@@ -16,7 +16,7 @@ coverage/
 logs/
 *.log
 
-# AI/Editor folders
+# AI/Editor folderscat prisma/schema.prisma
 .agents/
 .claude/
 .windsurf/

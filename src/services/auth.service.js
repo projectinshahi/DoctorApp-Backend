@@ -62,7 +62,7 @@ module.exports = {
   generateRefreshToken,
   verifyAccessToken,
   verifyRefreshToken,
+  verifyGoogleToken,
 };
-
 
 
