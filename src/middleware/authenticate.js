@@ -1,6 +1,11 @@
+const { PrismaClient } = require('../generated/prisma');
+const { PrismaPg } = require('@prisma/adapter-pg');
 const { verifyAccessToken } = require('../services/auth.service');
 
-function authenticate(req, res, next) {
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
+
+async function authenticate(req, res, next) {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -13,6 +18,26 @@ function authenticate(req, res, next) {
 
   try {
     const decoded = verifyAccessToken(token);
+
+    const session = await prisma.session.findUnique({
+      where: { id: decoded.sessionId },
+    });
+
+    if (!session) {
+      return res.status(401).json({
+        error: { message: 'Session not found', status: 401 },
+      });
+    }
+
+    if (session.revokedAt !== null) {
+      return res.status(401).json({
+        error: {
+          message: 'Session ended — signed in on another device',
+          status: 401,
+        },
+      });
+    }
+
     req.user = decoded;
     next();
   } catch (err) {
