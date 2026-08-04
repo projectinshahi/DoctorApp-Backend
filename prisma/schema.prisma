@@ -27,13 +27,37 @@ model User {
   @@map("users")
 }
 
+
+model Admin {
+
+  id        Int      @id @default(autoincrement())
+
+  email     String   @unique
+
+  password  String
+
+  name       String?
+
+  role       String   @default("admin")
+
+  status     String   @default("active")
+
+  createdAt  DateTime @default(now())
+
+  updatedAt  DateTime @updatedAt
+
+  @@map("admins")
+
+}
+
 model Subject {
   id        Int      @id @default(autoincrement())
   name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  topics Topic[]
+  topics  Topic[]
+  courses Course[]
 
   @@map("subjects")
 }
@@ -63,4 +87,75 @@ model Session {
 
   @@index([userId])
   @@map("sessions")
+}
+
+
+enum CourseStatus {
+  draft
+  published
+  archived
+}
+
+enum AccessType {
+  free
+  premium
+}
+
+model Course {
+  id           Int          @id @default(autoincrement())
+  title        String
+  description  String?
+  thumbnail    String?      // Cloudinary URL
+  subjectId    Int?
+  classGrade   String?
+  difficulty   String?
+  status       CourseStatus @default(draft)
+  accessType   AccessType   @default(free)
+  displayOrder Int          @default(0)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  subject  Subject?  @relation(fields: [subjectId], references: [id])
+  chapters Chapter[]
+
+  @@index([subjectId])
+  @@map("courses")
+}
+
+model Chapter {
+  id           Int      @id @default(autoincrement())
+  courseId     Int
+  title        String
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  course  Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons Lesson[]
+
+  @@index([courseId])
+  @@map("chapters")
+}
+
+enum LessonType {
+  video
+  text
+  quiz
+}
+
+model Lesson {
+  id            Int        @id @default(autoincrement())
+  chapterId     Int
+  title         String
+  type          LessonType
+  content       String?    // video URL, text/notes content, or quiz reference
+  displayOrder  Int        @default(0)
+  isFreePreview Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@index([chapterId])
+  @@map("lessons")
 }

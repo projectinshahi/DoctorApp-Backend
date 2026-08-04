@@ -131,6 +131,17 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.AdminScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  password: 'password',
+  name: 'name',
+  role: 'role',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SubjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -142,6 +153,51 @@ exports.Prisma.TopicScalarFieldEnum = {
   id: 'id',
   name: 'name',
   subjectId: 'subjectId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  deviceId: 'deviceId',
+  refreshToken: 'refreshToken',
+  createdAt: 'createdAt',
+  revokedAt: 'revokedAt'
+};
+
+exports.Prisma.CourseScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  thumbnail: 'thumbnail',
+  subjectId: 'subjectId',
+  classGrade: 'classGrade',
+  difficulty: 'difficulty',
+  status: 'status',
+  accessType: 'accessType',
+  displayOrder: 'displayOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ChapterScalarFieldEnum = {
+  id: 'id',
+  courseId: 'courseId',
+  title: 'title',
+  displayOrder: 'displayOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.LessonScalarFieldEnum = {
+  id: 'id',
+  chapterId: 'chapterId',
+  title: 'title',
+  type: 'type',
+  content: 'content',
+  displayOrder: 'displayOrder',
+  isFreePreview: 'isFreePreview',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -160,12 +216,32 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.CourseStatus = exports.$Enums.CourseStatus = {
+  draft: 'draft',
+  published: 'published',
+  archived: 'archived'
+};
 
+exports.AccessType = exports.$Enums.AccessType = {
+  free: 'free',
+  premium: 'premium'
+};
+
+exports.LessonType = exports.$Enums.LessonType = {
+  video: 'video',
+  text: 'text',
+  quiz: 'quiz'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
+  Admin: 'Admin',
   Subject: 'Subject',
-  Topic: 'Topic'
+  Topic: 'Topic',
+  Session: 'Session',
+  Course: 'Course',
+  Chapter: 'Chapter',
+  Lesson: 'Lesson'
 };
 
 /**
