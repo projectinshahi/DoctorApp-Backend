@@ -18,6 +18,11 @@ const healthRoutes = require('./routes/health.routes');
 const errorHandler = require('./middleware/errorHandler');
 const authRoutes = require('./routes/auth.routes');
 const courseRoutes = require('./routes/course.routes');
+const subjectRoutes = require('./routes/subject.routes');
+const selectionRoutes = require('./routes/selection.routes');
+const chapterRoutes = require('./routes/chapter.route');
+const lessonRoutes = require('./routes/lesson.route');
+const profileRoutes = require('./routes/profile.routes');
 
 
 const app = express();
@@ -29,6 +34,12 @@ app.use(express.json());
 app.use('/api', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
+app.use('/api/subjects', subjectRoutes);
+app.use('/api/users/me/selection', selectionRoutes);
+
+app.use('/api/course-types/:courseTypeId/chapters', chapterRoutes);
+app.use('/api/chapters/:chapterId/lessons', lessonRoutes);
+
 
 app.use(errorHandler);
 

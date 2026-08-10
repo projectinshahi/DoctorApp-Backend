@@ -17,6 +17,8 @@ model User {
   email     String   @unique
   password  String?
   name      String?
+  phone     String?
+  avatarUrl String?
   role      String   @default("student")
   status    String   @default("unverified")
   createdAt DateTime @default(now())
@@ -24,31 +26,30 @@ model User {
 
   sessions  Session[]
 
+  selectedCourseId     Int?
+  selectedCourseTypeId Int?
+  selectedCourse       Course?     @relation(fields: [selectedCourseId], references: [id])
+  selectedCourseType   CourseType? @relation(fields: [selectedCourseTypeId], references: [id])
+
   @@map("users")
 }
 
 
 model Admin {
-
   id        Int      @id @default(autoincrement())
-
   email     String   @unique
-
   password  String
+  name      String?
+  role      String   @default("admin")
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  name       String?
-
-  role       String   @default("admin")
-
-  status     String   @default("active")
-
-  createdAt  DateTime @default(now())
-
-  updatedAt  DateTime @updatedAt
+  courses   Course[]
 
   @@map("admins")
-
 }
+
 
 model Subject {
   id        Int      @id @default(autoincrement())
@@ -105,35 +106,61 @@ model Course {
   id           Int          @id @default(autoincrement())
   title        String
   description  String?
-  thumbnail    String?      // Cloudinary URL
-  subjectId    Int?
+  thumbnail    String?
   classGrade   String?
   difficulty   String?
   status       CourseStatus @default(draft)
   accessType   AccessType   @default(free)
   displayOrder Int          @default(0)
+  createdBy    Int?
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
-  subject  Subject?  @relation(fields: [subjectId], references: [id])
-  chapters Chapter[]
+  subjects    Subject[]
+  admin       Admin?       @relation(fields: [createdBy], references: [id])
+  chapters    Chapter[]
+  courseTypes CourseType[]
+  selectedBy  User[]
 
-  @@index([subjectId])
+  @@index([createdBy])
   @@map("courses")
 }
 
+model CourseType {
+  id           Int          @id @default(autoincrement())
+  courseId     Int
+  title        String
+  description  String?
+  status       CourseStatus @default(draft)
+  accessType   AccessType   @default(free)
+  displayOrder Int?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  course     Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  chapters   Chapter[]
+  selectedBy User[]
+
+  @@index([courseId])
+  @@map("course_types")
+}
+
+
 model Chapter {
   id           Int      @id @default(autoincrement())
-  courseId     Int
+  courseId     Int?                       // nullable now
+  courseTypeId Int?                       // NEW: nullable
   title        String
   displayOrder Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  course  Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  lessons Lesson[]
+  course     Course?     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseType CourseType? @relation(fields: [courseTypeId], references: [id], onDelete: Cascade)
+  lessons    Lesson[]
 
   @@index([courseId])
+  @@index([courseTypeId])
   @@map("chapters")
 }
 

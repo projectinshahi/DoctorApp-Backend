@@ -125,10 +125,14 @@ exports.Prisma.UserScalarFieldEnum = {
   email: 'email',
   password: 'password',
   name: 'name',
+  phone: 'phone',
+  avatarUrl: 'avatarUrl',
   role: 'role',
   status: 'status',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  selectedCourseId: 'selectedCourseId',
+  selectedCourseTypeId: 'selectedCourseTypeId'
 };
 
 exports.Prisma.AdminScalarFieldEnum = {
@@ -171,9 +175,21 @@ exports.Prisma.CourseScalarFieldEnum = {
   title: 'title',
   description: 'description',
   thumbnail: 'thumbnail',
-  subjectId: 'subjectId',
   classGrade: 'classGrade',
   difficulty: 'difficulty',
+  status: 'status',
+  accessType: 'accessType',
+  displayOrder: 'displayOrder',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CourseTypeScalarFieldEnum = {
+  id: 'id',
+  courseId: 'courseId',
+  title: 'title',
+  description: 'description',
   status: 'status',
   accessType: 'accessType',
   displayOrder: 'displayOrder',
@@ -184,6 +200,7 @@ exports.Prisma.CourseScalarFieldEnum = {
 exports.Prisma.ChapterScalarFieldEnum = {
   id: 'id',
   courseId: 'courseId',
+  courseTypeId: 'courseTypeId',
   title: 'title',
   displayOrder: 'displayOrder',
   createdAt: 'createdAt',
@@ -240,6 +257,7 @@ exports.Prisma.ModelName = {
   Topic: 'Topic',
   Session: 'Session',
   Course: 'Course',
+  CourseType: 'CourseType',
   Chapter: 'Chapter',
   Lesson: 'Lesson'
 };

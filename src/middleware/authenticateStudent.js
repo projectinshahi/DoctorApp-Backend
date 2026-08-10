@@ -1,53 +1,5 @@
-// const { PrismaClient } = require('../generated/prisma');
-// const { PrismaPg } = require('@prisma/adapter-pg');
-// const { verifyAccessToken } = require('../services/auth.service');
 
-// const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-// const prisma = new PrismaClient({ adapter });
-
-// async function authenticate(req, res, next) {
-//   const authHeader = req.headers.authorization;
-
-//   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-//     return res.status(401).json({
-//       error: { message: 'Missing or invalid authorization header', status: 401 },
-//     });
-//   }
-
-//   const token = authHeader.split(' ')[1];
-
-//   try {
-//     const decoded = verifyAccessToken(token);
-
-//     const session = await prisma.session.findUnique({
-//       where: { id: decoded.sessionId },
-//     });
-
-//     if (!session) {
-//       return res.status(401).json({
-//         error: { message: 'Session not found', status: 401 },
-//       });
-//     }
-
-//     if (session.revokedAt !== null) {
-//       return res.status(401).json({
-//         error: {
-//           message: 'Session ended — signed in on another device',
-//           status: 401,
-//         },
-//       });
-//     }
-
-//     req.user = decoded;
-//     next();
-//   } catch (err) {
-//     return res.status(401).json({
-//       error: { message: 'Invalid or expired token', status: 401 },
-//     });
-//   }
-// }
-
-// module.exports = authenticate;
+// module.exports = authenticateStudent;
 
 const { PrismaClient } = require('../generated/prisma');
 const { PrismaPg } = require('@prisma/adapter-pg');
@@ -61,7 +13,11 @@ async function authenticateStudent(req, res, next) {
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({
-      error: { message: 'Missing or invalid authorization header', status: 401 },
+      error: {
+        code: 'MISSING_TOKEN',
+        message: 'Missing or invalid authorization header',
+        status: 401,
+      },
     });
   }
 
@@ -76,14 +32,19 @@ async function authenticateStudent(req, res, next) {
 
     if (!session) {
       return res.status(401).json({
-        error: { message: 'Session not found', status: 401 },
+        error: {
+          code: 'SESSION_NOT_FOUND',
+          message: 'Session not found',
+          status: 401,
+        },
       });
     }
 
     if (session.revokedAt !== null) {
       return res.status(401).json({
         error: {
-          message: 'Session ended — signed in on another device',
+          code: 'SESSION_ENDED',
+          message: 'You were signed out because your account was accessed on another device.',
           status: 401,
         },
       });
@@ -93,7 +54,11 @@ async function authenticateStudent(req, res, next) {
     next();
   } catch (err) {
     return res.status(401).json({
-      error: { message: 'Invalid or expired token', status: 401 },
+      error: {
+        code: 'INVALID_TOKEN',
+        message: 'Invalid or expired token',
+        status: 401,
+      },
     });
   }
 }
