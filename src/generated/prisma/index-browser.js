@@ -212,11 +212,37 @@ exports.Prisma.LessonScalarFieldEnum = {
   chapterId: 'chapterId',
   title: 'title',
   type: 'type',
+  videoUrl: 'videoUrl',
+  noteUrl: 'noteUrl',
   content: 'content',
+  accessType: 'accessType',
   displayOrder: 'displayOrder',
   isFreePreview: 'isFreePreview',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PlanScalarFieldEnum = {
+  id: 'id',
+  courseId: 'courseId',
+  title: 'title',
+  description: 'description',
+  price: 'price',
+  durationDays: 'durationDays',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SubscriptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  courseId: 'courseId',
+  planId: 'planId',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  isActive: 'isActive',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -259,7 +285,9 @@ exports.Prisma.ModelName = {
   Course: 'Course',
   CourseType: 'CourseType',
   Chapter: 'Chapter',
-  Lesson: 'Lesson'
+  Lesson: 'Lesson',
+  Plan: 'Plan',
+  Subscription: 'Subscription'
 };
 
 /**

@@ -24,7 +24,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions Session[]
+  sessions      Session[]
+  subscriptions Subscription[]
 
   selectedCourseId     Int?
   selectedCourseTypeId Int?
@@ -113,11 +114,13 @@ model Course {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
-  subjects    Subject[]
-  admin       Admin?       @relation(fields: [createdBy], references: [id])
-  chapters    Chapter[]
-  courseTypes CourseType[]
-  selectedBy  User[]
+  subjects      Subject[]
+  admin         Admin?         @relation(fields: [createdBy], references: [id])
+  chapters      Chapter[]
+  courseTypes   CourseType[]
+  selectedBy    User[]
+  plans         Plan[]
+  subscriptions Subscription[]
 
   @@index([createdBy])
   @@map("courses")
@@ -170,10 +173,13 @@ model Lesson {
   id            Int        @id @default(autoincrement())
   chapterId     Int
   title         String
-  type          LessonType
-  content       String? // video URL, text/notes content, or quiz reference
+  type          LessonType // still used for the primary icon/category shown in UI
+  videoUrl      String? // optional - class video URL
+  noteUrl       String? // optional - PDF link or notes text/URL
+  content       String? // now used for quiz reference only
+  accessType    AccessType @default(free) // NEW - reuses your existing free/premium enum
   displayOrder  Int        @default(0)
-  isFreePreview Boolean    @default(false)
+  isFreePreview Boolean    @default(false) // unchanged - false means "requires an active subscription"
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 
@@ -181,4 +187,41 @@ model Lesson {
 
   @@index([chapterId])
   @@map("lessons")
+}
+
+model Plan {
+  id           Int      @id @default(autoincrement())
+  courseId     Int
+  title        String // e.g. "3-month access"
+  description  String?
+  price        Float // e.g. 199.00
+  durationDays Int // e.g. 90
+  isActive     Boolean  @default(true) // admin can disable a plan without deleting it
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  course        Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  subscriptions Subscription[]
+
+  @@index([courseId])
+  @@map("plans")
+}
+
+model Subscription {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  courseId  Int
+  planId    Int
+  startDate DateTime @default(now())
+  endDate   DateTime
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  plan   Plan   @relation(fields: [planId], references: [id])
+
+  @@index([userId])
+  @@index([courseId])
+  @@map("subscriptions")
 }

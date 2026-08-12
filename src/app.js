@@ -23,6 +23,12 @@ const selectionRoutes = require('./routes/selection.routes');
 const chapterRoutes = require('./routes/chapter.route');
 const lessonRoutes = require('./routes/lesson.route');
 const profileRoutes = require('./routes/profile.routes');
+const uploadRoutes = require('./routes/upload.routes');
+const adminRoutes = require('./routes/admin.routes');
+const planRoutes = require('./routes/plan.routes');
+const subscriptionRoutes = require('./routes/subscription.routes');
+const subscribeRoutes = require('./routes/subscribe.routes');
+const path = require('path');
 
 
 const app = express();
@@ -39,6 +45,16 @@ app.use('/api/users/me/selection', selectionRoutes);
 
 app.use('/api/course-types/:courseTypeId/chapters', chapterRoutes);
 app.use('/api/chapters/:chapterId/lessons', lessonRoutes);
+app.use('/api/users/me', profileRoutes);
+app.use('/api/uploads', uploadRoutes);
+app.use('/admin', adminRoutes);
+app.use('/api', planRoutes);
+app.use('/api/users/me/subscription-status', subscriptionRoutes);
+app.use('/api/users/me/subscribe', subscribeRoutes);
+app.use('/api/uploads', require('./routes/upload.routes'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 
 
 app.use(errorHandler);
