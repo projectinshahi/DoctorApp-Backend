@@ -11761,13 +11761,19 @@ export namespace Prisma {
     id: number | null
     chapterId: number | null
     title: string | null
+    description: string | null
     type: $Enums.LessonType | null
     videoUrl: string | null
+    videoPublicId: string | null
+    thumbnailUrl: string | null
+    thumbnailPublicId: string | null
     noteUrl: string | null
+    notePublicId: string | null
+    noteFileType: string | null
     content: string | null
-    accessType: $Enums.AccessType | null
     displayOrder: number | null
     isFreePreview: boolean | null
+    accessType: $Enums.AccessType | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11776,13 +11782,19 @@ export namespace Prisma {
     id: number | null
     chapterId: number | null
     title: string | null
+    description: string | null
     type: $Enums.LessonType | null
     videoUrl: string | null
+    videoPublicId: string | null
+    thumbnailUrl: string | null
+    thumbnailPublicId: string | null
     noteUrl: string | null
+    notePublicId: string | null
+    noteFileType: string | null
     content: string | null
-    accessType: $Enums.AccessType | null
     displayOrder: number | null
     isFreePreview: boolean | null
+    accessType: $Enums.AccessType | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11791,13 +11803,19 @@ export namespace Prisma {
     id: number
     chapterId: number
     title: number
+    description: number
     type: number
     videoUrl: number
+    videoPublicId: number
+    thumbnailUrl: number
+    thumbnailPublicId: number
     noteUrl: number
+    notePublicId: number
+    noteFileType: number
     content: number
-    accessType: number
     displayOrder: number
     isFreePreview: number
+    accessType: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -11820,13 +11838,19 @@ export namespace Prisma {
     id?: true
     chapterId?: true
     title?: true
+    description?: true
     type?: true
     videoUrl?: true
+    videoPublicId?: true
+    thumbnailUrl?: true
+    thumbnailPublicId?: true
     noteUrl?: true
+    notePublicId?: true
+    noteFileType?: true
     content?: true
-    accessType?: true
     displayOrder?: true
     isFreePreview?: true
+    accessType?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11835,13 +11859,19 @@ export namespace Prisma {
     id?: true
     chapterId?: true
     title?: true
+    description?: true
     type?: true
     videoUrl?: true
+    videoPublicId?: true
+    thumbnailUrl?: true
+    thumbnailPublicId?: true
     noteUrl?: true
+    notePublicId?: true
+    noteFileType?: true
     content?: true
-    accessType?: true
     displayOrder?: true
     isFreePreview?: true
+    accessType?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11850,13 +11880,19 @@ export namespace Prisma {
     id?: true
     chapterId?: true
     title?: true
+    description?: true
     type?: true
     videoUrl?: true
+    videoPublicId?: true
+    thumbnailUrl?: true
+    thumbnailPublicId?: true
     noteUrl?: true
+    notePublicId?: true
+    noteFileType?: true
     content?: true
-    accessType?: true
     displayOrder?: true
     isFreePreview?: true
+    accessType?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -11952,13 +11988,19 @@ export namespace Prisma {
     id: number
     chapterId: number
     title: string
+    description: string | null
     type: $Enums.LessonType
     videoUrl: string | null
+    videoPublicId: string | null
+    thumbnailUrl: string | null
+    thumbnailPublicId: string | null
     noteUrl: string | null
+    notePublicId: string | null
+    noteFileType: string | null
     content: string | null
-    accessType: $Enums.AccessType
     displayOrder: number
     isFreePreview: boolean
+    accessType: $Enums.AccessType
     createdAt: Date
     updatedAt: Date
     _count: LessonCountAggregateOutputType | null
@@ -11986,13 +12028,19 @@ export namespace Prisma {
     id?: boolean
     chapterId?: boolean
     title?: boolean
+    description?: boolean
     type?: boolean
     videoUrl?: boolean
+    videoPublicId?: boolean
+    thumbnailUrl?: boolean
+    thumbnailPublicId?: boolean
     noteUrl?: boolean
+    notePublicId?: boolean
+    noteFileType?: boolean
     content?: boolean
-    accessType?: boolean
     displayOrder?: boolean
     isFreePreview?: boolean
+    accessType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
@@ -12002,13 +12050,19 @@ export namespace Prisma {
     id?: boolean
     chapterId?: boolean
     title?: boolean
+    description?: boolean
     type?: boolean
     videoUrl?: boolean
+    videoPublicId?: boolean
+    thumbnailUrl?: boolean
+    thumbnailPublicId?: boolean
     noteUrl?: boolean
+    notePublicId?: boolean
+    noteFileType?: boolean
     content?: boolean
-    accessType?: boolean
     displayOrder?: boolean
     isFreePreview?: boolean
+    accessType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
@@ -12018,13 +12072,19 @@ export namespace Prisma {
     id?: boolean
     chapterId?: boolean
     title?: boolean
+    description?: boolean
     type?: boolean
     videoUrl?: boolean
+    videoPublicId?: boolean
+    thumbnailUrl?: boolean
+    thumbnailPublicId?: boolean
     noteUrl?: boolean
+    notePublicId?: boolean
+    noteFileType?: boolean
     content?: boolean
-    accessType?: boolean
     displayOrder?: boolean
     isFreePreview?: boolean
+    accessType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
@@ -12034,18 +12094,24 @@ export namespace Prisma {
     id?: boolean
     chapterId?: boolean
     title?: boolean
+    description?: boolean
     type?: boolean
     videoUrl?: boolean
+    videoPublicId?: boolean
+    thumbnailUrl?: boolean
+    thumbnailPublicId?: boolean
     noteUrl?: boolean
+    notePublicId?: boolean
+    noteFileType?: boolean
     content?: boolean
-    accessType?: boolean
     displayOrder?: boolean
     isFreePreview?: boolean
+    accessType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chapterId" | "title" | "type" | "videoUrl" | "noteUrl" | "content" | "accessType" | "displayOrder" | "isFreePreview" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
+  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chapterId" | "title" | "description" | "type" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "thumbnailPublicId" | "noteUrl" | "notePublicId" | "noteFileType" | "content" | "displayOrder" | "isFreePreview" | "accessType" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
   export type LessonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
   }
@@ -12065,13 +12131,19 @@ export namespace Prisma {
       id: number
       chapterId: number
       title: string
+      description: string | null
       type: $Enums.LessonType
       videoUrl: string | null
+      videoPublicId: string | null
+      thumbnailUrl: string | null
+      thumbnailPublicId: string | null
       noteUrl: string | null
+      notePublicId: string | null
+      noteFileType: string | null
       content: string | null
-      accessType: $Enums.AccessType
       displayOrder: number
       isFreePreview: boolean
+      accessType: $Enums.AccessType
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["lesson"]>
@@ -12501,13 +12573,19 @@ export namespace Prisma {
     readonly id: FieldRef<"Lesson", 'Int'>
     readonly chapterId: FieldRef<"Lesson", 'Int'>
     readonly title: FieldRef<"Lesson", 'String'>
+    readonly description: FieldRef<"Lesson", 'String'>
     readonly type: FieldRef<"Lesson", 'LessonType'>
     readonly videoUrl: FieldRef<"Lesson", 'String'>
+    readonly videoPublicId: FieldRef<"Lesson", 'String'>
+    readonly thumbnailUrl: FieldRef<"Lesson", 'String'>
+    readonly thumbnailPublicId: FieldRef<"Lesson", 'String'>
     readonly noteUrl: FieldRef<"Lesson", 'String'>
+    readonly notePublicId: FieldRef<"Lesson", 'String'>
+    readonly noteFileType: FieldRef<"Lesson", 'String'>
     readonly content: FieldRef<"Lesson", 'String'>
-    readonly accessType: FieldRef<"Lesson", 'AccessType'>
     readonly displayOrder: FieldRef<"Lesson", 'Int'>
     readonly isFreePreview: FieldRef<"Lesson", 'Boolean'>
+    readonly accessType: FieldRef<"Lesson", 'AccessType'>
     readonly createdAt: FieldRef<"Lesson", 'DateTime'>
     readonly updatedAt: FieldRef<"Lesson", 'DateTime'>
   }
@@ -15413,13 +15491,19 @@ export namespace Prisma {
     id: 'id',
     chapterId: 'chapterId',
     title: 'title',
+    description: 'description',
     type: 'type',
     videoUrl: 'videoUrl',
+    videoPublicId: 'videoPublicId',
+    thumbnailUrl: 'thumbnailUrl',
+    thumbnailPublicId: 'thumbnailPublicId',
     noteUrl: 'noteUrl',
+    notePublicId: 'notePublicId',
+    noteFileType: 'noteFileType',
     content: 'content',
-    accessType: 'accessType',
     displayOrder: 'displayOrder',
     isFreePreview: 'isFreePreview',
+    accessType: 'accessType',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -16213,13 +16297,19 @@ export namespace Prisma {
     id?: IntFilter<"Lesson"> | number
     chapterId?: IntFilter<"Lesson"> | number
     title?: StringFilter<"Lesson"> | string
+    description?: StringNullableFilter<"Lesson"> | string | null
     type?: EnumLessonTypeFilter<"Lesson"> | $Enums.LessonType
     videoUrl?: StringNullableFilter<"Lesson"> | string | null
+    videoPublicId?: StringNullableFilter<"Lesson"> | string | null
+    thumbnailUrl?: StringNullableFilter<"Lesson"> | string | null
+    thumbnailPublicId?: StringNullableFilter<"Lesson"> | string | null
     noteUrl?: StringNullableFilter<"Lesson"> | string | null
+    notePublicId?: StringNullableFilter<"Lesson"> | string | null
+    noteFileType?: StringNullableFilter<"Lesson"> | string | null
     content?: StringNullableFilter<"Lesson"> | string | null
-    accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
     displayOrder?: IntFilter<"Lesson"> | number
     isFreePreview?: BoolFilter<"Lesson"> | boolean
+    accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
     chapter?: XOR<ChapterScalarRelationFilter, ChapterWhereInput>
@@ -16229,13 +16319,19 @@ export namespace Prisma {
     id?: SortOrder
     chapterId?: SortOrder
     title?: SortOrder
+    description?: SortOrderInput | SortOrder
     type?: SortOrder
     videoUrl?: SortOrderInput | SortOrder
+    videoPublicId?: SortOrderInput | SortOrder
+    thumbnailUrl?: SortOrderInput | SortOrder
+    thumbnailPublicId?: SortOrderInput | SortOrder
     noteUrl?: SortOrderInput | SortOrder
+    notePublicId?: SortOrderInput | SortOrder
+    noteFileType?: SortOrderInput | SortOrder
     content?: SortOrderInput | SortOrder
-    accessType?: SortOrder
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
+    accessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     chapter?: ChapterOrderByWithRelationInput
@@ -16248,13 +16344,19 @@ export namespace Prisma {
     NOT?: LessonWhereInput | LessonWhereInput[]
     chapterId?: IntFilter<"Lesson"> | number
     title?: StringFilter<"Lesson"> | string
+    description?: StringNullableFilter<"Lesson"> | string | null
     type?: EnumLessonTypeFilter<"Lesson"> | $Enums.LessonType
     videoUrl?: StringNullableFilter<"Lesson"> | string | null
+    videoPublicId?: StringNullableFilter<"Lesson"> | string | null
+    thumbnailUrl?: StringNullableFilter<"Lesson"> | string | null
+    thumbnailPublicId?: StringNullableFilter<"Lesson"> | string | null
     noteUrl?: StringNullableFilter<"Lesson"> | string | null
+    notePublicId?: StringNullableFilter<"Lesson"> | string | null
+    noteFileType?: StringNullableFilter<"Lesson"> | string | null
     content?: StringNullableFilter<"Lesson"> | string | null
-    accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
     displayOrder?: IntFilter<"Lesson"> | number
     isFreePreview?: BoolFilter<"Lesson"> | boolean
+    accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
     chapter?: XOR<ChapterScalarRelationFilter, ChapterWhereInput>
@@ -16264,13 +16366,19 @@ export namespace Prisma {
     id?: SortOrder
     chapterId?: SortOrder
     title?: SortOrder
+    description?: SortOrderInput | SortOrder
     type?: SortOrder
     videoUrl?: SortOrderInput | SortOrder
+    videoPublicId?: SortOrderInput | SortOrder
+    thumbnailUrl?: SortOrderInput | SortOrder
+    thumbnailPublicId?: SortOrderInput | SortOrder
     noteUrl?: SortOrderInput | SortOrder
+    notePublicId?: SortOrderInput | SortOrder
+    noteFileType?: SortOrderInput | SortOrder
     content?: SortOrderInput | SortOrder
-    accessType?: SortOrder
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
+    accessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: LessonCountOrderByAggregateInput
@@ -16287,13 +16395,19 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Lesson"> | number
     chapterId?: IntWithAggregatesFilter<"Lesson"> | number
     title?: StringWithAggregatesFilter<"Lesson"> | string
+    description?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
     type?: EnumLessonTypeWithAggregatesFilter<"Lesson"> | $Enums.LessonType
     videoUrl?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
+    videoPublicId?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
+    thumbnailUrl?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
+    thumbnailPublicId?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
     noteUrl?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
+    notePublicId?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
+    noteFileType?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
     content?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
-    accessType?: EnumAccessTypeWithAggregatesFilter<"Lesson"> | $Enums.AccessType
     displayOrder?: IntWithAggregatesFilter<"Lesson"> | number
     isFreePreview?: BoolWithAggregatesFilter<"Lesson"> | boolean
+    accessType?: EnumAccessTypeWithAggregatesFilter<"Lesson"> | $Enums.AccessType
     createdAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
   }
@@ -17091,13 +17205,19 @@ export namespace Prisma {
 
   export type LessonCreateInput = {
     title: string
+    description?: string | null
     type: $Enums.LessonType
     videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
     noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
     content?: string | null
-    accessType?: $Enums.AccessType
     displayOrder?: number
     isFreePreview?: boolean
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
@@ -17107,26 +17227,38 @@ export namespace Prisma {
     id?: number
     chapterId: number
     title: string
+    description?: string | null
     type: $Enums.LessonType
     videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
     noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
     content?: string | null
-    accessType?: $Enums.AccessType
     displayOrder?: number
     isFreePreview?: boolean
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type LessonUpdateInput = {
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
-    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
@@ -17136,13 +17268,19 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     chapterId?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
-    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17151,26 +17289,38 @@ export namespace Prisma {
     id?: number
     chapterId: number
     title: string
+    description?: string | null
     type: $Enums.LessonType
     videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
     noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
     content?: string | null
-    accessType?: $Enums.AccessType
     displayOrder?: number
     isFreePreview?: boolean
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type LessonUpdateManyMutationInput = {
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
-    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17179,13 +17329,19 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     chapterId?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
-    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18052,13 +18208,19 @@ export namespace Prisma {
     id?: SortOrder
     chapterId?: SortOrder
     title?: SortOrder
+    description?: SortOrder
     type?: SortOrder
     videoUrl?: SortOrder
+    videoPublicId?: SortOrder
+    thumbnailUrl?: SortOrder
+    thumbnailPublicId?: SortOrder
     noteUrl?: SortOrder
+    notePublicId?: SortOrder
+    noteFileType?: SortOrder
     content?: SortOrder
-    accessType?: SortOrder
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
+    accessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18073,13 +18235,19 @@ export namespace Prisma {
     id?: SortOrder
     chapterId?: SortOrder
     title?: SortOrder
+    description?: SortOrder
     type?: SortOrder
     videoUrl?: SortOrder
+    videoPublicId?: SortOrder
+    thumbnailUrl?: SortOrder
+    thumbnailPublicId?: SortOrder
     noteUrl?: SortOrder
+    notePublicId?: SortOrder
+    noteFileType?: SortOrder
     content?: SortOrder
-    accessType?: SortOrder
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
+    accessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18088,13 +18256,19 @@ export namespace Prisma {
     id?: SortOrder
     chapterId?: SortOrder
     title?: SortOrder
+    description?: SortOrder
     type?: SortOrder
     videoUrl?: SortOrder
+    videoPublicId?: SortOrder
+    thumbnailUrl?: SortOrder
+    thumbnailPublicId?: SortOrder
     noteUrl?: SortOrder
+    notePublicId?: SortOrder
+    noteFileType?: SortOrder
     content?: SortOrder
-    accessType?: SortOrder
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
+    accessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -20663,13 +20837,19 @@ export namespace Prisma {
 
   export type LessonCreateWithoutChapterInput = {
     title: string
+    description?: string | null
     type: $Enums.LessonType
     videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
     noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
     content?: string | null
-    accessType?: $Enums.AccessType
     displayOrder?: number
     isFreePreview?: boolean
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20677,13 +20857,19 @@ export namespace Prisma {
   export type LessonUncheckedCreateWithoutChapterInput = {
     id?: number
     title: string
+    description?: string | null
     type: $Enums.LessonType
     videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
     noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
     content?: string | null
-    accessType?: $Enums.AccessType
     displayOrder?: number
     isFreePreview?: boolean
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20807,13 +20993,19 @@ export namespace Prisma {
     id?: IntFilter<"Lesson"> | number
     chapterId?: IntFilter<"Lesson"> | number
     title?: StringFilter<"Lesson"> | string
+    description?: StringNullableFilter<"Lesson"> | string | null
     type?: EnumLessonTypeFilter<"Lesson"> | $Enums.LessonType
     videoUrl?: StringNullableFilter<"Lesson"> | string | null
+    videoPublicId?: StringNullableFilter<"Lesson"> | string | null
+    thumbnailUrl?: StringNullableFilter<"Lesson"> | string | null
+    thumbnailPublicId?: StringNullableFilter<"Lesson"> | string | null
     noteUrl?: StringNullableFilter<"Lesson"> | string | null
+    notePublicId?: StringNullableFilter<"Lesson"> | string | null
+    noteFileType?: StringNullableFilter<"Lesson"> | string | null
     content?: StringNullableFilter<"Lesson"> | string | null
-    accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
     displayOrder?: IntFilter<"Lesson"> | number
     isFreePreview?: BoolFilter<"Lesson"> | boolean
+    accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
   }
@@ -21811,26 +22003,38 @@ export namespace Prisma {
   export type LessonCreateManyChapterInput = {
     id?: number
     title: string
+    description?: string | null
     type: $Enums.LessonType
     videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
     noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
     content?: string | null
-    accessType?: $Enums.AccessType
     displayOrder?: number
     isFreePreview?: boolean
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type LessonUpdateWithoutChapterInput = {
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
-    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21838,13 +22042,19 @@ export namespace Prisma {
   export type LessonUncheckedUpdateWithoutChapterInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
-    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21852,13 +22062,19 @@ export namespace Prisma {
   export type LessonUncheckedUpdateManyWithoutChapterInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
-    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

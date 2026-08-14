@@ -170,22 +170,27 @@ enum LessonType {
 }
 
 model Lesson {
-  id            Int        @id @default(autoincrement())
-  chapterId     Int
-  title         String
-  type          LessonType // still used for the primary icon/category shown in UI
-  videoUrl      String? // optional - class video URL
-  noteUrl       String? // optional - PDF link or notes text/URL
-  content       String? // now used for quiz reference only
-  accessType    AccessType @default(free) // NEW - reuses your existing free/premium enum
-  displayOrder  Int        @default(0)
-  isFreePreview Boolean    @default(false) // unchanged - false means "requires an active subscription"
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  id                Int        @id @default(autoincrement())
+  chapterId         Int
+  title             String
+  description       String?
+  type              LessonType
+  videoUrl          String?
+  videoPublicId     String?
+  thumbnailUrl      String?
+  thumbnailPublicId String?
+  noteUrl           String?
+  notePublicId      String?
+  noteFileType      String?
+  content           String?
+  displayOrder      Int        @default(0)
+  isFreePreview     Boolean    @default(false)
+  accessType        AccessType @default(free)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
 
-  chapter Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  chapter Chapter @relation(fields: [chapterId], references: [id])
 
-  @@index([chapterId])
   @@map("lessons")
 }
 

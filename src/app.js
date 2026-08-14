@@ -31,6 +31,7 @@ const subscribeRoutes = require('./routes/subscribe.routes');
 const path = require('path');
 
 
+
 const app = express();
 
 
@@ -45,6 +46,7 @@ app.use('/api/users/me/selection', selectionRoutes);
 
 app.use('/api/course-types/:courseTypeId/chapters', chapterRoutes);
 app.use('/api/chapters/:chapterId/lessons', lessonRoutes);
+app.use('/api', lessonRoutes);
 app.use('/api/users/me', profileRoutes);
 app.use('/api/uploads', uploadRoutes);
 app.use('/admin', adminRoutes);
