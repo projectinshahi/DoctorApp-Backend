@@ -28,6 +28,7 @@ async function authenticateStudent(req, res, next) {
 
     const session = await prisma.session.findUnique({
       where: { id: decoded.sessionId },
+      include: { user: { select: { status: true } } },
     });
 
     if (!session) {
@@ -36,6 +37,19 @@ async function authenticateStudent(req, res, next) {
           code: 'SESSION_NOT_FOUND',
           message: 'Session not found',
           status: 401,
+        },
+      });
+    }
+
+    // Checked before revokedAt: blocking also revokes the session, so testing
+    // the session first would tell a blocked student they were signed in on
+    // another device — wrong reason, and it hides the real one.
+    if (session.user.status === 'blocked') {
+      return res.status(403).json({
+        error: {
+          code: 'ACCOUNT_BLOCKED',
+          message: 'Your account has been blocked. Please contact support.',
+          status: 403,
         },
       });
     }

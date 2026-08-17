@@ -190,11 +190,16 @@ model Lesson {
   displayOrder      Int        @default(0)
   isFreePreview     Boolean    @default(false)
   accessType        AccessType @default(free)
+  status            CourseStatus @default(draft)
+  planId            Int?       // only meaningful when accessType = premium
   createdAt         DateTime   @default(now())
   updatedAt         DateTime   @updatedAt
 
   chapter           Chapter    @relation(fields: [chapterId], references: [id])
+  plan              Plan?      @relation(fields: [planId], references: [id], onDelete: SetNull)
 
+  @@index([chapterId, displayOrder])
+  @@index([planId])
   @@map("lessons")
 }
 
@@ -211,6 +216,7 @@ model Plan {
 
   course        Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
   subscriptions Subscription[]
+  lessons       Lesson[]
 
   @@index([courseId])
   @@map("plans")

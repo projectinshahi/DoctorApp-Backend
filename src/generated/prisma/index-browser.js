@@ -224,6 +224,8 @@ exports.Prisma.LessonScalarFieldEnum = {
   displayOrder: 'displayOrder',
   isFreePreview: 'isFreePreview',
   accessType: 'accessType',
+  status: 'status',
+  planId: 'planId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

@@ -147,7 +147,7 @@ model CourseType {
 
 model Chapter {
   id           Int      @id @default(autoincrement())
-  courseId     Int? // nullable now
+  courseId     Int? // nulRlable now
   courseTypeId Int? // NEW: nullable
   title        String
   displayOrder Int      @default(0)
@@ -170,7 +170,7 @@ enum LessonType {
 }
 
 model Lesson {
-  id                Int        @id @default(autoincrement())
+  id                Int          @id @default(autoincrement())
   chapterId         Int
   title             String
   description       String?
@@ -183,14 +183,19 @@ model Lesson {
   notePublicId      String?
   noteFileType      String?
   content           String?
-  displayOrder      Int        @default(0)
-  isFreePreview     Boolean    @default(false)
-  accessType        AccessType @default(free)
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
+  displayOrder      Int          @default(0)
+  isFreePreview     Boolean      @default(false)
+  accessType        AccessType   @default(free)
+  status            CourseStatus @default(draft)
+  planId            Int? // only meaningful when accessType = premium
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
   chapter Chapter @relation(fields: [chapterId], references: [id])
+  plan    Plan?   @relation(fields: [planId], references: [id], onDelete: SetNull)
 
+  @@index([chapterId, displayOrder])
+  @@index([planId])
   @@map("lessons")
 }
 
@@ -207,6 +212,7 @@ model Plan {
 
   course        Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
   subscriptions Subscription[]
+  lessons       Lesson[]
 
   @@index([courseId])
   @@map("plans")

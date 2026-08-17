@@ -6,9 +6,11 @@ const {
   getLessonsByChapter,
   updateLesson,
   deleteLesson,
+  reorderLessons,
 } = require('../controllers/lesson.controller');
 const authenticateAdmin = require('../middleware/authenticateAdmin');
 
+router.patch('/chapters/:chapterId/lessons/reorder', authenticateAdmin, reorderLessons);
 router.post('/chapters/:chapterId/lessons', authenticateAdmin, createLesson);
 router.get('/chapters/:chapterId/lessons', authenticateAdmin, getLessonsByChapter);
 router.get('/lessons/:id', authenticateAdmin, getLesson);

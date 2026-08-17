@@ -69,6 +69,39 @@ async function getPlansForCourse(req, res) {
   }
 }
 
+// GET /api/plans/:id
+// Single plan, with how many lessons and subscribers hang off it — the admin
+// panel needs those counts before offering a delete.
+async function getPlanById(req, res) {
+  try {
+    const planId = Number(req.params.id);
+
+    if (isNaN(planId)) {
+      return res.status(400).json({ error: { message: 'Invalid plan id' } });
+    }
+
+    const plan = await prisma.plan.findUnique({
+      where: { id: planId },
+      include: {
+        course: { select: { id: true, title: true } },
+        _count: { select: { lessons: true, subscriptions: true } },
+      },
+    });
+
+    if (!plan) {
+      return res.status(404).json({ error: { message: 'Plan not found' } });
+    }
+
+    const { _count, ...rest } = plan;
+    return res.status(200).json({
+      plan: { ...rest, lessonCount: _count.lessons, subscriberCount: _count.subscriptions },
+    });
+  } catch (error) {
+    console.error('Get plan error:', error);
+    return res.status(500).json({ error: { message: 'Something went wrong while fetching the plan' } });
+  }
+}
+
 // PUT /api/plans/:id
 async function updatePlan(req, res) {
   try {
@@ -133,11 +166,26 @@ async function deletePlan(req, res) {
       return res.status(400).json({ error: { message: 'Invalid plan id' } });
     }
 
-    const existing = await prisma.plan.findUnique({ where: { id: planId } });
+    const existing = await prisma.plan.findUnique({
+      where: { id: planId },
+      include: { _count: { select: { subscriptions: true } } },
+    });
     if (!existing) {
       return res.status(404).json({ error: { message: 'Plan not found' } });
     }
 
+    // Deleting a plan people paid for would orphan their subscription rows and
+    // lose the purchase history. Tell the admin to deactivate it instead.
+    if (existing._count.subscriptions > 0) {
+      return res.status(409).json({
+        error: {
+          message: `Cannot delete: ${existing._count.subscriptions} student(s) have subscribed to this plan. Set isActive: false instead to hide it from new buyers.`,
+        },
+      });
+    }
+
+    // Lessons pointing here are released by onDelete: SetNull — they stay
+    // premium but fall back to "any active subscription unlocks it".
     await prisma.plan.delete({ where: { id: planId } });
 
     return res.status(200).json({ message: 'Plan deleted successfully', planId });
@@ -147,4 +195,4 @@ async function deletePlan(req, res) {
   }
 }
 
-module.exports = { createPlan, getPlansForCourse, updatePlan, deletePlan };
+module.exports = { createPlan, getPlansForCourse, getPlanById, updatePlan, deletePlan };

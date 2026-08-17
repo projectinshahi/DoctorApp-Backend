@@ -155,6 +155,18 @@ async function googleSignIn(req, res, next) {
       isNewUser = true;
     }
 
+    // Without this, a blocked student could simply sign in again and get a
+    // fresh session, making the admin block button useless.
+    if (user.status === 'blocked') {
+      return res.status(403).json({
+        error: {
+          code: 'ACCOUNT_BLOCKED',
+          message: 'Your account has been blocked. Please contact support.',
+          status: 403,
+        },
+      });
+    }
+
     // Revoke any existing active session(s) for this user (single-active-session rule)
     await revokeActiveSessions(user.id);
 

@@ -5,6 +5,17 @@ const { PrismaPg } = require('@prisma/adapter-pg');
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
+// Free lessons and free previews are always open. A premium lesson tied to a
+// plan needs *that* plan; one with no plan accepts any active subscription for
+// the course. Exported so the decision table is testable.
+function isLessonUnlocked(lesson, paidPlanIds) {
+  if (lesson.accessType !== 'premium' || lesson.isFreePreview) return true;
+  if (lesson.planId !== null && lesson.planId !== undefined) {
+    return paidPlanIds.has(lesson.planId);
+  }
+  return paidPlanIds.size > 0;
+}
+
 // GET /api/users/me/selection/content
 // Full tree for the student's selected exam: courseType -> chapters -> lessons
 // (video, notes, thumbnail). Locked lessons come back with the media stripped.
@@ -27,19 +38,21 @@ async function getSelectedCourseContent(req, res) {
       return res.status(200).json({ course: null, courseType: null, chapters: [] });
     }
 
-    const activeSub =
-      user.selectedCourse.accessType !== 'premium' ||
-      (await prisma.subscription.findFirst({
-        where: {
-          userId,
-          courseId: user.selectedCourseId,
-          isActive: true,
-          endDate: { gte: new Date() },
-        },
-        select: { id: true },
-      }));
+    // Which plans has this student actually paid for and not yet outlived?
+    const activeSubs = await prisma.subscription.findMany({
+      where: {
+        userId,
+        courseId: user.selectedCourseId,
+        isActive: true,
+        endDate: { gte: new Date() },
+      },
+      select: { planId: true },
+    });
+    const paidPlanIds = new Set(activeSubs.map((s) => s.planId));
 
-    const hasPaid = !!activeSub;
+    // Course-level flag for the UI banner. A free course needs no purchase.
+    const hasPaid =
+      user.selectedCourse.accessType !== 'premium' || paidPlanIds.size > 0;
 
     const courseType = user.selectedCourseTypeId
       ? await prisma.courseType.findUnique({
@@ -59,7 +72,8 @@ async function getSelectedCourseContent(req, res) {
         title: true,
         displayOrder: true,
         lessons: {
-          orderBy: { displayOrder: 'asc' },
+          where: { status: 'published' },
+          orderBy: [{ displayOrder: 'asc' }, { createdAt: 'asc' }],
           select: {
             id: true,
             title: true,
@@ -73,6 +87,8 @@ async function getSelectedCourseContent(req, res) {
             displayOrder: true,
             isFreePreview: true,
             accessType: true,
+            planId: true,
+            plan: { select: { id: true, title: true, price: true, durationDays: true } },
           },
         },
       },
@@ -81,10 +97,9 @@ async function getSelectedCourseContent(req, res) {
     const shaped = chapters.map((ch) => ({
       ...ch,
       lessons: ch.lessons.map((l) => {
-        const locked = !hasPaid && l.accessType === 'premium' && !l.isFreePreview;
-        return locked
-          ? { ...l, videoUrl: null, noteUrl: null, content: null, locked: true }
-          : { ...l, locked: false };
+        return isLessonUnlocked(l, paidPlanIds)
+          ? { ...l, locked: false }
+          : { ...l, videoUrl: null, noteUrl: null, content: null, locked: true };
       }),
     }));
 
@@ -100,4 +115,4 @@ async function getSelectedCourseContent(req, res) {
   }
 }
 
-module.exports = { getSelectedCourseContent };
+module.exports = { getSelectedCourseContent, isLessonUnlocked };

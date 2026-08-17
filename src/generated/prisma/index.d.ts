@@ -2106,10 +2106,12 @@ export namespace Prisma {
 
   export type PlanCountOutputType = {
     subscriptions: number
+    lessons: number
   }
 
   export type PlanCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     subscriptions?: boolean | PlanCountOutputTypeCountSubscriptionsArgs
+    lessons?: boolean | PlanCountOutputTypeCountLessonsArgs
   }
 
   // Custom InputTypes
@@ -2128,6 +2130,13 @@ export namespace Prisma {
    */
   export type PlanCountOutputTypeCountSubscriptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SubscriptionWhereInput
+  }
+
+  /**
+   * PlanCountOutputType without action
+   */
+  export type PlanCountOutputTypeCountLessonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LessonWhereInput
   }
 
 
@@ -11749,12 +11758,14 @@ export namespace Prisma {
     id: number | null
     chapterId: number | null
     displayOrder: number | null
+    planId: number | null
   }
 
   export type LessonSumAggregateOutputType = {
     id: number | null
     chapterId: number | null
     displayOrder: number | null
+    planId: number | null
   }
 
   export type LessonMinAggregateOutputType = {
@@ -11774,6 +11785,8 @@ export namespace Prisma {
     displayOrder: number | null
     isFreePreview: boolean | null
     accessType: $Enums.AccessType | null
+    status: $Enums.CourseStatus | null
+    planId: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11795,6 +11808,8 @@ export namespace Prisma {
     displayOrder: number | null
     isFreePreview: boolean | null
     accessType: $Enums.AccessType | null
+    status: $Enums.CourseStatus | null
+    planId: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11816,6 +11831,8 @@ export namespace Prisma {
     displayOrder: number
     isFreePreview: number
     accessType: number
+    status: number
+    planId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -11826,12 +11843,14 @@ export namespace Prisma {
     id?: true
     chapterId?: true
     displayOrder?: true
+    planId?: true
   }
 
   export type LessonSumAggregateInputType = {
     id?: true
     chapterId?: true
     displayOrder?: true
+    planId?: true
   }
 
   export type LessonMinAggregateInputType = {
@@ -11851,6 +11870,8 @@ export namespace Prisma {
     displayOrder?: true
     isFreePreview?: true
     accessType?: true
+    status?: true
+    planId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11872,6 +11893,8 @@ export namespace Prisma {
     displayOrder?: true
     isFreePreview?: true
     accessType?: true
+    status?: true
+    planId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11893,6 +11916,8 @@ export namespace Prisma {
     displayOrder?: true
     isFreePreview?: true
     accessType?: true
+    status?: true
+    planId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -12001,6 +12026,8 @@ export namespace Prisma {
     displayOrder: number
     isFreePreview: boolean
     accessType: $Enums.AccessType
+    status: $Enums.CourseStatus
+    planId: number | null
     createdAt: Date
     updatedAt: Date
     _count: LessonCountAggregateOutputType | null
@@ -12041,9 +12068,12 @@ export namespace Prisma {
     displayOrder?: boolean
     isFreePreview?: boolean
     accessType?: boolean
+    status?: boolean
+    planId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
+    plan?: boolean | Lesson$planArgs<ExtArgs>
   }, ExtArgs["result"]["lesson"]>
 
   export type LessonSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -12063,9 +12093,12 @@ export namespace Prisma {
     displayOrder?: boolean
     isFreePreview?: boolean
     accessType?: boolean
+    status?: boolean
+    planId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
+    plan?: boolean | Lesson$planArgs<ExtArgs>
   }, ExtArgs["result"]["lesson"]>
 
   export type LessonSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -12085,9 +12118,12 @@ export namespace Prisma {
     displayOrder?: boolean
     isFreePreview?: boolean
     accessType?: boolean
+    status?: boolean
+    planId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
+    plan?: boolean | Lesson$planArgs<ExtArgs>
   }, ExtArgs["result"]["lesson"]>
 
   export type LessonSelectScalar = {
@@ -12107,25 +12143,31 @@ export namespace Prisma {
     displayOrder?: boolean
     isFreePreview?: boolean
     accessType?: boolean
+    status?: boolean
+    planId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chapterId" | "title" | "description" | "type" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "thumbnailPublicId" | "noteUrl" | "notePublicId" | "noteFileType" | "content" | "displayOrder" | "isFreePreview" | "accessType" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
+  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chapterId" | "title" | "description" | "type" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "thumbnailPublicId" | "noteUrl" | "notePublicId" | "noteFileType" | "content" | "displayOrder" | "isFreePreview" | "accessType" | "status" | "planId" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
   export type LessonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
+    plan?: boolean | Lesson$planArgs<ExtArgs>
   }
   export type LessonIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
+    plan?: boolean | Lesson$planArgs<ExtArgs>
   }
   export type LessonIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
+    plan?: boolean | Lesson$planArgs<ExtArgs>
   }
 
   export type $LessonPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Lesson"
     objects: {
       chapter: Prisma.$ChapterPayload<ExtArgs>
+      plan: Prisma.$PlanPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -12144,6 +12186,8 @@ export namespace Prisma {
       displayOrder: number
       isFreePreview: boolean
       accessType: $Enums.AccessType
+      status: $Enums.CourseStatus
+      planId: number | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["lesson"]>
@@ -12541,6 +12585,7 @@ export namespace Prisma {
   export interface Prisma__LessonClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     chapter<T extends ChapterDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChapterDefaultArgs<ExtArgs>>): Prisma__ChapterClient<$Result.GetResult<Prisma.$ChapterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    plan<T extends Lesson$planArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$planArgs<ExtArgs>>): Prisma__PlanClient<$Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12586,6 +12631,8 @@ export namespace Prisma {
     readonly displayOrder: FieldRef<"Lesson", 'Int'>
     readonly isFreePreview: FieldRef<"Lesson", 'Boolean'>
     readonly accessType: FieldRef<"Lesson", 'AccessType'>
+    readonly status: FieldRef<"Lesson", 'CourseStatus'>
+    readonly planId: FieldRef<"Lesson", 'Int'>
     readonly createdAt: FieldRef<"Lesson", 'DateTime'>
     readonly updatedAt: FieldRef<"Lesson", 'DateTime'>
   }
@@ -12989,6 +13036,25 @@ export namespace Prisma {
   }
 
   /**
+   * Lesson.plan
+   */
+  export type Lesson$planArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Plan
+     */
+    select?: PlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Plan
+     */
+    omit?: PlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PlanInclude<ExtArgs> | null
+    where?: PlanWhereInput
+  }
+
+  /**
    * Lesson without action
    */
   export type LessonDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13251,6 +13317,7 @@ export namespace Prisma {
     updatedAt?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
     subscriptions?: boolean | Plan$subscriptionsArgs<ExtArgs>
+    lessons?: boolean | Plan$lessonsArgs<ExtArgs>
     _count?: boolean | PlanCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["plan"]>
 
@@ -13296,6 +13363,7 @@ export namespace Prisma {
   export type PlanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     subscriptions?: boolean | Plan$subscriptionsArgs<ExtArgs>
+    lessons?: boolean | Plan$lessonsArgs<ExtArgs>
     _count?: boolean | PlanCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PlanIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13310,6 +13378,7 @@ export namespace Prisma {
     objects: {
       course: Prisma.$CoursePayload<ExtArgs>
       subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
+      lessons: Prisma.$LessonPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -13717,6 +13786,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     course<T extends CourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourseDefaultArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     subscriptions<T extends Plan$subscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, Plan$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    lessons<T extends Plan$lessonsArgs<ExtArgs> = {}>(args?: Subset<T, Plan$lessonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14177,6 +14247,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SubscriptionScalarFieldEnum | SubscriptionScalarFieldEnum[]
+  }
+
+  /**
+   * Plan.lessons
+   */
+  export type Plan$lessonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lesson
+     */
+    select?: LessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Lesson
+     */
+    omit?: LessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonInclude<ExtArgs> | null
+    where?: LessonWhereInput
+    orderBy?: LessonOrderByWithRelationInput | LessonOrderByWithRelationInput[]
+    cursor?: LessonWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LessonScalarFieldEnum | LessonScalarFieldEnum[]
   }
 
   /**
@@ -15504,6 +15598,8 @@ export namespace Prisma {
     displayOrder: 'displayOrder',
     isFreePreview: 'isFreePreview',
     accessType: 'accessType',
+    status: 'status',
+    planId: 'planId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -16310,9 +16406,12 @@ export namespace Prisma {
     displayOrder?: IntFilter<"Lesson"> | number
     isFreePreview?: BoolFilter<"Lesson"> | boolean
     accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
+    status?: EnumCourseStatusFilter<"Lesson"> | $Enums.CourseStatus
+    planId?: IntNullableFilter<"Lesson"> | number | null
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
     chapter?: XOR<ChapterScalarRelationFilter, ChapterWhereInput>
+    plan?: XOR<PlanNullableScalarRelationFilter, PlanWhereInput> | null
   }
 
   export type LessonOrderByWithRelationInput = {
@@ -16332,9 +16431,12 @@ export namespace Prisma {
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
     accessType?: SortOrder
+    status?: SortOrder
+    planId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     chapter?: ChapterOrderByWithRelationInput
+    plan?: PlanOrderByWithRelationInput
   }
 
   export type LessonWhereUniqueInput = Prisma.AtLeast<{
@@ -16357,9 +16459,12 @@ export namespace Prisma {
     displayOrder?: IntFilter<"Lesson"> | number
     isFreePreview?: BoolFilter<"Lesson"> | boolean
     accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
+    status?: EnumCourseStatusFilter<"Lesson"> | $Enums.CourseStatus
+    planId?: IntNullableFilter<"Lesson"> | number | null
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
     chapter?: XOR<ChapterScalarRelationFilter, ChapterWhereInput>
+    plan?: XOR<PlanNullableScalarRelationFilter, PlanWhereInput> | null
   }, "id">
 
   export type LessonOrderByWithAggregationInput = {
@@ -16379,6 +16484,8 @@ export namespace Prisma {
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
     accessType?: SortOrder
+    status?: SortOrder
+    planId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: LessonCountOrderByAggregateInput
@@ -16408,6 +16515,8 @@ export namespace Prisma {
     displayOrder?: IntWithAggregatesFilter<"Lesson"> | number
     isFreePreview?: BoolWithAggregatesFilter<"Lesson"> | boolean
     accessType?: EnumAccessTypeWithAggregatesFilter<"Lesson"> | $Enums.AccessType
+    status?: EnumCourseStatusWithAggregatesFilter<"Lesson"> | $Enums.CourseStatus
+    planId?: IntNullableWithAggregatesFilter<"Lesson"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
   }
@@ -16427,6 +16536,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Plan"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     subscriptions?: SubscriptionListRelationFilter
+    lessons?: LessonListRelationFilter
   }
 
   export type PlanOrderByWithRelationInput = {
@@ -16441,6 +16551,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     course?: CourseOrderByWithRelationInput
     subscriptions?: SubscriptionOrderByRelationAggregateInput
+    lessons?: LessonOrderByRelationAggregateInput
   }
 
   export type PlanWhereUniqueInput = Prisma.AtLeast<{
@@ -16458,6 +16569,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Plan"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     subscriptions?: SubscriptionListRelationFilter
+    lessons?: LessonListRelationFilter
   }, "id">
 
   export type PlanOrderByWithAggregationInput = {
@@ -17218,9 +17330,11 @@ export namespace Prisma {
     displayOrder?: number
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
+    plan?: PlanCreateNestedOneWithoutLessonsInput
   }
 
   export type LessonUncheckedCreateInput = {
@@ -17240,6 +17354,8 @@ export namespace Prisma {
     displayOrder?: number
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    planId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17259,9 +17375,11 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
+    plan?: PlanUpdateOneWithoutLessonsNestedInput
   }
 
   export type LessonUncheckedUpdateInput = {
@@ -17281,6 +17399,8 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    planId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17302,6 +17422,8 @@ export namespace Prisma {
     displayOrder?: number
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    planId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17321,6 +17443,7 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17342,6 +17465,8 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    planId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17356,6 +17481,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutPlansInput
     subscriptions?: SubscriptionCreateNestedManyWithoutPlanInput
+    lessons?: LessonCreateNestedManyWithoutPlanInput
   }
 
   export type PlanUncheckedCreateInput = {
@@ -17369,6 +17495,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutPlanInput
+    lessons?: LessonUncheckedCreateNestedManyWithoutPlanInput
   }
 
   export type PlanUpdateInput = {
@@ -17381,6 +17508,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutPlansNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutPlanNestedInput
+    lessons?: LessonUpdateManyWithoutPlanNestedInput
   }
 
   export type PlanUncheckedUpdateInput = {
@@ -17394,6 +17522,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutPlanNestedInput
+    lessons?: LessonUncheckedUpdateManyWithoutPlanNestedInput
   }
 
   export type PlanCreateManyInput = {
@@ -18204,6 +18333,11 @@ export namespace Prisma {
     isNot?: ChapterWhereInput
   }
 
+  export type PlanNullableScalarRelationFilter = {
+    is?: PlanWhereInput | null
+    isNot?: PlanWhereInput | null
+  }
+
   export type LessonCountOrderByAggregateInput = {
     id?: SortOrder
     chapterId?: SortOrder
@@ -18221,6 +18355,8 @@ export namespace Prisma {
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
     accessType?: SortOrder
+    status?: SortOrder
+    planId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18229,6 +18365,7 @@ export namespace Prisma {
     id?: SortOrder
     chapterId?: SortOrder
     displayOrder?: SortOrder
+    planId?: SortOrder
   }
 
   export type LessonMaxOrderByAggregateInput = {
@@ -18248,6 +18385,8 @@ export namespace Prisma {
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
     accessType?: SortOrder
+    status?: SortOrder
+    planId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18269,6 +18408,8 @@ export namespace Prisma {
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
     accessType?: SortOrder
+    status?: SortOrder
+    planId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18277,6 +18418,7 @@ export namespace Prisma {
     id?: SortOrder
     chapterId?: SortOrder
     displayOrder?: SortOrder
+    planId?: SortOrder
   }
 
   export type EnumLessonTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -19174,6 +19316,12 @@ export namespace Prisma {
     connect?: ChapterWhereUniqueInput
   }
 
+  export type PlanCreateNestedOneWithoutLessonsInput = {
+    create?: XOR<PlanCreateWithoutLessonsInput, PlanUncheckedCreateWithoutLessonsInput>
+    connectOrCreate?: PlanCreateOrConnectWithoutLessonsInput
+    connect?: PlanWhereUniqueInput
+  }
+
   export type EnumLessonTypeFieldUpdateOperationsInput = {
     set?: $Enums.LessonType
   }
@@ -19190,6 +19338,16 @@ export namespace Prisma {
     update?: XOR<XOR<ChapterUpdateToOneWithWhereWithoutLessonsInput, ChapterUpdateWithoutLessonsInput>, ChapterUncheckedUpdateWithoutLessonsInput>
   }
 
+  export type PlanUpdateOneWithoutLessonsNestedInput = {
+    create?: XOR<PlanCreateWithoutLessonsInput, PlanUncheckedCreateWithoutLessonsInput>
+    connectOrCreate?: PlanCreateOrConnectWithoutLessonsInput
+    upsert?: PlanUpsertWithoutLessonsInput
+    disconnect?: PlanWhereInput | boolean
+    delete?: PlanWhereInput | boolean
+    connect?: PlanWhereUniqueInput
+    update?: XOR<XOR<PlanUpdateToOneWithWhereWithoutLessonsInput, PlanUpdateWithoutLessonsInput>, PlanUncheckedUpdateWithoutLessonsInput>
+  }
+
   export type CourseCreateNestedOneWithoutPlansInput = {
     create?: XOR<CourseCreateWithoutPlansInput, CourseUncheckedCreateWithoutPlansInput>
     connectOrCreate?: CourseCreateOrConnectWithoutPlansInput
@@ -19203,11 +19361,25 @@ export namespace Prisma {
     connect?: SubscriptionWhereUniqueInput | SubscriptionWhereUniqueInput[]
   }
 
+  export type LessonCreateNestedManyWithoutPlanInput = {
+    create?: XOR<LessonCreateWithoutPlanInput, LessonUncheckedCreateWithoutPlanInput> | LessonCreateWithoutPlanInput[] | LessonUncheckedCreateWithoutPlanInput[]
+    connectOrCreate?: LessonCreateOrConnectWithoutPlanInput | LessonCreateOrConnectWithoutPlanInput[]
+    createMany?: LessonCreateManyPlanInputEnvelope
+    connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
+  }
+
   export type SubscriptionUncheckedCreateNestedManyWithoutPlanInput = {
     create?: XOR<SubscriptionCreateWithoutPlanInput, SubscriptionUncheckedCreateWithoutPlanInput> | SubscriptionCreateWithoutPlanInput[] | SubscriptionUncheckedCreateWithoutPlanInput[]
     connectOrCreate?: SubscriptionCreateOrConnectWithoutPlanInput | SubscriptionCreateOrConnectWithoutPlanInput[]
     createMany?: SubscriptionCreateManyPlanInputEnvelope
     connect?: SubscriptionWhereUniqueInput | SubscriptionWhereUniqueInput[]
+  }
+
+  export type LessonUncheckedCreateNestedManyWithoutPlanInput = {
+    create?: XOR<LessonCreateWithoutPlanInput, LessonUncheckedCreateWithoutPlanInput> | LessonCreateWithoutPlanInput[] | LessonUncheckedCreateWithoutPlanInput[]
+    connectOrCreate?: LessonCreateOrConnectWithoutPlanInput | LessonCreateOrConnectWithoutPlanInput[]
+    createMany?: LessonCreateManyPlanInputEnvelope
+    connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
   }
 
   export type FloatFieldUpdateOperationsInput = {
@@ -19240,6 +19412,20 @@ export namespace Prisma {
     deleteMany?: SubscriptionScalarWhereInput | SubscriptionScalarWhereInput[]
   }
 
+  export type LessonUpdateManyWithoutPlanNestedInput = {
+    create?: XOR<LessonCreateWithoutPlanInput, LessonUncheckedCreateWithoutPlanInput> | LessonCreateWithoutPlanInput[] | LessonUncheckedCreateWithoutPlanInput[]
+    connectOrCreate?: LessonCreateOrConnectWithoutPlanInput | LessonCreateOrConnectWithoutPlanInput[]
+    upsert?: LessonUpsertWithWhereUniqueWithoutPlanInput | LessonUpsertWithWhereUniqueWithoutPlanInput[]
+    createMany?: LessonCreateManyPlanInputEnvelope
+    set?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
+    disconnect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
+    delete?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
+    connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
+    update?: LessonUpdateWithWhereUniqueWithoutPlanInput | LessonUpdateWithWhereUniqueWithoutPlanInput[]
+    updateMany?: LessonUpdateManyWithWhereWithoutPlanInput | LessonUpdateManyWithWhereWithoutPlanInput[]
+    deleteMany?: LessonScalarWhereInput | LessonScalarWhereInput[]
+  }
+
   export type SubscriptionUncheckedUpdateManyWithoutPlanNestedInput = {
     create?: XOR<SubscriptionCreateWithoutPlanInput, SubscriptionUncheckedCreateWithoutPlanInput> | SubscriptionCreateWithoutPlanInput[] | SubscriptionUncheckedCreateWithoutPlanInput[]
     connectOrCreate?: SubscriptionCreateOrConnectWithoutPlanInput | SubscriptionCreateOrConnectWithoutPlanInput[]
@@ -19252,6 +19438,20 @@ export namespace Prisma {
     update?: SubscriptionUpdateWithWhereUniqueWithoutPlanInput | SubscriptionUpdateWithWhereUniqueWithoutPlanInput[]
     updateMany?: SubscriptionUpdateManyWithWhereWithoutPlanInput | SubscriptionUpdateManyWithWhereWithoutPlanInput[]
     deleteMany?: SubscriptionScalarWhereInput | SubscriptionScalarWhereInput[]
+  }
+
+  export type LessonUncheckedUpdateManyWithoutPlanNestedInput = {
+    create?: XOR<LessonCreateWithoutPlanInput, LessonUncheckedCreateWithoutPlanInput> | LessonCreateWithoutPlanInput[] | LessonUncheckedCreateWithoutPlanInput[]
+    connectOrCreate?: LessonCreateOrConnectWithoutPlanInput | LessonCreateOrConnectWithoutPlanInput[]
+    upsert?: LessonUpsertWithWhereUniqueWithoutPlanInput | LessonUpsertWithWhereUniqueWithoutPlanInput[]
+    createMany?: LessonCreateManyPlanInputEnvelope
+    set?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
+    disconnect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
+    delete?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
+    connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
+    update?: LessonUpdateWithWhereUniqueWithoutPlanInput | LessonUpdateWithWhereUniqueWithoutPlanInput[]
+    updateMany?: LessonUpdateManyWithWhereWithoutPlanInput | LessonUpdateManyWithWhereWithoutPlanInput[]
+    deleteMany?: LessonScalarWhereInput | LessonScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSubscriptionsInput = {
@@ -20313,6 +20513,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subscriptions?: SubscriptionCreateNestedManyWithoutPlanInput
+    lessons?: LessonCreateNestedManyWithoutPlanInput
   }
 
   export type PlanUncheckedCreateWithoutCourseInput = {
@@ -20325,6 +20526,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutPlanInput
+    lessons?: LessonUncheckedCreateNestedManyWithoutPlanInput
   }
 
   export type PlanCreateOrConnectWithoutCourseInput = {
@@ -20850,8 +21052,10 @@ export namespace Prisma {
     displayOrder?: number
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
+    plan?: PlanCreateNestedOneWithoutLessonsInput
   }
 
   export type LessonUncheckedCreateWithoutChapterInput = {
@@ -20870,6 +21074,8 @@ export namespace Prisma {
     displayOrder?: number
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    planId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -21006,6 +21212,8 @@ export namespace Prisma {
     displayOrder?: IntFilter<"Lesson"> | number
     isFreePreview?: BoolFilter<"Lesson"> | boolean
     accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
+    status?: EnumCourseStatusFilter<"Lesson"> | $Enums.CourseStatus
+    planId?: IntNullableFilter<"Lesson"> | number | null
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
   }
@@ -21032,6 +21240,36 @@ export namespace Prisma {
   export type ChapterCreateOrConnectWithoutLessonsInput = {
     where: ChapterWhereUniqueInput
     create: XOR<ChapterCreateWithoutLessonsInput, ChapterUncheckedCreateWithoutLessonsInput>
+  }
+
+  export type PlanCreateWithoutLessonsInput = {
+    title: string
+    description?: string | null
+    price: number
+    durationDays: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    course: CourseCreateNestedOneWithoutPlansInput
+    subscriptions?: SubscriptionCreateNestedManyWithoutPlanInput
+  }
+
+  export type PlanUncheckedCreateWithoutLessonsInput = {
+    id?: number
+    courseId: number
+    title: string
+    description?: string | null
+    price: number
+    durationDays: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutPlanInput
+  }
+
+  export type PlanCreateOrConnectWithoutLessonsInput = {
+    where: PlanWhereUniqueInput
+    create: XOR<PlanCreateWithoutLessonsInput, PlanUncheckedCreateWithoutLessonsInput>
   }
 
   export type ChapterUpsertWithoutLessonsInput = {
@@ -21062,6 +21300,42 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlanUpsertWithoutLessonsInput = {
+    update: XOR<PlanUpdateWithoutLessonsInput, PlanUncheckedUpdateWithoutLessonsInput>
+    create: XOR<PlanCreateWithoutLessonsInput, PlanUncheckedCreateWithoutLessonsInput>
+    where?: PlanWhereInput
+  }
+
+  export type PlanUpdateToOneWithWhereWithoutLessonsInput = {
+    where?: PlanWhereInput
+    data: XOR<PlanUpdateWithoutLessonsInput, PlanUncheckedUpdateWithoutLessonsInput>
+  }
+
+  export type PlanUpdateWithoutLessonsInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    durationDays?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    course?: CourseUpdateOneRequiredWithoutPlansNestedInput
+    subscriptions?: SubscriptionUpdateManyWithoutPlanNestedInput
+  }
+
+  export type PlanUncheckedUpdateWithoutLessonsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    durationDays?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subscriptions?: SubscriptionUncheckedUpdateManyWithoutPlanNestedInput
   }
 
   export type CourseCreateWithoutPlansInput = {
@@ -21137,6 +21411,59 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type LessonCreateWithoutPlanInput = {
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    chapter: ChapterCreateNestedOneWithoutLessonsInput
+  }
+
+  export type LessonUncheckedCreateWithoutPlanInput = {
+    id?: number
+    chapterId: number
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LessonCreateOrConnectWithoutPlanInput = {
+    where: LessonWhereUniqueInput
+    create: XOR<LessonCreateWithoutPlanInput, LessonUncheckedCreateWithoutPlanInput>
+  }
+
+  export type LessonCreateManyPlanInputEnvelope = {
+    data: LessonCreateManyPlanInput | LessonCreateManyPlanInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CourseUpsertWithoutPlansInput = {
     update: XOR<CourseUpdateWithoutPlansInput, CourseUncheckedUpdateWithoutPlansInput>
     create: XOR<CourseCreateWithoutPlansInput, CourseUncheckedCreateWithoutPlansInput>
@@ -21201,6 +21528,22 @@ export namespace Prisma {
   export type SubscriptionUpdateManyWithWhereWithoutPlanInput = {
     where: SubscriptionScalarWhereInput
     data: XOR<SubscriptionUpdateManyMutationInput, SubscriptionUncheckedUpdateManyWithoutPlanInput>
+  }
+
+  export type LessonUpsertWithWhereUniqueWithoutPlanInput = {
+    where: LessonWhereUniqueInput
+    update: XOR<LessonUpdateWithoutPlanInput, LessonUncheckedUpdateWithoutPlanInput>
+    create: XOR<LessonCreateWithoutPlanInput, LessonUncheckedCreateWithoutPlanInput>
+  }
+
+  export type LessonUpdateWithWhereUniqueWithoutPlanInput = {
+    where: LessonWhereUniqueInput
+    data: XOR<LessonUpdateWithoutPlanInput, LessonUncheckedUpdateWithoutPlanInput>
+  }
+
+  export type LessonUpdateManyWithWhereWithoutPlanInput = {
+    where: LessonScalarWhereInput
+    data: XOR<LessonUpdateManyMutationInput, LessonUncheckedUpdateManyWithoutPlanInput>
   }
 
   export type UserCreateWithoutSubscriptionsInput = {
@@ -21292,6 +21635,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutPlansInput
+    lessons?: LessonCreateNestedManyWithoutPlanInput
   }
 
   export type PlanUncheckedCreateWithoutSubscriptionsInput = {
@@ -21304,6 +21648,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    lessons?: LessonUncheckedCreateNestedManyWithoutPlanInput
   }
 
   export type PlanCreateOrConnectWithoutSubscriptionsInput = {
@@ -21423,6 +21768,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutPlansNestedInput
+    lessons?: LessonUpdateManyWithoutPlanNestedInput
   }
 
   export type PlanUncheckedUpdateWithoutSubscriptionsInput = {
@@ -21435,6 +21781,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lessons?: LessonUncheckedUpdateManyWithoutPlanNestedInput
   }
 
   export type SessionCreateManyUserInput = {
@@ -21850,6 +22197,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subscriptions?: SubscriptionUpdateManyWithoutPlanNestedInput
+    lessons?: LessonUpdateManyWithoutPlanNestedInput
   }
 
   export type PlanUncheckedUpdateWithoutCourseInput = {
@@ -21862,6 +22210,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutPlanNestedInput
+    lessons?: LessonUncheckedUpdateManyWithoutPlanNestedInput
   }
 
   export type PlanUncheckedUpdateManyWithoutCourseInput = {
@@ -22016,6 +22365,8 @@ export namespace Prisma {
     displayOrder?: number
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    planId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22035,8 +22386,10 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    plan?: PlanUpdateOneWithoutLessonsNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutChapterInput = {
@@ -22055,6 +22408,8 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    planId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22075,6 +22430,8 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    planId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22087,6 +22444,28 @@ export namespace Prisma {
     endDate: Date | string
     isActive?: boolean
     createdAt?: Date | string
+  }
+
+  export type LessonCreateManyPlanInput = {
+    id?: number
+    chapterId: number
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type SubscriptionUpdateWithoutPlanInput = {
@@ -22116,6 +22495,71 @@ export namespace Prisma {
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonUpdateWithoutPlanInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
+  }
+
+  export type LessonUncheckedUpdateWithoutPlanInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    chapterId?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonUncheckedUpdateManyWithoutPlanInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    chapterId?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

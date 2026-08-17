@@ -7,10 +7,9 @@ const prisma = new PrismaClient({ adapter });
 
 const VALID_LESSON_TYPES = ['video', 'text', 'quiz'];
 const VALID_ACCESS_TYPES = ['free', 'premium'];
+const VALID_STATUSES = ['draft', 'published', 'archived'];
 
-// Explicit field list, reused across getLesson / getLessonsByChapter, so
-// the response shape is guaranteed and self-documenting - always includes
-// video (url + publicId), notes (url + publicId + fileType), and thumbnail.
+
 const LESSON_SELECT = {
   id: true,
   chapterId: true,
@@ -28,9 +27,39 @@ const LESSON_SELECT = {
   displayOrder: true,
   isFreePreview: true,
   accessType: true,
+  status: true,
+  planId: true,
+  plan: { select: { id: true, title: true, price: true, durationDays: true, isActive: true } },
   createdAt: true,
   updatedAt: true,
 };
+
+
+async function validatePlanForLesson(planId, effectiveAccessType, chapterId) {
+  if (effectiveAccessType !== 'premium') {
+    return 'planId can only be set when accessType is premium';
+  }
+
+  const plan = await prisma.plan.findUnique({
+    where: { id: planId },
+    select: { id: true, courseId: true },
+  });
+  if (!plan) return `Plan ${planId} not found`;
+
+  const chapter = await prisma.chapter.findUnique({
+    where: { id: chapterId },
+    select: { courseId: true, courseType: { select: { courseId: true } } },
+  });
+
+  // A chapter hangs off either the course or a course type — resolve either way.
+  const courseId = chapter?.courseId ?? chapter?.courseType?.courseId ?? null;
+  if (courseId === null) return 'Cannot resolve the course for this lesson';
+  if (plan.courseId !== courseId) {
+    return `Plan ${planId} belongs to course ${plan.courseId}, but this lesson is in course ${courseId}`;
+  }
+
+  return null;
+}
 
 // POST /api/chapters/:chapterId/lessons
 async function createLesson(req, res) {
@@ -40,7 +69,7 @@ async function createLesson(req, res) {
       title, description, type, videoUrl, videoPublicId,
       thumbnailUrl, thumbnailPublicId,
       noteUrl, notePublicId, noteFileType,
-      content, displayOrder, isFreePreview, accessType,
+      content, displayOrder, isFreePreview, accessType, status, planId,
     } = req.body;
 
     if (isNaN(chapterId)) {
@@ -68,6 +97,20 @@ async function createLesson(req, res) {
       return res.status(400).json({ error: { message: "accessType must be 'free' or 'premium'" } });
     }
 
+    if (status !== undefined && !VALID_STATUSES.includes(status)) {
+      return res.status(400).json({ error: { message: `status must be one of: ${VALID_STATUSES.join(', ')}` } });
+    }
+
+    if (planId !== undefined && planId !== null) {
+      if (!Number.isInteger(Number(planId))) {
+        return res.status(400).json({ error: { message: 'planId must be an integer' } });
+      }
+      const planError = await validatePlanForLesson(Number(planId), accessType ?? 'free', chapterId);
+      if (planError) {
+        return res.status(400).json({ error: { message: planError } });
+      }
+    }
+
     const lesson = await prisma.lesson.create({
       data: {
         chapterId,
@@ -85,6 +128,8 @@ async function createLesson(req, res) {
         displayOrder: displayOrder !== undefined ? Number(displayOrder) : 0,
         isFreePreview: Boolean(isFreePreview) || false,
         accessType: accessType ?? 'free',
+        status: status ?? 'draft',
+        planId: planId !== undefined && planId !== null ? Number(planId) : null,
       },
       select: LESSON_SELECT,
     });
@@ -96,12 +141,8 @@ async function createLesson(req, res) {
   }
 }
 
-// GET /api/lessons/:id
-// Returns everything for a single lesson by its own id - video (url +
-// publicId), notes (url + publicId + fileType), thumbnail, quiz content,
-// and access settings, all in one response. Optionally includes the
-// parent chapter (id, title, courseId/courseTypeId) via ?includeChapter=true,
-// useful for breadcrumbs on a lesson detail screen.
+
+
 async function getLesson(req, res) {
   try {
     const lessonId = Number(req.params.id);
@@ -139,9 +180,9 @@ async function getLesson(req, res) {
   }
 }
 
-// GET /api/chapters/:chapterId/lessons
-// Lists every lesson under a chapter, ordered for display, each one
-// carrying its own video/note/thumbnail fields via LESSON_SELECT.
+
+
+
 async function getLessonsByChapter(req, res) {
   try {
     const chapterId = Number(req.params.chapterId);
@@ -184,7 +225,7 @@ async function updateLesson(req, res) {
       title, description, type, videoUrl, videoPublicId,
       thumbnailUrl, thumbnailPublicId,
       noteUrl, notePublicId, noteFileType,
-      content, displayOrder, isFreePreview, accessType,
+      content, displayOrder, isFreePreview, accessType, status, planId,
     } = req.body;
 
     const data = {};
@@ -215,6 +256,35 @@ async function updateLesson(req, res) {
         return res.status(400).json({ error: { message: "accessType must be 'free' or 'premium'" } });
       }
       data.accessType = accessType;
+    }
+
+    if (status !== undefined) {
+      if (!VALID_STATUSES.includes(status)) {
+        return res.status(400).json({ error: { message: `status must be one of: ${VALID_STATUSES.join(', ')}` } });
+      }
+      data.status = status;
+    }
+
+    // planId and accessType interact, so resolve them together against whatever
+    // the lesson will look like *after* this update, not what it looks like now.
+    const effectiveAccessType = accessType !== undefined ? accessType : existing.accessType;
+
+    if (planId !== undefined) {
+      if (planId === null) {
+        data.planId = null;
+      } else {
+        if (!Number.isInteger(Number(planId))) {
+          return res.status(400).json({ error: { message: 'planId must be an integer' } });
+        }
+        const planError = await validatePlanForLesson(Number(planId), effectiveAccessType, existing.chapterId);
+        if (planError) {
+          return res.status(400).json({ error: { message: planError } });
+        }
+        data.planId = Number(planId);
+      }
+    } else if (effectiveAccessType !== 'premium' && existing.planId !== null) {
+      // Demoted to free while still carrying a plan — drop the now-meaningless link.
+      data.planId = null;
     }
 
     // Cleanup old Cloudinary files when they're being replaced or removed
@@ -312,10 +382,68 @@ async function deleteLesson(req, res) {
   }
 }
 
+
+
+async function reorderLessons(req, res) {
+  try {
+    const chapterId = Number(req.params.chapterId);
+    if (isNaN(chapterId)) {
+      return res.status(400).json({ error: { message: 'Invalid chapter id' } });
+    }
+
+    const { lessonIds } = req.body;
+    if (!Array.isArray(lessonIds) || lessonIds.length === 0) {
+      return res.status(400).json({ error: { message: 'lessonIds must be a non-empty array' } });
+    }
+
+    const ids = lessonIds.map(Number);
+    if (ids.some((id) => !Number.isInteger(id))) {
+      return res.status(400).json({ error: { message: 'lessonIds must contain integers' } });
+    }
+
+    if (new Set(ids).size !== ids.length) {
+      return res.status(400).json({ error: { message: 'lessonIds contains duplicates' } });
+    }
+
+
+    
+    const owned = await prisma.lesson.findMany({
+      where: { chapterId },
+      select: { id: true },
+    });
+    const ownedIds = new Set(owned.map((l) => l.id));
+
+    const strays = ids.filter((id) => !ownedIds.has(id));
+    if (strays.length > 0) {
+      return res.status(400).json({
+        error: { message: `These lessons do not belong to chapter ${chapterId}: ${strays.join(', ')}` },
+      });
+    }
+
+    await prisma.$transaction(
+      ids.map((id, index) =>
+        prisma.lesson.update({ where: { id }, data: { displayOrder: index } })
+      )
+    );
+
+    const lessons = await prisma.lesson.findMany({
+      where: { chapterId },
+      orderBy: [{ displayOrder: 'asc' }, { createdAt: 'asc' }],
+      select: LESSON_SELECT,
+    });
+
+    return res.status(200).json({ lessons });
+  } catch (error) {
+    console.error('Reorder lessons error:', error);
+    return res.status(500).json({ error: { message: 'Something went wrong while reordering lessons' } });
+  }
+}
+
 module.exports = {
   createLesson,
   getLesson,
   getLessonsByChapter,
   updateLesson,
   deleteLesson,
+  reorderLessons,
 };
