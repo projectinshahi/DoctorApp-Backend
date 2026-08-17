@@ -6,6 +6,7 @@ const {
   createCourse,
   getCourses,
   getCourseDetails,
+  getPublicCourseTypes,
   addCourseType,
   updateCourse,
   deleteCourse,
@@ -18,6 +19,8 @@ const authenticateAdmin = require('../middleware/authenticateAdmin');
 router.post('/', authenticateAdmin, createCourse);
 router.get('/', getCourses);
 router.get('/:id', authenticateAdmin, getCourseDetails);
+
+router.get('/:id/course-types', getPublicCourseTypes);
 
 router.post('/:id/course-types', authenticateAdmin, addCourseType);
 router.put('/:courseId/course-types/:courseTypeId', authenticateAdmin, updateCourseType);

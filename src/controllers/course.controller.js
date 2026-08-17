@@ -604,4 +604,52 @@ async function deleteCourseType(req, res) {
 
 
 
-module.exports = { createCourse, getCourses, getCourseDetails, addCourseType , updateCourse, deleteCourse, updateCourseType, deleteCourseType,};
+// GET /api/courses/:id/course-types  (student-facing: pick your exam type)
+// Published types only, no chapters/lessons — those come from
+// /api/users/me/selection/content once the student saves the pick.
+async function getPublicCourseTypes(req, res) {
+  try {
+    const courseId = Number(req.params.id);
+
+    if (!Number.isInteger(courseId)) {
+      return res.status(400).json({ error: { message: 'Invalid course id' } });
+    }
+
+    const course = await prisma.course.findUnique({
+      where: { id: courseId },
+      select: { id: true, title: true },
+    });
+
+    if (!course) {
+      return res.status(404).json({ error: { message: 'Course not found' } });
+    }
+
+    const courseTypes = await prisma.courseType.findMany({
+      where: { courseId, status: 'published' },
+      orderBy: { displayOrder: 'asc' },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        accessType: true,
+        displayOrder: true,
+        _count: { select: { chapters: true } },
+      },
+    });
+
+    return res.status(200).json({
+      course,
+      courseTypes: courseTypes.map(({ _count, ...ct }) => ({
+        ...ct,
+        chapterCount: _count.chapters,
+      })),
+    });
+  } catch (error) {
+    console.error('Get public course types error:', error);
+    return res.status(500).json({
+      error: { message: 'Something went wrong while fetching course types' },
+    });
+  }
+}
+
+module.exports = { createCourse, getCourses, getCourseDetails, getPublicCourseTypes, addCourseType , updateCourse, deleteCourse, updateCourseType, deleteCourseType,};

@@ -1,71 +1,103 @@
 // backend/src/controllers/selected-course.controller.js
 const { PrismaClient } = require('../generated/prisma');
+const { PrismaPg } = require('@prisma/adapter-pg');
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
 
-// GET /api/profile/selected-course
-// Returns the course + exam type the logged-in user picked (User.selectedCourseId /
-// User.selectedCourseTypeId), along with that exam type's chapters -> lessons.
-async function getSelectedCourseDetails(req, res) {
+// GET /api/users/me/selection/content
+// Full tree for the student's selected exam: courseType -> chapters -> lessons
+// (video, notes, thumbnail). Locked lessons come back with the media stripped.
+async function getSelectedCourseContent(req, res) {
   try {
+    const userId = req.user.userId;
+
     const user = await prisma.user.findUnique({
-      where: { id: req.user.id },
-      select: { selectedCourseId: true, selectedCourseTypeId: true },
-    });
-
-    if (!user || !user.selectedCourseId) {
-      // Not an error — the user just hasn't picked a course yet.
-      return res.json({ course: null, courseType: null });
-    }
-
-    const course = await prisma.course.findUnique({
-      where: { id: user.selectedCourseId },
+      where: { id: userId },
       select: {
-        id: true,
-        title: true,
-        thumbnail: true,
-        accessType: true,
-        status: true,
+        selectedCourseId: true,
+        selectedCourseTypeId: true,
+        selectedCourse: {
+          select: { id: true, title: true, thumbnail: true, accessType: true },
+        },
       },
     });
 
-    let courseType = null;
-    if (user.selectedCourseTypeId) {
-      courseType = await prisma.courseType.findUnique({
-        where: { id: user.selectedCourseTypeId },
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          accessType: true,
-          status: true,
-          chapters: {
-            orderBy: { displayOrder: 'asc' },
-            select: {
-              id: true,
-              title: true,
-              displayOrder: true,
-              lessons: {
-                orderBy: { displayOrder: 'asc' },
-                select: {
-                  id: true,
-                  title: true,
-                  type: true,
-                  isFreePreview: true,
-                  displayOrder: true,
-                },
-              },
-            },
-          },
-        },
-      });
+    if (!user?.selectedCourseId) {
+      return res.status(200).json({ course: null, courseType: null, chapters: [] });
     }
 
-    return res.json({ course, courseType });
+    const activeSub =
+      user.selectedCourse.accessType !== 'premium' ||
+      (await prisma.subscription.findFirst({
+        where: {
+          userId,
+          courseId: user.selectedCourseId,
+          isActive: true,
+          endDate: { gte: new Date() },
+        },
+        select: { id: true },
+      }));
+
+    const hasPaid = !!activeSub;
+
+    const courseType = user.selectedCourseTypeId
+      ? await prisma.courseType.findUnique({
+          where: { id: user.selectedCourseTypeId },
+          select: { id: true, title: true, description: true, accessType: true },
+        })
+      : null;
+
+    // Chapters hang off either the course type (exam) or the course itself.
+    const chapters = await prisma.chapter.findMany({
+      where: user.selectedCourseTypeId
+        ? { courseTypeId: user.selectedCourseTypeId }
+        : { courseId: user.selectedCourseId },
+      orderBy: { displayOrder: 'asc' },
+      select: {
+        id: true,
+        title: true,
+        displayOrder: true,
+        lessons: {
+          orderBy: { displayOrder: 'asc' },
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            type: true,
+            content: true,
+            videoUrl: true,
+            thumbnailUrl: true,
+            noteUrl: true,
+            noteFileType: true,
+            displayOrder: true,
+            isFreePreview: true,
+            accessType: true,
+          },
+        },
+      },
+    });
+
+    const shaped = chapters.map((ch) => ({
+      ...ch,
+      lessons: ch.lessons.map((l) => {
+        const locked = !hasPaid && l.accessType === 'premium' && !l.isFreePreview;
+        return locked
+          ? { ...l, videoUrl: null, noteUrl: null, content: null, locked: true }
+          : { ...l, locked: false };
+      }),
+    }));
+
+    return res.status(200).json({
+      course: user.selectedCourse,
+      courseType,
+      hasPaid,
+      chapters: shaped,
+    });
   } catch (err) {
-    console.error('getSelectedCourseDetails error:', err);
-    return res.status(500).json({ message: 'Failed to load selected course' });
+    console.error('getSelectedCourseContent error:', err);
+    return res.status(500).json({ error: { message: 'Failed to load selected course content' } });
   }
 }
 
-module.exports = { getSelectedCourseDetails };
+module.exports = { getSelectedCourseContent };
