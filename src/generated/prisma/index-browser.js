@@ -149,6 +149,8 @@ exports.Prisma.AdminScalarFieldEnum = {
 exports.Prisma.SubjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  isActive: 'isActive',
+  displayOrder: 'displayOrder',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -157,6 +159,8 @@ exports.Prisma.TopicScalarFieldEnum = {
   id: 'id',
   name: 'name',
   subjectId: 'subjectId',
+  isActive: 'isActive',
+  displayOrder: 'displayOrder',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -225,9 +229,14 @@ exports.Prisma.LessonScalarFieldEnum = {
   isFreePreview: 'isFreePreview',
   accessType: 'accessType',
   status: 'status',
-  planId: 'planId',
+  quizId: 'quizId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.LessonPlanScalarFieldEnum = {
+  lessonId: 'lessonId',
+  planId: 'planId'
 };
 
 exports.Prisma.PlanScalarFieldEnum = {
@@ -251,6 +260,52 @@ exports.Prisma.SubscriptionScalarFieldEnum = {
   endDate: 'endDate',
   isActive: 'isActive',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.QuestionScalarFieldEnum = {
+  id: 'id',
+  subjectId: 'subjectId',
+  topicId: 'topicId',
+  questionText: 'questionText',
+  questionImageUrl: 'questionImageUrl',
+  difficulty: 'difficulty',
+  marksCorrect: 'marksCorrect',
+  marksIncorrect: 'marksIncorrect',
+  explanation: 'explanation',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.QuestionOptionScalarFieldEnum = {
+  id: 'id',
+  questionId: 'questionId',
+  optionText: 'optionText',
+  optionImageUrl: 'optionImageUrl',
+  isCorrect: 'isCorrect',
+  displayOrder: 'displayOrder'
+};
+
+exports.Prisma.QuizScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  subjectId: 'subjectId',
+  topicId: 'topicId',
+  examTag: 'examTag',
+  questionCount: 'questionCount',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TagScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
+exports.Prisma.QuestionTagScalarFieldEnum = {
+  questionId: 'questionId',
+  tagId: 'tagId'
 };
 
 exports.Prisma.SortOrder = {
@@ -284,6 +339,17 @@ exports.LessonType = exports.$Enums.LessonType = {
   quiz: 'quiz'
 };
 
+exports.Difficulty = exports.$Enums.Difficulty = {
+  easy: 'easy',
+  medium: 'medium',
+  hard: 'hard'
+};
+
+exports.QuestionStatus = exports.$Enums.QuestionStatus = {
+  active: 'active',
+  inactive: 'inactive'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Admin: 'Admin',
@@ -294,8 +360,14 @@ exports.Prisma.ModelName = {
   CourseType: 'CourseType',
   Chapter: 'Chapter',
   Lesson: 'Lesson',
+  LessonPlan: 'LessonPlan',
   Plan: 'Plan',
-  Subscription: 'Subscription'
+  Subscription: 'Subscription',
+  Question: 'Question',
+  QuestionOption: 'QuestionOption',
+  Quiz: 'Quiz',
+  Tag: 'Tag',
+  QuestionTag: 'QuestionTag'
 };
 
 /**

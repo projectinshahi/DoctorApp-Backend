@@ -51,6 +51,72 @@ async function createChapter(req, res) {
   }
 }
 
+// GET /api/chapters?courseId=&courseTypeId=&includeLessons=true
+// Every chapter in the system, for the admin. The course-type-scoped list
+// below can't see chapters attached straight to a course (Chapter.courseId),
+// so this is the only view that shows all of them.
+async function getAllChapters(req, res) {
+  try {
+    const where = {};
+
+    if (req.query.courseId !== undefined) {
+      const courseId = Number(req.query.courseId);
+      if (!Number.isInteger(courseId)) {
+        return res.status(400).json({ error: { message: 'courseId must be an integer' } });
+      }
+      where.courseId = courseId;
+    }
+
+    if (req.query.courseTypeId !== undefined) {
+      const courseTypeId = Number(req.query.courseTypeId);
+      if (!Number.isInteger(courseTypeId)) {
+        return res.status(400).json({ error: { message: 'courseTypeId must be an integer' } });
+      }
+      where.courseTypeId = courseTypeId;
+    }
+
+    // Lessons are opt-in: a full tree is heavy once the syllabus grows, and a
+    // list screen only needs the count.
+    const includeLessons = req.query.includeLessons === 'true';
+
+    const chapters = await prisma.chapter.findMany({
+      where,
+      orderBy: [{ courseTypeId: 'asc' }, { courseId: 'asc' }, { displayOrder: 'asc' }],
+      select: {
+        id: true,
+        title: true,
+        displayOrder: true,
+        courseId: true,
+        courseTypeId: true,
+        course: { select: { id: true, title: true } },
+        courseType: { select: { id: true, title: true, courseId: true, course: { select: { id: true, title: true } } } },
+        createdAt: true,
+        updatedAt: true,
+        ...(includeLessons
+          ? { lessons: { select: { id: true, title: true, type: true, status: true, displayOrder: true }, orderBy: { displayOrder: 'asc' } } }
+          : { _count: { select: { lessons: true } } }),
+      },
+    });
+
+    // Flatten "which course does this belong to" so the client doesn't have to
+    // care whether the chapter hangs off a course or a course type.
+    const shaped = chapters.map((chapter) => {
+      const { _count, courseType, course, ...rest } = chapter;
+      return {
+        ...rest,
+        course: course ?? courseType?.course ?? null,
+        courseType: courseType ? { id: courseType.id, title: courseType.title } : null,
+        lessonCount: _count ? _count.lessons : (chapter.lessons ? chapter.lessons.length : 0),
+      };
+    });
+
+    return res.status(200).json({ chapters: shaped, total: shaped.length });
+  } catch (error) {
+    console.error('Get all chapters error:', error);
+    return res.status(500).json({ error: { message: 'Something went wrong while fetching chapters' } });
+  }
+}
+
 // GET /api/course-types/:courseTypeId/chapters
 async function getChapters(req, res) {
   try {
@@ -159,4 +225,4 @@ async function deleteChapter(req, res) {
   }
 }
 
-module.exports = { createChapter, getChapters, getChapterById, updateChapter, deleteChapter };
+module.exports = { createChapter, getAllChapters, getChapters, getChapterById, updateChapter, deleteChapter };

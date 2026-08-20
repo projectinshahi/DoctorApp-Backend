@@ -184,8 +184,9 @@ async function deletePlan(req, res) {
       });
     }
 
-    // Lessons pointing here are released by onDelete: SetNull — they stay
-    // premium but fall back to "any active subscription unlocks it".
+    // The lesson_plans links are dropped by onDelete: Cascade. A lesson left
+    // with no plans stays premium and falls back to "any active subscription
+    // unlocks it"; one still tied to other plans keeps those.
     await prisma.plan.delete({ where: { id: planId } });
 
     return res.status(200).json({ message: 'Plan deleted successfully', planId });

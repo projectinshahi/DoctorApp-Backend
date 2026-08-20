@@ -21,6 +21,8 @@ const courseRoutes = require('./routes/course.routes');
 const subjectRoutes = require('./routes/subject.routes');
 const selectionRoutes = require('./routes/selection.routes');
 const chapterRoutes = require('./routes/chapter.route');
+const { getAllChapters } = require('./controllers/chapter.controller');
+const authenticateAdmin = require('./middleware/authenticateAdmin');
 const lessonRoutes = require('./routes/lesson.route');
 const profileRoutes = require('./routes/profile.routes');
 const uploadRoutes = require('./routes/upload.routes');
@@ -28,6 +30,8 @@ const adminRoutes = require('./routes/admin.routes');
 const planRoutes = require('./routes/plan.routes');
 const subscriptionRoutes = require('./routes/subscription.routes');
 const subscribeRoutes = require('./routes/subscribe.routes');
+const questionBankRoutes = require('./routes/questionBank.route');
+const quizRoutes = require('./routes/quiz.routes');
 const path = require('path');
 
 
@@ -44,6 +48,9 @@ app.use('/api/courses', courseRoutes);
 app.use('/api/subjects', subjectRoutes);
 app.use('/api/users/me/selection', selectionRoutes);
 
+// Flat admin listing — every chapter, whichever parent it hangs off.
+// Declared before the nested mount so it is not shadowed by it.
+app.get('/api/chapters', authenticateAdmin, getAllChapters);
 app.use('/api/course-types/:courseTypeId/chapters', chapterRoutes);
 app.use('/api/chapters/:chapterId/lessons', lessonRoutes);
 app.use('/api', lessonRoutes);
@@ -53,6 +60,8 @@ app.use('/admin', adminRoutes);
 app.use('/api', planRoutes);
 app.use('/api/users/me/subscription-status', subscriptionRoutes);
 app.use('/api/users/me/subscribe', subscribeRoutes);
+app.use('/api', questionBankRoutes);
+app.use('/api', quizRoutes);
 app.use('/api/uploads', require('./routes/upload.routes'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

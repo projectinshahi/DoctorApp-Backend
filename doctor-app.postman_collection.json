@@ -1,0 +1,848 @@
+{
+  "info": {
+    "name": "Doctor App \u2014 Question Bank & Quiz",
+    "description": "Admin flows for the question bank, quizzes and lesson linking.\n\nSETUP:\n1. Pick the environment variable baseUrl (defaults to http://localhost:3000).\n2. Run 'Admin login' FIRST \u2014 it saves the token automatically, every other request inherits it.\n\nAll requests except login require an admin token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "subjectId",
+      "value": "7"
+    },
+    {
+      "key": "topicId",
+      "value": "1"
+    },
+    {
+      "key": "questionId",
+      "value": "1"
+    },
+    {
+      "key": "quizId",
+      "value": "1"
+    },
+    {
+      "key": "lessonId",
+      "value": "21"
+    },
+    {
+      "key": "chapterId",
+      "value": "14"
+    },
+    {
+      "key": "courseTypeId",
+      "value": "15"
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Auth",
+      "item": [
+        {
+          "name": "Admin login (run this first)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) {",
+                  "  pm.collectionVariables.set('token', res.token);",
+                  "  console.log('Token saved. Expires in 8h.');",
+                  "} else {",
+                  "  console.log('No token in response:', JSON.stringify(res));",
+                  "}",
+                  "pm.test('login returns 200 + token', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(res).to.have.property('token');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@yourapp.com\",\n  \"password\": \"REPLACE_WITH_YOUR_PASSWORD\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/admin/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "admin",
+                "login"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Subjects & Topics",
+      "item": [
+        {
+          "name": "List subjects",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/subjects",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "subjects"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create subject",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"General Surgery\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/subjects",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "subjects"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List topics for a subject",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/subjects/{{subjectId}}/topics",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "subjects",
+                "{{subjectId}}",
+                "topics"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create topic under a subject",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Pulmonology\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/subjects/{{subjectId}}/topics",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "subjects",
+                "{{subjectId}}",
+                "topics"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Questions",
+      "item": [
+        {
+          "name": "List ALL questions (no filters)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/questions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "questions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List questions (filtered)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/questions?subjectId={{subjectId}}&topicId={{topicId}}&tag=dha&difficulty=medium&status=active&sort=newest&page=1&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "questions"
+              ],
+              "query": [
+                {
+                  "key": "subjectId",
+                  "value": "{{subjectId}}"
+                },
+                {
+                  "key": "topicId",
+                  "value": "{{topicId}}"
+                },
+                {
+                  "key": "tag",
+                  "value": "dha",
+                  "description": "exam board: dha/doh/mohap/sha/kuwait/smle/omsb/qchp/nhra"
+                },
+                {
+                  "key": "difficulty",
+                  "value": "medium",
+                  "description": "easy | medium | hard"
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "description": "active | inactive"
+                },
+                {
+                  "key": "search",
+                  "value": "chest",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "newest",
+                  "description": "newest|oldest|difficulty_asc|difficulty_desc"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "max 100"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get one question",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/questions/{{questionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "questions",
+                "{{questionId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create question",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  pm.collectionVariables.set('questionId', pm.response.json().question.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subjectId\": {{subjectId}},\n  \"topicId\": {{topicId}},\n  \"questionText\": \"Which drug class is first-line for reducing mortality in HFrEF?\",\n  \"questionImageUrl\": null,\n  \"difficulty\": \"medium\",\n  \"marksCorrect\": 2,\n  \"marksIncorrect\": -0.5,\n  \"explanation\": \"ACE inhibitors/ARBs reduce mortality in HFrEF.\",\n  \"status\": \"active\",\n  \"tags\": [\"cardiology\", \"heart-failure\", \"dha\", \"mohap\"],\n  \"options\": [\n    { \"optionText\": \"ACE inhibitors\", \"isCorrect\": true },\n    { \"optionText\": \"Calcium channel blockers\", \"isCorrect\": false },\n    { \"optionText\": \"Loop diuretics\", \"isCorrect\": false },\n    { \"optionText\": \"Digoxin\", \"isCorrect\": false }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/questions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "questions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update question (full replace of options/tags)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"questionText\": \"Updated question text\",\n  \"difficulty\": \"hard\",\n  \"tags\": [\"cardiology\", \"dha\"],\n  \"options\": [\n    { \"optionText\": \"Correct answer\", \"isCorrect\": true },\n    { \"optionText\": \"Wrong answer\", \"isCorrect\": false }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/questions/{{questionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "questions",
+                "{{questionId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Deactivate question (use instead of delete)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"inactive\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/questions/{{questionId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "questions",
+                "{{questionId}}",
+                "status"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Bulk activate / deactivate",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"questionIds\": [1],\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/questions/bulk-status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "questions",
+                "bulk-status"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Duplicate question (copy is created inactive)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/questions/{{questionId}}/duplicate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "questions",
+                "{{questionId}}",
+                "duplicate"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete question (expected 409 \u2014 deactivate instead)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/questions/{{questionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "questions",
+                "{{questionId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Quizzes",
+      "item": [
+        {
+          "name": "Create quiz",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  pm.collectionVariables.set('quizId', pm.response.json().quiz.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"DHA Cardiology Practice\",\n  \"subjectId\": {{subjectId}},\n  \"topicId\": {{topicId}},\n  \"examTag\": \"dha\",\n  \"questionCount\": 20\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/quizzes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "quizzes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List quizzes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/quizzes?subjectId={{subjectId}}&status=active",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "quizzes"
+              ],
+              "query": [
+                {
+                  "key": "subjectId",
+                  "value": "{{subjectId}}"
+                },
+                {
+                  "key": "topicId",
+                  "value": "{{topicId}}",
+                  "disabled": true
+                },
+                {
+                  "key": "examTag",
+                  "value": "dha",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "active"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get quiz + live pool size",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/quizzes/{{quizId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "quizzes",
+                "{{quizId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Preview quiz WITH answer key (admin only)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/quizzes/{{quizId}}/preview",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "quizzes",
+                "{{quizId}}",
+                "preview"
+              ]
+            },
+            "description": "The only endpoint that returns isCorrect and explanation. Use for the admin's read-only quiz preview."
+          }
+        },
+        {
+          "name": "Update quiz",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"DHA Cardiology \u2014 30 questions\",\n  \"questionCount\": 30\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/quizzes/{{quizId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "quizzes",
+                "{{quizId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete quiz (409 while linked to a lesson)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/quizzes/{{quizId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "quizzes",
+                "{{quizId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Lessons & Quiz serving",
+      "item": [
+        {
+          "name": "Create quiz-type lesson linked to a quiz",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  pm.collectionVariables.set('lessonId', pm.response.json().lesson.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"DHA Cardiology Quiz\",\n  \"type\": \"quiz\",\n  \"quizId\": {{quizId}},\n  \"status\": \"published\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/chapters/{{chapterId}}/lessons",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "chapters",
+                "{{chapterId}}",
+                "lessons"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Serve quiz questions (isCorrect is stripped)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/lessons/{{lessonId}}/quiz-questions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "lessons",
+                "{{lessonId}}",
+                "quiz-questions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get lesson (quiz lesson \u2014 has quiz object)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/lessons/{{lessonId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "lessons",
+                "{{lessonId}}"
+              ]
+            },
+            "description": "Quiz-type lesson: quizId set, quiz object carries availableQuestions / servedQuestions / isUnderfilled. Non-quiz lesson: both are null."
+          }
+        },
+        {
+          "name": "Get lesson (video lesson \u2014 quiz is null)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/lessons/20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "lessons",
+                "20"
+              ]
+            },
+            "description": "Confirms the conditional: quizId=null and quiz=null on a non-quiz lesson."
+          }
+        },
+        {
+          "name": "Get lesson",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/lessons/{{lessonId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "lessons",
+                "{{lessonId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Chapters under a course type",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/course-types/{{courseTypeId}}/chapters",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "course-types",
+                "{{courseTypeId}}",
+                "chapters"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ALL chapters (admin, flat list)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/chapters?includeLessons=true&courseTypeId={{courseTypeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "chapters"
+              ],
+              "query": [
+                {
+                  "key": "includeLessons",
+                  "value": "true"
+                },
+                {
+                  "key": "courseTypeId",
+                  "value": "{{courseTypeId}}"
+                }
+              ]
+            },
+            "description": "Every chapter regardless of parent. Both query params optional; includeLessons=true nests the lessons, otherwise you get lessonCount."
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Student app (needs a STUDENT token, not the admin one)",
+      "item": [
+        {
+          "name": "Selected course content (published lessons only)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me/selection/content",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me",
+                "selection",
+                "content"
+              ]
+            },
+            "description": "Draft and archived lessons are filtered out server-side. Locked lessons come back with media stripped."
+          }
+        },
+        {
+          "name": "Student lesson detail",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me/lessons/{{lessonId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me",
+                "lessons",
+                "{{lessonId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Student quiz questions (answer key stripped)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me/lessons/{{lessonId}}/quiz-questions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me",
+                "lessons",
+                "{{lessonId}}",
+                "quiz-questions"
+              ]
+            },
+            "description": "Gated on published + belongs to selected course + unlocked. 403 with requiredPlans when locked."
+          }
+        }
+      ]
+    }
+  ]
+}

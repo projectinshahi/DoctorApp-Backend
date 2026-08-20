@@ -88,7 +88,7 @@ async function createCourse(req, res) {
         accessType: ct.accessType ?? 'free',
         displayOrder: ct.displayOrder !== undefined && ct.displayOrder !== null
           ? Number(ct.displayOrder)
-          : null, // optional — stays null if not given
+          : 0, // optional — defaults to 0, same as chapters/lessons
       }));
     }
 
@@ -156,7 +156,7 @@ async function addCourseType(req, res) {
         description: description ?? null,
         status: status ?? 'draft',
         accessType: accessType ?? 'free',
-        displayOrder: displayOrder !== undefined && displayOrder !== null ? Number(displayOrder) : null,
+        displayOrder: displayOrder !== undefined && displayOrder !== null ? Number(displayOrder) : 0,
       },
     });
 
@@ -543,7 +543,8 @@ async function updateCourseType(req, res) {
           error: { message: 'displayOrder must be an integer or null' },
         });
       }
-      data.displayOrder = displayOrder === null ? null : Number(displayOrder);
+      // null means "reset to the front", not "unset" — the column is NOT NULL.
+      data.displayOrder = displayOrder === null ? 0 : Number(displayOrder);
     }
 
     const updatedCourseType = await prisma.courseType.update({
@@ -626,7 +627,9 @@ async function getPublicCourseTypes(req, res) {
 
     const courseTypes = await prisma.courseType.findMany({
       where: { courseId, status: 'published' },
-      orderBy: { displayOrder: 'asc' },
+      // id breaks ties: several types sharing displayOrder 0 would otherwise
+      // come back in whatever order Postgres felt like.
+      orderBy: [{ displayOrder: 'asc' }, { id: 'asc' }],
       select: {
         id: true,
         title: true,

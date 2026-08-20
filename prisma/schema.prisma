@@ -53,26 +53,35 @@ model Admin {
 
 
 model Subject {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  isActive     Boolean  @default(true)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  topics  Topic[]
-  courses Course[]
+  topics    Topic[]
+  courses   Course[]
+  questions Question[]
+  quizzes   Quiz[]
 
   @@map("subjects")
 }
 
 model Topic {
-  id        Int      @id @default(autoincrement())
-  name      String
-  subjectId Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  name         String
+  subjectId    Int
+  isActive     Boolean  @default(true)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  subject Subject @relation(fields: [subjectId], references: [id])
+  subject   Subject    @relation(fields: [subjectId], references: [id])
+  questions Question[]
+  quizzes   Quiz[]
 
+  @@unique([subjectId, name])
   @@index([subjectId])
   @@map("topics")
 }
@@ -136,7 +145,9 @@ model CourseType {
   description  String?
   status       CourseStatus @default(draft)
   accessType   AccessType   @default(free)
-  displayOrder Int?
+  // Non-null with a default, same as Chapter/Lesson/Subject. Nulls here are
+  // meaningless for ordering and three separate writers used to produce them.
+  displayOrder Int          @default(0)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
@@ -191,16 +202,35 @@ model Lesson {
   isFreePreview     Boolean    @default(false)
   accessType        AccessType @default(free)
   status            CourseStatus @default(draft)
-  planId            Int?       // only meaningful when accessType = premium
+  // A quiz-type lesson points at a Quiz instead of stuffing a ref into
+  // `content`. Unique: a quiz is served by at most one lesson.
+  quizId            Int?       @unique
   createdAt         DateTime   @default(now())
   updatedAt         DateTime   @updatedAt
 
   chapter           Chapter    @relation(fields: [chapterId], references: [id])
-  plan              Plan?      @relation(fields: [planId], references: [id], onDelete: SetNull)
+  quiz              Quiz?      @relation(fields: [quizId], references: [id])
+
+  // A premium lesson can be unlocked by any number of plans. No rows means
+  // "any active subscription for the course" — the old planId = null case.
+  lessonPlans       LessonPlan[]
 
   @@index([chapterId, displayOrder])
-  @@index([planId])
   @@map("lessons")
+}
+
+// Which plans unlock which lessons. Explicit join so both sides can be
+// queried and so deleting either end just drops the link.
+model LessonPlan {
+  lessonId Int
+  planId   Int
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  plan   Plan   @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@id([lessonId, planId])
+  @@index([planId])
+  @@map("lesson_plans")
 }
 
 model Plan {
@@ -216,7 +246,7 @@ model Plan {
 
   course        Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
   subscriptions Subscription[]
-  lessons       Lesson[]
+  lessonPlans   LessonPlan[]
 
   @@index([courseId])
   @@map("plans")
@@ -239,4 +269,105 @@ model Subscription {
   @@index([userId])
   @@index([courseId])
   @@map("subscriptions")
+}
+
+
+// ─────────────────────────── Question Bank ───────────────────────────
+
+enum Difficulty {
+  easy
+  medium
+  hard
+}
+
+enum QuestionStatus {
+  active
+  inactive
+}
+
+model Question {
+  id               Int            @id @default(autoincrement())
+  subjectId        Int
+  topicId          Int
+  questionText     String
+  questionImageUrl String?
+  difficulty       Difficulty
+  marksCorrect     Float
+  marksIncorrect   Float          @default(0)
+  explanation      String?
+  status           QuestionStatus @default(active)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  subject Subject @relation(fields: [subjectId], references: [id])
+  topic   Topic   @relation(fields: [topicId], references: [id])
+
+  options QuestionOption[]
+  tags    QuestionTag[]
+
+  // TODO(quiz-module): add `quizQuestions QuizQuestion[]` once the Quiz model
+  // exists. Until then countQuizUsage() in questionBank.controller.js cannot
+  // count usage and the delete guard falls back to a hard block.
+
+  @@index([subjectId, topicId, status])
+  @@map("questions")
+}
+
+model QuestionOption {
+  id             Int     @id @default(autoincrement())
+  questionId     Int
+  optionText     String
+  optionImageUrl String?
+  isCorrect      Boolean @default(false)
+  displayOrder   Int     @default(0)
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([questionId])
+  @@map("question_options")
+}
+
+// A quiz is a saved *filter* over the question bank, not a copy of questions.
+// It never writes to Question — the pool is resolved at serve time, so
+// questions added to the bank later show up automatically.
+model Quiz {
+  id            Int            @id @default(autoincrement())
+  title         String
+  subjectId     Int
+  topicId       Int
+  // Matches a Tag name already used on questions ("dha", "mohap"). Null =
+  // don't filter by tag.
+  examTag       String?
+  // How many questions to serve. Null = serve the whole matching pool.
+  questionCount Int?
+  status        QuestionStatus @default(active)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  subject Subject @relation(fields: [subjectId], references: [id])
+  topic   Topic   @relation(fields: [topicId], references: [id])
+  lesson  Lesson?
+
+  @@index([subjectId, topicId, status])
+  @@map("quizzes")
+}
+
+model Tag {
+  id        Int           @id @default(autoincrement())
+  name      String        @unique
+  questions QuestionTag[]
+
+  @@map("tags")
+}
+
+model QuestionTag {
+  questionId Int
+  tagId      Int
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  tag      Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([questionId, tagId])
+  @@index([tagId])
+  @@map("question_tags")
 }

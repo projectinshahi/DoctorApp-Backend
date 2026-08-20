@@ -2,6 +2,7 @@ const { PrismaClient } = require('../generated/prisma');
 const { PrismaPg } = require('@prisma/adapter-pg');
 
 const { revokeActiveSessions } = require('../services/session.service');
+const { isLessonUnlocked } = require('./selected-course.controller');
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -175,4 +176,129 @@ async function updateStudentStatus(req, res) {
   }
 }
 
-module.exports = { getStudentList, updateStudentStatus };
+// GET /admin/students/:id
+// Everything about one student on a single screen: profile, login state, the
+// course + course type they picked, their subscriptions, and the full
+// chapter -> lesson tree. Unlike the student endpoint this returns draft and
+// archived lessons too, and marks which ones that student can actually open.
+async function getStudentById(req, res) {
+  try {
+    const studentId = Number(req.params.id);
+    if (!Number.isInteger(studentId)) {
+      return res.status(400).json({ error: { message: 'Invalid student id' } });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: studentId },
+      select: {
+        id: true, name: true, email: true, phone: true, avatarUrl: true,
+        role: true, status: true, createdAt: true,
+        selectedCourseId: true, selectedCourseTypeId: true,
+        selectedCourse: {
+          select: { id: true, title: true, thumbnail: true, status: true, accessType: true },
+        },
+        selectedCourseType: {
+          select: { id: true, title: true, description: true, status: true, accessType: true },
+        },
+        sessions: {
+          where: { revokedAt: null },
+          select: { deviceId: true, createdAt: true },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+        },
+      },
+    });
+
+    if (!user || user.role !== 'student') {
+      return res.status(404).json({ error: { message: 'Student not found' } });
+    }
+
+    const subscriptions = user.selectedCourseId
+      ? await prisma.subscription.findMany({
+          where: { userId: studentId },
+          orderBy: { startDate: 'desc' },
+          select: {
+            id: true, courseId: true, planId: true, startDate: true,
+            endDate: true, isActive: true,
+            plan: { select: { id: true, title: true, price: true, durationDays: true, isActive: true } },
+          },
+        })
+      : [];
+
+    const now = new Date();
+    const paidPlanIds = new Set(
+      subscriptions
+        .filter((s) => s.isActive && s.endDate >= now && s.courseId === user.selectedCourseId)
+        .map((s) => s.planId)
+    );
+
+    // Same either/or resolution the student feed uses.
+    const chapters = user.selectedCourseId
+      ? await prisma.chapter.findMany({
+          where: user.selectedCourseTypeId
+            ? { courseTypeId: user.selectedCourseTypeId }
+            : { courseId: user.selectedCourseId },
+          orderBy: { displayOrder: 'asc' },
+          select: {
+            id: true, title: true, displayOrder: true,
+            lessons: {
+              orderBy: [{ displayOrder: 'asc' }, { createdAt: 'asc' }],
+              select: {
+                id: true, title: true, type: true, status: true,
+                accessType: true, isFreePreview: true, displayOrder: true,
+                videoUrl: true, noteUrl: true, thumbnailUrl: true, noteFileType: true,
+                lessonPlans: {
+                  select: {
+                    plan: { select: { id: true, title: true, price: true, durationDays: true, isActive: true } },
+                  },
+                },
+              },
+            },
+          },
+        })
+      : [];
+
+    const shapedChapters = chapters.map((ch) => ({
+      ...ch,
+      lessonCount: ch.lessons.length,
+      publishedCount: ch.lessons.filter((l) => l.status === 'published').length,
+      lessons: ch.lessons.map((l) => {
+        const { lessonPlans = [], ...rest } = l;
+        const plans = lessonPlans.map((lp) => lp.plan);
+        return {
+          ...rest,
+          plans,
+          planIds: plans.map((p) => p.id),
+          // What this specific student sees. Draft lessons never reach them,
+          // however their subscription looks.
+          visibleToStudent: l.status === 'published' && isLessonUnlocked(l, paidPlanIds),
+          unlockedByPlan: isLessonUnlocked(l, paidPlanIds),
+        };
+      }),
+    }));
+
+    return res.status(200).json({
+      student: {
+        id: user.id, name: user.name, email: user.email, phone: user.phone,
+        avatarUrl: user.avatarUrl, status: user.status,
+        isBlocked: user.status === 'blocked',
+        isLoggedIn: user.sessions.length > 0,
+        lastLoginAt: user.sessions[0]?.createdAt ?? null,
+        currentDeviceId: user.sessions[0]?.deviceId ?? null,
+        createdAt: user.createdAt,
+      },
+      selectedCourse: user.selectedCourse,
+      selectedCourseType: user.selectedCourseType,
+      subscriptions,
+      hasActiveSubscription: paidPlanIds.size > 0,
+      chapters: shapedChapters,
+    });
+  } catch (error) {
+    console.error('getStudentById error:', error);
+    return res.status(500).json({
+      error: { message: 'Something went wrong while fetching the student' },
+    });
+  }
+}
+
+module.exports = { getStudentList, getStudentById, updateStudentStatus };

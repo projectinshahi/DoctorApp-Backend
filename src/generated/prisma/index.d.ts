@@ -59,6 +59,11 @@ export type Chapter = $Result.DefaultSelection<Prisma.$ChapterPayload>
  */
 export type Lesson = $Result.DefaultSelection<Prisma.$LessonPayload>
 /**
+ * Model LessonPlan
+ * 
+ */
+export type LessonPlan = $Result.DefaultSelection<Prisma.$LessonPlanPayload>
+/**
  * Model Plan
  * 
  */
@@ -68,6 +73,31 @@ export type Plan = $Result.DefaultSelection<Prisma.$PlanPayload>
  * 
  */
 export type Subscription = $Result.DefaultSelection<Prisma.$SubscriptionPayload>
+/**
+ * Model Question
+ * 
+ */
+export type Question = $Result.DefaultSelection<Prisma.$QuestionPayload>
+/**
+ * Model QuestionOption
+ * 
+ */
+export type QuestionOption = $Result.DefaultSelection<Prisma.$QuestionOptionPayload>
+/**
+ * Model Quiz
+ * 
+ */
+export type Quiz = $Result.DefaultSelection<Prisma.$QuizPayload>
+/**
+ * Model Tag
+ * 
+ */
+export type Tag = $Result.DefaultSelection<Prisma.$TagPayload>
+/**
+ * Model QuestionTag
+ * 
+ */
+export type QuestionTag = $Result.DefaultSelection<Prisma.$QuestionTagPayload>
 
 /**
  * Enums
@@ -98,6 +128,23 @@ export const LessonType: {
 
 export type LessonType = (typeof LessonType)[keyof typeof LessonType]
 
+
+export const Difficulty: {
+  easy: 'easy',
+  medium: 'medium',
+  hard: 'hard'
+};
+
+export type Difficulty = (typeof Difficulty)[keyof typeof Difficulty]
+
+
+export const QuestionStatus: {
+  active: 'active',
+  inactive: 'inactive'
+};
+
+export type QuestionStatus = (typeof QuestionStatus)[keyof typeof QuestionStatus]
+
 }
 
 export type CourseStatus = $Enums.CourseStatus
@@ -111,6 +158,14 @@ export const AccessType: typeof $Enums.AccessType
 export type LessonType = $Enums.LessonType
 
 export const LessonType: typeof $Enums.LessonType
+
+export type Difficulty = $Enums.Difficulty
+
+export const Difficulty: typeof $Enums.Difficulty
+
+export type QuestionStatus = $Enums.QuestionStatus
+
+export const QuestionStatus: typeof $Enums.QuestionStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -324,6 +379,16 @@ export class PrismaClient<
   get lesson(): Prisma.LessonDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.lessonPlan`: Exposes CRUD operations for the **LessonPlan** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LessonPlans
+    * const lessonPlans = await prisma.lessonPlan.findMany()
+    * ```
+    */
+  get lessonPlan(): Prisma.LessonPlanDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.plan`: Exposes CRUD operations for the **Plan** model.
     * Example usage:
     * ```ts
@@ -342,6 +407,56 @@ export class PrismaClient<
     * ```
     */
   get subscription(): Prisma.SubscriptionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.question`: Exposes CRUD operations for the **Question** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Questions
+    * const questions = await prisma.question.findMany()
+    * ```
+    */
+  get question(): Prisma.QuestionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.questionOption`: Exposes CRUD operations for the **QuestionOption** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more QuestionOptions
+    * const questionOptions = await prisma.questionOption.findMany()
+    * ```
+    */
+  get questionOption(): Prisma.QuestionOptionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.quiz`: Exposes CRUD operations for the **Quiz** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Quizzes
+    * const quizzes = await prisma.quiz.findMany()
+    * ```
+    */
+  get quiz(): Prisma.QuizDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tag`: Exposes CRUD operations for the **Tag** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Tags
+    * const tags = await prisma.tag.findMany()
+    * ```
+    */
+  get tag(): Prisma.TagDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.questionTag`: Exposes CRUD operations for the **QuestionTag** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more QuestionTags
+    * const questionTags = await prisma.questionTag.findMany()
+    * ```
+    */
+  get questionTag(): Prisma.QuestionTagDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -798,8 +913,14 @@ export namespace Prisma {
     CourseType: 'CourseType',
     Chapter: 'Chapter',
     Lesson: 'Lesson',
+    LessonPlan: 'LessonPlan',
     Plan: 'Plan',
-    Subscription: 'Subscription'
+    Subscription: 'Subscription',
+    Question: 'Question',
+    QuestionOption: 'QuestionOption',
+    Quiz: 'Quiz',
+    Tag: 'Tag',
+    QuestionTag: 'QuestionTag'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -815,7 +936,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "plan" | "subscription"
+      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "tag" | "questionTag"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1485,6 +1606,80 @@ export namespace Prisma {
           }
         }
       }
+      LessonPlan: {
+        payload: Prisma.$LessonPlanPayload<ExtArgs>
+        fields: Prisma.LessonPlanFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LessonPlanFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonPlanPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LessonPlanFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonPlanPayload>
+          }
+          findFirst: {
+            args: Prisma.LessonPlanFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonPlanPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LessonPlanFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonPlanPayload>
+          }
+          findMany: {
+            args: Prisma.LessonPlanFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonPlanPayload>[]
+          }
+          create: {
+            args: Prisma.LessonPlanCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonPlanPayload>
+          }
+          createMany: {
+            args: Prisma.LessonPlanCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LessonPlanCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonPlanPayload>[]
+          }
+          delete: {
+            args: Prisma.LessonPlanDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonPlanPayload>
+          }
+          update: {
+            args: Prisma.LessonPlanUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonPlanPayload>
+          }
+          deleteMany: {
+            args: Prisma.LessonPlanDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LessonPlanUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LessonPlanUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonPlanPayload>[]
+          }
+          upsert: {
+            args: Prisma.LessonPlanUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonPlanPayload>
+          }
+          aggregate: {
+            args: Prisma.LessonPlanAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLessonPlan>
+          }
+          groupBy: {
+            args: Prisma.LessonPlanGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LessonPlanGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LessonPlanCountArgs<ExtArgs>
+            result: $Utils.Optional<LessonPlanCountAggregateOutputType> | number
+          }
+        }
+      }
       Plan: {
         payload: Prisma.$PlanPayload<ExtArgs>
         fields: Prisma.PlanFieldRefs
@@ -1633,6 +1828,376 @@ export namespace Prisma {
           }
         }
       }
+      Question: {
+        payload: Prisma.$QuestionPayload<ExtArgs>
+        fields: Prisma.QuestionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.QuestionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.QuestionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionPayload>
+          }
+          findFirst: {
+            args: Prisma.QuestionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.QuestionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionPayload>
+          }
+          findMany: {
+            args: Prisma.QuestionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionPayload>[]
+          }
+          create: {
+            args: Prisma.QuestionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionPayload>
+          }
+          createMany: {
+            args: Prisma.QuestionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.QuestionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionPayload>[]
+          }
+          delete: {
+            args: Prisma.QuestionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionPayload>
+          }
+          update: {
+            args: Prisma.QuestionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionPayload>
+          }
+          deleteMany: {
+            args: Prisma.QuestionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.QuestionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.QuestionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionPayload>[]
+          }
+          upsert: {
+            args: Prisma.QuestionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionPayload>
+          }
+          aggregate: {
+            args: Prisma.QuestionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateQuestion>
+          }
+          groupBy: {
+            args: Prisma.QuestionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<QuestionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.QuestionCountArgs<ExtArgs>
+            result: $Utils.Optional<QuestionCountAggregateOutputType> | number
+          }
+        }
+      }
+      QuestionOption: {
+        payload: Prisma.$QuestionOptionPayload<ExtArgs>
+        fields: Prisma.QuestionOptionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.QuestionOptionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionOptionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.QuestionOptionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionOptionPayload>
+          }
+          findFirst: {
+            args: Prisma.QuestionOptionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionOptionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.QuestionOptionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionOptionPayload>
+          }
+          findMany: {
+            args: Prisma.QuestionOptionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionOptionPayload>[]
+          }
+          create: {
+            args: Prisma.QuestionOptionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionOptionPayload>
+          }
+          createMany: {
+            args: Prisma.QuestionOptionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.QuestionOptionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionOptionPayload>[]
+          }
+          delete: {
+            args: Prisma.QuestionOptionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionOptionPayload>
+          }
+          update: {
+            args: Prisma.QuestionOptionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionOptionPayload>
+          }
+          deleteMany: {
+            args: Prisma.QuestionOptionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.QuestionOptionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.QuestionOptionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionOptionPayload>[]
+          }
+          upsert: {
+            args: Prisma.QuestionOptionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionOptionPayload>
+          }
+          aggregate: {
+            args: Prisma.QuestionOptionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateQuestionOption>
+          }
+          groupBy: {
+            args: Prisma.QuestionOptionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<QuestionOptionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.QuestionOptionCountArgs<ExtArgs>
+            result: $Utils.Optional<QuestionOptionCountAggregateOutputType> | number
+          }
+        }
+      }
+      Quiz: {
+        payload: Prisma.$QuizPayload<ExtArgs>
+        fields: Prisma.QuizFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.QuizFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuizPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.QuizFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuizPayload>
+          }
+          findFirst: {
+            args: Prisma.QuizFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuizPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.QuizFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuizPayload>
+          }
+          findMany: {
+            args: Prisma.QuizFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuizPayload>[]
+          }
+          create: {
+            args: Prisma.QuizCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuizPayload>
+          }
+          createMany: {
+            args: Prisma.QuizCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.QuizCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuizPayload>[]
+          }
+          delete: {
+            args: Prisma.QuizDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuizPayload>
+          }
+          update: {
+            args: Prisma.QuizUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuizPayload>
+          }
+          deleteMany: {
+            args: Prisma.QuizDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.QuizUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.QuizUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuizPayload>[]
+          }
+          upsert: {
+            args: Prisma.QuizUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuizPayload>
+          }
+          aggregate: {
+            args: Prisma.QuizAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateQuiz>
+          }
+          groupBy: {
+            args: Prisma.QuizGroupByArgs<ExtArgs>
+            result: $Utils.Optional<QuizGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.QuizCountArgs<ExtArgs>
+            result: $Utils.Optional<QuizCountAggregateOutputType> | number
+          }
+        }
+      }
+      Tag: {
+        payload: Prisma.$TagPayload<ExtArgs>
+        fields: Prisma.TagFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TagFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TagFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          findFirst: {
+            args: Prisma.TagFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TagFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          findMany: {
+            args: Prisma.TagFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>[]
+          }
+          create: {
+            args: Prisma.TagCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          createMany: {
+            args: Prisma.TagCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TagCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>[]
+          }
+          delete: {
+            args: Prisma.TagDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          update: {
+            args: Prisma.TagUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          deleteMany: {
+            args: Prisma.TagDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TagUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TagUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>[]
+          }
+          upsert: {
+            args: Prisma.TagUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TagPayload>
+          }
+          aggregate: {
+            args: Prisma.TagAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTag>
+          }
+          groupBy: {
+            args: Prisma.TagGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TagGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TagCountArgs<ExtArgs>
+            result: $Utils.Optional<TagCountAggregateOutputType> | number
+          }
+        }
+      }
+      QuestionTag: {
+        payload: Prisma.$QuestionTagPayload<ExtArgs>
+        fields: Prisma.QuestionTagFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.QuestionTagFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionTagPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.QuestionTagFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionTagPayload>
+          }
+          findFirst: {
+            args: Prisma.QuestionTagFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionTagPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.QuestionTagFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionTagPayload>
+          }
+          findMany: {
+            args: Prisma.QuestionTagFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionTagPayload>[]
+          }
+          create: {
+            args: Prisma.QuestionTagCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionTagPayload>
+          }
+          createMany: {
+            args: Prisma.QuestionTagCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.QuestionTagCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionTagPayload>[]
+          }
+          delete: {
+            args: Prisma.QuestionTagDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionTagPayload>
+          }
+          update: {
+            args: Prisma.QuestionTagUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionTagPayload>
+          }
+          deleteMany: {
+            args: Prisma.QuestionTagDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.QuestionTagUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.QuestionTagUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionTagPayload>[]
+          }
+          upsert: {
+            args: Prisma.QuestionTagUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$QuestionTagPayload>
+          }
+          aggregate: {
+            args: Prisma.QuestionTagAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateQuestionTag>
+          }
+          groupBy: {
+            args: Prisma.QuestionTagGroupByArgs<ExtArgs>
+            result: $Utils.Optional<QuestionTagGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.QuestionTagCountArgs<ExtArgs>
+            result: $Utils.Optional<QuestionTagCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1765,8 +2330,14 @@ export namespace Prisma {
     courseType?: CourseTypeOmit
     chapter?: ChapterOmit
     lesson?: LessonOmit
+    lessonPlan?: LessonPlanOmit
     plan?: PlanOmit
     subscription?: SubscriptionOmit
+    question?: QuestionOmit
+    questionOption?: QuestionOptionOmit
+    quiz?: QuizOmit
+    tag?: TagOmit
+    questionTag?: QuestionTagOmit
   }
 
   /* Types for Logging */
@@ -1920,11 +2491,15 @@ export namespace Prisma {
   export type SubjectCountOutputType = {
     topics: number
     courses: number
+    questions: number
+    quizzes: number
   }
 
   export type SubjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     topics?: boolean | SubjectCountOutputTypeCountTopicsArgs
     courses?: boolean | SubjectCountOutputTypeCountCoursesArgs
+    questions?: boolean | SubjectCountOutputTypeCountQuestionsArgs
+    quizzes?: boolean | SubjectCountOutputTypeCountQuizzesArgs
   }
 
   // Custom InputTypes
@@ -1950,6 +2525,60 @@ export namespace Prisma {
    */
   export type SubjectCountOutputTypeCountCoursesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CourseWhereInput
+  }
+
+  /**
+   * SubjectCountOutputType without action
+   */
+  export type SubjectCountOutputTypeCountQuestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuestionWhereInput
+  }
+
+  /**
+   * SubjectCountOutputType without action
+   */
+  export type SubjectCountOutputTypeCountQuizzesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuizWhereInput
+  }
+
+
+  /**
+   * Count Type TopicCountOutputType
+   */
+
+  export type TopicCountOutputType = {
+    questions: number
+    quizzes: number
+  }
+
+  export type TopicCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    questions?: boolean | TopicCountOutputTypeCountQuestionsArgs
+    quizzes?: boolean | TopicCountOutputTypeCountQuizzesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TopicCountOutputType without action
+   */
+  export type TopicCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TopicCountOutputType
+     */
+    select?: TopicCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TopicCountOutputType without action
+   */
+  export type TopicCountOutputTypeCountQuestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuestionWhereInput
+  }
+
+  /**
+   * TopicCountOutputType without action
+   */
+  export type TopicCountOutputTypeCountQuizzesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuizWhereInput
   }
 
 
@@ -2101,17 +2730,48 @@ export namespace Prisma {
 
 
   /**
+   * Count Type LessonCountOutputType
+   */
+
+  export type LessonCountOutputType = {
+    lessonPlans: number
+  }
+
+  export type LessonCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lessonPlans?: boolean | LessonCountOutputTypeCountLessonPlansArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * LessonCountOutputType without action
+   */
+  export type LessonCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonCountOutputType
+     */
+    select?: LessonCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * LessonCountOutputType without action
+   */
+  export type LessonCountOutputTypeCountLessonPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LessonPlanWhereInput
+  }
+
+
+  /**
    * Count Type PlanCountOutputType
    */
 
   export type PlanCountOutputType = {
     subscriptions: number
-    lessons: number
+    lessonPlans: number
   }
 
   export type PlanCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     subscriptions?: boolean | PlanCountOutputTypeCountSubscriptionsArgs
-    lessons?: boolean | PlanCountOutputTypeCountLessonsArgs
+    lessonPlans?: boolean | PlanCountOutputTypeCountLessonPlansArgs
   }
 
   // Custom InputTypes
@@ -2135,8 +2795,79 @@ export namespace Prisma {
   /**
    * PlanCountOutputType without action
    */
-  export type PlanCountOutputTypeCountLessonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LessonWhereInput
+  export type PlanCountOutputTypeCountLessonPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LessonPlanWhereInput
+  }
+
+
+  /**
+   * Count Type QuestionCountOutputType
+   */
+
+  export type QuestionCountOutputType = {
+    options: number
+    tags: number
+  }
+
+  export type QuestionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    options?: boolean | QuestionCountOutputTypeCountOptionsArgs
+    tags?: boolean | QuestionCountOutputTypeCountTagsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * QuestionCountOutputType without action
+   */
+  export type QuestionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionCountOutputType
+     */
+    select?: QuestionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * QuestionCountOutputType without action
+   */
+  export type QuestionCountOutputTypeCountOptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuestionOptionWhereInput
+  }
+
+  /**
+   * QuestionCountOutputType without action
+   */
+  export type QuestionCountOutputTypeCountTagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuestionTagWhereInput
+  }
+
+
+  /**
+   * Count Type TagCountOutputType
+   */
+
+  export type TagCountOutputType = {
+    questions: number
+  }
+
+  export type TagCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    questions?: boolean | TagCountOutputTypeCountQuestionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TagCountOutputType without action
+   */
+  export type TagCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TagCountOutputType
+     */
+    select?: TagCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TagCountOutputType without action
+   */
+  export type TagCountOutputTypeCountQuestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuestionTagWhereInput
   }
 
 
@@ -4606,15 +5337,19 @@ export namespace Prisma {
 
   export type SubjectAvgAggregateOutputType = {
     id: number | null
+    displayOrder: number | null
   }
 
   export type SubjectSumAggregateOutputType = {
     id: number | null
+    displayOrder: number | null
   }
 
   export type SubjectMinAggregateOutputType = {
     id: number | null
     name: string | null
+    isActive: boolean | null
+    displayOrder: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4622,6 +5357,8 @@ export namespace Prisma {
   export type SubjectMaxAggregateOutputType = {
     id: number | null
     name: string | null
+    isActive: boolean | null
+    displayOrder: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4629,6 +5366,8 @@ export namespace Prisma {
   export type SubjectCountAggregateOutputType = {
     id: number
     name: number
+    isActive: number
+    displayOrder: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -4637,15 +5376,19 @@ export namespace Prisma {
 
   export type SubjectAvgAggregateInputType = {
     id?: true
+    displayOrder?: true
   }
 
   export type SubjectSumAggregateInputType = {
     id?: true
+    displayOrder?: true
   }
 
   export type SubjectMinAggregateInputType = {
     id?: true
     name?: true
+    isActive?: true
+    displayOrder?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4653,6 +5396,8 @@ export namespace Prisma {
   export type SubjectMaxAggregateInputType = {
     id?: true
     name?: true
+    isActive?: true
+    displayOrder?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4660,6 +5405,8 @@ export namespace Prisma {
   export type SubjectCountAggregateInputType = {
     id?: true
     name?: true
+    isActive?: true
+    displayOrder?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -4754,6 +5501,8 @@ export namespace Prisma {
   export type SubjectGroupByOutputType = {
     id: number
     name: string
+    isActive: boolean
+    displayOrder: number
     createdAt: Date
     updatedAt: Date
     _count: SubjectCountAggregateOutputType | null
@@ -4780,16 +5529,22 @@ export namespace Prisma {
   export type SubjectSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    isActive?: boolean
+    displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     topics?: boolean | Subject$topicsArgs<ExtArgs>
     courses?: boolean | Subject$coursesArgs<ExtArgs>
+    questions?: boolean | Subject$questionsArgs<ExtArgs>
+    quizzes?: boolean | Subject$quizzesArgs<ExtArgs>
     _count?: boolean | SubjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["subject"]>
 
   export type SubjectSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    isActive?: boolean
+    displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["subject"]>
@@ -4797,6 +5552,8 @@ export namespace Prisma {
   export type SubjectSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    isActive?: boolean
+    displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["subject"]>
@@ -4804,14 +5561,18 @@ export namespace Prisma {
   export type SubjectSelectScalar = {
     id?: boolean
     name?: boolean
+    isActive?: boolean
+    displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SubjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["subject"]>
+  export type SubjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "isActive" | "displayOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["subject"]>
   export type SubjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     topics?: boolean | Subject$topicsArgs<ExtArgs>
     courses?: boolean | Subject$coursesArgs<ExtArgs>
+    questions?: boolean | Subject$questionsArgs<ExtArgs>
+    quizzes?: boolean | Subject$quizzesArgs<ExtArgs>
     _count?: boolean | SubjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type SubjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4822,10 +5583,14 @@ export namespace Prisma {
     objects: {
       topics: Prisma.$TopicPayload<ExtArgs>[]
       courses: Prisma.$CoursePayload<ExtArgs>[]
+      questions: Prisma.$QuestionPayload<ExtArgs>[]
+      quizzes: Prisma.$QuizPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
+      isActive: boolean
+      displayOrder: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["subject"]>
@@ -5224,6 +5989,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     topics<T extends Subject$topicsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$topicsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     courses<T extends Subject$coursesArgs<ExtArgs> = {}>(args?: Subset<T, Subject$coursesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    questions<T extends Subject$questionsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    quizzes<T extends Subject$quizzesArgs<ExtArgs> = {}>(args?: Subset<T, Subject$quizzesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5255,6 +6022,8 @@ export namespace Prisma {
   interface SubjectFieldRefs {
     readonly id: FieldRef<"Subject", 'Int'>
     readonly name: FieldRef<"Subject", 'String'>
+    readonly isActive: FieldRef<"Subject", 'Boolean'>
+    readonly displayOrder: FieldRef<"Subject", 'Int'>
     readonly createdAt: FieldRef<"Subject", 'DateTime'>
     readonly updatedAt: FieldRef<"Subject", 'DateTime'>
   }
@@ -5698,6 +6467,54 @@ export namespace Prisma {
   }
 
   /**
+   * Subject.questions
+   */
+  export type Subject$questionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionInclude<ExtArgs> | null
+    where?: QuestionWhereInput
+    orderBy?: QuestionOrderByWithRelationInput | QuestionOrderByWithRelationInput[]
+    cursor?: QuestionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: QuestionScalarFieldEnum | QuestionScalarFieldEnum[]
+  }
+
+  /**
+   * Subject.quizzes
+   */
+  export type Subject$quizzesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quiz
+     */
+    select?: QuizSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Quiz
+     */
+    omit?: QuizOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuizInclude<ExtArgs> | null
+    where?: QuizWhereInput
+    orderBy?: QuizOrderByWithRelationInput | QuizOrderByWithRelationInput[]
+    cursor?: QuizWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: QuizScalarFieldEnum | QuizScalarFieldEnum[]
+  }
+
+  /**
    * Subject without action
    */
   export type SubjectDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5731,17 +6548,21 @@ export namespace Prisma {
   export type TopicAvgAggregateOutputType = {
     id: number | null
     subjectId: number | null
+    displayOrder: number | null
   }
 
   export type TopicSumAggregateOutputType = {
     id: number | null
     subjectId: number | null
+    displayOrder: number | null
   }
 
   export type TopicMinAggregateOutputType = {
     id: number | null
     name: string | null
     subjectId: number | null
+    isActive: boolean | null
+    displayOrder: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5750,6 +6571,8 @@ export namespace Prisma {
     id: number | null
     name: string | null
     subjectId: number | null
+    isActive: boolean | null
+    displayOrder: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5758,6 +6581,8 @@ export namespace Prisma {
     id: number
     name: number
     subjectId: number
+    isActive: number
+    displayOrder: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5767,17 +6592,21 @@ export namespace Prisma {
   export type TopicAvgAggregateInputType = {
     id?: true
     subjectId?: true
+    displayOrder?: true
   }
 
   export type TopicSumAggregateInputType = {
     id?: true
     subjectId?: true
+    displayOrder?: true
   }
 
   export type TopicMinAggregateInputType = {
     id?: true
     name?: true
     subjectId?: true
+    isActive?: true
+    displayOrder?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5786,6 +6615,8 @@ export namespace Prisma {
     id?: true
     name?: true
     subjectId?: true
+    isActive?: true
+    displayOrder?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5794,6 +6625,8 @@ export namespace Prisma {
     id?: true
     name?: true
     subjectId?: true
+    isActive?: true
+    displayOrder?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5889,6 +6722,8 @@ export namespace Prisma {
     id: number
     name: string
     subjectId: number
+    isActive: boolean
+    displayOrder: number
     createdAt: Date
     updatedAt: Date
     _count: TopicCountAggregateOutputType | null
@@ -5916,15 +6751,22 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     subjectId?: boolean
+    isActive?: boolean
+    displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    questions?: boolean | Topic$questionsArgs<ExtArgs>
+    quizzes?: boolean | Topic$quizzesArgs<ExtArgs>
+    _count?: boolean | TopicCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["topic"]>
 
   export type TopicSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     subjectId?: boolean
+    isActive?: boolean
+    displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
@@ -5934,6 +6776,8 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     subjectId?: boolean
+    isActive?: boolean
+    displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
@@ -5943,13 +6787,18 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     subjectId?: boolean
+    isActive?: boolean
+    displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TopicOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "subjectId" | "createdAt" | "updatedAt", ExtArgs["result"]["topic"]>
+  export type TopicOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "subjectId" | "isActive" | "displayOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["topic"]>
   export type TopicInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    questions?: boolean | Topic$questionsArgs<ExtArgs>
+    quizzes?: boolean | Topic$quizzesArgs<ExtArgs>
+    _count?: boolean | TopicCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TopicIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
@@ -5962,11 +6811,15 @@ export namespace Prisma {
     name: "Topic"
     objects: {
       subject: Prisma.$SubjectPayload<ExtArgs>
+      questions: Prisma.$QuestionPayload<ExtArgs>[]
+      quizzes: Prisma.$QuizPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
       subjectId: number
+      isActive: boolean
+      displayOrder: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["topic"]>
@@ -6364,6 +7217,8 @@ export namespace Prisma {
   export interface Prisma__TopicClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    questions<T extends Topic$questionsArgs<ExtArgs> = {}>(args?: Subset<T, Topic$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    quizzes<T extends Topic$quizzesArgs<ExtArgs> = {}>(args?: Subset<T, Topic$quizzesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6396,6 +7251,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Topic", 'Int'>
     readonly name: FieldRef<"Topic", 'String'>
     readonly subjectId: FieldRef<"Topic", 'Int'>
+    readonly isActive: FieldRef<"Topic", 'Boolean'>
+    readonly displayOrder: FieldRef<"Topic", 'Int'>
     readonly createdAt: FieldRef<"Topic", 'DateTime'>
     readonly updatedAt: FieldRef<"Topic", 'DateTime'>
   }
@@ -6796,6 +7653,54 @@ export namespace Prisma {
      * Limit how many Topics to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Topic.questions
+   */
+  export type Topic$questionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionInclude<ExtArgs> | null
+    where?: QuestionWhereInput
+    orderBy?: QuestionOrderByWithRelationInput | QuestionOrderByWithRelationInput[]
+    cursor?: QuestionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: QuestionScalarFieldEnum | QuestionScalarFieldEnum[]
+  }
+
+  /**
+   * Topic.quizzes
+   */
+  export type Topic$quizzesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quiz
+     */
+    select?: QuizSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Quiz
+     */
+    omit?: QuizOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuizInclude<ExtArgs> | null
+    where?: QuizWhereInput
+    orderBy?: QuizOrderByWithRelationInput | QuizOrderByWithRelationInput[]
+    cursor?: QuizWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: QuizScalarFieldEnum | QuizScalarFieldEnum[]
   }
 
   /**
@@ -9520,7 +10425,7 @@ export namespace Prisma {
     description: string | null
     status: $Enums.CourseStatus
     accessType: $Enums.AccessType
-    displayOrder: number | null
+    displayOrder: number
     createdAt: Date
     updatedAt: Date
     _count: CourseTypeCountAggregateOutputType | null
@@ -9626,7 +10531,7 @@ export namespace Prisma {
       description: string | null
       status: $Enums.CourseStatus
       accessType: $Enums.AccessType
-      displayOrder: number | null
+      displayOrder: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["courseType"]>
@@ -11758,14 +12663,14 @@ export namespace Prisma {
     id: number | null
     chapterId: number | null
     displayOrder: number | null
-    planId: number | null
+    quizId: number | null
   }
 
   export type LessonSumAggregateOutputType = {
     id: number | null
     chapterId: number | null
     displayOrder: number | null
-    planId: number | null
+    quizId: number | null
   }
 
   export type LessonMinAggregateOutputType = {
@@ -11786,7 +12691,7 @@ export namespace Prisma {
     isFreePreview: boolean | null
     accessType: $Enums.AccessType | null
     status: $Enums.CourseStatus | null
-    planId: number | null
+    quizId: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11809,7 +12714,7 @@ export namespace Prisma {
     isFreePreview: boolean | null
     accessType: $Enums.AccessType | null
     status: $Enums.CourseStatus | null
-    planId: number | null
+    quizId: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11832,7 +12737,7 @@ export namespace Prisma {
     isFreePreview: number
     accessType: number
     status: number
-    planId: number
+    quizId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -11843,14 +12748,14 @@ export namespace Prisma {
     id?: true
     chapterId?: true
     displayOrder?: true
-    planId?: true
+    quizId?: true
   }
 
   export type LessonSumAggregateInputType = {
     id?: true
     chapterId?: true
     displayOrder?: true
-    planId?: true
+    quizId?: true
   }
 
   export type LessonMinAggregateInputType = {
@@ -11871,7 +12776,7 @@ export namespace Prisma {
     isFreePreview?: true
     accessType?: true
     status?: true
-    planId?: true
+    quizId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11894,7 +12799,7 @@ export namespace Prisma {
     isFreePreview?: true
     accessType?: true
     status?: true
-    planId?: true
+    quizId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11917,7 +12822,7 @@ export namespace Prisma {
     isFreePreview?: true
     accessType?: true
     status?: true
-    planId?: true
+    quizId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -12027,7 +12932,7 @@ export namespace Prisma {
     isFreePreview: boolean
     accessType: $Enums.AccessType
     status: $Enums.CourseStatus
-    planId: number | null
+    quizId: number | null
     createdAt: Date
     updatedAt: Date
     _count: LessonCountAggregateOutputType | null
@@ -12069,11 +12974,13 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: boolean
     status?: boolean
-    planId?: boolean
+    quizId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
-    plan?: boolean | Lesson$planArgs<ExtArgs>
+    quiz?: boolean | Lesson$quizArgs<ExtArgs>
+    lessonPlans?: boolean | Lesson$lessonPlansArgs<ExtArgs>
+    _count?: boolean | LessonCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lesson"]>
 
   export type LessonSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -12094,11 +13001,11 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: boolean
     status?: boolean
-    planId?: boolean
+    quizId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
-    plan?: boolean | Lesson$planArgs<ExtArgs>
+    quiz?: boolean | Lesson$quizArgs<ExtArgs>
   }, ExtArgs["result"]["lesson"]>
 
   export type LessonSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -12119,11 +13026,11 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: boolean
     status?: boolean
-    planId?: boolean
+    quizId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
-    plan?: boolean | Lesson$planArgs<ExtArgs>
+    quiz?: boolean | Lesson$quizArgs<ExtArgs>
   }, ExtArgs["result"]["lesson"]>
 
   export type LessonSelectScalar = {
@@ -12144,30 +13051,33 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: boolean
     status?: boolean
-    planId?: boolean
+    quizId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chapterId" | "title" | "description" | "type" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "thumbnailPublicId" | "noteUrl" | "notePublicId" | "noteFileType" | "content" | "displayOrder" | "isFreePreview" | "accessType" | "status" | "planId" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
+  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chapterId" | "title" | "description" | "type" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "thumbnailPublicId" | "noteUrl" | "notePublicId" | "noteFileType" | "content" | "displayOrder" | "isFreePreview" | "accessType" | "status" | "quizId" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
   export type LessonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
-    plan?: boolean | Lesson$planArgs<ExtArgs>
+    quiz?: boolean | Lesson$quizArgs<ExtArgs>
+    lessonPlans?: boolean | Lesson$lessonPlansArgs<ExtArgs>
+    _count?: boolean | LessonCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LessonIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
-    plan?: boolean | Lesson$planArgs<ExtArgs>
+    quiz?: boolean | Lesson$quizArgs<ExtArgs>
   }
   export type LessonIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
-    plan?: boolean | Lesson$planArgs<ExtArgs>
+    quiz?: boolean | Lesson$quizArgs<ExtArgs>
   }
 
   export type $LessonPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Lesson"
     objects: {
       chapter: Prisma.$ChapterPayload<ExtArgs>
-      plan: Prisma.$PlanPayload<ExtArgs> | null
+      quiz: Prisma.$QuizPayload<ExtArgs> | null
+      lessonPlans: Prisma.$LessonPlanPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -12187,7 +13097,7 @@ export namespace Prisma {
       isFreePreview: boolean
       accessType: $Enums.AccessType
       status: $Enums.CourseStatus
-      planId: number | null
+      quizId: number | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["lesson"]>
@@ -12585,7 +13495,8 @@ export namespace Prisma {
   export interface Prisma__LessonClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     chapter<T extends ChapterDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChapterDefaultArgs<ExtArgs>>): Prisma__ChapterClient<$Result.GetResult<Prisma.$ChapterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    plan<T extends Lesson$planArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$planArgs<ExtArgs>>): Prisma__PlanClient<$Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    quiz<T extends Lesson$quizArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$quizArgs<ExtArgs>>): Prisma__QuizClient<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    lessonPlans<T extends Lesson$lessonPlansArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$lessonPlansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12632,7 +13543,7 @@ export namespace Prisma {
     readonly isFreePreview: FieldRef<"Lesson", 'Boolean'>
     readonly accessType: FieldRef<"Lesson", 'AccessType'>
     readonly status: FieldRef<"Lesson", 'CourseStatus'>
-    readonly planId: FieldRef<"Lesson", 'Int'>
+    readonly quizId: FieldRef<"Lesson", 'Int'>
     readonly createdAt: FieldRef<"Lesson", 'DateTime'>
     readonly updatedAt: FieldRef<"Lesson", 'DateTime'>
   }
@@ -13036,22 +13947,46 @@ export namespace Prisma {
   }
 
   /**
-   * Lesson.plan
+   * Lesson.quiz
    */
-  export type Lesson$planArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Lesson$quizArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Plan
+     * Select specific fields to fetch from the Quiz
      */
-    select?: PlanSelect<ExtArgs> | null
+    select?: QuizSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Plan
+     * Omit specific fields from the Quiz
      */
-    omit?: PlanOmit<ExtArgs> | null
+    omit?: QuizOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PlanInclude<ExtArgs> | null
-    where?: PlanWhereInput
+    include?: QuizInclude<ExtArgs> | null
+    where?: QuizWhereInput
+  }
+
+  /**
+   * Lesson.lessonPlans
+   */
+  export type Lesson$lessonPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonPlan
+     */
+    select?: LessonPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonPlan
+     */
+    omit?: LessonPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonPlanInclude<ExtArgs> | null
+    where?: LessonPlanWhereInput
+    orderBy?: LessonPlanOrderByWithRelationInput | LessonPlanOrderByWithRelationInput[]
+    cursor?: LessonPlanWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LessonPlanScalarFieldEnum | LessonPlanScalarFieldEnum[]
   }
 
   /**
@@ -13070,6 +14005,1076 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: LessonInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model LessonPlan
+   */
+
+  export type AggregateLessonPlan = {
+    _count: LessonPlanCountAggregateOutputType | null
+    _avg: LessonPlanAvgAggregateOutputType | null
+    _sum: LessonPlanSumAggregateOutputType | null
+    _min: LessonPlanMinAggregateOutputType | null
+    _max: LessonPlanMaxAggregateOutputType | null
+  }
+
+  export type LessonPlanAvgAggregateOutputType = {
+    lessonId: number | null
+    planId: number | null
+  }
+
+  export type LessonPlanSumAggregateOutputType = {
+    lessonId: number | null
+    planId: number | null
+  }
+
+  export type LessonPlanMinAggregateOutputType = {
+    lessonId: number | null
+    planId: number | null
+  }
+
+  export type LessonPlanMaxAggregateOutputType = {
+    lessonId: number | null
+    planId: number | null
+  }
+
+  export type LessonPlanCountAggregateOutputType = {
+    lessonId: number
+    planId: number
+    _all: number
+  }
+
+
+  export type LessonPlanAvgAggregateInputType = {
+    lessonId?: true
+    planId?: true
+  }
+
+  export type LessonPlanSumAggregateInputType = {
+    lessonId?: true
+    planId?: true
+  }
+
+  export type LessonPlanMinAggregateInputType = {
+    lessonId?: true
+    planId?: true
+  }
+
+  export type LessonPlanMaxAggregateInputType = {
+    lessonId?: true
+    planId?: true
+  }
+
+  export type LessonPlanCountAggregateInputType = {
+    lessonId?: true
+    planId?: true
+    _all?: true
+  }
+
+  export type LessonPlanAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LessonPlan to aggregate.
+     */
+    where?: LessonPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LessonPlans to fetch.
+     */
+    orderBy?: LessonPlanOrderByWithRelationInput | LessonPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LessonPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LessonPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LessonPlans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LessonPlans
+    **/
+    _count?: true | LessonPlanCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LessonPlanAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LessonPlanSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LessonPlanMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LessonPlanMaxAggregateInputType
+  }
+
+  export type GetLessonPlanAggregateType<T extends LessonPlanAggregateArgs> = {
+        [P in keyof T & keyof AggregateLessonPlan]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLessonPlan[P]>
+      : GetScalarType<T[P], AggregateLessonPlan[P]>
+  }
+
+
+
+
+  export type LessonPlanGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LessonPlanWhereInput
+    orderBy?: LessonPlanOrderByWithAggregationInput | LessonPlanOrderByWithAggregationInput[]
+    by: LessonPlanScalarFieldEnum[] | LessonPlanScalarFieldEnum
+    having?: LessonPlanScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LessonPlanCountAggregateInputType | true
+    _avg?: LessonPlanAvgAggregateInputType
+    _sum?: LessonPlanSumAggregateInputType
+    _min?: LessonPlanMinAggregateInputType
+    _max?: LessonPlanMaxAggregateInputType
+  }
+
+  export type LessonPlanGroupByOutputType = {
+    lessonId: number
+    planId: number
+    _count: LessonPlanCountAggregateOutputType | null
+    _avg: LessonPlanAvgAggregateOutputType | null
+    _sum: LessonPlanSumAggregateOutputType | null
+    _min: LessonPlanMinAggregateOutputType | null
+    _max: LessonPlanMaxAggregateOutputType | null
+  }
+
+  type GetLessonPlanGroupByPayload<T extends LessonPlanGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LessonPlanGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LessonPlanGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LessonPlanGroupByOutputType[P]>
+            : GetScalarType<T[P], LessonPlanGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LessonPlanSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    lessonId?: boolean
+    planId?: boolean
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+    plan?: boolean | PlanDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lessonPlan"]>
+
+  export type LessonPlanSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    lessonId?: boolean
+    planId?: boolean
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+    plan?: boolean | PlanDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lessonPlan"]>
+
+  export type LessonPlanSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    lessonId?: boolean
+    planId?: boolean
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+    plan?: boolean | PlanDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lessonPlan"]>
+
+  export type LessonPlanSelectScalar = {
+    lessonId?: boolean
+    planId?: boolean
+  }
+
+  export type LessonPlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"lessonId" | "planId", ExtArgs["result"]["lessonPlan"]>
+  export type LessonPlanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+    plan?: boolean | PlanDefaultArgs<ExtArgs>
+  }
+  export type LessonPlanIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+    plan?: boolean | PlanDefaultArgs<ExtArgs>
+  }
+  export type LessonPlanIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+    plan?: boolean | PlanDefaultArgs<ExtArgs>
+  }
+
+  export type $LessonPlanPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LessonPlan"
+    objects: {
+      lesson: Prisma.$LessonPayload<ExtArgs>
+      plan: Prisma.$PlanPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      lessonId: number
+      planId: number
+    }, ExtArgs["result"]["lessonPlan"]>
+    composites: {}
+  }
+
+  type LessonPlanGetPayload<S extends boolean | null | undefined | LessonPlanDefaultArgs> = $Result.GetResult<Prisma.$LessonPlanPayload, S>
+
+  type LessonPlanCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LessonPlanFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LessonPlanCountAggregateInputType | true
+    }
+
+  export interface LessonPlanDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LessonPlan'], meta: { name: 'LessonPlan' } }
+    /**
+     * Find zero or one LessonPlan that matches the filter.
+     * @param {LessonPlanFindUniqueArgs} args - Arguments to find a LessonPlan
+     * @example
+     * // Get one LessonPlan
+     * const lessonPlan = await prisma.lessonPlan.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LessonPlanFindUniqueArgs>(args: SelectSubset<T, LessonPlanFindUniqueArgs<ExtArgs>>): Prisma__LessonPlanClient<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LessonPlan that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LessonPlanFindUniqueOrThrowArgs} args - Arguments to find a LessonPlan
+     * @example
+     * // Get one LessonPlan
+     * const lessonPlan = await prisma.lessonPlan.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LessonPlanFindUniqueOrThrowArgs>(args: SelectSubset<T, LessonPlanFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LessonPlanClient<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LessonPlan that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonPlanFindFirstArgs} args - Arguments to find a LessonPlan
+     * @example
+     * // Get one LessonPlan
+     * const lessonPlan = await prisma.lessonPlan.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LessonPlanFindFirstArgs>(args?: SelectSubset<T, LessonPlanFindFirstArgs<ExtArgs>>): Prisma__LessonPlanClient<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LessonPlan that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonPlanFindFirstOrThrowArgs} args - Arguments to find a LessonPlan
+     * @example
+     * // Get one LessonPlan
+     * const lessonPlan = await prisma.lessonPlan.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LessonPlanFindFirstOrThrowArgs>(args?: SelectSubset<T, LessonPlanFindFirstOrThrowArgs<ExtArgs>>): Prisma__LessonPlanClient<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LessonPlans that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonPlanFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LessonPlans
+     * const lessonPlans = await prisma.lessonPlan.findMany()
+     * 
+     * // Get first 10 LessonPlans
+     * const lessonPlans = await prisma.lessonPlan.findMany({ take: 10 })
+     * 
+     * // Only select the `lessonId`
+     * const lessonPlanWithLessonIdOnly = await prisma.lessonPlan.findMany({ select: { lessonId: true } })
+     * 
+     */
+    findMany<T extends LessonPlanFindManyArgs>(args?: SelectSubset<T, LessonPlanFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LessonPlan.
+     * @param {LessonPlanCreateArgs} args - Arguments to create a LessonPlan.
+     * @example
+     * // Create one LessonPlan
+     * const LessonPlan = await prisma.lessonPlan.create({
+     *   data: {
+     *     // ... data to create a LessonPlan
+     *   }
+     * })
+     * 
+     */
+    create<T extends LessonPlanCreateArgs>(args: SelectSubset<T, LessonPlanCreateArgs<ExtArgs>>): Prisma__LessonPlanClient<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LessonPlans.
+     * @param {LessonPlanCreateManyArgs} args - Arguments to create many LessonPlans.
+     * @example
+     * // Create many LessonPlans
+     * const lessonPlan = await prisma.lessonPlan.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LessonPlanCreateManyArgs>(args?: SelectSubset<T, LessonPlanCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LessonPlans and returns the data saved in the database.
+     * @param {LessonPlanCreateManyAndReturnArgs} args - Arguments to create many LessonPlans.
+     * @example
+     * // Create many LessonPlans
+     * const lessonPlan = await prisma.lessonPlan.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LessonPlans and only return the `lessonId`
+     * const lessonPlanWithLessonIdOnly = await prisma.lessonPlan.createManyAndReturn({
+     *   select: { lessonId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LessonPlanCreateManyAndReturnArgs>(args?: SelectSubset<T, LessonPlanCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LessonPlan.
+     * @param {LessonPlanDeleteArgs} args - Arguments to delete one LessonPlan.
+     * @example
+     * // Delete one LessonPlan
+     * const LessonPlan = await prisma.lessonPlan.delete({
+     *   where: {
+     *     // ... filter to delete one LessonPlan
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LessonPlanDeleteArgs>(args: SelectSubset<T, LessonPlanDeleteArgs<ExtArgs>>): Prisma__LessonPlanClient<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LessonPlan.
+     * @param {LessonPlanUpdateArgs} args - Arguments to update one LessonPlan.
+     * @example
+     * // Update one LessonPlan
+     * const lessonPlan = await prisma.lessonPlan.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LessonPlanUpdateArgs>(args: SelectSubset<T, LessonPlanUpdateArgs<ExtArgs>>): Prisma__LessonPlanClient<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LessonPlans.
+     * @param {LessonPlanDeleteManyArgs} args - Arguments to filter LessonPlans to delete.
+     * @example
+     * // Delete a few LessonPlans
+     * const { count } = await prisma.lessonPlan.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LessonPlanDeleteManyArgs>(args?: SelectSubset<T, LessonPlanDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LessonPlans.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonPlanUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LessonPlans
+     * const lessonPlan = await prisma.lessonPlan.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LessonPlanUpdateManyArgs>(args: SelectSubset<T, LessonPlanUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LessonPlans and returns the data updated in the database.
+     * @param {LessonPlanUpdateManyAndReturnArgs} args - Arguments to update many LessonPlans.
+     * @example
+     * // Update many LessonPlans
+     * const lessonPlan = await prisma.lessonPlan.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LessonPlans and only return the `lessonId`
+     * const lessonPlanWithLessonIdOnly = await prisma.lessonPlan.updateManyAndReturn({
+     *   select: { lessonId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LessonPlanUpdateManyAndReturnArgs>(args: SelectSubset<T, LessonPlanUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LessonPlan.
+     * @param {LessonPlanUpsertArgs} args - Arguments to update or create a LessonPlan.
+     * @example
+     * // Update or create a LessonPlan
+     * const lessonPlan = await prisma.lessonPlan.upsert({
+     *   create: {
+     *     // ... data to create a LessonPlan
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LessonPlan we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LessonPlanUpsertArgs>(args: SelectSubset<T, LessonPlanUpsertArgs<ExtArgs>>): Prisma__LessonPlanClient<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LessonPlans.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonPlanCountArgs} args - Arguments to filter LessonPlans to count.
+     * @example
+     * // Count the number of LessonPlans
+     * const count = await prisma.lessonPlan.count({
+     *   where: {
+     *     // ... the filter for the LessonPlans we want to count
+     *   }
+     * })
+    **/
+    count<T extends LessonPlanCountArgs>(
+      args?: Subset<T, LessonPlanCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LessonPlanCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LessonPlan.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonPlanAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LessonPlanAggregateArgs>(args: Subset<T, LessonPlanAggregateArgs>): Prisma.PrismaPromise<GetLessonPlanAggregateType<T>>
+
+    /**
+     * Group by LessonPlan.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonPlanGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LessonPlanGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LessonPlanGroupByArgs['orderBy'] }
+        : { orderBy?: LessonPlanGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LessonPlanGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLessonPlanGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LessonPlan model
+   */
+  readonly fields: LessonPlanFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LessonPlan.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LessonPlanClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    lesson<T extends LessonDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LessonDefaultArgs<ExtArgs>>): Prisma__LessonClient<$Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    plan<T extends PlanDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PlanDefaultArgs<ExtArgs>>): Prisma__PlanClient<$Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LessonPlan model
+   */
+  interface LessonPlanFieldRefs {
+    readonly lessonId: FieldRef<"LessonPlan", 'Int'>
+    readonly planId: FieldRef<"LessonPlan", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LessonPlan findUnique
+   */
+  export type LessonPlanFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonPlan
+     */
+    select?: LessonPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonPlan
+     */
+    omit?: LessonPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonPlan to fetch.
+     */
+    where: LessonPlanWhereUniqueInput
+  }
+
+  /**
+   * LessonPlan findUniqueOrThrow
+   */
+  export type LessonPlanFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonPlan
+     */
+    select?: LessonPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonPlan
+     */
+    omit?: LessonPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonPlan to fetch.
+     */
+    where: LessonPlanWhereUniqueInput
+  }
+
+  /**
+   * LessonPlan findFirst
+   */
+  export type LessonPlanFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonPlan
+     */
+    select?: LessonPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonPlan
+     */
+    omit?: LessonPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonPlan to fetch.
+     */
+    where?: LessonPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LessonPlans to fetch.
+     */
+    orderBy?: LessonPlanOrderByWithRelationInput | LessonPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LessonPlans.
+     */
+    cursor?: LessonPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LessonPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LessonPlans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LessonPlans.
+     */
+    distinct?: LessonPlanScalarFieldEnum | LessonPlanScalarFieldEnum[]
+  }
+
+  /**
+   * LessonPlan findFirstOrThrow
+   */
+  export type LessonPlanFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonPlan
+     */
+    select?: LessonPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonPlan
+     */
+    omit?: LessonPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonPlan to fetch.
+     */
+    where?: LessonPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LessonPlans to fetch.
+     */
+    orderBy?: LessonPlanOrderByWithRelationInput | LessonPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LessonPlans.
+     */
+    cursor?: LessonPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LessonPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LessonPlans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LessonPlans.
+     */
+    distinct?: LessonPlanScalarFieldEnum | LessonPlanScalarFieldEnum[]
+  }
+
+  /**
+   * LessonPlan findMany
+   */
+  export type LessonPlanFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonPlan
+     */
+    select?: LessonPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonPlan
+     */
+    omit?: LessonPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonPlanInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonPlans to fetch.
+     */
+    where?: LessonPlanWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LessonPlans to fetch.
+     */
+    orderBy?: LessonPlanOrderByWithRelationInput | LessonPlanOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LessonPlans.
+     */
+    cursor?: LessonPlanWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LessonPlans from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LessonPlans.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LessonPlans.
+     */
+    distinct?: LessonPlanScalarFieldEnum | LessonPlanScalarFieldEnum[]
+  }
+
+  /**
+   * LessonPlan create
+   */
+  export type LessonPlanCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonPlan
+     */
+    select?: LessonPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonPlan
+     */
+    omit?: LessonPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonPlanInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LessonPlan.
+     */
+    data: XOR<LessonPlanCreateInput, LessonPlanUncheckedCreateInput>
+  }
+
+  /**
+   * LessonPlan createMany
+   */
+  export type LessonPlanCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LessonPlans.
+     */
+    data: LessonPlanCreateManyInput | LessonPlanCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LessonPlan createManyAndReturn
+   */
+  export type LessonPlanCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonPlan
+     */
+    select?: LessonPlanSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonPlan
+     */
+    omit?: LessonPlanOmit<ExtArgs> | null
+    /**
+     * The data used to create many LessonPlans.
+     */
+    data: LessonPlanCreateManyInput | LessonPlanCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonPlanIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LessonPlan update
+   */
+  export type LessonPlanUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonPlan
+     */
+    select?: LessonPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonPlan
+     */
+    omit?: LessonPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonPlanInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LessonPlan.
+     */
+    data: XOR<LessonPlanUpdateInput, LessonPlanUncheckedUpdateInput>
+    /**
+     * Choose, which LessonPlan to update.
+     */
+    where: LessonPlanWhereUniqueInput
+  }
+
+  /**
+   * LessonPlan updateMany
+   */
+  export type LessonPlanUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LessonPlans.
+     */
+    data: XOR<LessonPlanUpdateManyMutationInput, LessonPlanUncheckedUpdateManyInput>
+    /**
+     * Filter which LessonPlans to update
+     */
+    where?: LessonPlanWhereInput
+    /**
+     * Limit how many LessonPlans to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LessonPlan updateManyAndReturn
+   */
+  export type LessonPlanUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonPlan
+     */
+    select?: LessonPlanSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonPlan
+     */
+    omit?: LessonPlanOmit<ExtArgs> | null
+    /**
+     * The data used to update LessonPlans.
+     */
+    data: XOR<LessonPlanUpdateManyMutationInput, LessonPlanUncheckedUpdateManyInput>
+    /**
+     * Filter which LessonPlans to update
+     */
+    where?: LessonPlanWhereInput
+    /**
+     * Limit how many LessonPlans to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonPlanIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LessonPlan upsert
+   */
+  export type LessonPlanUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonPlan
+     */
+    select?: LessonPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonPlan
+     */
+    omit?: LessonPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonPlanInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LessonPlan to update in case it exists.
+     */
+    where: LessonPlanWhereUniqueInput
+    /**
+     * In case the LessonPlan found by the `where` argument doesn't exist, create a new LessonPlan with this data.
+     */
+    create: XOR<LessonPlanCreateInput, LessonPlanUncheckedCreateInput>
+    /**
+     * In case the LessonPlan was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LessonPlanUpdateInput, LessonPlanUncheckedUpdateInput>
+  }
+
+  /**
+   * LessonPlan delete
+   */
+  export type LessonPlanDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonPlan
+     */
+    select?: LessonPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonPlan
+     */
+    omit?: LessonPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonPlanInclude<ExtArgs> | null
+    /**
+     * Filter which LessonPlan to delete.
+     */
+    where: LessonPlanWhereUniqueInput
+  }
+
+  /**
+   * LessonPlan deleteMany
+   */
+  export type LessonPlanDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LessonPlans to delete
+     */
+    where?: LessonPlanWhereInput
+    /**
+     * Limit how many LessonPlans to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LessonPlan without action
+   */
+  export type LessonPlanDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonPlan
+     */
+    select?: LessonPlanSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonPlan
+     */
+    omit?: LessonPlanOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonPlanInclude<ExtArgs> | null
   }
 
 
@@ -13317,7 +15322,7 @@ export namespace Prisma {
     updatedAt?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
     subscriptions?: boolean | Plan$subscriptionsArgs<ExtArgs>
-    lessons?: boolean | Plan$lessonsArgs<ExtArgs>
+    lessonPlans?: boolean | Plan$lessonPlansArgs<ExtArgs>
     _count?: boolean | PlanCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["plan"]>
 
@@ -13363,7 +15368,7 @@ export namespace Prisma {
   export type PlanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     subscriptions?: boolean | Plan$subscriptionsArgs<ExtArgs>
-    lessons?: boolean | Plan$lessonsArgs<ExtArgs>
+    lessonPlans?: boolean | Plan$lessonPlansArgs<ExtArgs>
     _count?: boolean | PlanCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PlanIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13378,7 +15383,7 @@ export namespace Prisma {
     objects: {
       course: Prisma.$CoursePayload<ExtArgs>
       subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
-      lessons: Prisma.$LessonPayload<ExtArgs>[]
+      lessonPlans: Prisma.$LessonPlanPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -13786,7 +15791,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     course<T extends CourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourseDefaultArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     subscriptions<T extends Plan$subscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, Plan$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    lessons<T extends Plan$lessonsArgs<ExtArgs> = {}>(args?: Subset<T, Plan$lessonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    lessonPlans<T extends Plan$lessonPlansArgs<ExtArgs> = {}>(args?: Subset<T, Plan$lessonPlansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14250,27 +16255,27 @@ export namespace Prisma {
   }
 
   /**
-   * Plan.lessons
+   * Plan.lessonPlans
    */
-  export type Plan$lessonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Plan$lessonPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Lesson
+     * Select specific fields to fetch from the LessonPlan
      */
-    select?: LessonSelect<ExtArgs> | null
+    select?: LessonPlanSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Lesson
+     * Omit specific fields from the LessonPlan
      */
-    omit?: LessonOmit<ExtArgs> | null
+    omit?: LessonPlanOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: LessonInclude<ExtArgs> | null
-    where?: LessonWhereInput
-    orderBy?: LessonOrderByWithRelationInput | LessonOrderByWithRelationInput[]
-    cursor?: LessonWhereUniqueInput
+    include?: LessonPlanInclude<ExtArgs> | null
+    where?: LessonPlanWhereInput
+    orderBy?: LessonPlanOrderByWithRelationInput | LessonPlanOrderByWithRelationInput[]
+    cursor?: LessonPlanWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: LessonScalarFieldEnum | LessonScalarFieldEnum[]
+    distinct?: LessonPlanScalarFieldEnum | LessonPlanScalarFieldEnum[]
   }
 
   /**
@@ -15457,6 +17462,5726 @@ export namespace Prisma {
 
 
   /**
+   * Model Question
+   */
+
+  export type AggregateQuestion = {
+    _count: QuestionCountAggregateOutputType | null
+    _avg: QuestionAvgAggregateOutputType | null
+    _sum: QuestionSumAggregateOutputType | null
+    _min: QuestionMinAggregateOutputType | null
+    _max: QuestionMaxAggregateOutputType | null
+  }
+
+  export type QuestionAvgAggregateOutputType = {
+    id: number | null
+    subjectId: number | null
+    topicId: number | null
+    marksCorrect: number | null
+    marksIncorrect: number | null
+  }
+
+  export type QuestionSumAggregateOutputType = {
+    id: number | null
+    subjectId: number | null
+    topicId: number | null
+    marksCorrect: number | null
+    marksIncorrect: number | null
+  }
+
+  export type QuestionMinAggregateOutputType = {
+    id: number | null
+    subjectId: number | null
+    topicId: number | null
+    questionText: string | null
+    questionImageUrl: string | null
+    difficulty: $Enums.Difficulty | null
+    marksCorrect: number | null
+    marksIncorrect: number | null
+    explanation: string | null
+    status: $Enums.QuestionStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type QuestionMaxAggregateOutputType = {
+    id: number | null
+    subjectId: number | null
+    topicId: number | null
+    questionText: string | null
+    questionImageUrl: string | null
+    difficulty: $Enums.Difficulty | null
+    marksCorrect: number | null
+    marksIncorrect: number | null
+    explanation: string | null
+    status: $Enums.QuestionStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type QuestionCountAggregateOutputType = {
+    id: number
+    subjectId: number
+    topicId: number
+    questionText: number
+    questionImageUrl: number
+    difficulty: number
+    marksCorrect: number
+    marksIncorrect: number
+    explanation: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type QuestionAvgAggregateInputType = {
+    id?: true
+    subjectId?: true
+    topicId?: true
+    marksCorrect?: true
+    marksIncorrect?: true
+  }
+
+  export type QuestionSumAggregateInputType = {
+    id?: true
+    subjectId?: true
+    topicId?: true
+    marksCorrect?: true
+    marksIncorrect?: true
+  }
+
+  export type QuestionMinAggregateInputType = {
+    id?: true
+    subjectId?: true
+    topicId?: true
+    questionText?: true
+    questionImageUrl?: true
+    difficulty?: true
+    marksCorrect?: true
+    marksIncorrect?: true
+    explanation?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type QuestionMaxAggregateInputType = {
+    id?: true
+    subjectId?: true
+    topicId?: true
+    questionText?: true
+    questionImageUrl?: true
+    difficulty?: true
+    marksCorrect?: true
+    marksIncorrect?: true
+    explanation?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type QuestionCountAggregateInputType = {
+    id?: true
+    subjectId?: true
+    topicId?: true
+    questionText?: true
+    questionImageUrl?: true
+    difficulty?: true
+    marksCorrect?: true
+    marksIncorrect?: true
+    explanation?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type QuestionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Question to aggregate.
+     */
+    where?: QuestionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Questions to fetch.
+     */
+    orderBy?: QuestionOrderByWithRelationInput | QuestionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: QuestionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Questions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Questions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Questions
+    **/
+    _count?: true | QuestionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: QuestionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: QuestionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: QuestionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: QuestionMaxAggregateInputType
+  }
+
+  export type GetQuestionAggregateType<T extends QuestionAggregateArgs> = {
+        [P in keyof T & keyof AggregateQuestion]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateQuestion[P]>
+      : GetScalarType<T[P], AggregateQuestion[P]>
+  }
+
+
+
+
+  export type QuestionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuestionWhereInput
+    orderBy?: QuestionOrderByWithAggregationInput | QuestionOrderByWithAggregationInput[]
+    by: QuestionScalarFieldEnum[] | QuestionScalarFieldEnum
+    having?: QuestionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: QuestionCountAggregateInputType | true
+    _avg?: QuestionAvgAggregateInputType
+    _sum?: QuestionSumAggregateInputType
+    _min?: QuestionMinAggregateInputType
+    _max?: QuestionMaxAggregateInputType
+  }
+
+  export type QuestionGroupByOutputType = {
+    id: number
+    subjectId: number
+    topicId: number
+    questionText: string
+    questionImageUrl: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect: number
+    explanation: string | null
+    status: $Enums.QuestionStatus
+    createdAt: Date
+    updatedAt: Date
+    _count: QuestionCountAggregateOutputType | null
+    _avg: QuestionAvgAggregateOutputType | null
+    _sum: QuestionSumAggregateOutputType | null
+    _min: QuestionMinAggregateOutputType | null
+    _max: QuestionMaxAggregateOutputType | null
+  }
+
+  type GetQuestionGroupByPayload<T extends QuestionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<QuestionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof QuestionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], QuestionGroupByOutputType[P]>
+            : GetScalarType<T[P], QuestionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type QuestionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    subjectId?: boolean
+    topicId?: boolean
+    questionText?: boolean
+    questionImageUrl?: boolean
+    difficulty?: boolean
+    marksCorrect?: boolean
+    marksIncorrect?: boolean
+    explanation?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+    options?: boolean | Question$optionsArgs<ExtArgs>
+    tags?: boolean | Question$tagsArgs<ExtArgs>
+    _count?: boolean | QuestionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["question"]>
+
+  export type QuestionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    subjectId?: boolean
+    topicId?: boolean
+    questionText?: boolean
+    questionImageUrl?: boolean
+    difficulty?: boolean
+    marksCorrect?: boolean
+    marksIncorrect?: boolean
+    explanation?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["question"]>
+
+  export type QuestionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    subjectId?: boolean
+    topicId?: boolean
+    questionText?: boolean
+    questionImageUrl?: boolean
+    difficulty?: boolean
+    marksCorrect?: boolean
+    marksIncorrect?: boolean
+    explanation?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["question"]>
+
+  export type QuestionSelectScalar = {
+    id?: boolean
+    subjectId?: boolean
+    topicId?: boolean
+    questionText?: boolean
+    questionImageUrl?: boolean
+    difficulty?: boolean
+    marksCorrect?: boolean
+    marksIncorrect?: boolean
+    explanation?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type QuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subjectId" | "topicId" | "questionText" | "questionImageUrl" | "difficulty" | "marksCorrect" | "marksIncorrect" | "explanation" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["question"]>
+  export type QuestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+    options?: boolean | Question$optionsArgs<ExtArgs>
+    tags?: boolean | Question$tagsArgs<ExtArgs>
+    _count?: boolean | QuestionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type QuestionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+  }
+  export type QuestionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+  }
+
+  export type $QuestionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Question"
+    objects: {
+      subject: Prisma.$SubjectPayload<ExtArgs>
+      topic: Prisma.$TopicPayload<ExtArgs>
+      options: Prisma.$QuestionOptionPayload<ExtArgs>[]
+      tags: Prisma.$QuestionTagPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      subjectId: number
+      topicId: number
+      questionText: string
+      questionImageUrl: string | null
+      difficulty: $Enums.Difficulty
+      marksCorrect: number
+      marksIncorrect: number
+      explanation: string | null
+      status: $Enums.QuestionStatus
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["question"]>
+    composites: {}
+  }
+
+  type QuestionGetPayload<S extends boolean | null | undefined | QuestionDefaultArgs> = $Result.GetResult<Prisma.$QuestionPayload, S>
+
+  type QuestionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<QuestionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: QuestionCountAggregateInputType | true
+    }
+
+  export interface QuestionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Question'], meta: { name: 'Question' } }
+    /**
+     * Find zero or one Question that matches the filter.
+     * @param {QuestionFindUniqueArgs} args - Arguments to find a Question
+     * @example
+     * // Get one Question
+     * const question = await prisma.question.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends QuestionFindUniqueArgs>(args: SelectSubset<T, QuestionFindUniqueArgs<ExtArgs>>): Prisma__QuestionClient<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Question that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {QuestionFindUniqueOrThrowArgs} args - Arguments to find a Question
+     * @example
+     * // Get one Question
+     * const question = await prisma.question.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends QuestionFindUniqueOrThrowArgs>(args: SelectSubset<T, QuestionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__QuestionClient<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Question that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionFindFirstArgs} args - Arguments to find a Question
+     * @example
+     * // Get one Question
+     * const question = await prisma.question.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends QuestionFindFirstArgs>(args?: SelectSubset<T, QuestionFindFirstArgs<ExtArgs>>): Prisma__QuestionClient<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Question that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionFindFirstOrThrowArgs} args - Arguments to find a Question
+     * @example
+     * // Get one Question
+     * const question = await prisma.question.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends QuestionFindFirstOrThrowArgs>(args?: SelectSubset<T, QuestionFindFirstOrThrowArgs<ExtArgs>>): Prisma__QuestionClient<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Questions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Questions
+     * const questions = await prisma.question.findMany()
+     * 
+     * // Get first 10 Questions
+     * const questions = await prisma.question.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const questionWithIdOnly = await prisma.question.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends QuestionFindManyArgs>(args?: SelectSubset<T, QuestionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Question.
+     * @param {QuestionCreateArgs} args - Arguments to create a Question.
+     * @example
+     * // Create one Question
+     * const Question = await prisma.question.create({
+     *   data: {
+     *     // ... data to create a Question
+     *   }
+     * })
+     * 
+     */
+    create<T extends QuestionCreateArgs>(args: SelectSubset<T, QuestionCreateArgs<ExtArgs>>): Prisma__QuestionClient<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Questions.
+     * @param {QuestionCreateManyArgs} args - Arguments to create many Questions.
+     * @example
+     * // Create many Questions
+     * const question = await prisma.question.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends QuestionCreateManyArgs>(args?: SelectSubset<T, QuestionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Questions and returns the data saved in the database.
+     * @param {QuestionCreateManyAndReturnArgs} args - Arguments to create many Questions.
+     * @example
+     * // Create many Questions
+     * const question = await prisma.question.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Questions and only return the `id`
+     * const questionWithIdOnly = await prisma.question.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends QuestionCreateManyAndReturnArgs>(args?: SelectSubset<T, QuestionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Question.
+     * @param {QuestionDeleteArgs} args - Arguments to delete one Question.
+     * @example
+     * // Delete one Question
+     * const Question = await prisma.question.delete({
+     *   where: {
+     *     // ... filter to delete one Question
+     *   }
+     * })
+     * 
+     */
+    delete<T extends QuestionDeleteArgs>(args: SelectSubset<T, QuestionDeleteArgs<ExtArgs>>): Prisma__QuestionClient<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Question.
+     * @param {QuestionUpdateArgs} args - Arguments to update one Question.
+     * @example
+     * // Update one Question
+     * const question = await prisma.question.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends QuestionUpdateArgs>(args: SelectSubset<T, QuestionUpdateArgs<ExtArgs>>): Prisma__QuestionClient<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Questions.
+     * @param {QuestionDeleteManyArgs} args - Arguments to filter Questions to delete.
+     * @example
+     * // Delete a few Questions
+     * const { count } = await prisma.question.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends QuestionDeleteManyArgs>(args?: SelectSubset<T, QuestionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Questions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Questions
+     * const question = await prisma.question.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends QuestionUpdateManyArgs>(args: SelectSubset<T, QuestionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Questions and returns the data updated in the database.
+     * @param {QuestionUpdateManyAndReturnArgs} args - Arguments to update many Questions.
+     * @example
+     * // Update many Questions
+     * const question = await prisma.question.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Questions and only return the `id`
+     * const questionWithIdOnly = await prisma.question.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends QuestionUpdateManyAndReturnArgs>(args: SelectSubset<T, QuestionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Question.
+     * @param {QuestionUpsertArgs} args - Arguments to update or create a Question.
+     * @example
+     * // Update or create a Question
+     * const question = await prisma.question.upsert({
+     *   create: {
+     *     // ... data to create a Question
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Question we want to update
+     *   }
+     * })
+     */
+    upsert<T extends QuestionUpsertArgs>(args: SelectSubset<T, QuestionUpsertArgs<ExtArgs>>): Prisma__QuestionClient<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Questions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionCountArgs} args - Arguments to filter Questions to count.
+     * @example
+     * // Count the number of Questions
+     * const count = await prisma.question.count({
+     *   where: {
+     *     // ... the filter for the Questions we want to count
+     *   }
+     * })
+    **/
+    count<T extends QuestionCountArgs>(
+      args?: Subset<T, QuestionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], QuestionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Question.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends QuestionAggregateArgs>(args: Subset<T, QuestionAggregateArgs>): Prisma.PrismaPromise<GetQuestionAggregateType<T>>
+
+    /**
+     * Group by Question.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends QuestionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: QuestionGroupByArgs['orderBy'] }
+        : { orderBy?: QuestionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, QuestionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetQuestionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Question model
+   */
+  readonly fields: QuestionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Question.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__QuestionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    topic<T extends TopicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TopicDefaultArgs<ExtArgs>>): Prisma__TopicClient<$Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    options<T extends Question$optionsArgs<ExtArgs> = {}>(args?: Subset<T, Question$optionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionOptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tags<T extends Question$tagsArgs<ExtArgs> = {}>(args?: Subset<T, Question$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Question model
+   */
+  interface QuestionFieldRefs {
+    readonly id: FieldRef<"Question", 'Int'>
+    readonly subjectId: FieldRef<"Question", 'Int'>
+    readonly topicId: FieldRef<"Question", 'Int'>
+    readonly questionText: FieldRef<"Question", 'String'>
+    readonly questionImageUrl: FieldRef<"Question", 'String'>
+    readonly difficulty: FieldRef<"Question", 'Difficulty'>
+    readonly marksCorrect: FieldRef<"Question", 'Float'>
+    readonly marksIncorrect: FieldRef<"Question", 'Float'>
+    readonly explanation: FieldRef<"Question", 'String'>
+    readonly status: FieldRef<"Question", 'QuestionStatus'>
+    readonly createdAt: FieldRef<"Question", 'DateTime'>
+    readonly updatedAt: FieldRef<"Question", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Question findUnique
+   */
+  export type QuestionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionInclude<ExtArgs> | null
+    /**
+     * Filter, which Question to fetch.
+     */
+    where: QuestionWhereUniqueInput
+  }
+
+  /**
+   * Question findUniqueOrThrow
+   */
+  export type QuestionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionInclude<ExtArgs> | null
+    /**
+     * Filter, which Question to fetch.
+     */
+    where: QuestionWhereUniqueInput
+  }
+
+  /**
+   * Question findFirst
+   */
+  export type QuestionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionInclude<ExtArgs> | null
+    /**
+     * Filter, which Question to fetch.
+     */
+    where?: QuestionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Questions to fetch.
+     */
+    orderBy?: QuestionOrderByWithRelationInput | QuestionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Questions.
+     */
+    cursor?: QuestionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Questions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Questions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Questions.
+     */
+    distinct?: QuestionScalarFieldEnum | QuestionScalarFieldEnum[]
+  }
+
+  /**
+   * Question findFirstOrThrow
+   */
+  export type QuestionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionInclude<ExtArgs> | null
+    /**
+     * Filter, which Question to fetch.
+     */
+    where?: QuestionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Questions to fetch.
+     */
+    orderBy?: QuestionOrderByWithRelationInput | QuestionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Questions.
+     */
+    cursor?: QuestionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Questions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Questions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Questions.
+     */
+    distinct?: QuestionScalarFieldEnum | QuestionScalarFieldEnum[]
+  }
+
+  /**
+   * Question findMany
+   */
+  export type QuestionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionInclude<ExtArgs> | null
+    /**
+     * Filter, which Questions to fetch.
+     */
+    where?: QuestionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Questions to fetch.
+     */
+    orderBy?: QuestionOrderByWithRelationInput | QuestionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Questions.
+     */
+    cursor?: QuestionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Questions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Questions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Questions.
+     */
+    distinct?: QuestionScalarFieldEnum | QuestionScalarFieldEnum[]
+  }
+
+  /**
+   * Question create
+   */
+  export type QuestionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Question.
+     */
+    data: XOR<QuestionCreateInput, QuestionUncheckedCreateInput>
+  }
+
+  /**
+   * Question createMany
+   */
+  export type QuestionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Questions.
+     */
+    data: QuestionCreateManyInput | QuestionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Question createManyAndReturn
+   */
+  export type QuestionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * The data used to create many Questions.
+     */
+    data: QuestionCreateManyInput | QuestionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Question update
+   */
+  export type QuestionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Question.
+     */
+    data: XOR<QuestionUpdateInput, QuestionUncheckedUpdateInput>
+    /**
+     * Choose, which Question to update.
+     */
+    where: QuestionWhereUniqueInput
+  }
+
+  /**
+   * Question updateMany
+   */
+  export type QuestionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Questions.
+     */
+    data: XOR<QuestionUpdateManyMutationInput, QuestionUncheckedUpdateManyInput>
+    /**
+     * Filter which Questions to update
+     */
+    where?: QuestionWhereInput
+    /**
+     * Limit how many Questions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Question updateManyAndReturn
+   */
+  export type QuestionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * The data used to update Questions.
+     */
+    data: XOR<QuestionUpdateManyMutationInput, QuestionUncheckedUpdateManyInput>
+    /**
+     * Filter which Questions to update
+     */
+    where?: QuestionWhereInput
+    /**
+     * Limit how many Questions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Question upsert
+   */
+  export type QuestionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Question to update in case it exists.
+     */
+    where: QuestionWhereUniqueInput
+    /**
+     * In case the Question found by the `where` argument doesn't exist, create a new Question with this data.
+     */
+    create: XOR<QuestionCreateInput, QuestionUncheckedCreateInput>
+    /**
+     * In case the Question was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<QuestionUpdateInput, QuestionUncheckedUpdateInput>
+  }
+
+  /**
+   * Question delete
+   */
+  export type QuestionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionInclude<ExtArgs> | null
+    /**
+     * Filter which Question to delete.
+     */
+    where: QuestionWhereUniqueInput
+  }
+
+  /**
+   * Question deleteMany
+   */
+  export type QuestionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Questions to delete
+     */
+    where?: QuestionWhereInput
+    /**
+     * Limit how many Questions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Question.options
+   */
+  export type Question$optionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionOption
+     */
+    select?: QuestionOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionOption
+     */
+    omit?: QuestionOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionOptionInclude<ExtArgs> | null
+    where?: QuestionOptionWhereInput
+    orderBy?: QuestionOptionOrderByWithRelationInput | QuestionOptionOrderByWithRelationInput[]
+    cursor?: QuestionOptionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: QuestionOptionScalarFieldEnum | QuestionOptionScalarFieldEnum[]
+  }
+
+  /**
+   * Question.tags
+   */
+  export type Question$tagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionTag
+     */
+    select?: QuestionTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionTag
+     */
+    omit?: QuestionTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionTagInclude<ExtArgs> | null
+    where?: QuestionTagWhereInput
+    orderBy?: QuestionTagOrderByWithRelationInput | QuestionTagOrderByWithRelationInput[]
+    cursor?: QuestionTagWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: QuestionTagScalarFieldEnum | QuestionTagScalarFieldEnum[]
+  }
+
+  /**
+   * Question without action
+   */
+  export type QuestionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Question
+     */
+    select?: QuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Question
+     */
+    omit?: QuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model QuestionOption
+   */
+
+  export type AggregateQuestionOption = {
+    _count: QuestionOptionCountAggregateOutputType | null
+    _avg: QuestionOptionAvgAggregateOutputType | null
+    _sum: QuestionOptionSumAggregateOutputType | null
+    _min: QuestionOptionMinAggregateOutputType | null
+    _max: QuestionOptionMaxAggregateOutputType | null
+  }
+
+  export type QuestionOptionAvgAggregateOutputType = {
+    id: number | null
+    questionId: number | null
+    displayOrder: number | null
+  }
+
+  export type QuestionOptionSumAggregateOutputType = {
+    id: number | null
+    questionId: number | null
+    displayOrder: number | null
+  }
+
+  export type QuestionOptionMinAggregateOutputType = {
+    id: number | null
+    questionId: number | null
+    optionText: string | null
+    optionImageUrl: string | null
+    isCorrect: boolean | null
+    displayOrder: number | null
+  }
+
+  export type QuestionOptionMaxAggregateOutputType = {
+    id: number | null
+    questionId: number | null
+    optionText: string | null
+    optionImageUrl: string | null
+    isCorrect: boolean | null
+    displayOrder: number | null
+  }
+
+  export type QuestionOptionCountAggregateOutputType = {
+    id: number
+    questionId: number
+    optionText: number
+    optionImageUrl: number
+    isCorrect: number
+    displayOrder: number
+    _all: number
+  }
+
+
+  export type QuestionOptionAvgAggregateInputType = {
+    id?: true
+    questionId?: true
+    displayOrder?: true
+  }
+
+  export type QuestionOptionSumAggregateInputType = {
+    id?: true
+    questionId?: true
+    displayOrder?: true
+  }
+
+  export type QuestionOptionMinAggregateInputType = {
+    id?: true
+    questionId?: true
+    optionText?: true
+    optionImageUrl?: true
+    isCorrect?: true
+    displayOrder?: true
+  }
+
+  export type QuestionOptionMaxAggregateInputType = {
+    id?: true
+    questionId?: true
+    optionText?: true
+    optionImageUrl?: true
+    isCorrect?: true
+    displayOrder?: true
+  }
+
+  export type QuestionOptionCountAggregateInputType = {
+    id?: true
+    questionId?: true
+    optionText?: true
+    optionImageUrl?: true
+    isCorrect?: true
+    displayOrder?: true
+    _all?: true
+  }
+
+  export type QuestionOptionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which QuestionOption to aggregate.
+     */
+    where?: QuestionOptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QuestionOptions to fetch.
+     */
+    orderBy?: QuestionOptionOrderByWithRelationInput | QuestionOptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: QuestionOptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QuestionOptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QuestionOptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned QuestionOptions
+    **/
+    _count?: true | QuestionOptionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: QuestionOptionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: QuestionOptionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: QuestionOptionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: QuestionOptionMaxAggregateInputType
+  }
+
+  export type GetQuestionOptionAggregateType<T extends QuestionOptionAggregateArgs> = {
+        [P in keyof T & keyof AggregateQuestionOption]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateQuestionOption[P]>
+      : GetScalarType<T[P], AggregateQuestionOption[P]>
+  }
+
+
+
+
+  export type QuestionOptionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuestionOptionWhereInput
+    orderBy?: QuestionOptionOrderByWithAggregationInput | QuestionOptionOrderByWithAggregationInput[]
+    by: QuestionOptionScalarFieldEnum[] | QuestionOptionScalarFieldEnum
+    having?: QuestionOptionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: QuestionOptionCountAggregateInputType | true
+    _avg?: QuestionOptionAvgAggregateInputType
+    _sum?: QuestionOptionSumAggregateInputType
+    _min?: QuestionOptionMinAggregateInputType
+    _max?: QuestionOptionMaxAggregateInputType
+  }
+
+  export type QuestionOptionGroupByOutputType = {
+    id: number
+    questionId: number
+    optionText: string
+    optionImageUrl: string | null
+    isCorrect: boolean
+    displayOrder: number
+    _count: QuestionOptionCountAggregateOutputType | null
+    _avg: QuestionOptionAvgAggregateOutputType | null
+    _sum: QuestionOptionSumAggregateOutputType | null
+    _min: QuestionOptionMinAggregateOutputType | null
+    _max: QuestionOptionMaxAggregateOutputType | null
+  }
+
+  type GetQuestionOptionGroupByPayload<T extends QuestionOptionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<QuestionOptionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof QuestionOptionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], QuestionOptionGroupByOutputType[P]>
+            : GetScalarType<T[P], QuestionOptionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type QuestionOptionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    questionId?: boolean
+    optionText?: boolean
+    optionImageUrl?: boolean
+    isCorrect?: boolean
+    displayOrder?: boolean
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["questionOption"]>
+
+  export type QuestionOptionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    questionId?: boolean
+    optionText?: boolean
+    optionImageUrl?: boolean
+    isCorrect?: boolean
+    displayOrder?: boolean
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["questionOption"]>
+
+  export type QuestionOptionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    questionId?: boolean
+    optionText?: boolean
+    optionImageUrl?: boolean
+    isCorrect?: boolean
+    displayOrder?: boolean
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["questionOption"]>
+
+  export type QuestionOptionSelectScalar = {
+    id?: boolean
+    questionId?: boolean
+    optionText?: boolean
+    optionImageUrl?: boolean
+    isCorrect?: boolean
+    displayOrder?: boolean
+  }
+
+  export type QuestionOptionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "questionId" | "optionText" | "optionImageUrl" | "isCorrect" | "displayOrder", ExtArgs["result"]["questionOption"]>
+  export type QuestionOptionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+  }
+  export type QuestionOptionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+  }
+  export type QuestionOptionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+  }
+
+  export type $QuestionOptionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "QuestionOption"
+    objects: {
+      question: Prisma.$QuestionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      questionId: number
+      optionText: string
+      optionImageUrl: string | null
+      isCorrect: boolean
+      displayOrder: number
+    }, ExtArgs["result"]["questionOption"]>
+    composites: {}
+  }
+
+  type QuestionOptionGetPayload<S extends boolean | null | undefined | QuestionOptionDefaultArgs> = $Result.GetResult<Prisma.$QuestionOptionPayload, S>
+
+  type QuestionOptionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<QuestionOptionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: QuestionOptionCountAggregateInputType | true
+    }
+
+  export interface QuestionOptionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['QuestionOption'], meta: { name: 'QuestionOption' } }
+    /**
+     * Find zero or one QuestionOption that matches the filter.
+     * @param {QuestionOptionFindUniqueArgs} args - Arguments to find a QuestionOption
+     * @example
+     * // Get one QuestionOption
+     * const questionOption = await prisma.questionOption.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends QuestionOptionFindUniqueArgs>(args: SelectSubset<T, QuestionOptionFindUniqueArgs<ExtArgs>>): Prisma__QuestionOptionClient<$Result.GetResult<Prisma.$QuestionOptionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one QuestionOption that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {QuestionOptionFindUniqueOrThrowArgs} args - Arguments to find a QuestionOption
+     * @example
+     * // Get one QuestionOption
+     * const questionOption = await prisma.questionOption.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends QuestionOptionFindUniqueOrThrowArgs>(args: SelectSubset<T, QuestionOptionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__QuestionOptionClient<$Result.GetResult<Prisma.$QuestionOptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first QuestionOption that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionOptionFindFirstArgs} args - Arguments to find a QuestionOption
+     * @example
+     * // Get one QuestionOption
+     * const questionOption = await prisma.questionOption.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends QuestionOptionFindFirstArgs>(args?: SelectSubset<T, QuestionOptionFindFirstArgs<ExtArgs>>): Prisma__QuestionOptionClient<$Result.GetResult<Prisma.$QuestionOptionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first QuestionOption that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionOptionFindFirstOrThrowArgs} args - Arguments to find a QuestionOption
+     * @example
+     * // Get one QuestionOption
+     * const questionOption = await prisma.questionOption.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends QuestionOptionFindFirstOrThrowArgs>(args?: SelectSubset<T, QuestionOptionFindFirstOrThrowArgs<ExtArgs>>): Prisma__QuestionOptionClient<$Result.GetResult<Prisma.$QuestionOptionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more QuestionOptions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionOptionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all QuestionOptions
+     * const questionOptions = await prisma.questionOption.findMany()
+     * 
+     * // Get first 10 QuestionOptions
+     * const questionOptions = await prisma.questionOption.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const questionOptionWithIdOnly = await prisma.questionOption.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends QuestionOptionFindManyArgs>(args?: SelectSubset<T, QuestionOptionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionOptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a QuestionOption.
+     * @param {QuestionOptionCreateArgs} args - Arguments to create a QuestionOption.
+     * @example
+     * // Create one QuestionOption
+     * const QuestionOption = await prisma.questionOption.create({
+     *   data: {
+     *     // ... data to create a QuestionOption
+     *   }
+     * })
+     * 
+     */
+    create<T extends QuestionOptionCreateArgs>(args: SelectSubset<T, QuestionOptionCreateArgs<ExtArgs>>): Prisma__QuestionOptionClient<$Result.GetResult<Prisma.$QuestionOptionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many QuestionOptions.
+     * @param {QuestionOptionCreateManyArgs} args - Arguments to create many QuestionOptions.
+     * @example
+     * // Create many QuestionOptions
+     * const questionOption = await prisma.questionOption.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends QuestionOptionCreateManyArgs>(args?: SelectSubset<T, QuestionOptionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many QuestionOptions and returns the data saved in the database.
+     * @param {QuestionOptionCreateManyAndReturnArgs} args - Arguments to create many QuestionOptions.
+     * @example
+     * // Create many QuestionOptions
+     * const questionOption = await prisma.questionOption.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many QuestionOptions and only return the `id`
+     * const questionOptionWithIdOnly = await prisma.questionOption.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends QuestionOptionCreateManyAndReturnArgs>(args?: SelectSubset<T, QuestionOptionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionOptionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a QuestionOption.
+     * @param {QuestionOptionDeleteArgs} args - Arguments to delete one QuestionOption.
+     * @example
+     * // Delete one QuestionOption
+     * const QuestionOption = await prisma.questionOption.delete({
+     *   where: {
+     *     // ... filter to delete one QuestionOption
+     *   }
+     * })
+     * 
+     */
+    delete<T extends QuestionOptionDeleteArgs>(args: SelectSubset<T, QuestionOptionDeleteArgs<ExtArgs>>): Prisma__QuestionOptionClient<$Result.GetResult<Prisma.$QuestionOptionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one QuestionOption.
+     * @param {QuestionOptionUpdateArgs} args - Arguments to update one QuestionOption.
+     * @example
+     * // Update one QuestionOption
+     * const questionOption = await prisma.questionOption.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends QuestionOptionUpdateArgs>(args: SelectSubset<T, QuestionOptionUpdateArgs<ExtArgs>>): Prisma__QuestionOptionClient<$Result.GetResult<Prisma.$QuestionOptionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more QuestionOptions.
+     * @param {QuestionOptionDeleteManyArgs} args - Arguments to filter QuestionOptions to delete.
+     * @example
+     * // Delete a few QuestionOptions
+     * const { count } = await prisma.questionOption.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends QuestionOptionDeleteManyArgs>(args?: SelectSubset<T, QuestionOptionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more QuestionOptions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionOptionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many QuestionOptions
+     * const questionOption = await prisma.questionOption.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends QuestionOptionUpdateManyArgs>(args: SelectSubset<T, QuestionOptionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more QuestionOptions and returns the data updated in the database.
+     * @param {QuestionOptionUpdateManyAndReturnArgs} args - Arguments to update many QuestionOptions.
+     * @example
+     * // Update many QuestionOptions
+     * const questionOption = await prisma.questionOption.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more QuestionOptions and only return the `id`
+     * const questionOptionWithIdOnly = await prisma.questionOption.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends QuestionOptionUpdateManyAndReturnArgs>(args: SelectSubset<T, QuestionOptionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionOptionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one QuestionOption.
+     * @param {QuestionOptionUpsertArgs} args - Arguments to update or create a QuestionOption.
+     * @example
+     * // Update or create a QuestionOption
+     * const questionOption = await prisma.questionOption.upsert({
+     *   create: {
+     *     // ... data to create a QuestionOption
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the QuestionOption we want to update
+     *   }
+     * })
+     */
+    upsert<T extends QuestionOptionUpsertArgs>(args: SelectSubset<T, QuestionOptionUpsertArgs<ExtArgs>>): Prisma__QuestionOptionClient<$Result.GetResult<Prisma.$QuestionOptionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of QuestionOptions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionOptionCountArgs} args - Arguments to filter QuestionOptions to count.
+     * @example
+     * // Count the number of QuestionOptions
+     * const count = await prisma.questionOption.count({
+     *   where: {
+     *     // ... the filter for the QuestionOptions we want to count
+     *   }
+     * })
+    **/
+    count<T extends QuestionOptionCountArgs>(
+      args?: Subset<T, QuestionOptionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], QuestionOptionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a QuestionOption.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionOptionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends QuestionOptionAggregateArgs>(args: Subset<T, QuestionOptionAggregateArgs>): Prisma.PrismaPromise<GetQuestionOptionAggregateType<T>>
+
+    /**
+     * Group by QuestionOption.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionOptionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends QuestionOptionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: QuestionOptionGroupByArgs['orderBy'] }
+        : { orderBy?: QuestionOptionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, QuestionOptionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetQuestionOptionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the QuestionOption model
+   */
+  readonly fields: QuestionOptionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for QuestionOption.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__QuestionOptionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    question<T extends QuestionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, QuestionDefaultArgs<ExtArgs>>): Prisma__QuestionClient<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the QuestionOption model
+   */
+  interface QuestionOptionFieldRefs {
+    readonly id: FieldRef<"QuestionOption", 'Int'>
+    readonly questionId: FieldRef<"QuestionOption", 'Int'>
+    readonly optionText: FieldRef<"QuestionOption", 'String'>
+    readonly optionImageUrl: FieldRef<"QuestionOption", 'String'>
+    readonly isCorrect: FieldRef<"QuestionOption", 'Boolean'>
+    readonly displayOrder: FieldRef<"QuestionOption", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * QuestionOption findUnique
+   */
+  export type QuestionOptionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionOption
+     */
+    select?: QuestionOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionOption
+     */
+    omit?: QuestionOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionOptionInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionOption to fetch.
+     */
+    where: QuestionOptionWhereUniqueInput
+  }
+
+  /**
+   * QuestionOption findUniqueOrThrow
+   */
+  export type QuestionOptionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionOption
+     */
+    select?: QuestionOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionOption
+     */
+    omit?: QuestionOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionOptionInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionOption to fetch.
+     */
+    where: QuestionOptionWhereUniqueInput
+  }
+
+  /**
+   * QuestionOption findFirst
+   */
+  export type QuestionOptionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionOption
+     */
+    select?: QuestionOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionOption
+     */
+    omit?: QuestionOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionOptionInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionOption to fetch.
+     */
+    where?: QuestionOptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QuestionOptions to fetch.
+     */
+    orderBy?: QuestionOptionOrderByWithRelationInput | QuestionOptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for QuestionOptions.
+     */
+    cursor?: QuestionOptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QuestionOptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QuestionOptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of QuestionOptions.
+     */
+    distinct?: QuestionOptionScalarFieldEnum | QuestionOptionScalarFieldEnum[]
+  }
+
+  /**
+   * QuestionOption findFirstOrThrow
+   */
+  export type QuestionOptionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionOption
+     */
+    select?: QuestionOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionOption
+     */
+    omit?: QuestionOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionOptionInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionOption to fetch.
+     */
+    where?: QuestionOptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QuestionOptions to fetch.
+     */
+    orderBy?: QuestionOptionOrderByWithRelationInput | QuestionOptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for QuestionOptions.
+     */
+    cursor?: QuestionOptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QuestionOptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QuestionOptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of QuestionOptions.
+     */
+    distinct?: QuestionOptionScalarFieldEnum | QuestionOptionScalarFieldEnum[]
+  }
+
+  /**
+   * QuestionOption findMany
+   */
+  export type QuestionOptionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionOption
+     */
+    select?: QuestionOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionOption
+     */
+    omit?: QuestionOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionOptionInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionOptions to fetch.
+     */
+    where?: QuestionOptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QuestionOptions to fetch.
+     */
+    orderBy?: QuestionOptionOrderByWithRelationInput | QuestionOptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing QuestionOptions.
+     */
+    cursor?: QuestionOptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QuestionOptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QuestionOptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of QuestionOptions.
+     */
+    distinct?: QuestionOptionScalarFieldEnum | QuestionOptionScalarFieldEnum[]
+  }
+
+  /**
+   * QuestionOption create
+   */
+  export type QuestionOptionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionOption
+     */
+    select?: QuestionOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionOption
+     */
+    omit?: QuestionOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionOptionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a QuestionOption.
+     */
+    data: XOR<QuestionOptionCreateInput, QuestionOptionUncheckedCreateInput>
+  }
+
+  /**
+   * QuestionOption createMany
+   */
+  export type QuestionOptionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many QuestionOptions.
+     */
+    data: QuestionOptionCreateManyInput | QuestionOptionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * QuestionOption createManyAndReturn
+   */
+  export type QuestionOptionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionOption
+     */
+    select?: QuestionOptionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionOption
+     */
+    omit?: QuestionOptionOmit<ExtArgs> | null
+    /**
+     * The data used to create many QuestionOptions.
+     */
+    data: QuestionOptionCreateManyInput | QuestionOptionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionOptionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * QuestionOption update
+   */
+  export type QuestionOptionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionOption
+     */
+    select?: QuestionOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionOption
+     */
+    omit?: QuestionOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionOptionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a QuestionOption.
+     */
+    data: XOR<QuestionOptionUpdateInput, QuestionOptionUncheckedUpdateInput>
+    /**
+     * Choose, which QuestionOption to update.
+     */
+    where: QuestionOptionWhereUniqueInput
+  }
+
+  /**
+   * QuestionOption updateMany
+   */
+  export type QuestionOptionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update QuestionOptions.
+     */
+    data: XOR<QuestionOptionUpdateManyMutationInput, QuestionOptionUncheckedUpdateManyInput>
+    /**
+     * Filter which QuestionOptions to update
+     */
+    where?: QuestionOptionWhereInput
+    /**
+     * Limit how many QuestionOptions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * QuestionOption updateManyAndReturn
+   */
+  export type QuestionOptionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionOption
+     */
+    select?: QuestionOptionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionOption
+     */
+    omit?: QuestionOptionOmit<ExtArgs> | null
+    /**
+     * The data used to update QuestionOptions.
+     */
+    data: XOR<QuestionOptionUpdateManyMutationInput, QuestionOptionUncheckedUpdateManyInput>
+    /**
+     * Filter which QuestionOptions to update
+     */
+    where?: QuestionOptionWhereInput
+    /**
+     * Limit how many QuestionOptions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionOptionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * QuestionOption upsert
+   */
+  export type QuestionOptionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionOption
+     */
+    select?: QuestionOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionOption
+     */
+    omit?: QuestionOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionOptionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the QuestionOption to update in case it exists.
+     */
+    where: QuestionOptionWhereUniqueInput
+    /**
+     * In case the QuestionOption found by the `where` argument doesn't exist, create a new QuestionOption with this data.
+     */
+    create: XOR<QuestionOptionCreateInput, QuestionOptionUncheckedCreateInput>
+    /**
+     * In case the QuestionOption was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<QuestionOptionUpdateInput, QuestionOptionUncheckedUpdateInput>
+  }
+
+  /**
+   * QuestionOption delete
+   */
+  export type QuestionOptionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionOption
+     */
+    select?: QuestionOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionOption
+     */
+    omit?: QuestionOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionOptionInclude<ExtArgs> | null
+    /**
+     * Filter which QuestionOption to delete.
+     */
+    where: QuestionOptionWhereUniqueInput
+  }
+
+  /**
+   * QuestionOption deleteMany
+   */
+  export type QuestionOptionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which QuestionOptions to delete
+     */
+    where?: QuestionOptionWhereInput
+    /**
+     * Limit how many QuestionOptions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * QuestionOption without action
+   */
+  export type QuestionOptionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionOption
+     */
+    select?: QuestionOptionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionOption
+     */
+    omit?: QuestionOptionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionOptionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Quiz
+   */
+
+  export type AggregateQuiz = {
+    _count: QuizCountAggregateOutputType | null
+    _avg: QuizAvgAggregateOutputType | null
+    _sum: QuizSumAggregateOutputType | null
+    _min: QuizMinAggregateOutputType | null
+    _max: QuizMaxAggregateOutputType | null
+  }
+
+  export type QuizAvgAggregateOutputType = {
+    id: number | null
+    subjectId: number | null
+    topicId: number | null
+    questionCount: number | null
+  }
+
+  export type QuizSumAggregateOutputType = {
+    id: number | null
+    subjectId: number | null
+    topicId: number | null
+    questionCount: number | null
+  }
+
+  export type QuizMinAggregateOutputType = {
+    id: number | null
+    title: string | null
+    subjectId: number | null
+    topicId: number | null
+    examTag: string | null
+    questionCount: number | null
+    status: $Enums.QuestionStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type QuizMaxAggregateOutputType = {
+    id: number | null
+    title: string | null
+    subjectId: number | null
+    topicId: number | null
+    examTag: string | null
+    questionCount: number | null
+    status: $Enums.QuestionStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type QuizCountAggregateOutputType = {
+    id: number
+    title: number
+    subjectId: number
+    topicId: number
+    examTag: number
+    questionCount: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type QuizAvgAggregateInputType = {
+    id?: true
+    subjectId?: true
+    topicId?: true
+    questionCount?: true
+  }
+
+  export type QuizSumAggregateInputType = {
+    id?: true
+    subjectId?: true
+    topicId?: true
+    questionCount?: true
+  }
+
+  export type QuizMinAggregateInputType = {
+    id?: true
+    title?: true
+    subjectId?: true
+    topicId?: true
+    examTag?: true
+    questionCount?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type QuizMaxAggregateInputType = {
+    id?: true
+    title?: true
+    subjectId?: true
+    topicId?: true
+    examTag?: true
+    questionCount?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type QuizCountAggregateInputType = {
+    id?: true
+    title?: true
+    subjectId?: true
+    topicId?: true
+    examTag?: true
+    questionCount?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type QuizAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Quiz to aggregate.
+     */
+    where?: QuizWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Quizzes to fetch.
+     */
+    orderBy?: QuizOrderByWithRelationInput | QuizOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: QuizWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Quizzes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Quizzes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Quizzes
+    **/
+    _count?: true | QuizCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: QuizAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: QuizSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: QuizMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: QuizMaxAggregateInputType
+  }
+
+  export type GetQuizAggregateType<T extends QuizAggregateArgs> = {
+        [P in keyof T & keyof AggregateQuiz]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateQuiz[P]>
+      : GetScalarType<T[P], AggregateQuiz[P]>
+  }
+
+
+
+
+  export type QuizGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuizWhereInput
+    orderBy?: QuizOrderByWithAggregationInput | QuizOrderByWithAggregationInput[]
+    by: QuizScalarFieldEnum[] | QuizScalarFieldEnum
+    having?: QuizScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: QuizCountAggregateInputType | true
+    _avg?: QuizAvgAggregateInputType
+    _sum?: QuizSumAggregateInputType
+    _min?: QuizMinAggregateInputType
+    _max?: QuizMaxAggregateInputType
+  }
+
+  export type QuizGroupByOutputType = {
+    id: number
+    title: string
+    subjectId: number
+    topicId: number
+    examTag: string | null
+    questionCount: number | null
+    status: $Enums.QuestionStatus
+    createdAt: Date
+    updatedAt: Date
+    _count: QuizCountAggregateOutputType | null
+    _avg: QuizAvgAggregateOutputType | null
+    _sum: QuizSumAggregateOutputType | null
+    _min: QuizMinAggregateOutputType | null
+    _max: QuizMaxAggregateOutputType | null
+  }
+
+  type GetQuizGroupByPayload<T extends QuizGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<QuizGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof QuizGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], QuizGroupByOutputType[P]>
+            : GetScalarType<T[P], QuizGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type QuizSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    subjectId?: boolean
+    topicId?: boolean
+    examTag?: boolean
+    questionCount?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+    lesson?: boolean | Quiz$lessonArgs<ExtArgs>
+  }, ExtArgs["result"]["quiz"]>
+
+  export type QuizSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    subjectId?: boolean
+    topicId?: boolean
+    examTag?: boolean
+    questionCount?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["quiz"]>
+
+  export type QuizSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    subjectId?: boolean
+    topicId?: boolean
+    examTag?: boolean
+    questionCount?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["quiz"]>
+
+  export type QuizSelectScalar = {
+    id?: boolean
+    title?: boolean
+    subjectId?: boolean
+    topicId?: boolean
+    examTag?: boolean
+    questionCount?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type QuizOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "subjectId" | "topicId" | "examTag" | "questionCount" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["quiz"]>
+  export type QuizInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+    lesson?: boolean | Quiz$lessonArgs<ExtArgs>
+  }
+  export type QuizIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+  }
+  export type QuizIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    topic?: boolean | TopicDefaultArgs<ExtArgs>
+  }
+
+  export type $QuizPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Quiz"
+    objects: {
+      subject: Prisma.$SubjectPayload<ExtArgs>
+      topic: Prisma.$TopicPayload<ExtArgs>
+      lesson: Prisma.$LessonPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      title: string
+      subjectId: number
+      topicId: number
+      examTag: string | null
+      questionCount: number | null
+      status: $Enums.QuestionStatus
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["quiz"]>
+    composites: {}
+  }
+
+  type QuizGetPayload<S extends boolean | null | undefined | QuizDefaultArgs> = $Result.GetResult<Prisma.$QuizPayload, S>
+
+  type QuizCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<QuizFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: QuizCountAggregateInputType | true
+    }
+
+  export interface QuizDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Quiz'], meta: { name: 'Quiz' } }
+    /**
+     * Find zero or one Quiz that matches the filter.
+     * @param {QuizFindUniqueArgs} args - Arguments to find a Quiz
+     * @example
+     * // Get one Quiz
+     * const quiz = await prisma.quiz.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends QuizFindUniqueArgs>(args: SelectSubset<T, QuizFindUniqueArgs<ExtArgs>>): Prisma__QuizClient<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Quiz that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {QuizFindUniqueOrThrowArgs} args - Arguments to find a Quiz
+     * @example
+     * // Get one Quiz
+     * const quiz = await prisma.quiz.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends QuizFindUniqueOrThrowArgs>(args: SelectSubset<T, QuizFindUniqueOrThrowArgs<ExtArgs>>): Prisma__QuizClient<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Quiz that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuizFindFirstArgs} args - Arguments to find a Quiz
+     * @example
+     * // Get one Quiz
+     * const quiz = await prisma.quiz.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends QuizFindFirstArgs>(args?: SelectSubset<T, QuizFindFirstArgs<ExtArgs>>): Prisma__QuizClient<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Quiz that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuizFindFirstOrThrowArgs} args - Arguments to find a Quiz
+     * @example
+     * // Get one Quiz
+     * const quiz = await prisma.quiz.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends QuizFindFirstOrThrowArgs>(args?: SelectSubset<T, QuizFindFirstOrThrowArgs<ExtArgs>>): Prisma__QuizClient<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Quizzes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuizFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Quizzes
+     * const quizzes = await prisma.quiz.findMany()
+     * 
+     * // Get first 10 Quizzes
+     * const quizzes = await prisma.quiz.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const quizWithIdOnly = await prisma.quiz.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends QuizFindManyArgs>(args?: SelectSubset<T, QuizFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Quiz.
+     * @param {QuizCreateArgs} args - Arguments to create a Quiz.
+     * @example
+     * // Create one Quiz
+     * const Quiz = await prisma.quiz.create({
+     *   data: {
+     *     // ... data to create a Quiz
+     *   }
+     * })
+     * 
+     */
+    create<T extends QuizCreateArgs>(args: SelectSubset<T, QuizCreateArgs<ExtArgs>>): Prisma__QuizClient<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Quizzes.
+     * @param {QuizCreateManyArgs} args - Arguments to create many Quizzes.
+     * @example
+     * // Create many Quizzes
+     * const quiz = await prisma.quiz.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends QuizCreateManyArgs>(args?: SelectSubset<T, QuizCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Quizzes and returns the data saved in the database.
+     * @param {QuizCreateManyAndReturnArgs} args - Arguments to create many Quizzes.
+     * @example
+     * // Create many Quizzes
+     * const quiz = await prisma.quiz.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Quizzes and only return the `id`
+     * const quizWithIdOnly = await prisma.quiz.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends QuizCreateManyAndReturnArgs>(args?: SelectSubset<T, QuizCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Quiz.
+     * @param {QuizDeleteArgs} args - Arguments to delete one Quiz.
+     * @example
+     * // Delete one Quiz
+     * const Quiz = await prisma.quiz.delete({
+     *   where: {
+     *     // ... filter to delete one Quiz
+     *   }
+     * })
+     * 
+     */
+    delete<T extends QuizDeleteArgs>(args: SelectSubset<T, QuizDeleteArgs<ExtArgs>>): Prisma__QuizClient<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Quiz.
+     * @param {QuizUpdateArgs} args - Arguments to update one Quiz.
+     * @example
+     * // Update one Quiz
+     * const quiz = await prisma.quiz.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends QuizUpdateArgs>(args: SelectSubset<T, QuizUpdateArgs<ExtArgs>>): Prisma__QuizClient<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Quizzes.
+     * @param {QuizDeleteManyArgs} args - Arguments to filter Quizzes to delete.
+     * @example
+     * // Delete a few Quizzes
+     * const { count } = await prisma.quiz.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends QuizDeleteManyArgs>(args?: SelectSubset<T, QuizDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Quizzes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuizUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Quizzes
+     * const quiz = await prisma.quiz.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends QuizUpdateManyArgs>(args: SelectSubset<T, QuizUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Quizzes and returns the data updated in the database.
+     * @param {QuizUpdateManyAndReturnArgs} args - Arguments to update many Quizzes.
+     * @example
+     * // Update many Quizzes
+     * const quiz = await prisma.quiz.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Quizzes and only return the `id`
+     * const quizWithIdOnly = await prisma.quiz.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends QuizUpdateManyAndReturnArgs>(args: SelectSubset<T, QuizUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Quiz.
+     * @param {QuizUpsertArgs} args - Arguments to update or create a Quiz.
+     * @example
+     * // Update or create a Quiz
+     * const quiz = await prisma.quiz.upsert({
+     *   create: {
+     *     // ... data to create a Quiz
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Quiz we want to update
+     *   }
+     * })
+     */
+    upsert<T extends QuizUpsertArgs>(args: SelectSubset<T, QuizUpsertArgs<ExtArgs>>): Prisma__QuizClient<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Quizzes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuizCountArgs} args - Arguments to filter Quizzes to count.
+     * @example
+     * // Count the number of Quizzes
+     * const count = await prisma.quiz.count({
+     *   where: {
+     *     // ... the filter for the Quizzes we want to count
+     *   }
+     * })
+    **/
+    count<T extends QuizCountArgs>(
+      args?: Subset<T, QuizCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], QuizCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Quiz.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuizAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends QuizAggregateArgs>(args: Subset<T, QuizAggregateArgs>): Prisma.PrismaPromise<GetQuizAggregateType<T>>
+
+    /**
+     * Group by Quiz.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuizGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends QuizGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: QuizGroupByArgs['orderBy'] }
+        : { orderBy?: QuizGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, QuizGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetQuizGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Quiz model
+   */
+  readonly fields: QuizFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Quiz.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__QuizClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    topic<T extends TopicDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TopicDefaultArgs<ExtArgs>>): Prisma__TopicClient<$Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    lesson<T extends Quiz$lessonArgs<ExtArgs> = {}>(args?: Subset<T, Quiz$lessonArgs<ExtArgs>>): Prisma__LessonClient<$Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Quiz model
+   */
+  interface QuizFieldRefs {
+    readonly id: FieldRef<"Quiz", 'Int'>
+    readonly title: FieldRef<"Quiz", 'String'>
+    readonly subjectId: FieldRef<"Quiz", 'Int'>
+    readonly topicId: FieldRef<"Quiz", 'Int'>
+    readonly examTag: FieldRef<"Quiz", 'String'>
+    readonly questionCount: FieldRef<"Quiz", 'Int'>
+    readonly status: FieldRef<"Quiz", 'QuestionStatus'>
+    readonly createdAt: FieldRef<"Quiz", 'DateTime'>
+    readonly updatedAt: FieldRef<"Quiz", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Quiz findUnique
+   */
+  export type QuizFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quiz
+     */
+    select?: QuizSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Quiz
+     */
+    omit?: QuizOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuizInclude<ExtArgs> | null
+    /**
+     * Filter, which Quiz to fetch.
+     */
+    where: QuizWhereUniqueInput
+  }
+
+  /**
+   * Quiz findUniqueOrThrow
+   */
+  export type QuizFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quiz
+     */
+    select?: QuizSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Quiz
+     */
+    omit?: QuizOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuizInclude<ExtArgs> | null
+    /**
+     * Filter, which Quiz to fetch.
+     */
+    where: QuizWhereUniqueInput
+  }
+
+  /**
+   * Quiz findFirst
+   */
+  export type QuizFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quiz
+     */
+    select?: QuizSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Quiz
+     */
+    omit?: QuizOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuizInclude<ExtArgs> | null
+    /**
+     * Filter, which Quiz to fetch.
+     */
+    where?: QuizWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Quizzes to fetch.
+     */
+    orderBy?: QuizOrderByWithRelationInput | QuizOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Quizzes.
+     */
+    cursor?: QuizWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Quizzes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Quizzes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Quizzes.
+     */
+    distinct?: QuizScalarFieldEnum | QuizScalarFieldEnum[]
+  }
+
+  /**
+   * Quiz findFirstOrThrow
+   */
+  export type QuizFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quiz
+     */
+    select?: QuizSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Quiz
+     */
+    omit?: QuizOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuizInclude<ExtArgs> | null
+    /**
+     * Filter, which Quiz to fetch.
+     */
+    where?: QuizWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Quizzes to fetch.
+     */
+    orderBy?: QuizOrderByWithRelationInput | QuizOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Quizzes.
+     */
+    cursor?: QuizWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Quizzes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Quizzes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Quizzes.
+     */
+    distinct?: QuizScalarFieldEnum | QuizScalarFieldEnum[]
+  }
+
+  /**
+   * Quiz findMany
+   */
+  export type QuizFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quiz
+     */
+    select?: QuizSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Quiz
+     */
+    omit?: QuizOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuizInclude<ExtArgs> | null
+    /**
+     * Filter, which Quizzes to fetch.
+     */
+    where?: QuizWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Quizzes to fetch.
+     */
+    orderBy?: QuizOrderByWithRelationInput | QuizOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Quizzes.
+     */
+    cursor?: QuizWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Quizzes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Quizzes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Quizzes.
+     */
+    distinct?: QuizScalarFieldEnum | QuizScalarFieldEnum[]
+  }
+
+  /**
+   * Quiz create
+   */
+  export type QuizCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quiz
+     */
+    select?: QuizSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Quiz
+     */
+    omit?: QuizOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuizInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Quiz.
+     */
+    data: XOR<QuizCreateInput, QuizUncheckedCreateInput>
+  }
+
+  /**
+   * Quiz createMany
+   */
+  export type QuizCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Quizzes.
+     */
+    data: QuizCreateManyInput | QuizCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Quiz createManyAndReturn
+   */
+  export type QuizCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quiz
+     */
+    select?: QuizSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Quiz
+     */
+    omit?: QuizOmit<ExtArgs> | null
+    /**
+     * The data used to create many Quizzes.
+     */
+    data: QuizCreateManyInput | QuizCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuizIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Quiz update
+   */
+  export type QuizUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quiz
+     */
+    select?: QuizSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Quiz
+     */
+    omit?: QuizOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuizInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Quiz.
+     */
+    data: XOR<QuizUpdateInput, QuizUncheckedUpdateInput>
+    /**
+     * Choose, which Quiz to update.
+     */
+    where: QuizWhereUniqueInput
+  }
+
+  /**
+   * Quiz updateMany
+   */
+  export type QuizUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Quizzes.
+     */
+    data: XOR<QuizUpdateManyMutationInput, QuizUncheckedUpdateManyInput>
+    /**
+     * Filter which Quizzes to update
+     */
+    where?: QuizWhereInput
+    /**
+     * Limit how many Quizzes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Quiz updateManyAndReturn
+   */
+  export type QuizUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quiz
+     */
+    select?: QuizSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Quiz
+     */
+    omit?: QuizOmit<ExtArgs> | null
+    /**
+     * The data used to update Quizzes.
+     */
+    data: XOR<QuizUpdateManyMutationInput, QuizUncheckedUpdateManyInput>
+    /**
+     * Filter which Quizzes to update
+     */
+    where?: QuizWhereInput
+    /**
+     * Limit how many Quizzes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuizIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Quiz upsert
+   */
+  export type QuizUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quiz
+     */
+    select?: QuizSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Quiz
+     */
+    omit?: QuizOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuizInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Quiz to update in case it exists.
+     */
+    where: QuizWhereUniqueInput
+    /**
+     * In case the Quiz found by the `where` argument doesn't exist, create a new Quiz with this data.
+     */
+    create: XOR<QuizCreateInput, QuizUncheckedCreateInput>
+    /**
+     * In case the Quiz was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<QuizUpdateInput, QuizUncheckedUpdateInput>
+  }
+
+  /**
+   * Quiz delete
+   */
+  export type QuizDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quiz
+     */
+    select?: QuizSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Quiz
+     */
+    omit?: QuizOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuizInclude<ExtArgs> | null
+    /**
+     * Filter which Quiz to delete.
+     */
+    where: QuizWhereUniqueInput
+  }
+
+  /**
+   * Quiz deleteMany
+   */
+  export type QuizDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Quizzes to delete
+     */
+    where?: QuizWhereInput
+    /**
+     * Limit how many Quizzes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Quiz.lesson
+   */
+  export type Quiz$lessonArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lesson
+     */
+    select?: LessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Lesson
+     */
+    omit?: LessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonInclude<ExtArgs> | null
+    where?: LessonWhereInput
+  }
+
+  /**
+   * Quiz without action
+   */
+  export type QuizDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Quiz
+     */
+    select?: QuizSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Quiz
+     */
+    omit?: QuizOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuizInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Tag
+   */
+
+  export type AggregateTag = {
+    _count: TagCountAggregateOutputType | null
+    _avg: TagAvgAggregateOutputType | null
+    _sum: TagSumAggregateOutputType | null
+    _min: TagMinAggregateOutputType | null
+    _max: TagMaxAggregateOutputType | null
+  }
+
+  export type TagAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type TagSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type TagMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+  }
+
+  export type TagMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+  }
+
+  export type TagCountAggregateOutputType = {
+    id: number
+    name: number
+    _all: number
+  }
+
+
+  export type TagAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type TagSumAggregateInputType = {
+    id?: true
+  }
+
+  export type TagMinAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type TagMaxAggregateInputType = {
+    id?: true
+    name?: true
+  }
+
+  export type TagCountAggregateInputType = {
+    id?: true
+    name?: true
+    _all?: true
+  }
+
+  export type TagAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Tag to aggregate.
+     */
+    where?: TagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tags to fetch.
+     */
+    orderBy?: TagOrderByWithRelationInput | TagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Tags
+    **/
+    _count?: true | TagCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TagAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TagSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TagMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TagMaxAggregateInputType
+  }
+
+  export type GetTagAggregateType<T extends TagAggregateArgs> = {
+        [P in keyof T & keyof AggregateTag]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTag[P]>
+      : GetScalarType<T[P], AggregateTag[P]>
+  }
+
+
+
+
+  export type TagGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TagWhereInput
+    orderBy?: TagOrderByWithAggregationInput | TagOrderByWithAggregationInput[]
+    by: TagScalarFieldEnum[] | TagScalarFieldEnum
+    having?: TagScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TagCountAggregateInputType | true
+    _avg?: TagAvgAggregateInputType
+    _sum?: TagSumAggregateInputType
+    _min?: TagMinAggregateInputType
+    _max?: TagMaxAggregateInputType
+  }
+
+  export type TagGroupByOutputType = {
+    id: number
+    name: string
+    _count: TagCountAggregateOutputType | null
+    _avg: TagAvgAggregateOutputType | null
+    _sum: TagSumAggregateOutputType | null
+    _min: TagMinAggregateOutputType | null
+    _max: TagMaxAggregateOutputType | null
+  }
+
+  type GetTagGroupByPayload<T extends TagGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TagGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TagGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TagGroupByOutputType[P]>
+            : GetScalarType<T[P], TagGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TagSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    questions?: boolean | Tag$questionsArgs<ExtArgs>
+    _count?: boolean | TagCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tag"]>
+
+  export type TagSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+  }, ExtArgs["result"]["tag"]>
+
+  export type TagSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+  }, ExtArgs["result"]["tag"]>
+
+  export type TagSelectScalar = {
+    id?: boolean
+    name?: boolean
+  }
+
+  export type TagOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name", ExtArgs["result"]["tag"]>
+  export type TagInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    questions?: boolean | Tag$questionsArgs<ExtArgs>
+    _count?: boolean | TagCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type TagIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type TagIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $TagPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Tag"
+    objects: {
+      questions: Prisma.$QuestionTagPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+    }, ExtArgs["result"]["tag"]>
+    composites: {}
+  }
+
+  type TagGetPayload<S extends boolean | null | undefined | TagDefaultArgs> = $Result.GetResult<Prisma.$TagPayload, S>
+
+  type TagCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TagFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TagCountAggregateInputType | true
+    }
+
+  export interface TagDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Tag'], meta: { name: 'Tag' } }
+    /**
+     * Find zero or one Tag that matches the filter.
+     * @param {TagFindUniqueArgs} args - Arguments to find a Tag
+     * @example
+     * // Get one Tag
+     * const tag = await prisma.tag.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TagFindUniqueArgs>(args: SelectSubset<T, TagFindUniqueArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Tag that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TagFindUniqueOrThrowArgs} args - Arguments to find a Tag
+     * @example
+     * // Get one Tag
+     * const tag = await prisma.tag.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TagFindUniqueOrThrowArgs>(args: SelectSubset<T, TagFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tag that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagFindFirstArgs} args - Arguments to find a Tag
+     * @example
+     * // Get one Tag
+     * const tag = await prisma.tag.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TagFindFirstArgs>(args?: SelectSubset<T, TagFindFirstArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tag that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagFindFirstOrThrowArgs} args - Arguments to find a Tag
+     * @example
+     * // Get one Tag
+     * const tag = await prisma.tag.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TagFindFirstOrThrowArgs>(args?: SelectSubset<T, TagFindFirstOrThrowArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Tags that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Tags
+     * const tags = await prisma.tag.findMany()
+     * 
+     * // Get first 10 Tags
+     * const tags = await prisma.tag.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tagWithIdOnly = await prisma.tag.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TagFindManyArgs>(args?: SelectSubset<T, TagFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Tag.
+     * @param {TagCreateArgs} args - Arguments to create a Tag.
+     * @example
+     * // Create one Tag
+     * const Tag = await prisma.tag.create({
+     *   data: {
+     *     // ... data to create a Tag
+     *   }
+     * })
+     * 
+     */
+    create<T extends TagCreateArgs>(args: SelectSubset<T, TagCreateArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Tags.
+     * @param {TagCreateManyArgs} args - Arguments to create many Tags.
+     * @example
+     * // Create many Tags
+     * const tag = await prisma.tag.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TagCreateManyArgs>(args?: SelectSubset<T, TagCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Tags and returns the data saved in the database.
+     * @param {TagCreateManyAndReturnArgs} args - Arguments to create many Tags.
+     * @example
+     * // Create many Tags
+     * const tag = await prisma.tag.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Tags and only return the `id`
+     * const tagWithIdOnly = await prisma.tag.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TagCreateManyAndReturnArgs>(args?: SelectSubset<T, TagCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Tag.
+     * @param {TagDeleteArgs} args - Arguments to delete one Tag.
+     * @example
+     * // Delete one Tag
+     * const Tag = await prisma.tag.delete({
+     *   where: {
+     *     // ... filter to delete one Tag
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TagDeleteArgs>(args: SelectSubset<T, TagDeleteArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Tag.
+     * @param {TagUpdateArgs} args - Arguments to update one Tag.
+     * @example
+     * // Update one Tag
+     * const tag = await prisma.tag.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TagUpdateArgs>(args: SelectSubset<T, TagUpdateArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Tags.
+     * @param {TagDeleteManyArgs} args - Arguments to filter Tags to delete.
+     * @example
+     * // Delete a few Tags
+     * const { count } = await prisma.tag.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TagDeleteManyArgs>(args?: SelectSubset<T, TagDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Tags
+     * const tag = await prisma.tag.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TagUpdateManyArgs>(args: SelectSubset<T, TagUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tags and returns the data updated in the database.
+     * @param {TagUpdateManyAndReturnArgs} args - Arguments to update many Tags.
+     * @example
+     * // Update many Tags
+     * const tag = await prisma.tag.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Tags and only return the `id`
+     * const tagWithIdOnly = await prisma.tag.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TagUpdateManyAndReturnArgs>(args: SelectSubset<T, TagUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Tag.
+     * @param {TagUpsertArgs} args - Arguments to update or create a Tag.
+     * @example
+     * // Update or create a Tag
+     * const tag = await prisma.tag.upsert({
+     *   create: {
+     *     // ... data to create a Tag
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Tag we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TagUpsertArgs>(args: SelectSubset<T, TagUpsertArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Tags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagCountArgs} args - Arguments to filter Tags to count.
+     * @example
+     * // Count the number of Tags
+     * const count = await prisma.tag.count({
+     *   where: {
+     *     // ... the filter for the Tags we want to count
+     *   }
+     * })
+    **/
+    count<T extends TagCountArgs>(
+      args?: Subset<T, TagCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TagCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Tag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TagAggregateArgs>(args: Subset<T, TagAggregateArgs>): Prisma.PrismaPromise<GetTagAggregateType<T>>
+
+    /**
+     * Group by Tag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TagGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TagGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TagGroupByArgs['orderBy'] }
+        : { orderBy?: TagGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TagGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTagGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Tag model
+   */
+  readonly fields: TagFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Tag.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TagClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    questions<T extends Tag$questionsArgs<ExtArgs> = {}>(args?: Subset<T, Tag$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Tag model
+   */
+  interface TagFieldRefs {
+    readonly id: FieldRef<"Tag", 'Int'>
+    readonly name: FieldRef<"Tag", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Tag findUnique
+   */
+  export type TagFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tag to fetch.
+     */
+    where: TagWhereUniqueInput
+  }
+
+  /**
+   * Tag findUniqueOrThrow
+   */
+  export type TagFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tag to fetch.
+     */
+    where: TagWhereUniqueInput
+  }
+
+  /**
+   * Tag findFirst
+   */
+  export type TagFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tag to fetch.
+     */
+    where?: TagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tags to fetch.
+     */
+    orderBy?: TagOrderByWithRelationInput | TagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Tags.
+     */
+    cursor?: TagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Tags.
+     */
+    distinct?: TagScalarFieldEnum | TagScalarFieldEnum[]
+  }
+
+  /**
+   * Tag findFirstOrThrow
+   */
+  export type TagFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tag to fetch.
+     */
+    where?: TagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tags to fetch.
+     */
+    orderBy?: TagOrderByWithRelationInput | TagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Tags.
+     */
+    cursor?: TagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Tags.
+     */
+    distinct?: TagScalarFieldEnum | TagScalarFieldEnum[]
+  }
+
+  /**
+   * Tag findMany
+   */
+  export type TagFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter, which Tags to fetch.
+     */
+    where?: TagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Tags to fetch.
+     */
+    orderBy?: TagOrderByWithRelationInput | TagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Tags.
+     */
+    cursor?: TagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Tags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Tags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Tags.
+     */
+    distinct?: TagScalarFieldEnum | TagScalarFieldEnum[]
+  }
+
+  /**
+   * Tag create
+   */
+  export type TagCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Tag.
+     */
+    data: XOR<TagCreateInput, TagUncheckedCreateInput>
+  }
+
+  /**
+   * Tag createMany
+   */
+  export type TagCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Tags.
+     */
+    data: TagCreateManyInput | TagCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Tag createManyAndReturn
+   */
+  export type TagCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * The data used to create many Tags.
+     */
+    data: TagCreateManyInput | TagCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Tag update
+   */
+  export type TagUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Tag.
+     */
+    data: XOR<TagUpdateInput, TagUncheckedUpdateInput>
+    /**
+     * Choose, which Tag to update.
+     */
+    where: TagWhereUniqueInput
+  }
+
+  /**
+   * Tag updateMany
+   */
+  export type TagUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Tags.
+     */
+    data: XOR<TagUpdateManyMutationInput, TagUncheckedUpdateManyInput>
+    /**
+     * Filter which Tags to update
+     */
+    where?: TagWhereInput
+    /**
+     * Limit how many Tags to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Tag updateManyAndReturn
+   */
+  export type TagUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * The data used to update Tags.
+     */
+    data: XOR<TagUpdateManyMutationInput, TagUncheckedUpdateManyInput>
+    /**
+     * Filter which Tags to update
+     */
+    where?: TagWhereInput
+    /**
+     * Limit how many Tags to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Tag upsert
+   */
+  export type TagUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Tag to update in case it exists.
+     */
+    where: TagWhereUniqueInput
+    /**
+     * In case the Tag found by the `where` argument doesn't exist, create a new Tag with this data.
+     */
+    create: XOR<TagCreateInput, TagUncheckedCreateInput>
+    /**
+     * In case the Tag was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TagUpdateInput, TagUncheckedUpdateInput>
+  }
+
+  /**
+   * Tag delete
+   */
+  export type TagDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+    /**
+     * Filter which Tag to delete.
+     */
+    where: TagWhereUniqueInput
+  }
+
+  /**
+   * Tag deleteMany
+   */
+  export type TagDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Tags to delete
+     */
+    where?: TagWhereInput
+    /**
+     * Limit how many Tags to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Tag.questions
+   */
+  export type Tag$questionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionTag
+     */
+    select?: QuestionTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionTag
+     */
+    omit?: QuestionTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionTagInclude<ExtArgs> | null
+    where?: QuestionTagWhereInput
+    orderBy?: QuestionTagOrderByWithRelationInput | QuestionTagOrderByWithRelationInput[]
+    cursor?: QuestionTagWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: QuestionTagScalarFieldEnum | QuestionTagScalarFieldEnum[]
+  }
+
+  /**
+   * Tag without action
+   */
+  export type TagDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Tag
+     */
+    select?: TagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Tag
+     */
+    omit?: TagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TagInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model QuestionTag
+   */
+
+  export type AggregateQuestionTag = {
+    _count: QuestionTagCountAggregateOutputType | null
+    _avg: QuestionTagAvgAggregateOutputType | null
+    _sum: QuestionTagSumAggregateOutputType | null
+    _min: QuestionTagMinAggregateOutputType | null
+    _max: QuestionTagMaxAggregateOutputType | null
+  }
+
+  export type QuestionTagAvgAggregateOutputType = {
+    questionId: number | null
+    tagId: number | null
+  }
+
+  export type QuestionTagSumAggregateOutputType = {
+    questionId: number | null
+    tagId: number | null
+  }
+
+  export type QuestionTagMinAggregateOutputType = {
+    questionId: number | null
+    tagId: number | null
+  }
+
+  export type QuestionTagMaxAggregateOutputType = {
+    questionId: number | null
+    tagId: number | null
+  }
+
+  export type QuestionTagCountAggregateOutputType = {
+    questionId: number
+    tagId: number
+    _all: number
+  }
+
+
+  export type QuestionTagAvgAggregateInputType = {
+    questionId?: true
+    tagId?: true
+  }
+
+  export type QuestionTagSumAggregateInputType = {
+    questionId?: true
+    tagId?: true
+  }
+
+  export type QuestionTagMinAggregateInputType = {
+    questionId?: true
+    tagId?: true
+  }
+
+  export type QuestionTagMaxAggregateInputType = {
+    questionId?: true
+    tagId?: true
+  }
+
+  export type QuestionTagCountAggregateInputType = {
+    questionId?: true
+    tagId?: true
+    _all?: true
+  }
+
+  export type QuestionTagAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which QuestionTag to aggregate.
+     */
+    where?: QuestionTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QuestionTags to fetch.
+     */
+    orderBy?: QuestionTagOrderByWithRelationInput | QuestionTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: QuestionTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QuestionTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QuestionTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned QuestionTags
+    **/
+    _count?: true | QuestionTagCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: QuestionTagAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: QuestionTagSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: QuestionTagMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: QuestionTagMaxAggregateInputType
+  }
+
+  export type GetQuestionTagAggregateType<T extends QuestionTagAggregateArgs> = {
+        [P in keyof T & keyof AggregateQuestionTag]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateQuestionTag[P]>
+      : GetScalarType<T[P], AggregateQuestionTag[P]>
+  }
+
+
+
+
+  export type QuestionTagGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QuestionTagWhereInput
+    orderBy?: QuestionTagOrderByWithAggregationInput | QuestionTagOrderByWithAggregationInput[]
+    by: QuestionTagScalarFieldEnum[] | QuestionTagScalarFieldEnum
+    having?: QuestionTagScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: QuestionTagCountAggregateInputType | true
+    _avg?: QuestionTagAvgAggregateInputType
+    _sum?: QuestionTagSumAggregateInputType
+    _min?: QuestionTagMinAggregateInputType
+    _max?: QuestionTagMaxAggregateInputType
+  }
+
+  export type QuestionTagGroupByOutputType = {
+    questionId: number
+    tagId: number
+    _count: QuestionTagCountAggregateOutputType | null
+    _avg: QuestionTagAvgAggregateOutputType | null
+    _sum: QuestionTagSumAggregateOutputType | null
+    _min: QuestionTagMinAggregateOutputType | null
+    _max: QuestionTagMaxAggregateOutputType | null
+  }
+
+  type GetQuestionTagGroupByPayload<T extends QuestionTagGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<QuestionTagGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof QuestionTagGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], QuestionTagGroupByOutputType[P]>
+            : GetScalarType<T[P], QuestionTagGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type QuestionTagSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    questionId?: boolean
+    tagId?: boolean
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["questionTag"]>
+
+  export type QuestionTagSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    questionId?: boolean
+    tagId?: boolean
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["questionTag"]>
+
+  export type QuestionTagSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    questionId?: boolean
+    tagId?: boolean
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["questionTag"]>
+
+  export type QuestionTagSelectScalar = {
+    questionId?: boolean
+    tagId?: boolean
+  }
+
+  export type QuestionTagOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"questionId" | "tagId", ExtArgs["result"]["questionTag"]>
+  export type QuestionTagInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }
+  export type QuestionTagIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }
+  export type QuestionTagIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+    tag?: boolean | TagDefaultArgs<ExtArgs>
+  }
+
+  export type $QuestionTagPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "QuestionTag"
+    objects: {
+      question: Prisma.$QuestionPayload<ExtArgs>
+      tag: Prisma.$TagPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      questionId: number
+      tagId: number
+    }, ExtArgs["result"]["questionTag"]>
+    composites: {}
+  }
+
+  type QuestionTagGetPayload<S extends boolean | null | undefined | QuestionTagDefaultArgs> = $Result.GetResult<Prisma.$QuestionTagPayload, S>
+
+  type QuestionTagCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<QuestionTagFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: QuestionTagCountAggregateInputType | true
+    }
+
+  export interface QuestionTagDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['QuestionTag'], meta: { name: 'QuestionTag' } }
+    /**
+     * Find zero or one QuestionTag that matches the filter.
+     * @param {QuestionTagFindUniqueArgs} args - Arguments to find a QuestionTag
+     * @example
+     * // Get one QuestionTag
+     * const questionTag = await prisma.questionTag.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends QuestionTagFindUniqueArgs>(args: SelectSubset<T, QuestionTagFindUniqueArgs<ExtArgs>>): Prisma__QuestionTagClient<$Result.GetResult<Prisma.$QuestionTagPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one QuestionTag that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {QuestionTagFindUniqueOrThrowArgs} args - Arguments to find a QuestionTag
+     * @example
+     * // Get one QuestionTag
+     * const questionTag = await prisma.questionTag.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends QuestionTagFindUniqueOrThrowArgs>(args: SelectSubset<T, QuestionTagFindUniqueOrThrowArgs<ExtArgs>>): Prisma__QuestionTagClient<$Result.GetResult<Prisma.$QuestionTagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first QuestionTag that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionTagFindFirstArgs} args - Arguments to find a QuestionTag
+     * @example
+     * // Get one QuestionTag
+     * const questionTag = await prisma.questionTag.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends QuestionTagFindFirstArgs>(args?: SelectSubset<T, QuestionTagFindFirstArgs<ExtArgs>>): Prisma__QuestionTagClient<$Result.GetResult<Prisma.$QuestionTagPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first QuestionTag that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionTagFindFirstOrThrowArgs} args - Arguments to find a QuestionTag
+     * @example
+     * // Get one QuestionTag
+     * const questionTag = await prisma.questionTag.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends QuestionTagFindFirstOrThrowArgs>(args?: SelectSubset<T, QuestionTagFindFirstOrThrowArgs<ExtArgs>>): Prisma__QuestionTagClient<$Result.GetResult<Prisma.$QuestionTagPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more QuestionTags that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionTagFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all QuestionTags
+     * const questionTags = await prisma.questionTag.findMany()
+     * 
+     * // Get first 10 QuestionTags
+     * const questionTags = await prisma.questionTag.findMany({ take: 10 })
+     * 
+     * // Only select the `questionId`
+     * const questionTagWithQuestionIdOnly = await prisma.questionTag.findMany({ select: { questionId: true } })
+     * 
+     */
+    findMany<T extends QuestionTagFindManyArgs>(args?: SelectSubset<T, QuestionTagFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a QuestionTag.
+     * @param {QuestionTagCreateArgs} args - Arguments to create a QuestionTag.
+     * @example
+     * // Create one QuestionTag
+     * const QuestionTag = await prisma.questionTag.create({
+     *   data: {
+     *     // ... data to create a QuestionTag
+     *   }
+     * })
+     * 
+     */
+    create<T extends QuestionTagCreateArgs>(args: SelectSubset<T, QuestionTagCreateArgs<ExtArgs>>): Prisma__QuestionTagClient<$Result.GetResult<Prisma.$QuestionTagPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many QuestionTags.
+     * @param {QuestionTagCreateManyArgs} args - Arguments to create many QuestionTags.
+     * @example
+     * // Create many QuestionTags
+     * const questionTag = await prisma.questionTag.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends QuestionTagCreateManyArgs>(args?: SelectSubset<T, QuestionTagCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many QuestionTags and returns the data saved in the database.
+     * @param {QuestionTagCreateManyAndReturnArgs} args - Arguments to create many QuestionTags.
+     * @example
+     * // Create many QuestionTags
+     * const questionTag = await prisma.questionTag.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many QuestionTags and only return the `questionId`
+     * const questionTagWithQuestionIdOnly = await prisma.questionTag.createManyAndReturn({
+     *   select: { questionId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends QuestionTagCreateManyAndReturnArgs>(args?: SelectSubset<T, QuestionTagCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionTagPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a QuestionTag.
+     * @param {QuestionTagDeleteArgs} args - Arguments to delete one QuestionTag.
+     * @example
+     * // Delete one QuestionTag
+     * const QuestionTag = await prisma.questionTag.delete({
+     *   where: {
+     *     // ... filter to delete one QuestionTag
+     *   }
+     * })
+     * 
+     */
+    delete<T extends QuestionTagDeleteArgs>(args: SelectSubset<T, QuestionTagDeleteArgs<ExtArgs>>): Prisma__QuestionTagClient<$Result.GetResult<Prisma.$QuestionTagPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one QuestionTag.
+     * @param {QuestionTagUpdateArgs} args - Arguments to update one QuestionTag.
+     * @example
+     * // Update one QuestionTag
+     * const questionTag = await prisma.questionTag.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends QuestionTagUpdateArgs>(args: SelectSubset<T, QuestionTagUpdateArgs<ExtArgs>>): Prisma__QuestionTagClient<$Result.GetResult<Prisma.$QuestionTagPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more QuestionTags.
+     * @param {QuestionTagDeleteManyArgs} args - Arguments to filter QuestionTags to delete.
+     * @example
+     * // Delete a few QuestionTags
+     * const { count } = await prisma.questionTag.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends QuestionTagDeleteManyArgs>(args?: SelectSubset<T, QuestionTagDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more QuestionTags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionTagUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many QuestionTags
+     * const questionTag = await prisma.questionTag.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends QuestionTagUpdateManyArgs>(args: SelectSubset<T, QuestionTagUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more QuestionTags and returns the data updated in the database.
+     * @param {QuestionTagUpdateManyAndReturnArgs} args - Arguments to update many QuestionTags.
+     * @example
+     * // Update many QuestionTags
+     * const questionTag = await prisma.questionTag.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more QuestionTags and only return the `questionId`
+     * const questionTagWithQuestionIdOnly = await prisma.questionTag.updateManyAndReturn({
+     *   select: { questionId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends QuestionTagUpdateManyAndReturnArgs>(args: SelectSubset<T, QuestionTagUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionTagPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one QuestionTag.
+     * @param {QuestionTagUpsertArgs} args - Arguments to update or create a QuestionTag.
+     * @example
+     * // Update or create a QuestionTag
+     * const questionTag = await prisma.questionTag.upsert({
+     *   create: {
+     *     // ... data to create a QuestionTag
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the QuestionTag we want to update
+     *   }
+     * })
+     */
+    upsert<T extends QuestionTagUpsertArgs>(args: SelectSubset<T, QuestionTagUpsertArgs<ExtArgs>>): Prisma__QuestionTagClient<$Result.GetResult<Prisma.$QuestionTagPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of QuestionTags.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionTagCountArgs} args - Arguments to filter QuestionTags to count.
+     * @example
+     * // Count the number of QuestionTags
+     * const count = await prisma.questionTag.count({
+     *   where: {
+     *     // ... the filter for the QuestionTags we want to count
+     *   }
+     * })
+    **/
+    count<T extends QuestionTagCountArgs>(
+      args?: Subset<T, QuestionTagCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], QuestionTagCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a QuestionTag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionTagAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends QuestionTagAggregateArgs>(args: Subset<T, QuestionTagAggregateArgs>): Prisma.PrismaPromise<GetQuestionTagAggregateType<T>>
+
+    /**
+     * Group by QuestionTag.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {QuestionTagGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends QuestionTagGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: QuestionTagGroupByArgs['orderBy'] }
+        : { orderBy?: QuestionTagGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, QuestionTagGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetQuestionTagGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the QuestionTag model
+   */
+  readonly fields: QuestionTagFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for QuestionTag.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__QuestionTagClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    question<T extends QuestionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, QuestionDefaultArgs<ExtArgs>>): Prisma__QuestionClient<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    tag<T extends TagDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TagDefaultArgs<ExtArgs>>): Prisma__TagClient<$Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the QuestionTag model
+   */
+  interface QuestionTagFieldRefs {
+    readonly questionId: FieldRef<"QuestionTag", 'Int'>
+    readonly tagId: FieldRef<"QuestionTag", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * QuestionTag findUnique
+   */
+  export type QuestionTagFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionTag
+     */
+    select?: QuestionTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionTag
+     */
+    omit?: QuestionTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionTagInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionTag to fetch.
+     */
+    where: QuestionTagWhereUniqueInput
+  }
+
+  /**
+   * QuestionTag findUniqueOrThrow
+   */
+  export type QuestionTagFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionTag
+     */
+    select?: QuestionTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionTag
+     */
+    omit?: QuestionTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionTagInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionTag to fetch.
+     */
+    where: QuestionTagWhereUniqueInput
+  }
+
+  /**
+   * QuestionTag findFirst
+   */
+  export type QuestionTagFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionTag
+     */
+    select?: QuestionTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionTag
+     */
+    omit?: QuestionTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionTagInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionTag to fetch.
+     */
+    where?: QuestionTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QuestionTags to fetch.
+     */
+    orderBy?: QuestionTagOrderByWithRelationInput | QuestionTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for QuestionTags.
+     */
+    cursor?: QuestionTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QuestionTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QuestionTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of QuestionTags.
+     */
+    distinct?: QuestionTagScalarFieldEnum | QuestionTagScalarFieldEnum[]
+  }
+
+  /**
+   * QuestionTag findFirstOrThrow
+   */
+  export type QuestionTagFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionTag
+     */
+    select?: QuestionTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionTag
+     */
+    omit?: QuestionTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionTagInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionTag to fetch.
+     */
+    where?: QuestionTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QuestionTags to fetch.
+     */
+    orderBy?: QuestionTagOrderByWithRelationInput | QuestionTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for QuestionTags.
+     */
+    cursor?: QuestionTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QuestionTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QuestionTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of QuestionTags.
+     */
+    distinct?: QuestionTagScalarFieldEnum | QuestionTagScalarFieldEnum[]
+  }
+
+  /**
+   * QuestionTag findMany
+   */
+  export type QuestionTagFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionTag
+     */
+    select?: QuestionTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionTag
+     */
+    omit?: QuestionTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionTagInclude<ExtArgs> | null
+    /**
+     * Filter, which QuestionTags to fetch.
+     */
+    where?: QuestionTagWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of QuestionTags to fetch.
+     */
+    orderBy?: QuestionTagOrderByWithRelationInput | QuestionTagOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing QuestionTags.
+     */
+    cursor?: QuestionTagWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` QuestionTags from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` QuestionTags.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of QuestionTags.
+     */
+    distinct?: QuestionTagScalarFieldEnum | QuestionTagScalarFieldEnum[]
+  }
+
+  /**
+   * QuestionTag create
+   */
+  export type QuestionTagCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionTag
+     */
+    select?: QuestionTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionTag
+     */
+    omit?: QuestionTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionTagInclude<ExtArgs> | null
+    /**
+     * The data needed to create a QuestionTag.
+     */
+    data: XOR<QuestionTagCreateInput, QuestionTagUncheckedCreateInput>
+  }
+
+  /**
+   * QuestionTag createMany
+   */
+  export type QuestionTagCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many QuestionTags.
+     */
+    data: QuestionTagCreateManyInput | QuestionTagCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * QuestionTag createManyAndReturn
+   */
+  export type QuestionTagCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionTag
+     */
+    select?: QuestionTagSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionTag
+     */
+    omit?: QuestionTagOmit<ExtArgs> | null
+    /**
+     * The data used to create many QuestionTags.
+     */
+    data: QuestionTagCreateManyInput | QuestionTagCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionTagIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * QuestionTag update
+   */
+  export type QuestionTagUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionTag
+     */
+    select?: QuestionTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionTag
+     */
+    omit?: QuestionTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionTagInclude<ExtArgs> | null
+    /**
+     * The data needed to update a QuestionTag.
+     */
+    data: XOR<QuestionTagUpdateInput, QuestionTagUncheckedUpdateInput>
+    /**
+     * Choose, which QuestionTag to update.
+     */
+    where: QuestionTagWhereUniqueInput
+  }
+
+  /**
+   * QuestionTag updateMany
+   */
+  export type QuestionTagUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update QuestionTags.
+     */
+    data: XOR<QuestionTagUpdateManyMutationInput, QuestionTagUncheckedUpdateManyInput>
+    /**
+     * Filter which QuestionTags to update
+     */
+    where?: QuestionTagWhereInput
+    /**
+     * Limit how many QuestionTags to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * QuestionTag updateManyAndReturn
+   */
+  export type QuestionTagUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionTag
+     */
+    select?: QuestionTagSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionTag
+     */
+    omit?: QuestionTagOmit<ExtArgs> | null
+    /**
+     * The data used to update QuestionTags.
+     */
+    data: XOR<QuestionTagUpdateManyMutationInput, QuestionTagUncheckedUpdateManyInput>
+    /**
+     * Filter which QuestionTags to update
+     */
+    where?: QuestionTagWhereInput
+    /**
+     * Limit how many QuestionTags to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionTagIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * QuestionTag upsert
+   */
+  export type QuestionTagUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionTag
+     */
+    select?: QuestionTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionTag
+     */
+    omit?: QuestionTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionTagInclude<ExtArgs> | null
+    /**
+     * The filter to search for the QuestionTag to update in case it exists.
+     */
+    where: QuestionTagWhereUniqueInput
+    /**
+     * In case the QuestionTag found by the `where` argument doesn't exist, create a new QuestionTag with this data.
+     */
+    create: XOR<QuestionTagCreateInput, QuestionTagUncheckedCreateInput>
+    /**
+     * In case the QuestionTag was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<QuestionTagUpdateInput, QuestionTagUncheckedUpdateInput>
+  }
+
+  /**
+   * QuestionTag delete
+   */
+  export type QuestionTagDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionTag
+     */
+    select?: QuestionTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionTag
+     */
+    omit?: QuestionTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionTagInclude<ExtArgs> | null
+    /**
+     * Filter which QuestionTag to delete.
+     */
+    where: QuestionTagWhereUniqueInput
+  }
+
+  /**
+   * QuestionTag deleteMany
+   */
+  export type QuestionTagDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which QuestionTags to delete
+     */
+    where?: QuestionTagWhereInput
+    /**
+     * Limit how many QuestionTags to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * QuestionTag without action
+   */
+  export type QuestionTagDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QuestionTag
+     */
+    select?: QuestionTagSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QuestionTag
+     */
+    omit?: QuestionTagOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QuestionTagInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -15505,6 +23230,8 @@ export namespace Prisma {
   export const SubjectScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    isActive: 'isActive',
+    displayOrder: 'displayOrder',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -15516,6 +23243,8 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     subjectId: 'subjectId',
+    isActive: 'isActive',
+    displayOrder: 'displayOrder',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -15599,12 +23328,20 @@ export namespace Prisma {
     isFreePreview: 'isFreePreview',
     accessType: 'accessType',
     status: 'status',
-    planId: 'planId',
+    quizId: 'quizId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type LessonScalarFieldEnum = (typeof LessonScalarFieldEnum)[keyof typeof LessonScalarFieldEnum]
+
+
+  export const LessonPlanScalarFieldEnum: {
+    lessonId: 'lessonId',
+    planId: 'planId'
+  };
+
+  export type LessonPlanScalarFieldEnum = (typeof LessonPlanScalarFieldEnum)[keyof typeof LessonPlanScalarFieldEnum]
 
 
   export const PlanScalarFieldEnum: {
@@ -15634,6 +23371,67 @@ export namespace Prisma {
   };
 
   export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
+
+
+  export const QuestionScalarFieldEnum: {
+    id: 'id',
+    subjectId: 'subjectId',
+    topicId: 'topicId',
+    questionText: 'questionText',
+    questionImageUrl: 'questionImageUrl',
+    difficulty: 'difficulty',
+    marksCorrect: 'marksCorrect',
+    marksIncorrect: 'marksIncorrect',
+    explanation: 'explanation',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type QuestionScalarFieldEnum = (typeof QuestionScalarFieldEnum)[keyof typeof QuestionScalarFieldEnum]
+
+
+  export const QuestionOptionScalarFieldEnum: {
+    id: 'id',
+    questionId: 'questionId',
+    optionText: 'optionText',
+    optionImageUrl: 'optionImageUrl',
+    isCorrect: 'isCorrect',
+    displayOrder: 'displayOrder'
+  };
+
+  export type QuestionOptionScalarFieldEnum = (typeof QuestionOptionScalarFieldEnum)[keyof typeof QuestionOptionScalarFieldEnum]
+
+
+  export const QuizScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    subjectId: 'subjectId',
+    topicId: 'topicId',
+    examTag: 'examTag',
+    questionCount: 'questionCount',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type QuizScalarFieldEnum = (typeof QuizScalarFieldEnum)[keyof typeof QuizScalarFieldEnum]
+
+
+  export const TagScalarFieldEnum: {
+    id: 'id',
+    name: 'name'
+  };
+
+  export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
+
+
+  export const QuestionTagScalarFieldEnum: {
+    questionId: 'questionId',
+    tagId: 'tagId'
+  };
+
+  export type QuestionTagScalarFieldEnum = (typeof QuestionTagScalarFieldEnum)[keyof typeof QuestionTagScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -15708,6 +23506,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'CourseStatus'
    */
   export type EnumCourseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CourseStatus'>
@@ -15750,13 +23555,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -15767,6 +23565,34 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Difficulty'
+   */
+  export type EnumDifficultyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Difficulty'>
+    
+
+
+  /**
+   * Reference to a field of type 'Difficulty[]'
+   */
+  export type ListEnumDifficultyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Difficulty[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'QuestionStatus'
+   */
+  export type EnumQuestionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QuestionStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'QuestionStatus[]'
+   */
+  export type ListEnumQuestionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QuestionStatus[]'>
     
   /**
    * Deep Input Types
@@ -15952,19 +23778,27 @@ export namespace Prisma {
     NOT?: SubjectWhereInput | SubjectWhereInput[]
     id?: IntFilter<"Subject"> | number
     name?: StringFilter<"Subject"> | string
+    isActive?: BoolFilter<"Subject"> | boolean
+    displayOrder?: IntFilter<"Subject"> | number
     createdAt?: DateTimeFilter<"Subject"> | Date | string
     updatedAt?: DateTimeFilter<"Subject"> | Date | string
     topics?: TopicListRelationFilter
     courses?: CourseListRelationFilter
+    questions?: QuestionListRelationFilter
+    quizzes?: QuizListRelationFilter
   }
 
   export type SubjectOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     topics?: TopicOrderByRelationAggregateInput
     courses?: CourseOrderByRelationAggregateInput
+    questions?: QuestionOrderByRelationAggregateInput
+    quizzes?: QuizOrderByRelationAggregateInput
   }
 
   export type SubjectWhereUniqueInput = Prisma.AtLeast<{
@@ -15973,15 +23807,21 @@ export namespace Prisma {
     AND?: SubjectWhereInput | SubjectWhereInput[]
     OR?: SubjectWhereInput[]
     NOT?: SubjectWhereInput | SubjectWhereInput[]
+    isActive?: BoolFilter<"Subject"> | boolean
+    displayOrder?: IntFilter<"Subject"> | number
     createdAt?: DateTimeFilter<"Subject"> | Date | string
     updatedAt?: DateTimeFilter<"Subject"> | Date | string
     topics?: TopicListRelationFilter
     courses?: CourseListRelationFilter
+    questions?: QuestionListRelationFilter
+    quizzes?: QuizListRelationFilter
   }, "id" | "name">
 
   export type SubjectOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: SubjectCountOrderByAggregateInput
@@ -15997,6 +23837,8 @@ export namespace Prisma {
     NOT?: SubjectScalarWhereWithAggregatesInput | SubjectScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Subject"> | number
     name?: StringWithAggregatesFilter<"Subject"> | string
+    isActive?: BoolWithAggregatesFilter<"Subject"> | boolean
+    displayOrder?: IntWithAggregatesFilter<"Subject"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Subject"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Subject"> | Date | string
   }
@@ -16008,36 +23850,51 @@ export namespace Prisma {
     id?: IntFilter<"Topic"> | number
     name?: StringFilter<"Topic"> | string
     subjectId?: IntFilter<"Topic"> | number
+    isActive?: BoolFilter<"Topic"> | boolean
+    displayOrder?: IntFilter<"Topic"> | number
     createdAt?: DateTimeFilter<"Topic"> | Date | string
     updatedAt?: DateTimeFilter<"Topic"> | Date | string
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    questions?: QuestionListRelationFilter
+    quizzes?: QuizListRelationFilter
   }
 
   export type TopicOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
     subjectId?: SortOrder
+    isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     subject?: SubjectOrderByWithRelationInput
+    questions?: QuestionOrderByRelationAggregateInput
+    quizzes?: QuizOrderByRelationAggregateInput
   }
 
   export type TopicWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    subjectId_name?: TopicSubjectIdNameCompoundUniqueInput
     AND?: TopicWhereInput | TopicWhereInput[]
     OR?: TopicWhereInput[]
     NOT?: TopicWhereInput | TopicWhereInput[]
     name?: StringFilter<"Topic"> | string
     subjectId?: IntFilter<"Topic"> | number
+    isActive?: BoolFilter<"Topic"> | boolean
+    displayOrder?: IntFilter<"Topic"> | number
     createdAt?: DateTimeFilter<"Topic"> | Date | string
     updatedAt?: DateTimeFilter<"Topic"> | Date | string
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
-  }, "id">
+    questions?: QuestionListRelationFilter
+    quizzes?: QuizListRelationFilter
+  }, "id" | "subjectId_name">
 
   export type TopicOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
     subjectId?: SortOrder
+    isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TopicCountOrderByAggregateInput
@@ -16054,6 +23911,8 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Topic"> | number
     name?: StringWithAggregatesFilter<"Topic"> | string
     subjectId?: IntWithAggregatesFilter<"Topic"> | number
+    isActive?: BoolWithAggregatesFilter<"Topic"> | boolean
+    displayOrder?: IntWithAggregatesFilter<"Topic"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Topic"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Topic"> | Date | string
   }
@@ -16240,7 +24099,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"CourseType"> | string | null
     status?: EnumCourseStatusFilter<"CourseType"> | $Enums.CourseStatus
     accessType?: EnumAccessTypeFilter<"CourseType"> | $Enums.AccessType
-    displayOrder?: IntNullableFilter<"CourseType"> | number | null
+    displayOrder?: IntFilter<"CourseType"> | number
     createdAt?: DateTimeFilter<"CourseType"> | Date | string
     updatedAt?: DateTimeFilter<"CourseType"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
@@ -16255,7 +24114,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     status?: SortOrder
     accessType?: SortOrder
-    displayOrder?: SortOrderInput | SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     course?: CourseOrderByWithRelationInput
@@ -16273,7 +24132,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"CourseType"> | string | null
     status?: EnumCourseStatusFilter<"CourseType"> | $Enums.CourseStatus
     accessType?: EnumAccessTypeFilter<"CourseType"> | $Enums.AccessType
-    displayOrder?: IntNullableFilter<"CourseType"> | number | null
+    displayOrder?: IntFilter<"CourseType"> | number
     createdAt?: DateTimeFilter<"CourseType"> | Date | string
     updatedAt?: DateTimeFilter<"CourseType"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
@@ -16288,7 +24147,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     status?: SortOrder
     accessType?: SortOrder
-    displayOrder?: SortOrderInput | SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CourseTypeCountOrderByAggregateInput
@@ -16308,7 +24167,7 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"CourseType"> | string | null
     status?: EnumCourseStatusWithAggregatesFilter<"CourseType"> | $Enums.CourseStatus
     accessType?: EnumAccessTypeWithAggregatesFilter<"CourseType"> | $Enums.AccessType
-    displayOrder?: IntNullableWithAggregatesFilter<"CourseType"> | number | null
+    displayOrder?: IntWithAggregatesFilter<"CourseType"> | number
     createdAt?: DateTimeWithAggregatesFilter<"CourseType"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CourseType"> | Date | string
   }
@@ -16407,11 +24266,12 @@ export namespace Prisma {
     isFreePreview?: BoolFilter<"Lesson"> | boolean
     accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
     status?: EnumCourseStatusFilter<"Lesson"> | $Enums.CourseStatus
-    planId?: IntNullableFilter<"Lesson"> | number | null
+    quizId?: IntNullableFilter<"Lesson"> | number | null
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
     chapter?: XOR<ChapterScalarRelationFilter, ChapterWhereInput>
-    plan?: XOR<PlanNullableScalarRelationFilter, PlanWhereInput> | null
+    quiz?: XOR<QuizNullableScalarRelationFilter, QuizWhereInput> | null
+    lessonPlans?: LessonPlanListRelationFilter
   }
 
   export type LessonOrderByWithRelationInput = {
@@ -16432,15 +24292,17 @@ export namespace Prisma {
     isFreePreview?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
-    planId?: SortOrderInput | SortOrder
+    quizId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     chapter?: ChapterOrderByWithRelationInput
-    plan?: PlanOrderByWithRelationInput
+    quiz?: QuizOrderByWithRelationInput
+    lessonPlans?: LessonPlanOrderByRelationAggregateInput
   }
 
   export type LessonWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    quizId?: number
     AND?: LessonWhereInput | LessonWhereInput[]
     OR?: LessonWhereInput[]
     NOT?: LessonWhereInput | LessonWhereInput[]
@@ -16460,12 +24322,12 @@ export namespace Prisma {
     isFreePreview?: BoolFilter<"Lesson"> | boolean
     accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
     status?: EnumCourseStatusFilter<"Lesson"> | $Enums.CourseStatus
-    planId?: IntNullableFilter<"Lesson"> | number | null
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
     chapter?: XOR<ChapterScalarRelationFilter, ChapterWhereInput>
-    plan?: XOR<PlanNullableScalarRelationFilter, PlanWhereInput> | null
-  }, "id">
+    quiz?: XOR<QuizNullableScalarRelationFilter, QuizWhereInput> | null
+    lessonPlans?: LessonPlanListRelationFilter
+  }, "id" | "quizId">
 
   export type LessonOrderByWithAggregationInput = {
     id?: SortOrder
@@ -16485,7 +24347,7 @@ export namespace Prisma {
     isFreePreview?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
-    planId?: SortOrderInput | SortOrder
+    quizId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: LessonCountOrderByAggregateInput
@@ -16516,9 +24378,55 @@ export namespace Prisma {
     isFreePreview?: BoolWithAggregatesFilter<"Lesson"> | boolean
     accessType?: EnumAccessTypeWithAggregatesFilter<"Lesson"> | $Enums.AccessType
     status?: EnumCourseStatusWithAggregatesFilter<"Lesson"> | $Enums.CourseStatus
-    planId?: IntNullableWithAggregatesFilter<"Lesson"> | number | null
+    quizId?: IntNullableWithAggregatesFilter<"Lesson"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
+  }
+
+  export type LessonPlanWhereInput = {
+    AND?: LessonPlanWhereInput | LessonPlanWhereInput[]
+    OR?: LessonPlanWhereInput[]
+    NOT?: LessonPlanWhereInput | LessonPlanWhereInput[]
+    lessonId?: IntFilter<"LessonPlan"> | number
+    planId?: IntFilter<"LessonPlan"> | number
+    lesson?: XOR<LessonScalarRelationFilter, LessonWhereInput>
+    plan?: XOR<PlanScalarRelationFilter, PlanWhereInput>
+  }
+
+  export type LessonPlanOrderByWithRelationInput = {
+    lessonId?: SortOrder
+    planId?: SortOrder
+    lesson?: LessonOrderByWithRelationInput
+    plan?: PlanOrderByWithRelationInput
+  }
+
+  export type LessonPlanWhereUniqueInput = Prisma.AtLeast<{
+    lessonId_planId?: LessonPlanLessonIdPlanIdCompoundUniqueInput
+    AND?: LessonPlanWhereInput | LessonPlanWhereInput[]
+    OR?: LessonPlanWhereInput[]
+    NOT?: LessonPlanWhereInput | LessonPlanWhereInput[]
+    lessonId?: IntFilter<"LessonPlan"> | number
+    planId?: IntFilter<"LessonPlan"> | number
+    lesson?: XOR<LessonScalarRelationFilter, LessonWhereInput>
+    plan?: XOR<PlanScalarRelationFilter, PlanWhereInput>
+  }, "lessonId_planId">
+
+  export type LessonPlanOrderByWithAggregationInput = {
+    lessonId?: SortOrder
+    planId?: SortOrder
+    _count?: LessonPlanCountOrderByAggregateInput
+    _avg?: LessonPlanAvgOrderByAggregateInput
+    _max?: LessonPlanMaxOrderByAggregateInput
+    _min?: LessonPlanMinOrderByAggregateInput
+    _sum?: LessonPlanSumOrderByAggregateInput
+  }
+
+  export type LessonPlanScalarWhereWithAggregatesInput = {
+    AND?: LessonPlanScalarWhereWithAggregatesInput | LessonPlanScalarWhereWithAggregatesInput[]
+    OR?: LessonPlanScalarWhereWithAggregatesInput[]
+    NOT?: LessonPlanScalarWhereWithAggregatesInput | LessonPlanScalarWhereWithAggregatesInput[]
+    lessonId?: IntWithAggregatesFilter<"LessonPlan"> | number
+    planId?: IntWithAggregatesFilter<"LessonPlan"> | number
   }
 
   export type PlanWhereInput = {
@@ -16536,7 +24444,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Plan"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     subscriptions?: SubscriptionListRelationFilter
-    lessons?: LessonListRelationFilter
+    lessonPlans?: LessonPlanListRelationFilter
   }
 
   export type PlanOrderByWithRelationInput = {
@@ -16551,7 +24459,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     course?: CourseOrderByWithRelationInput
     subscriptions?: SubscriptionOrderByRelationAggregateInput
-    lessons?: LessonOrderByRelationAggregateInput
+    lessonPlans?: LessonPlanOrderByRelationAggregateInput
   }
 
   export type PlanWhereUniqueInput = Prisma.AtLeast<{
@@ -16569,7 +24477,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Plan"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     subscriptions?: SubscriptionListRelationFilter
-    lessons?: LessonListRelationFilter
+    lessonPlans?: LessonPlanListRelationFilter
   }, "id">
 
   export type PlanOrderByWithAggregationInput = {
@@ -16680,6 +24588,340 @@ export namespace Prisma {
     endDate?: DateTimeWithAggregatesFilter<"Subscription"> | Date | string
     isActive?: BoolWithAggregatesFilter<"Subscription"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Subscription"> | Date | string
+  }
+
+  export type QuestionWhereInput = {
+    AND?: QuestionWhereInput | QuestionWhereInput[]
+    OR?: QuestionWhereInput[]
+    NOT?: QuestionWhereInput | QuestionWhereInput[]
+    id?: IntFilter<"Question"> | number
+    subjectId?: IntFilter<"Question"> | number
+    topicId?: IntFilter<"Question"> | number
+    questionText?: StringFilter<"Question"> | string
+    questionImageUrl?: StringNullableFilter<"Question"> | string | null
+    difficulty?: EnumDifficultyFilter<"Question"> | $Enums.Difficulty
+    marksCorrect?: FloatFilter<"Question"> | number
+    marksIncorrect?: FloatFilter<"Question"> | number
+    explanation?: StringNullableFilter<"Question"> | string | null
+    status?: EnumQuestionStatusFilter<"Question"> | $Enums.QuestionStatus
+    createdAt?: DateTimeFilter<"Question"> | Date | string
+    updatedAt?: DateTimeFilter<"Question"> | Date | string
+    subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    topic?: XOR<TopicScalarRelationFilter, TopicWhereInput>
+    options?: QuestionOptionListRelationFilter
+    tags?: QuestionTagListRelationFilter
+  }
+
+  export type QuestionOrderByWithRelationInput = {
+    id?: SortOrder
+    subjectId?: SortOrder
+    topicId?: SortOrder
+    questionText?: SortOrder
+    questionImageUrl?: SortOrderInput | SortOrder
+    difficulty?: SortOrder
+    marksCorrect?: SortOrder
+    marksIncorrect?: SortOrder
+    explanation?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    subject?: SubjectOrderByWithRelationInput
+    topic?: TopicOrderByWithRelationInput
+    options?: QuestionOptionOrderByRelationAggregateInput
+    tags?: QuestionTagOrderByRelationAggregateInput
+  }
+
+  export type QuestionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: QuestionWhereInput | QuestionWhereInput[]
+    OR?: QuestionWhereInput[]
+    NOT?: QuestionWhereInput | QuestionWhereInput[]
+    subjectId?: IntFilter<"Question"> | number
+    topicId?: IntFilter<"Question"> | number
+    questionText?: StringFilter<"Question"> | string
+    questionImageUrl?: StringNullableFilter<"Question"> | string | null
+    difficulty?: EnumDifficultyFilter<"Question"> | $Enums.Difficulty
+    marksCorrect?: FloatFilter<"Question"> | number
+    marksIncorrect?: FloatFilter<"Question"> | number
+    explanation?: StringNullableFilter<"Question"> | string | null
+    status?: EnumQuestionStatusFilter<"Question"> | $Enums.QuestionStatus
+    createdAt?: DateTimeFilter<"Question"> | Date | string
+    updatedAt?: DateTimeFilter<"Question"> | Date | string
+    subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    topic?: XOR<TopicScalarRelationFilter, TopicWhereInput>
+    options?: QuestionOptionListRelationFilter
+    tags?: QuestionTagListRelationFilter
+  }, "id">
+
+  export type QuestionOrderByWithAggregationInput = {
+    id?: SortOrder
+    subjectId?: SortOrder
+    topicId?: SortOrder
+    questionText?: SortOrder
+    questionImageUrl?: SortOrderInput | SortOrder
+    difficulty?: SortOrder
+    marksCorrect?: SortOrder
+    marksIncorrect?: SortOrder
+    explanation?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: QuestionCountOrderByAggregateInput
+    _avg?: QuestionAvgOrderByAggregateInput
+    _max?: QuestionMaxOrderByAggregateInput
+    _min?: QuestionMinOrderByAggregateInput
+    _sum?: QuestionSumOrderByAggregateInput
+  }
+
+  export type QuestionScalarWhereWithAggregatesInput = {
+    AND?: QuestionScalarWhereWithAggregatesInput | QuestionScalarWhereWithAggregatesInput[]
+    OR?: QuestionScalarWhereWithAggregatesInput[]
+    NOT?: QuestionScalarWhereWithAggregatesInput | QuestionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Question"> | number
+    subjectId?: IntWithAggregatesFilter<"Question"> | number
+    topicId?: IntWithAggregatesFilter<"Question"> | number
+    questionText?: StringWithAggregatesFilter<"Question"> | string
+    questionImageUrl?: StringNullableWithAggregatesFilter<"Question"> | string | null
+    difficulty?: EnumDifficultyWithAggregatesFilter<"Question"> | $Enums.Difficulty
+    marksCorrect?: FloatWithAggregatesFilter<"Question"> | number
+    marksIncorrect?: FloatWithAggregatesFilter<"Question"> | number
+    explanation?: StringNullableWithAggregatesFilter<"Question"> | string | null
+    status?: EnumQuestionStatusWithAggregatesFilter<"Question"> | $Enums.QuestionStatus
+    createdAt?: DateTimeWithAggregatesFilter<"Question"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Question"> | Date | string
+  }
+
+  export type QuestionOptionWhereInput = {
+    AND?: QuestionOptionWhereInput | QuestionOptionWhereInput[]
+    OR?: QuestionOptionWhereInput[]
+    NOT?: QuestionOptionWhereInput | QuestionOptionWhereInput[]
+    id?: IntFilter<"QuestionOption"> | number
+    questionId?: IntFilter<"QuestionOption"> | number
+    optionText?: StringFilter<"QuestionOption"> | string
+    optionImageUrl?: StringNullableFilter<"QuestionOption"> | string | null
+    isCorrect?: BoolFilter<"QuestionOption"> | boolean
+    displayOrder?: IntFilter<"QuestionOption"> | number
+    question?: XOR<QuestionScalarRelationFilter, QuestionWhereInput>
+  }
+
+  export type QuestionOptionOrderByWithRelationInput = {
+    id?: SortOrder
+    questionId?: SortOrder
+    optionText?: SortOrder
+    optionImageUrl?: SortOrderInput | SortOrder
+    isCorrect?: SortOrder
+    displayOrder?: SortOrder
+    question?: QuestionOrderByWithRelationInput
+  }
+
+  export type QuestionOptionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: QuestionOptionWhereInput | QuestionOptionWhereInput[]
+    OR?: QuestionOptionWhereInput[]
+    NOT?: QuestionOptionWhereInput | QuestionOptionWhereInput[]
+    questionId?: IntFilter<"QuestionOption"> | number
+    optionText?: StringFilter<"QuestionOption"> | string
+    optionImageUrl?: StringNullableFilter<"QuestionOption"> | string | null
+    isCorrect?: BoolFilter<"QuestionOption"> | boolean
+    displayOrder?: IntFilter<"QuestionOption"> | number
+    question?: XOR<QuestionScalarRelationFilter, QuestionWhereInput>
+  }, "id">
+
+  export type QuestionOptionOrderByWithAggregationInput = {
+    id?: SortOrder
+    questionId?: SortOrder
+    optionText?: SortOrder
+    optionImageUrl?: SortOrderInput | SortOrder
+    isCorrect?: SortOrder
+    displayOrder?: SortOrder
+    _count?: QuestionOptionCountOrderByAggregateInput
+    _avg?: QuestionOptionAvgOrderByAggregateInput
+    _max?: QuestionOptionMaxOrderByAggregateInput
+    _min?: QuestionOptionMinOrderByAggregateInput
+    _sum?: QuestionOptionSumOrderByAggregateInput
+  }
+
+  export type QuestionOptionScalarWhereWithAggregatesInput = {
+    AND?: QuestionOptionScalarWhereWithAggregatesInput | QuestionOptionScalarWhereWithAggregatesInput[]
+    OR?: QuestionOptionScalarWhereWithAggregatesInput[]
+    NOT?: QuestionOptionScalarWhereWithAggregatesInput | QuestionOptionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"QuestionOption"> | number
+    questionId?: IntWithAggregatesFilter<"QuestionOption"> | number
+    optionText?: StringWithAggregatesFilter<"QuestionOption"> | string
+    optionImageUrl?: StringNullableWithAggregatesFilter<"QuestionOption"> | string | null
+    isCorrect?: BoolWithAggregatesFilter<"QuestionOption"> | boolean
+    displayOrder?: IntWithAggregatesFilter<"QuestionOption"> | number
+  }
+
+  export type QuizWhereInput = {
+    AND?: QuizWhereInput | QuizWhereInput[]
+    OR?: QuizWhereInput[]
+    NOT?: QuizWhereInput | QuizWhereInput[]
+    id?: IntFilter<"Quiz"> | number
+    title?: StringFilter<"Quiz"> | string
+    subjectId?: IntFilter<"Quiz"> | number
+    topicId?: IntFilter<"Quiz"> | number
+    examTag?: StringNullableFilter<"Quiz"> | string | null
+    questionCount?: IntNullableFilter<"Quiz"> | number | null
+    status?: EnumQuestionStatusFilter<"Quiz"> | $Enums.QuestionStatus
+    createdAt?: DateTimeFilter<"Quiz"> | Date | string
+    updatedAt?: DateTimeFilter<"Quiz"> | Date | string
+    subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    topic?: XOR<TopicScalarRelationFilter, TopicWhereInput>
+    lesson?: XOR<LessonNullableScalarRelationFilter, LessonWhereInput> | null
+  }
+
+  export type QuizOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    subjectId?: SortOrder
+    topicId?: SortOrder
+    examTag?: SortOrderInput | SortOrder
+    questionCount?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    subject?: SubjectOrderByWithRelationInput
+    topic?: TopicOrderByWithRelationInput
+    lesson?: LessonOrderByWithRelationInput
+  }
+
+  export type QuizWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: QuizWhereInput | QuizWhereInput[]
+    OR?: QuizWhereInput[]
+    NOT?: QuizWhereInput | QuizWhereInput[]
+    title?: StringFilter<"Quiz"> | string
+    subjectId?: IntFilter<"Quiz"> | number
+    topicId?: IntFilter<"Quiz"> | number
+    examTag?: StringNullableFilter<"Quiz"> | string | null
+    questionCount?: IntNullableFilter<"Quiz"> | number | null
+    status?: EnumQuestionStatusFilter<"Quiz"> | $Enums.QuestionStatus
+    createdAt?: DateTimeFilter<"Quiz"> | Date | string
+    updatedAt?: DateTimeFilter<"Quiz"> | Date | string
+    subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    topic?: XOR<TopicScalarRelationFilter, TopicWhereInput>
+    lesson?: XOR<LessonNullableScalarRelationFilter, LessonWhereInput> | null
+  }, "id">
+
+  export type QuizOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    subjectId?: SortOrder
+    topicId?: SortOrder
+    examTag?: SortOrderInput | SortOrder
+    questionCount?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: QuizCountOrderByAggregateInput
+    _avg?: QuizAvgOrderByAggregateInput
+    _max?: QuizMaxOrderByAggregateInput
+    _min?: QuizMinOrderByAggregateInput
+    _sum?: QuizSumOrderByAggregateInput
+  }
+
+  export type QuizScalarWhereWithAggregatesInput = {
+    AND?: QuizScalarWhereWithAggregatesInput | QuizScalarWhereWithAggregatesInput[]
+    OR?: QuizScalarWhereWithAggregatesInput[]
+    NOT?: QuizScalarWhereWithAggregatesInput | QuizScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Quiz"> | number
+    title?: StringWithAggregatesFilter<"Quiz"> | string
+    subjectId?: IntWithAggregatesFilter<"Quiz"> | number
+    topicId?: IntWithAggregatesFilter<"Quiz"> | number
+    examTag?: StringNullableWithAggregatesFilter<"Quiz"> | string | null
+    questionCount?: IntNullableWithAggregatesFilter<"Quiz"> | number | null
+    status?: EnumQuestionStatusWithAggregatesFilter<"Quiz"> | $Enums.QuestionStatus
+    createdAt?: DateTimeWithAggregatesFilter<"Quiz"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Quiz"> | Date | string
+  }
+
+  export type TagWhereInput = {
+    AND?: TagWhereInput | TagWhereInput[]
+    OR?: TagWhereInput[]
+    NOT?: TagWhereInput | TagWhereInput[]
+    id?: IntFilter<"Tag"> | number
+    name?: StringFilter<"Tag"> | string
+    questions?: QuestionTagListRelationFilter
+  }
+
+  export type TagOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    questions?: QuestionTagOrderByRelationAggregateInput
+  }
+
+  export type TagWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    name?: string
+    AND?: TagWhereInput | TagWhereInput[]
+    OR?: TagWhereInput[]
+    NOT?: TagWhereInput | TagWhereInput[]
+    questions?: QuestionTagListRelationFilter
+  }, "id" | "name">
+
+  export type TagOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    _count?: TagCountOrderByAggregateInput
+    _avg?: TagAvgOrderByAggregateInput
+    _max?: TagMaxOrderByAggregateInput
+    _min?: TagMinOrderByAggregateInput
+    _sum?: TagSumOrderByAggregateInput
+  }
+
+  export type TagScalarWhereWithAggregatesInput = {
+    AND?: TagScalarWhereWithAggregatesInput | TagScalarWhereWithAggregatesInput[]
+    OR?: TagScalarWhereWithAggregatesInput[]
+    NOT?: TagScalarWhereWithAggregatesInput | TagScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Tag"> | number
+    name?: StringWithAggregatesFilter<"Tag"> | string
+  }
+
+  export type QuestionTagWhereInput = {
+    AND?: QuestionTagWhereInput | QuestionTagWhereInput[]
+    OR?: QuestionTagWhereInput[]
+    NOT?: QuestionTagWhereInput | QuestionTagWhereInput[]
+    questionId?: IntFilter<"QuestionTag"> | number
+    tagId?: IntFilter<"QuestionTag"> | number
+    question?: XOR<QuestionScalarRelationFilter, QuestionWhereInput>
+    tag?: XOR<TagScalarRelationFilter, TagWhereInput>
+  }
+
+  export type QuestionTagOrderByWithRelationInput = {
+    questionId?: SortOrder
+    tagId?: SortOrder
+    question?: QuestionOrderByWithRelationInput
+    tag?: TagOrderByWithRelationInput
+  }
+
+  export type QuestionTagWhereUniqueInput = Prisma.AtLeast<{
+    questionId_tagId?: QuestionTagQuestionIdTagIdCompoundUniqueInput
+    AND?: QuestionTagWhereInput | QuestionTagWhereInput[]
+    OR?: QuestionTagWhereInput[]
+    NOT?: QuestionTagWhereInput | QuestionTagWhereInput[]
+    questionId?: IntFilter<"QuestionTag"> | number
+    tagId?: IntFilter<"QuestionTag"> | number
+    question?: XOR<QuestionScalarRelationFilter, QuestionWhereInput>
+    tag?: XOR<TagScalarRelationFilter, TagWhereInput>
+  }, "questionId_tagId">
+
+  export type QuestionTagOrderByWithAggregationInput = {
+    questionId?: SortOrder
+    tagId?: SortOrder
+    _count?: QuestionTagCountOrderByAggregateInput
+    _avg?: QuestionTagAvgOrderByAggregateInput
+    _max?: QuestionTagMaxOrderByAggregateInput
+    _min?: QuestionTagMinOrderByAggregateInput
+    _sum?: QuestionTagSumOrderByAggregateInput
+  }
+
+  export type QuestionTagScalarWhereWithAggregatesInput = {
+    AND?: QuestionTagScalarWhereWithAggregatesInput | QuestionTagScalarWhereWithAggregatesInput[]
+    OR?: QuestionTagScalarWhereWithAggregatesInput[]
+    NOT?: QuestionTagScalarWhereWithAggregatesInput | QuestionTagScalarWhereWithAggregatesInput[]
+    questionId?: IntWithAggregatesFilter<"QuestionTag"> | number
+    tagId?: IntWithAggregatesFilter<"QuestionTag"> | number
   }
 
   export type UserCreateInput = {
@@ -16870,47 +25112,67 @@ export namespace Prisma {
 
   export type SubjectCreateInput = {
     name: string
+    isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     topics?: TopicCreateNestedManyWithoutSubjectInput
     courses?: CourseCreateNestedManyWithoutSubjectsInput
+    questions?: QuestionCreateNestedManyWithoutSubjectInput
+    quizzes?: QuizCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateInput = {
     id?: number
     name: string
+    isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     topics?: TopicUncheckedCreateNestedManyWithoutSubjectInput
     courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
+    questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
+    quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUpdateManyWithoutSubjectNestedInput
     courses?: CourseUpdateManyWithoutSubjectsNestedInput
+    questions?: QuestionUpdateManyWithoutSubjectNestedInput
+    quizzes?: QuizUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUncheckedUpdateManyWithoutSubjectNestedInput
     courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
+    questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
+    quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectCreateManyInput = {
     id?: number
     name: string
+    isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type SubjectUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16918,50 +25180,72 @@ export namespace Prisma {
   export type SubjectUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TopicCreateInput = {
     name: string
+    isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     subject: SubjectCreateNestedOneWithoutTopicsInput
+    questions?: QuestionCreateNestedManyWithoutTopicInput
+    quizzes?: QuizCreateNestedManyWithoutTopicInput
   }
 
   export type TopicUncheckedCreateInput = {
     id?: number
     name: string
     subjectId: number
+    isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    questions?: QuestionUncheckedCreateNestedManyWithoutTopicInput
+    quizzes?: QuizUncheckedCreateNestedManyWithoutTopicInput
   }
 
   export type TopicUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subject?: SubjectUpdateOneRequiredWithoutTopicsNestedInput
+    questions?: QuestionUpdateManyWithoutTopicNestedInput
+    quizzes?: QuizUpdateManyWithoutTopicNestedInput
   }
 
   export type TopicUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     subjectId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: QuestionUncheckedUpdateManyWithoutTopicNestedInput
+    quizzes?: QuizUncheckedUpdateManyWithoutTopicNestedInput
   }
 
   export type TopicCreateManyInput = {
     id?: number
     name: string
     subjectId: number
+    isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type TopicUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16970,6 +25254,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     subjectId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17163,7 +25449,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.CourseStatus
     accessType?: $Enums.AccessType
-    displayOrder?: number | null
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutCourseTypesInput
@@ -17178,7 +25464,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.CourseStatus
     accessType?: $Enums.AccessType
-    displayOrder?: number | null
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     chapters?: ChapterUncheckedCreateNestedManyWithoutCourseTypeInput
@@ -17190,7 +25476,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutCourseTypesNestedInput
@@ -17205,7 +25491,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapters?: ChapterUncheckedUpdateManyWithoutCourseTypeNestedInput
@@ -17219,7 +25505,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.CourseStatus
     accessType?: $Enums.AccessType
-    displayOrder?: number | null
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17229,7 +25515,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17241,7 +25527,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17334,7 +25620,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
-    plan?: PlanCreateNestedOneWithoutLessonsInput
+    quiz?: QuizCreateNestedOneWithoutLessonInput
+    lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateInput = {
@@ -17355,9 +25642,10 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
-    planId?: number | null
+    quizId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUpdateInput = {
@@ -17379,7 +25667,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
-    plan?: PlanUpdateOneWithoutLessonsNestedInput
+    quiz?: QuizUpdateOneWithoutLessonNestedInput
+    lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateInput = {
@@ -17400,9 +25689,10 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    planId?: NullableIntFieldUpdateOperationsInput | number | null
+    quizId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonCreateManyInput = {
@@ -17423,7 +25713,7 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
-    planId?: number | null
+    quizId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -17466,9 +25756,43 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    planId?: NullableIntFieldUpdateOperationsInput | number | null
+    quizId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonPlanCreateInput = {
+    lesson: LessonCreateNestedOneWithoutLessonPlansInput
+    plan: PlanCreateNestedOneWithoutLessonPlansInput
+  }
+
+  export type LessonPlanUncheckedCreateInput = {
+    lessonId: number
+    planId: number
+  }
+
+  export type LessonPlanUpdateInput = {
+    lesson?: LessonUpdateOneRequiredWithoutLessonPlansNestedInput
+    plan?: PlanUpdateOneRequiredWithoutLessonPlansNestedInput
+  }
+
+  export type LessonPlanUncheckedUpdateInput = {
+    lessonId?: IntFieldUpdateOperationsInput | number
+    planId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type LessonPlanCreateManyInput = {
+    lessonId: number
+    planId: number
+  }
+
+  export type LessonPlanUpdateManyMutationInput = {
+
+  }
+
+  export type LessonPlanUncheckedUpdateManyInput = {
+    lessonId?: IntFieldUpdateOperationsInput | number
+    planId?: IntFieldUpdateOperationsInput | number
   }
 
   export type PlanCreateInput = {
@@ -17481,7 +25805,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutPlansInput
     subscriptions?: SubscriptionCreateNestedManyWithoutPlanInput
-    lessons?: LessonCreateNestedManyWithoutPlanInput
+    lessonPlans?: LessonPlanCreateNestedManyWithoutPlanInput
   }
 
   export type PlanUncheckedCreateInput = {
@@ -17495,7 +25819,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutPlanInput
-    lessons?: LessonUncheckedCreateNestedManyWithoutPlanInput
+    lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutPlanInput
   }
 
   export type PlanUpdateInput = {
@@ -17508,7 +25832,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutPlansNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutPlanNestedInput
-    lessons?: LessonUpdateManyWithoutPlanNestedInput
+    lessonPlans?: LessonPlanUpdateManyWithoutPlanNestedInput
   }
 
   export type PlanUncheckedUpdateInput = {
@@ -17522,7 +25846,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutPlanNestedInput
-    lessons?: LessonUncheckedUpdateManyWithoutPlanNestedInput
+    lessonPlans?: LessonPlanUncheckedUpdateManyWithoutPlanNestedInput
   }
 
   export type PlanCreateManyInput = {
@@ -17628,6 +25952,326 @@ export namespace Prisma {
     endDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuestionCreateInput = {
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subject: SubjectCreateNestedOneWithoutQuestionsInput
+    topic: TopicCreateNestedOneWithoutQuestionsInput
+    options?: QuestionOptionCreateNestedManyWithoutQuestionInput
+    tags?: QuestionTagCreateNestedManyWithoutQuestionInput
+  }
+
+  export type QuestionUncheckedCreateInput = {
+    id?: number
+    subjectId: number
+    topicId: number
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
+    tags?: QuestionTagUncheckedCreateNestedManyWithoutQuestionInput
+  }
+
+  export type QuestionUpdateInput = {
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subject?: SubjectUpdateOneRequiredWithoutQuestionsNestedInput
+    topic?: TopicUpdateOneRequiredWithoutQuestionsNestedInput
+    options?: QuestionOptionUpdateManyWithoutQuestionNestedInput
+    tags?: QuestionTagUpdateManyWithoutQuestionNestedInput
+  }
+
+  export type QuestionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    subjectId?: IntFieldUpdateOperationsInput | number
+    topicId?: IntFieldUpdateOperationsInput | number
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
+    tags?: QuestionTagUncheckedUpdateManyWithoutQuestionNestedInput
+  }
+
+  export type QuestionCreateManyInput = {
+    id?: number
+    subjectId: number
+    topicId: number
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuestionUpdateManyMutationInput = {
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuestionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    subjectId?: IntFieldUpdateOperationsInput | number
+    topicId?: IntFieldUpdateOperationsInput | number
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuestionOptionCreateInput = {
+    optionText: string
+    optionImageUrl?: string | null
+    isCorrect?: boolean
+    displayOrder?: number
+    question: QuestionCreateNestedOneWithoutOptionsInput
+  }
+
+  export type QuestionOptionUncheckedCreateInput = {
+    id?: number
+    questionId: number
+    optionText: string
+    optionImageUrl?: string | null
+    isCorrect?: boolean
+    displayOrder?: number
+  }
+
+  export type QuestionOptionUpdateInput = {
+    optionText?: StringFieldUpdateOperationsInput | string
+    optionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isCorrect?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    question?: QuestionUpdateOneRequiredWithoutOptionsNestedInput
+  }
+
+  export type QuestionOptionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    questionId?: IntFieldUpdateOperationsInput | number
+    optionText?: StringFieldUpdateOperationsInput | string
+    optionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isCorrect?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type QuestionOptionCreateManyInput = {
+    id?: number
+    questionId: number
+    optionText: string
+    optionImageUrl?: string | null
+    isCorrect?: boolean
+    displayOrder?: number
+  }
+
+  export type QuestionOptionUpdateManyMutationInput = {
+    optionText?: StringFieldUpdateOperationsInput | string
+    optionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isCorrect?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type QuestionOptionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    questionId?: IntFieldUpdateOperationsInput | number
+    optionText?: StringFieldUpdateOperationsInput | string
+    optionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isCorrect?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type QuizCreateInput = {
+    title: string
+    examTag?: string | null
+    questionCount?: number | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subject: SubjectCreateNestedOneWithoutQuizzesInput
+    topic: TopicCreateNestedOneWithoutQuizzesInput
+    lesson?: LessonCreateNestedOneWithoutQuizInput
+  }
+
+  export type QuizUncheckedCreateInput = {
+    id?: number
+    title: string
+    subjectId: number
+    topicId: number
+    examTag?: string | null
+    questionCount?: number | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lesson?: LessonUncheckedCreateNestedOneWithoutQuizInput
+  }
+
+  export type QuizUpdateInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    examTag?: NullableStringFieldUpdateOperationsInput | string | null
+    questionCount?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subject?: SubjectUpdateOneRequiredWithoutQuizzesNestedInput
+    topic?: TopicUpdateOneRequiredWithoutQuizzesNestedInput
+    lesson?: LessonUpdateOneWithoutQuizNestedInput
+  }
+
+  export type QuizUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    subjectId?: IntFieldUpdateOperationsInput | number
+    topicId?: IntFieldUpdateOperationsInput | number
+    examTag?: NullableStringFieldUpdateOperationsInput | string | null
+    questionCount?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lesson?: LessonUncheckedUpdateOneWithoutQuizNestedInput
+  }
+
+  export type QuizCreateManyInput = {
+    id?: number
+    title: string
+    subjectId: number
+    topicId: number
+    examTag?: string | null
+    questionCount?: number | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuizUpdateManyMutationInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    examTag?: NullableStringFieldUpdateOperationsInput | string | null
+    questionCount?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuizUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    subjectId?: IntFieldUpdateOperationsInput | number
+    topicId?: IntFieldUpdateOperationsInput | number
+    examTag?: NullableStringFieldUpdateOperationsInput | string | null
+    questionCount?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TagCreateInput = {
+    name: string
+    questions?: QuestionTagCreateNestedManyWithoutTagInput
+  }
+
+  export type TagUncheckedCreateInput = {
+    id?: number
+    name: string
+    questions?: QuestionTagUncheckedCreateNestedManyWithoutTagInput
+  }
+
+  export type TagUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    questions?: QuestionTagUpdateManyWithoutTagNestedInput
+  }
+
+  export type TagUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    questions?: QuestionTagUncheckedUpdateManyWithoutTagNestedInput
+  }
+
+  export type TagCreateManyInput = {
+    id?: number
+    name: string
+  }
+
+  export type TagUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type TagUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type QuestionTagCreateInput = {
+    question: QuestionCreateNestedOneWithoutTagsInput
+    tag: TagCreateNestedOneWithoutQuestionsInput
+  }
+
+  export type QuestionTagUncheckedCreateInput = {
+    questionId: number
+    tagId: number
+  }
+
+  export type QuestionTagUpdateInput = {
+    question?: QuestionUpdateOneRequiredWithoutTagsNestedInput
+    tag?: TagUpdateOneRequiredWithoutQuestionsNestedInput
+  }
+
+  export type QuestionTagUncheckedUpdateInput = {
+    questionId?: IntFieldUpdateOperationsInput | number
+    tagId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type QuestionTagCreateManyInput = {
+    questionId: number
+    tagId: number
+  }
+
+  export type QuestionTagUpdateManyMutationInput = {
+
+  }
+
+  export type QuestionTagUncheckedUpdateManyInput = {
+    questionId?: IntFieldUpdateOperationsInput | number
+    tagId?: IntFieldUpdateOperationsInput | number
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -17918,30 +26562,60 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type TopicListRelationFilter = {
     every?: TopicWhereInput
     some?: TopicWhereInput
     none?: TopicWhereInput
   }
 
+  export type QuestionListRelationFilter = {
+    every?: QuestionWhereInput
+    some?: QuestionWhereInput
+    none?: QuestionWhereInput
+  }
+
+  export type QuizListRelationFilter = {
+    every?: QuizWhereInput
+    some?: QuizWhereInput
+    none?: QuizWhereInput
+  }
+
   export type TopicOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type QuestionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type QuizOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type SubjectCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type SubjectAvgOrderByAggregateInput = {
     id?: SortOrder
+    displayOrder?: SortOrder
   }
 
   export type SubjectMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -17949,12 +26623,23 @@ export namespace Prisma {
   export type SubjectMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type SubjectSumOrderByAggregateInput = {
     id?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type SubjectScalarRelationFilter = {
@@ -17962,10 +26647,17 @@ export namespace Prisma {
     isNot?: SubjectWhereInput
   }
 
+  export type TopicSubjectIdNameCompoundUniqueInput = {
+    subjectId: number
+    name: string
+  }
+
   export type TopicCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     subjectId?: SortOrder
+    isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -17973,12 +26665,15 @@ export namespace Prisma {
   export type TopicAvgOrderByAggregateInput = {
     id?: SortOrder
     subjectId?: SortOrder
+    displayOrder?: SortOrder
   }
 
   export type TopicMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     subjectId?: SortOrder
+    isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -17987,6 +26682,8 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     subjectId?: SortOrder
+    isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -17994,6 +26691,7 @@ export namespace Prisma {
   export type TopicSumOrderByAggregateInput = {
     id?: SortOrder
     subjectId?: SortOrder
+    displayOrder?: SortOrder
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -18323,19 +27021,24 @@ export namespace Prisma {
     not?: NestedEnumLessonTypeFilter<$PrismaModel> | $Enums.LessonType
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type ChapterScalarRelationFilter = {
     is?: ChapterWhereInput
     isNot?: ChapterWhereInput
   }
 
-  export type PlanNullableScalarRelationFilter = {
-    is?: PlanWhereInput | null
-    isNot?: PlanWhereInput | null
+  export type QuizNullableScalarRelationFilter = {
+    is?: QuizWhereInput | null
+    isNot?: QuizWhereInput | null
+  }
+
+  export type LessonPlanListRelationFilter = {
+    every?: LessonPlanWhereInput
+    some?: LessonPlanWhereInput
+    none?: LessonPlanWhereInput
+  }
+
+  export type LessonPlanOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type LessonCountOrderByAggregateInput = {
@@ -18356,7 +27059,7 @@ export namespace Prisma {
     isFreePreview?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
-    planId?: SortOrder
+    quizId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18365,7 +27068,7 @@ export namespace Prisma {
     id?: SortOrder
     chapterId?: SortOrder
     displayOrder?: SortOrder
-    planId?: SortOrder
+    quizId?: SortOrder
   }
 
   export type LessonMaxOrderByAggregateInput = {
@@ -18386,7 +27089,7 @@ export namespace Prisma {
     isFreePreview?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
-    planId?: SortOrder
+    quizId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18409,7 +27112,7 @@ export namespace Prisma {
     isFreePreview?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
-    planId?: SortOrder
+    quizId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -18418,7 +27121,7 @@ export namespace Prisma {
     id?: SortOrder
     chapterId?: SortOrder
     displayOrder?: SortOrder
-    planId?: SortOrder
+    quizId?: SortOrder
   }
 
   export type EnumLessonTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -18431,12 +27134,44 @@ export namespace Prisma {
     _max?: NestedEnumLessonTypeFilter<$PrismaModel>
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+  export type LessonScalarRelationFilter = {
+    is?: LessonWhereInput
+    isNot?: LessonWhereInput
+  }
+
+  export type PlanScalarRelationFilter = {
+    is?: PlanWhereInput
+    isNot?: PlanWhereInput
+  }
+
+  export type LessonPlanLessonIdPlanIdCompoundUniqueInput = {
+    lessonId: number
+    planId: number
+  }
+
+  export type LessonPlanCountOrderByAggregateInput = {
+    lessonId?: SortOrder
+    planId?: SortOrder
+  }
+
+  export type LessonPlanAvgOrderByAggregateInput = {
+    lessonId?: SortOrder
+    planId?: SortOrder
+  }
+
+  export type LessonPlanMaxOrderByAggregateInput = {
+    lessonId?: SortOrder
+    planId?: SortOrder
+  }
+
+  export type LessonPlanMinOrderByAggregateInput = {
+    lessonId?: SortOrder
+    planId?: SortOrder
+  }
+
+  export type LessonPlanSumOrderByAggregateInput = {
+    lessonId?: SortOrder
+    planId?: SortOrder
   }
 
   export type FloatFilter<$PrismaModel = never> = {
@@ -18516,11 +27251,6 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type PlanScalarRelationFilter = {
-    is?: PlanWhereInput
-    isNot?: PlanWhereInput
-  }
-
   export type SubscriptionCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -18566,6 +27296,283 @@ export namespace Prisma {
     userId?: SortOrder
     courseId?: SortOrder
     planId?: SortOrder
+  }
+
+  export type EnumDifficultyFilter<$PrismaModel = never> = {
+    equals?: $Enums.Difficulty | EnumDifficultyFieldRefInput<$PrismaModel>
+    in?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    not?: NestedEnumDifficultyFilter<$PrismaModel> | $Enums.Difficulty
+  }
+
+  export type EnumQuestionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.QuestionStatus | EnumQuestionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.QuestionStatus[] | ListEnumQuestionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.QuestionStatus[] | ListEnumQuestionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumQuestionStatusFilter<$PrismaModel> | $Enums.QuestionStatus
+  }
+
+  export type TopicScalarRelationFilter = {
+    is?: TopicWhereInput
+    isNot?: TopicWhereInput
+  }
+
+  export type QuestionOptionListRelationFilter = {
+    every?: QuestionOptionWhereInput
+    some?: QuestionOptionWhereInput
+    none?: QuestionOptionWhereInput
+  }
+
+  export type QuestionTagListRelationFilter = {
+    every?: QuestionTagWhereInput
+    some?: QuestionTagWhereInput
+    none?: QuestionTagWhereInput
+  }
+
+  export type QuestionOptionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type QuestionTagOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type QuestionCountOrderByAggregateInput = {
+    id?: SortOrder
+    subjectId?: SortOrder
+    topicId?: SortOrder
+    questionText?: SortOrder
+    questionImageUrl?: SortOrder
+    difficulty?: SortOrder
+    marksCorrect?: SortOrder
+    marksIncorrect?: SortOrder
+    explanation?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type QuestionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    subjectId?: SortOrder
+    topicId?: SortOrder
+    marksCorrect?: SortOrder
+    marksIncorrect?: SortOrder
+  }
+
+  export type QuestionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    subjectId?: SortOrder
+    topicId?: SortOrder
+    questionText?: SortOrder
+    questionImageUrl?: SortOrder
+    difficulty?: SortOrder
+    marksCorrect?: SortOrder
+    marksIncorrect?: SortOrder
+    explanation?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type QuestionMinOrderByAggregateInput = {
+    id?: SortOrder
+    subjectId?: SortOrder
+    topicId?: SortOrder
+    questionText?: SortOrder
+    questionImageUrl?: SortOrder
+    difficulty?: SortOrder
+    marksCorrect?: SortOrder
+    marksIncorrect?: SortOrder
+    explanation?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type QuestionSumOrderByAggregateInput = {
+    id?: SortOrder
+    subjectId?: SortOrder
+    topicId?: SortOrder
+    marksCorrect?: SortOrder
+    marksIncorrect?: SortOrder
+  }
+
+  export type EnumDifficultyWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Difficulty | EnumDifficultyFieldRefInput<$PrismaModel>
+    in?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    not?: NestedEnumDifficultyWithAggregatesFilter<$PrismaModel> | $Enums.Difficulty
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDifficultyFilter<$PrismaModel>
+    _max?: NestedEnumDifficultyFilter<$PrismaModel>
+  }
+
+  export type EnumQuestionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.QuestionStatus | EnumQuestionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.QuestionStatus[] | ListEnumQuestionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.QuestionStatus[] | ListEnumQuestionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumQuestionStatusWithAggregatesFilter<$PrismaModel> | $Enums.QuestionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumQuestionStatusFilter<$PrismaModel>
+    _max?: NestedEnumQuestionStatusFilter<$PrismaModel>
+  }
+
+  export type QuestionScalarRelationFilter = {
+    is?: QuestionWhereInput
+    isNot?: QuestionWhereInput
+  }
+
+  export type QuestionOptionCountOrderByAggregateInput = {
+    id?: SortOrder
+    questionId?: SortOrder
+    optionText?: SortOrder
+    optionImageUrl?: SortOrder
+    isCorrect?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type QuestionOptionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    questionId?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type QuestionOptionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    questionId?: SortOrder
+    optionText?: SortOrder
+    optionImageUrl?: SortOrder
+    isCorrect?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type QuestionOptionMinOrderByAggregateInput = {
+    id?: SortOrder
+    questionId?: SortOrder
+    optionText?: SortOrder
+    optionImageUrl?: SortOrder
+    isCorrect?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type QuestionOptionSumOrderByAggregateInput = {
+    id?: SortOrder
+    questionId?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type LessonNullableScalarRelationFilter = {
+    is?: LessonWhereInput | null
+    isNot?: LessonWhereInput | null
+  }
+
+  export type QuizCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    subjectId?: SortOrder
+    topicId?: SortOrder
+    examTag?: SortOrder
+    questionCount?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type QuizAvgOrderByAggregateInput = {
+    id?: SortOrder
+    subjectId?: SortOrder
+    topicId?: SortOrder
+    questionCount?: SortOrder
+  }
+
+  export type QuizMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    subjectId?: SortOrder
+    topicId?: SortOrder
+    examTag?: SortOrder
+    questionCount?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type QuizMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    subjectId?: SortOrder
+    topicId?: SortOrder
+    examTag?: SortOrder
+    questionCount?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type QuizSumOrderByAggregateInput = {
+    id?: SortOrder
+    subjectId?: SortOrder
+    topicId?: SortOrder
+    questionCount?: SortOrder
+  }
+
+  export type TagCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type TagAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type TagMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type TagMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+  }
+
+  export type TagSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type TagScalarRelationFilter = {
+    is?: TagWhereInput
+    isNot?: TagWhereInput
+  }
+
+  export type QuestionTagQuestionIdTagIdCompoundUniqueInput = {
+    questionId: number
+    tagId: number
+  }
+
+  export type QuestionTagCountOrderByAggregateInput = {
+    questionId?: SortOrder
+    tagId?: SortOrder
+  }
+
+  export type QuestionTagAvgOrderByAggregateInput = {
+    questionId?: SortOrder
+    tagId?: SortOrder
+  }
+
+  export type QuestionTagMaxOrderByAggregateInput = {
+    questionId?: SortOrder
+    tagId?: SortOrder
+  }
+
+  export type QuestionTagMinOrderByAggregateInput = {
+    questionId?: SortOrder
+    tagId?: SortOrder
+  }
+
+  export type QuestionTagSumOrderByAggregateInput = {
+    questionId?: SortOrder
+    tagId?: SortOrder
   }
 
   export type SessionCreateNestedManyWithoutUserInput = {
@@ -18767,6 +27774,20 @@ export namespace Prisma {
     connect?: CourseWhereUniqueInput | CourseWhereUniqueInput[]
   }
 
+  export type QuestionCreateNestedManyWithoutSubjectInput = {
+    create?: XOR<QuestionCreateWithoutSubjectInput, QuestionUncheckedCreateWithoutSubjectInput> | QuestionCreateWithoutSubjectInput[] | QuestionUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutSubjectInput | QuestionCreateOrConnectWithoutSubjectInput[]
+    createMany?: QuestionCreateManySubjectInputEnvelope
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+  }
+
+  export type QuizCreateNestedManyWithoutSubjectInput = {
+    create?: XOR<QuizCreateWithoutSubjectInput, QuizUncheckedCreateWithoutSubjectInput> | QuizCreateWithoutSubjectInput[] | QuizUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: QuizCreateOrConnectWithoutSubjectInput | QuizCreateOrConnectWithoutSubjectInput[]
+    createMany?: QuizCreateManySubjectInputEnvelope
+    connect?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+  }
+
   export type TopicUncheckedCreateNestedManyWithoutSubjectInput = {
     create?: XOR<TopicCreateWithoutSubjectInput, TopicUncheckedCreateWithoutSubjectInput> | TopicCreateWithoutSubjectInput[] | TopicUncheckedCreateWithoutSubjectInput[]
     connectOrCreate?: TopicCreateOrConnectWithoutSubjectInput | TopicCreateOrConnectWithoutSubjectInput[]
@@ -18778,6 +27799,24 @@ export namespace Prisma {
     create?: XOR<CourseCreateWithoutSubjectsInput, CourseUncheckedCreateWithoutSubjectsInput> | CourseCreateWithoutSubjectsInput[] | CourseUncheckedCreateWithoutSubjectsInput[]
     connectOrCreate?: CourseCreateOrConnectWithoutSubjectsInput | CourseCreateOrConnectWithoutSubjectsInput[]
     connect?: CourseWhereUniqueInput | CourseWhereUniqueInput[]
+  }
+
+  export type QuestionUncheckedCreateNestedManyWithoutSubjectInput = {
+    create?: XOR<QuestionCreateWithoutSubjectInput, QuestionUncheckedCreateWithoutSubjectInput> | QuestionCreateWithoutSubjectInput[] | QuestionUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutSubjectInput | QuestionCreateOrConnectWithoutSubjectInput[]
+    createMany?: QuestionCreateManySubjectInputEnvelope
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+  }
+
+  export type QuizUncheckedCreateNestedManyWithoutSubjectInput = {
+    create?: XOR<QuizCreateWithoutSubjectInput, QuizUncheckedCreateWithoutSubjectInput> | QuizCreateWithoutSubjectInput[] | QuizUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: QuizCreateOrConnectWithoutSubjectInput | QuizCreateOrConnectWithoutSubjectInput[]
+    createMany?: QuizCreateManySubjectInputEnvelope
+    connect?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type TopicUpdateManyWithoutSubjectNestedInput = {
@@ -18807,6 +27846,34 @@ export namespace Prisma {
     deleteMany?: CourseScalarWhereInput | CourseScalarWhereInput[]
   }
 
+  export type QuestionUpdateManyWithoutSubjectNestedInput = {
+    create?: XOR<QuestionCreateWithoutSubjectInput, QuestionUncheckedCreateWithoutSubjectInput> | QuestionCreateWithoutSubjectInput[] | QuestionUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutSubjectInput | QuestionCreateOrConnectWithoutSubjectInput[]
+    upsert?: QuestionUpsertWithWhereUniqueWithoutSubjectInput | QuestionUpsertWithWhereUniqueWithoutSubjectInput[]
+    createMany?: QuestionCreateManySubjectInputEnvelope
+    set?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    disconnect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    delete?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    update?: QuestionUpdateWithWhereUniqueWithoutSubjectInput | QuestionUpdateWithWhereUniqueWithoutSubjectInput[]
+    updateMany?: QuestionUpdateManyWithWhereWithoutSubjectInput | QuestionUpdateManyWithWhereWithoutSubjectInput[]
+    deleteMany?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
+  }
+
+  export type QuizUpdateManyWithoutSubjectNestedInput = {
+    create?: XOR<QuizCreateWithoutSubjectInput, QuizUncheckedCreateWithoutSubjectInput> | QuizCreateWithoutSubjectInput[] | QuizUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: QuizCreateOrConnectWithoutSubjectInput | QuizCreateOrConnectWithoutSubjectInput[]
+    upsert?: QuizUpsertWithWhereUniqueWithoutSubjectInput | QuizUpsertWithWhereUniqueWithoutSubjectInput[]
+    createMany?: QuizCreateManySubjectInputEnvelope
+    set?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    disconnect?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    delete?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    connect?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    update?: QuizUpdateWithWhereUniqueWithoutSubjectInput | QuizUpdateWithWhereUniqueWithoutSubjectInput[]
+    updateMany?: QuizUpdateManyWithWhereWithoutSubjectInput | QuizUpdateManyWithWhereWithoutSubjectInput[]
+    deleteMany?: QuizScalarWhereInput | QuizScalarWhereInput[]
+  }
+
   export type TopicUncheckedUpdateManyWithoutSubjectNestedInput = {
     create?: XOR<TopicCreateWithoutSubjectInput, TopicUncheckedCreateWithoutSubjectInput> | TopicCreateWithoutSubjectInput[] | TopicUncheckedCreateWithoutSubjectInput[]
     connectOrCreate?: TopicCreateOrConnectWithoutSubjectInput | TopicCreateOrConnectWithoutSubjectInput[]
@@ -18834,10 +27901,66 @@ export namespace Prisma {
     deleteMany?: CourseScalarWhereInput | CourseScalarWhereInput[]
   }
 
+  export type QuestionUncheckedUpdateManyWithoutSubjectNestedInput = {
+    create?: XOR<QuestionCreateWithoutSubjectInput, QuestionUncheckedCreateWithoutSubjectInput> | QuestionCreateWithoutSubjectInput[] | QuestionUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutSubjectInput | QuestionCreateOrConnectWithoutSubjectInput[]
+    upsert?: QuestionUpsertWithWhereUniqueWithoutSubjectInput | QuestionUpsertWithWhereUniqueWithoutSubjectInput[]
+    createMany?: QuestionCreateManySubjectInputEnvelope
+    set?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    disconnect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    delete?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    update?: QuestionUpdateWithWhereUniqueWithoutSubjectInput | QuestionUpdateWithWhereUniqueWithoutSubjectInput[]
+    updateMany?: QuestionUpdateManyWithWhereWithoutSubjectInput | QuestionUpdateManyWithWhereWithoutSubjectInput[]
+    deleteMany?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
+  }
+
+  export type QuizUncheckedUpdateManyWithoutSubjectNestedInput = {
+    create?: XOR<QuizCreateWithoutSubjectInput, QuizUncheckedCreateWithoutSubjectInput> | QuizCreateWithoutSubjectInput[] | QuizUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: QuizCreateOrConnectWithoutSubjectInput | QuizCreateOrConnectWithoutSubjectInput[]
+    upsert?: QuizUpsertWithWhereUniqueWithoutSubjectInput | QuizUpsertWithWhereUniqueWithoutSubjectInput[]
+    createMany?: QuizCreateManySubjectInputEnvelope
+    set?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    disconnect?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    delete?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    connect?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    update?: QuizUpdateWithWhereUniqueWithoutSubjectInput | QuizUpdateWithWhereUniqueWithoutSubjectInput[]
+    updateMany?: QuizUpdateManyWithWhereWithoutSubjectInput | QuizUpdateManyWithWhereWithoutSubjectInput[]
+    deleteMany?: QuizScalarWhereInput | QuizScalarWhereInput[]
+  }
+
   export type SubjectCreateNestedOneWithoutTopicsInput = {
     create?: XOR<SubjectCreateWithoutTopicsInput, SubjectUncheckedCreateWithoutTopicsInput>
     connectOrCreate?: SubjectCreateOrConnectWithoutTopicsInput
     connect?: SubjectWhereUniqueInput
+  }
+
+  export type QuestionCreateNestedManyWithoutTopicInput = {
+    create?: XOR<QuestionCreateWithoutTopicInput, QuestionUncheckedCreateWithoutTopicInput> | QuestionCreateWithoutTopicInput[] | QuestionUncheckedCreateWithoutTopicInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutTopicInput | QuestionCreateOrConnectWithoutTopicInput[]
+    createMany?: QuestionCreateManyTopicInputEnvelope
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+  }
+
+  export type QuizCreateNestedManyWithoutTopicInput = {
+    create?: XOR<QuizCreateWithoutTopicInput, QuizUncheckedCreateWithoutTopicInput> | QuizCreateWithoutTopicInput[] | QuizUncheckedCreateWithoutTopicInput[]
+    connectOrCreate?: QuizCreateOrConnectWithoutTopicInput | QuizCreateOrConnectWithoutTopicInput[]
+    createMany?: QuizCreateManyTopicInputEnvelope
+    connect?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+  }
+
+  export type QuestionUncheckedCreateNestedManyWithoutTopicInput = {
+    create?: XOR<QuestionCreateWithoutTopicInput, QuestionUncheckedCreateWithoutTopicInput> | QuestionCreateWithoutTopicInput[] | QuestionUncheckedCreateWithoutTopicInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutTopicInput | QuestionCreateOrConnectWithoutTopicInput[]
+    createMany?: QuestionCreateManyTopicInputEnvelope
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+  }
+
+  export type QuizUncheckedCreateNestedManyWithoutTopicInput = {
+    create?: XOR<QuizCreateWithoutTopicInput, QuizUncheckedCreateWithoutTopicInput> | QuizCreateWithoutTopicInput[] | QuizUncheckedCreateWithoutTopicInput[]
+    connectOrCreate?: QuizCreateOrConnectWithoutTopicInput | QuizCreateOrConnectWithoutTopicInput[]
+    createMany?: QuizCreateManyTopicInputEnvelope
+    connect?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
   }
 
   export type SubjectUpdateOneRequiredWithoutTopicsNestedInput = {
@@ -18846,6 +27969,62 @@ export namespace Prisma {
     upsert?: SubjectUpsertWithoutTopicsInput
     connect?: SubjectWhereUniqueInput
     update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutTopicsInput, SubjectUpdateWithoutTopicsInput>, SubjectUncheckedUpdateWithoutTopicsInput>
+  }
+
+  export type QuestionUpdateManyWithoutTopicNestedInput = {
+    create?: XOR<QuestionCreateWithoutTopicInput, QuestionUncheckedCreateWithoutTopicInput> | QuestionCreateWithoutTopicInput[] | QuestionUncheckedCreateWithoutTopicInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutTopicInput | QuestionCreateOrConnectWithoutTopicInput[]
+    upsert?: QuestionUpsertWithWhereUniqueWithoutTopicInput | QuestionUpsertWithWhereUniqueWithoutTopicInput[]
+    createMany?: QuestionCreateManyTopicInputEnvelope
+    set?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    disconnect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    delete?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    update?: QuestionUpdateWithWhereUniqueWithoutTopicInput | QuestionUpdateWithWhereUniqueWithoutTopicInput[]
+    updateMany?: QuestionUpdateManyWithWhereWithoutTopicInput | QuestionUpdateManyWithWhereWithoutTopicInput[]
+    deleteMany?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
+  }
+
+  export type QuizUpdateManyWithoutTopicNestedInput = {
+    create?: XOR<QuizCreateWithoutTopicInput, QuizUncheckedCreateWithoutTopicInput> | QuizCreateWithoutTopicInput[] | QuizUncheckedCreateWithoutTopicInput[]
+    connectOrCreate?: QuizCreateOrConnectWithoutTopicInput | QuizCreateOrConnectWithoutTopicInput[]
+    upsert?: QuizUpsertWithWhereUniqueWithoutTopicInput | QuizUpsertWithWhereUniqueWithoutTopicInput[]
+    createMany?: QuizCreateManyTopicInputEnvelope
+    set?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    disconnect?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    delete?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    connect?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    update?: QuizUpdateWithWhereUniqueWithoutTopicInput | QuizUpdateWithWhereUniqueWithoutTopicInput[]
+    updateMany?: QuizUpdateManyWithWhereWithoutTopicInput | QuizUpdateManyWithWhereWithoutTopicInput[]
+    deleteMany?: QuizScalarWhereInput | QuizScalarWhereInput[]
+  }
+
+  export type QuestionUncheckedUpdateManyWithoutTopicNestedInput = {
+    create?: XOR<QuestionCreateWithoutTopicInput, QuestionUncheckedCreateWithoutTopicInput> | QuestionCreateWithoutTopicInput[] | QuestionUncheckedCreateWithoutTopicInput[]
+    connectOrCreate?: QuestionCreateOrConnectWithoutTopicInput | QuestionCreateOrConnectWithoutTopicInput[]
+    upsert?: QuestionUpsertWithWhereUniqueWithoutTopicInput | QuestionUpsertWithWhereUniqueWithoutTopicInput[]
+    createMany?: QuestionCreateManyTopicInputEnvelope
+    set?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    disconnect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    delete?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+    update?: QuestionUpdateWithWhereUniqueWithoutTopicInput | QuestionUpdateWithWhereUniqueWithoutTopicInput[]
+    updateMany?: QuestionUpdateManyWithWhereWithoutTopicInput | QuestionUpdateManyWithWhereWithoutTopicInput[]
+    deleteMany?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
+  }
+
+  export type QuizUncheckedUpdateManyWithoutTopicNestedInput = {
+    create?: XOR<QuizCreateWithoutTopicInput, QuizUncheckedCreateWithoutTopicInput> | QuizCreateWithoutTopicInput[] | QuizUncheckedCreateWithoutTopicInput[]
+    connectOrCreate?: QuizCreateOrConnectWithoutTopicInput | QuizCreateOrConnectWithoutTopicInput[]
+    upsert?: QuizUpsertWithWhereUniqueWithoutTopicInput | QuizUpsertWithWhereUniqueWithoutTopicInput[]
+    createMany?: QuizCreateManyTopicInputEnvelope
+    set?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    disconnect?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    delete?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    connect?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+    update?: QuizUpdateWithWhereUniqueWithoutTopicInput | QuizUpdateWithWhereUniqueWithoutTopicInput[]
+    updateMany?: QuizUpdateManyWithWhereWithoutTopicInput | QuizUpdateManyWithWhereWithoutTopicInput[]
+    deleteMany?: QuizScalarWhereInput | QuizScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSessionsInput = {
@@ -19316,18 +28495,28 @@ export namespace Prisma {
     connect?: ChapterWhereUniqueInput
   }
 
-  export type PlanCreateNestedOneWithoutLessonsInput = {
-    create?: XOR<PlanCreateWithoutLessonsInput, PlanUncheckedCreateWithoutLessonsInput>
-    connectOrCreate?: PlanCreateOrConnectWithoutLessonsInput
-    connect?: PlanWhereUniqueInput
+  export type QuizCreateNestedOneWithoutLessonInput = {
+    create?: XOR<QuizCreateWithoutLessonInput, QuizUncheckedCreateWithoutLessonInput>
+    connectOrCreate?: QuizCreateOrConnectWithoutLessonInput
+    connect?: QuizWhereUniqueInput
+  }
+
+  export type LessonPlanCreateNestedManyWithoutLessonInput = {
+    create?: XOR<LessonPlanCreateWithoutLessonInput, LessonPlanUncheckedCreateWithoutLessonInput> | LessonPlanCreateWithoutLessonInput[] | LessonPlanUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: LessonPlanCreateOrConnectWithoutLessonInput | LessonPlanCreateOrConnectWithoutLessonInput[]
+    createMany?: LessonPlanCreateManyLessonInputEnvelope
+    connect?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+  }
+
+  export type LessonPlanUncheckedCreateNestedManyWithoutLessonInput = {
+    create?: XOR<LessonPlanCreateWithoutLessonInput, LessonPlanUncheckedCreateWithoutLessonInput> | LessonPlanCreateWithoutLessonInput[] | LessonPlanUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: LessonPlanCreateOrConnectWithoutLessonInput | LessonPlanCreateOrConnectWithoutLessonInput[]
+    createMany?: LessonPlanCreateManyLessonInputEnvelope
+    connect?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
   }
 
   export type EnumLessonTypeFieldUpdateOperationsInput = {
     set?: $Enums.LessonType
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type ChapterUpdateOneRequiredWithoutLessonsNestedInput = {
@@ -19338,14 +28527,70 @@ export namespace Prisma {
     update?: XOR<XOR<ChapterUpdateToOneWithWhereWithoutLessonsInput, ChapterUpdateWithoutLessonsInput>, ChapterUncheckedUpdateWithoutLessonsInput>
   }
 
-  export type PlanUpdateOneWithoutLessonsNestedInput = {
-    create?: XOR<PlanCreateWithoutLessonsInput, PlanUncheckedCreateWithoutLessonsInput>
-    connectOrCreate?: PlanCreateOrConnectWithoutLessonsInput
-    upsert?: PlanUpsertWithoutLessonsInput
-    disconnect?: PlanWhereInput | boolean
-    delete?: PlanWhereInput | boolean
+  export type QuizUpdateOneWithoutLessonNestedInput = {
+    create?: XOR<QuizCreateWithoutLessonInput, QuizUncheckedCreateWithoutLessonInput>
+    connectOrCreate?: QuizCreateOrConnectWithoutLessonInput
+    upsert?: QuizUpsertWithoutLessonInput
+    disconnect?: QuizWhereInput | boolean
+    delete?: QuizWhereInput | boolean
+    connect?: QuizWhereUniqueInput
+    update?: XOR<XOR<QuizUpdateToOneWithWhereWithoutLessonInput, QuizUpdateWithoutLessonInput>, QuizUncheckedUpdateWithoutLessonInput>
+  }
+
+  export type LessonPlanUpdateManyWithoutLessonNestedInput = {
+    create?: XOR<LessonPlanCreateWithoutLessonInput, LessonPlanUncheckedCreateWithoutLessonInput> | LessonPlanCreateWithoutLessonInput[] | LessonPlanUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: LessonPlanCreateOrConnectWithoutLessonInput | LessonPlanCreateOrConnectWithoutLessonInput[]
+    upsert?: LessonPlanUpsertWithWhereUniqueWithoutLessonInput | LessonPlanUpsertWithWhereUniqueWithoutLessonInput[]
+    createMany?: LessonPlanCreateManyLessonInputEnvelope
+    set?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    disconnect?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    delete?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    connect?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    update?: LessonPlanUpdateWithWhereUniqueWithoutLessonInput | LessonPlanUpdateWithWhereUniqueWithoutLessonInput[]
+    updateMany?: LessonPlanUpdateManyWithWhereWithoutLessonInput | LessonPlanUpdateManyWithWhereWithoutLessonInput[]
+    deleteMany?: LessonPlanScalarWhereInput | LessonPlanScalarWhereInput[]
+  }
+
+  export type LessonPlanUncheckedUpdateManyWithoutLessonNestedInput = {
+    create?: XOR<LessonPlanCreateWithoutLessonInput, LessonPlanUncheckedCreateWithoutLessonInput> | LessonPlanCreateWithoutLessonInput[] | LessonPlanUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: LessonPlanCreateOrConnectWithoutLessonInput | LessonPlanCreateOrConnectWithoutLessonInput[]
+    upsert?: LessonPlanUpsertWithWhereUniqueWithoutLessonInput | LessonPlanUpsertWithWhereUniqueWithoutLessonInput[]
+    createMany?: LessonPlanCreateManyLessonInputEnvelope
+    set?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    disconnect?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    delete?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    connect?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    update?: LessonPlanUpdateWithWhereUniqueWithoutLessonInput | LessonPlanUpdateWithWhereUniqueWithoutLessonInput[]
+    updateMany?: LessonPlanUpdateManyWithWhereWithoutLessonInput | LessonPlanUpdateManyWithWhereWithoutLessonInput[]
+    deleteMany?: LessonPlanScalarWhereInput | LessonPlanScalarWhereInput[]
+  }
+
+  export type LessonCreateNestedOneWithoutLessonPlansInput = {
+    create?: XOR<LessonCreateWithoutLessonPlansInput, LessonUncheckedCreateWithoutLessonPlansInput>
+    connectOrCreate?: LessonCreateOrConnectWithoutLessonPlansInput
+    connect?: LessonWhereUniqueInput
+  }
+
+  export type PlanCreateNestedOneWithoutLessonPlansInput = {
+    create?: XOR<PlanCreateWithoutLessonPlansInput, PlanUncheckedCreateWithoutLessonPlansInput>
+    connectOrCreate?: PlanCreateOrConnectWithoutLessonPlansInput
     connect?: PlanWhereUniqueInput
-    update?: XOR<XOR<PlanUpdateToOneWithWhereWithoutLessonsInput, PlanUpdateWithoutLessonsInput>, PlanUncheckedUpdateWithoutLessonsInput>
+  }
+
+  export type LessonUpdateOneRequiredWithoutLessonPlansNestedInput = {
+    create?: XOR<LessonCreateWithoutLessonPlansInput, LessonUncheckedCreateWithoutLessonPlansInput>
+    connectOrCreate?: LessonCreateOrConnectWithoutLessonPlansInput
+    upsert?: LessonUpsertWithoutLessonPlansInput
+    connect?: LessonWhereUniqueInput
+    update?: XOR<XOR<LessonUpdateToOneWithWhereWithoutLessonPlansInput, LessonUpdateWithoutLessonPlansInput>, LessonUncheckedUpdateWithoutLessonPlansInput>
+  }
+
+  export type PlanUpdateOneRequiredWithoutLessonPlansNestedInput = {
+    create?: XOR<PlanCreateWithoutLessonPlansInput, PlanUncheckedCreateWithoutLessonPlansInput>
+    connectOrCreate?: PlanCreateOrConnectWithoutLessonPlansInput
+    upsert?: PlanUpsertWithoutLessonPlansInput
+    connect?: PlanWhereUniqueInput
+    update?: XOR<XOR<PlanUpdateToOneWithWhereWithoutLessonPlansInput, PlanUpdateWithoutLessonPlansInput>, PlanUncheckedUpdateWithoutLessonPlansInput>
   }
 
   export type CourseCreateNestedOneWithoutPlansInput = {
@@ -19361,11 +28606,11 @@ export namespace Prisma {
     connect?: SubscriptionWhereUniqueInput | SubscriptionWhereUniqueInput[]
   }
 
-  export type LessonCreateNestedManyWithoutPlanInput = {
-    create?: XOR<LessonCreateWithoutPlanInput, LessonUncheckedCreateWithoutPlanInput> | LessonCreateWithoutPlanInput[] | LessonUncheckedCreateWithoutPlanInput[]
-    connectOrCreate?: LessonCreateOrConnectWithoutPlanInput | LessonCreateOrConnectWithoutPlanInput[]
-    createMany?: LessonCreateManyPlanInputEnvelope
-    connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
+  export type LessonPlanCreateNestedManyWithoutPlanInput = {
+    create?: XOR<LessonPlanCreateWithoutPlanInput, LessonPlanUncheckedCreateWithoutPlanInput> | LessonPlanCreateWithoutPlanInput[] | LessonPlanUncheckedCreateWithoutPlanInput[]
+    connectOrCreate?: LessonPlanCreateOrConnectWithoutPlanInput | LessonPlanCreateOrConnectWithoutPlanInput[]
+    createMany?: LessonPlanCreateManyPlanInputEnvelope
+    connect?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
   }
 
   export type SubscriptionUncheckedCreateNestedManyWithoutPlanInput = {
@@ -19375,11 +28620,11 @@ export namespace Prisma {
     connect?: SubscriptionWhereUniqueInput | SubscriptionWhereUniqueInput[]
   }
 
-  export type LessonUncheckedCreateNestedManyWithoutPlanInput = {
-    create?: XOR<LessonCreateWithoutPlanInput, LessonUncheckedCreateWithoutPlanInput> | LessonCreateWithoutPlanInput[] | LessonUncheckedCreateWithoutPlanInput[]
-    connectOrCreate?: LessonCreateOrConnectWithoutPlanInput | LessonCreateOrConnectWithoutPlanInput[]
-    createMany?: LessonCreateManyPlanInputEnvelope
-    connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
+  export type LessonPlanUncheckedCreateNestedManyWithoutPlanInput = {
+    create?: XOR<LessonPlanCreateWithoutPlanInput, LessonPlanUncheckedCreateWithoutPlanInput> | LessonPlanCreateWithoutPlanInput[] | LessonPlanUncheckedCreateWithoutPlanInput[]
+    connectOrCreate?: LessonPlanCreateOrConnectWithoutPlanInput | LessonPlanCreateOrConnectWithoutPlanInput[]
+    createMany?: LessonPlanCreateManyPlanInputEnvelope
+    connect?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
   }
 
   export type FloatFieldUpdateOperationsInput = {
@@ -19412,18 +28657,18 @@ export namespace Prisma {
     deleteMany?: SubscriptionScalarWhereInput | SubscriptionScalarWhereInput[]
   }
 
-  export type LessonUpdateManyWithoutPlanNestedInput = {
-    create?: XOR<LessonCreateWithoutPlanInput, LessonUncheckedCreateWithoutPlanInput> | LessonCreateWithoutPlanInput[] | LessonUncheckedCreateWithoutPlanInput[]
-    connectOrCreate?: LessonCreateOrConnectWithoutPlanInput | LessonCreateOrConnectWithoutPlanInput[]
-    upsert?: LessonUpsertWithWhereUniqueWithoutPlanInput | LessonUpsertWithWhereUniqueWithoutPlanInput[]
-    createMany?: LessonCreateManyPlanInputEnvelope
-    set?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    disconnect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    delete?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    update?: LessonUpdateWithWhereUniqueWithoutPlanInput | LessonUpdateWithWhereUniqueWithoutPlanInput[]
-    updateMany?: LessonUpdateManyWithWhereWithoutPlanInput | LessonUpdateManyWithWhereWithoutPlanInput[]
-    deleteMany?: LessonScalarWhereInput | LessonScalarWhereInput[]
+  export type LessonPlanUpdateManyWithoutPlanNestedInput = {
+    create?: XOR<LessonPlanCreateWithoutPlanInput, LessonPlanUncheckedCreateWithoutPlanInput> | LessonPlanCreateWithoutPlanInput[] | LessonPlanUncheckedCreateWithoutPlanInput[]
+    connectOrCreate?: LessonPlanCreateOrConnectWithoutPlanInput | LessonPlanCreateOrConnectWithoutPlanInput[]
+    upsert?: LessonPlanUpsertWithWhereUniqueWithoutPlanInput | LessonPlanUpsertWithWhereUniqueWithoutPlanInput[]
+    createMany?: LessonPlanCreateManyPlanInputEnvelope
+    set?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    disconnect?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    delete?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    connect?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    update?: LessonPlanUpdateWithWhereUniqueWithoutPlanInput | LessonPlanUpdateWithWhereUniqueWithoutPlanInput[]
+    updateMany?: LessonPlanUpdateManyWithWhereWithoutPlanInput | LessonPlanUpdateManyWithWhereWithoutPlanInput[]
+    deleteMany?: LessonPlanScalarWhereInput | LessonPlanScalarWhereInput[]
   }
 
   export type SubscriptionUncheckedUpdateManyWithoutPlanNestedInput = {
@@ -19440,18 +28685,18 @@ export namespace Prisma {
     deleteMany?: SubscriptionScalarWhereInput | SubscriptionScalarWhereInput[]
   }
 
-  export type LessonUncheckedUpdateManyWithoutPlanNestedInput = {
-    create?: XOR<LessonCreateWithoutPlanInput, LessonUncheckedCreateWithoutPlanInput> | LessonCreateWithoutPlanInput[] | LessonUncheckedCreateWithoutPlanInput[]
-    connectOrCreate?: LessonCreateOrConnectWithoutPlanInput | LessonCreateOrConnectWithoutPlanInput[]
-    upsert?: LessonUpsertWithWhereUniqueWithoutPlanInput | LessonUpsertWithWhereUniqueWithoutPlanInput[]
-    createMany?: LessonCreateManyPlanInputEnvelope
-    set?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    disconnect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    delete?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    update?: LessonUpdateWithWhereUniqueWithoutPlanInput | LessonUpdateWithWhereUniqueWithoutPlanInput[]
-    updateMany?: LessonUpdateManyWithWhereWithoutPlanInput | LessonUpdateManyWithWhereWithoutPlanInput[]
-    deleteMany?: LessonScalarWhereInput | LessonScalarWhereInput[]
+  export type LessonPlanUncheckedUpdateManyWithoutPlanNestedInput = {
+    create?: XOR<LessonPlanCreateWithoutPlanInput, LessonPlanUncheckedCreateWithoutPlanInput> | LessonPlanCreateWithoutPlanInput[] | LessonPlanUncheckedCreateWithoutPlanInput[]
+    connectOrCreate?: LessonPlanCreateOrConnectWithoutPlanInput | LessonPlanCreateOrConnectWithoutPlanInput[]
+    upsert?: LessonPlanUpsertWithWhereUniqueWithoutPlanInput | LessonPlanUpsertWithWhereUniqueWithoutPlanInput[]
+    createMany?: LessonPlanCreateManyPlanInputEnvelope
+    set?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    disconnect?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    delete?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    connect?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+    update?: LessonPlanUpdateWithWhereUniqueWithoutPlanInput | LessonPlanUpdateWithWhereUniqueWithoutPlanInput[]
+    updateMany?: LessonPlanUpdateManyWithWhereWithoutPlanInput | LessonPlanUpdateManyWithWhereWithoutPlanInput[]
+    deleteMany?: LessonPlanScalarWhereInput | LessonPlanScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutSubscriptionsInput = {
@@ -19494,6 +28739,270 @@ export namespace Prisma {
     upsert?: PlanUpsertWithoutSubscriptionsInput
     connect?: PlanWhereUniqueInput
     update?: XOR<XOR<PlanUpdateToOneWithWhereWithoutSubscriptionsInput, PlanUpdateWithoutSubscriptionsInput>, PlanUncheckedUpdateWithoutSubscriptionsInput>
+  }
+
+  export type SubjectCreateNestedOneWithoutQuestionsInput = {
+    create?: XOR<SubjectCreateWithoutQuestionsInput, SubjectUncheckedCreateWithoutQuestionsInput>
+    connectOrCreate?: SubjectCreateOrConnectWithoutQuestionsInput
+    connect?: SubjectWhereUniqueInput
+  }
+
+  export type TopicCreateNestedOneWithoutQuestionsInput = {
+    create?: XOR<TopicCreateWithoutQuestionsInput, TopicUncheckedCreateWithoutQuestionsInput>
+    connectOrCreate?: TopicCreateOrConnectWithoutQuestionsInput
+    connect?: TopicWhereUniqueInput
+  }
+
+  export type QuestionOptionCreateNestedManyWithoutQuestionInput = {
+    create?: XOR<QuestionOptionCreateWithoutQuestionInput, QuestionOptionUncheckedCreateWithoutQuestionInput> | QuestionOptionCreateWithoutQuestionInput[] | QuestionOptionUncheckedCreateWithoutQuestionInput[]
+    connectOrCreate?: QuestionOptionCreateOrConnectWithoutQuestionInput | QuestionOptionCreateOrConnectWithoutQuestionInput[]
+    createMany?: QuestionOptionCreateManyQuestionInputEnvelope
+    connect?: QuestionOptionWhereUniqueInput | QuestionOptionWhereUniqueInput[]
+  }
+
+  export type QuestionTagCreateNestedManyWithoutQuestionInput = {
+    create?: XOR<QuestionTagCreateWithoutQuestionInput, QuestionTagUncheckedCreateWithoutQuestionInput> | QuestionTagCreateWithoutQuestionInput[] | QuestionTagUncheckedCreateWithoutQuestionInput[]
+    connectOrCreate?: QuestionTagCreateOrConnectWithoutQuestionInput | QuestionTagCreateOrConnectWithoutQuestionInput[]
+    createMany?: QuestionTagCreateManyQuestionInputEnvelope
+    connect?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+  }
+
+  export type QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput = {
+    create?: XOR<QuestionOptionCreateWithoutQuestionInput, QuestionOptionUncheckedCreateWithoutQuestionInput> | QuestionOptionCreateWithoutQuestionInput[] | QuestionOptionUncheckedCreateWithoutQuestionInput[]
+    connectOrCreate?: QuestionOptionCreateOrConnectWithoutQuestionInput | QuestionOptionCreateOrConnectWithoutQuestionInput[]
+    createMany?: QuestionOptionCreateManyQuestionInputEnvelope
+    connect?: QuestionOptionWhereUniqueInput | QuestionOptionWhereUniqueInput[]
+  }
+
+  export type QuestionTagUncheckedCreateNestedManyWithoutQuestionInput = {
+    create?: XOR<QuestionTagCreateWithoutQuestionInput, QuestionTagUncheckedCreateWithoutQuestionInput> | QuestionTagCreateWithoutQuestionInput[] | QuestionTagUncheckedCreateWithoutQuestionInput[]
+    connectOrCreate?: QuestionTagCreateOrConnectWithoutQuestionInput | QuestionTagCreateOrConnectWithoutQuestionInput[]
+    createMany?: QuestionTagCreateManyQuestionInputEnvelope
+    connect?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+  }
+
+  export type EnumDifficultyFieldUpdateOperationsInput = {
+    set?: $Enums.Difficulty
+  }
+
+  export type EnumQuestionStatusFieldUpdateOperationsInput = {
+    set?: $Enums.QuestionStatus
+  }
+
+  export type SubjectUpdateOneRequiredWithoutQuestionsNestedInput = {
+    create?: XOR<SubjectCreateWithoutQuestionsInput, SubjectUncheckedCreateWithoutQuestionsInput>
+    connectOrCreate?: SubjectCreateOrConnectWithoutQuestionsInput
+    upsert?: SubjectUpsertWithoutQuestionsInput
+    connect?: SubjectWhereUniqueInput
+    update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutQuestionsInput, SubjectUpdateWithoutQuestionsInput>, SubjectUncheckedUpdateWithoutQuestionsInput>
+  }
+
+  export type TopicUpdateOneRequiredWithoutQuestionsNestedInput = {
+    create?: XOR<TopicCreateWithoutQuestionsInput, TopicUncheckedCreateWithoutQuestionsInput>
+    connectOrCreate?: TopicCreateOrConnectWithoutQuestionsInput
+    upsert?: TopicUpsertWithoutQuestionsInput
+    connect?: TopicWhereUniqueInput
+    update?: XOR<XOR<TopicUpdateToOneWithWhereWithoutQuestionsInput, TopicUpdateWithoutQuestionsInput>, TopicUncheckedUpdateWithoutQuestionsInput>
+  }
+
+  export type QuestionOptionUpdateManyWithoutQuestionNestedInput = {
+    create?: XOR<QuestionOptionCreateWithoutQuestionInput, QuestionOptionUncheckedCreateWithoutQuestionInput> | QuestionOptionCreateWithoutQuestionInput[] | QuestionOptionUncheckedCreateWithoutQuestionInput[]
+    connectOrCreate?: QuestionOptionCreateOrConnectWithoutQuestionInput | QuestionOptionCreateOrConnectWithoutQuestionInput[]
+    upsert?: QuestionOptionUpsertWithWhereUniqueWithoutQuestionInput | QuestionOptionUpsertWithWhereUniqueWithoutQuestionInput[]
+    createMany?: QuestionOptionCreateManyQuestionInputEnvelope
+    set?: QuestionOptionWhereUniqueInput | QuestionOptionWhereUniqueInput[]
+    disconnect?: QuestionOptionWhereUniqueInput | QuestionOptionWhereUniqueInput[]
+    delete?: QuestionOptionWhereUniqueInput | QuestionOptionWhereUniqueInput[]
+    connect?: QuestionOptionWhereUniqueInput | QuestionOptionWhereUniqueInput[]
+    update?: QuestionOptionUpdateWithWhereUniqueWithoutQuestionInput | QuestionOptionUpdateWithWhereUniqueWithoutQuestionInput[]
+    updateMany?: QuestionOptionUpdateManyWithWhereWithoutQuestionInput | QuestionOptionUpdateManyWithWhereWithoutQuestionInput[]
+    deleteMany?: QuestionOptionScalarWhereInput | QuestionOptionScalarWhereInput[]
+  }
+
+  export type QuestionTagUpdateManyWithoutQuestionNestedInput = {
+    create?: XOR<QuestionTagCreateWithoutQuestionInput, QuestionTagUncheckedCreateWithoutQuestionInput> | QuestionTagCreateWithoutQuestionInput[] | QuestionTagUncheckedCreateWithoutQuestionInput[]
+    connectOrCreate?: QuestionTagCreateOrConnectWithoutQuestionInput | QuestionTagCreateOrConnectWithoutQuestionInput[]
+    upsert?: QuestionTagUpsertWithWhereUniqueWithoutQuestionInput | QuestionTagUpsertWithWhereUniqueWithoutQuestionInput[]
+    createMany?: QuestionTagCreateManyQuestionInputEnvelope
+    set?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    disconnect?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    delete?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    connect?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    update?: QuestionTagUpdateWithWhereUniqueWithoutQuestionInput | QuestionTagUpdateWithWhereUniqueWithoutQuestionInput[]
+    updateMany?: QuestionTagUpdateManyWithWhereWithoutQuestionInput | QuestionTagUpdateManyWithWhereWithoutQuestionInput[]
+    deleteMany?: QuestionTagScalarWhereInput | QuestionTagScalarWhereInput[]
+  }
+
+  export type QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput = {
+    create?: XOR<QuestionOptionCreateWithoutQuestionInput, QuestionOptionUncheckedCreateWithoutQuestionInput> | QuestionOptionCreateWithoutQuestionInput[] | QuestionOptionUncheckedCreateWithoutQuestionInput[]
+    connectOrCreate?: QuestionOptionCreateOrConnectWithoutQuestionInput | QuestionOptionCreateOrConnectWithoutQuestionInput[]
+    upsert?: QuestionOptionUpsertWithWhereUniqueWithoutQuestionInput | QuestionOptionUpsertWithWhereUniqueWithoutQuestionInput[]
+    createMany?: QuestionOptionCreateManyQuestionInputEnvelope
+    set?: QuestionOptionWhereUniqueInput | QuestionOptionWhereUniqueInput[]
+    disconnect?: QuestionOptionWhereUniqueInput | QuestionOptionWhereUniqueInput[]
+    delete?: QuestionOptionWhereUniqueInput | QuestionOptionWhereUniqueInput[]
+    connect?: QuestionOptionWhereUniqueInput | QuestionOptionWhereUniqueInput[]
+    update?: QuestionOptionUpdateWithWhereUniqueWithoutQuestionInput | QuestionOptionUpdateWithWhereUniqueWithoutQuestionInput[]
+    updateMany?: QuestionOptionUpdateManyWithWhereWithoutQuestionInput | QuestionOptionUpdateManyWithWhereWithoutQuestionInput[]
+    deleteMany?: QuestionOptionScalarWhereInput | QuestionOptionScalarWhereInput[]
+  }
+
+  export type QuestionTagUncheckedUpdateManyWithoutQuestionNestedInput = {
+    create?: XOR<QuestionTagCreateWithoutQuestionInput, QuestionTagUncheckedCreateWithoutQuestionInput> | QuestionTagCreateWithoutQuestionInput[] | QuestionTagUncheckedCreateWithoutQuestionInput[]
+    connectOrCreate?: QuestionTagCreateOrConnectWithoutQuestionInput | QuestionTagCreateOrConnectWithoutQuestionInput[]
+    upsert?: QuestionTagUpsertWithWhereUniqueWithoutQuestionInput | QuestionTagUpsertWithWhereUniqueWithoutQuestionInput[]
+    createMany?: QuestionTagCreateManyQuestionInputEnvelope
+    set?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    disconnect?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    delete?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    connect?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    update?: QuestionTagUpdateWithWhereUniqueWithoutQuestionInput | QuestionTagUpdateWithWhereUniqueWithoutQuestionInput[]
+    updateMany?: QuestionTagUpdateManyWithWhereWithoutQuestionInput | QuestionTagUpdateManyWithWhereWithoutQuestionInput[]
+    deleteMany?: QuestionTagScalarWhereInput | QuestionTagScalarWhereInput[]
+  }
+
+  export type QuestionCreateNestedOneWithoutOptionsInput = {
+    create?: XOR<QuestionCreateWithoutOptionsInput, QuestionUncheckedCreateWithoutOptionsInput>
+    connectOrCreate?: QuestionCreateOrConnectWithoutOptionsInput
+    connect?: QuestionWhereUniqueInput
+  }
+
+  export type QuestionUpdateOneRequiredWithoutOptionsNestedInput = {
+    create?: XOR<QuestionCreateWithoutOptionsInput, QuestionUncheckedCreateWithoutOptionsInput>
+    connectOrCreate?: QuestionCreateOrConnectWithoutOptionsInput
+    upsert?: QuestionUpsertWithoutOptionsInput
+    connect?: QuestionWhereUniqueInput
+    update?: XOR<XOR<QuestionUpdateToOneWithWhereWithoutOptionsInput, QuestionUpdateWithoutOptionsInput>, QuestionUncheckedUpdateWithoutOptionsInput>
+  }
+
+  export type SubjectCreateNestedOneWithoutQuizzesInput = {
+    create?: XOR<SubjectCreateWithoutQuizzesInput, SubjectUncheckedCreateWithoutQuizzesInput>
+    connectOrCreate?: SubjectCreateOrConnectWithoutQuizzesInput
+    connect?: SubjectWhereUniqueInput
+  }
+
+  export type TopicCreateNestedOneWithoutQuizzesInput = {
+    create?: XOR<TopicCreateWithoutQuizzesInput, TopicUncheckedCreateWithoutQuizzesInput>
+    connectOrCreate?: TopicCreateOrConnectWithoutQuizzesInput
+    connect?: TopicWhereUniqueInput
+  }
+
+  export type LessonCreateNestedOneWithoutQuizInput = {
+    create?: XOR<LessonCreateWithoutQuizInput, LessonUncheckedCreateWithoutQuizInput>
+    connectOrCreate?: LessonCreateOrConnectWithoutQuizInput
+    connect?: LessonWhereUniqueInput
+  }
+
+  export type LessonUncheckedCreateNestedOneWithoutQuizInput = {
+    create?: XOR<LessonCreateWithoutQuizInput, LessonUncheckedCreateWithoutQuizInput>
+    connectOrCreate?: LessonCreateOrConnectWithoutQuizInput
+    connect?: LessonWhereUniqueInput
+  }
+
+  export type SubjectUpdateOneRequiredWithoutQuizzesNestedInput = {
+    create?: XOR<SubjectCreateWithoutQuizzesInput, SubjectUncheckedCreateWithoutQuizzesInput>
+    connectOrCreate?: SubjectCreateOrConnectWithoutQuizzesInput
+    upsert?: SubjectUpsertWithoutQuizzesInput
+    connect?: SubjectWhereUniqueInput
+    update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutQuizzesInput, SubjectUpdateWithoutQuizzesInput>, SubjectUncheckedUpdateWithoutQuizzesInput>
+  }
+
+  export type TopicUpdateOneRequiredWithoutQuizzesNestedInput = {
+    create?: XOR<TopicCreateWithoutQuizzesInput, TopicUncheckedCreateWithoutQuizzesInput>
+    connectOrCreate?: TopicCreateOrConnectWithoutQuizzesInput
+    upsert?: TopicUpsertWithoutQuizzesInput
+    connect?: TopicWhereUniqueInput
+    update?: XOR<XOR<TopicUpdateToOneWithWhereWithoutQuizzesInput, TopicUpdateWithoutQuizzesInput>, TopicUncheckedUpdateWithoutQuizzesInput>
+  }
+
+  export type LessonUpdateOneWithoutQuizNestedInput = {
+    create?: XOR<LessonCreateWithoutQuizInput, LessonUncheckedCreateWithoutQuizInput>
+    connectOrCreate?: LessonCreateOrConnectWithoutQuizInput
+    upsert?: LessonUpsertWithoutQuizInput
+    disconnect?: LessonWhereInput | boolean
+    delete?: LessonWhereInput | boolean
+    connect?: LessonWhereUniqueInput
+    update?: XOR<XOR<LessonUpdateToOneWithWhereWithoutQuizInput, LessonUpdateWithoutQuizInput>, LessonUncheckedUpdateWithoutQuizInput>
+  }
+
+  export type LessonUncheckedUpdateOneWithoutQuizNestedInput = {
+    create?: XOR<LessonCreateWithoutQuizInput, LessonUncheckedCreateWithoutQuizInput>
+    connectOrCreate?: LessonCreateOrConnectWithoutQuizInput
+    upsert?: LessonUpsertWithoutQuizInput
+    disconnect?: LessonWhereInput | boolean
+    delete?: LessonWhereInput | boolean
+    connect?: LessonWhereUniqueInput
+    update?: XOR<XOR<LessonUpdateToOneWithWhereWithoutQuizInput, LessonUpdateWithoutQuizInput>, LessonUncheckedUpdateWithoutQuizInput>
+  }
+
+  export type QuestionTagCreateNestedManyWithoutTagInput = {
+    create?: XOR<QuestionTagCreateWithoutTagInput, QuestionTagUncheckedCreateWithoutTagInput> | QuestionTagCreateWithoutTagInput[] | QuestionTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: QuestionTagCreateOrConnectWithoutTagInput | QuestionTagCreateOrConnectWithoutTagInput[]
+    createMany?: QuestionTagCreateManyTagInputEnvelope
+    connect?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+  }
+
+  export type QuestionTagUncheckedCreateNestedManyWithoutTagInput = {
+    create?: XOR<QuestionTagCreateWithoutTagInput, QuestionTagUncheckedCreateWithoutTagInput> | QuestionTagCreateWithoutTagInput[] | QuestionTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: QuestionTagCreateOrConnectWithoutTagInput | QuestionTagCreateOrConnectWithoutTagInput[]
+    createMany?: QuestionTagCreateManyTagInputEnvelope
+    connect?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+  }
+
+  export type QuestionTagUpdateManyWithoutTagNestedInput = {
+    create?: XOR<QuestionTagCreateWithoutTagInput, QuestionTagUncheckedCreateWithoutTagInput> | QuestionTagCreateWithoutTagInput[] | QuestionTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: QuestionTagCreateOrConnectWithoutTagInput | QuestionTagCreateOrConnectWithoutTagInput[]
+    upsert?: QuestionTagUpsertWithWhereUniqueWithoutTagInput | QuestionTagUpsertWithWhereUniqueWithoutTagInput[]
+    createMany?: QuestionTagCreateManyTagInputEnvelope
+    set?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    disconnect?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    delete?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    connect?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    update?: QuestionTagUpdateWithWhereUniqueWithoutTagInput | QuestionTagUpdateWithWhereUniqueWithoutTagInput[]
+    updateMany?: QuestionTagUpdateManyWithWhereWithoutTagInput | QuestionTagUpdateManyWithWhereWithoutTagInput[]
+    deleteMany?: QuestionTagScalarWhereInput | QuestionTagScalarWhereInput[]
+  }
+
+  export type QuestionTagUncheckedUpdateManyWithoutTagNestedInput = {
+    create?: XOR<QuestionTagCreateWithoutTagInput, QuestionTagUncheckedCreateWithoutTagInput> | QuestionTagCreateWithoutTagInput[] | QuestionTagUncheckedCreateWithoutTagInput[]
+    connectOrCreate?: QuestionTagCreateOrConnectWithoutTagInput | QuestionTagCreateOrConnectWithoutTagInput[]
+    upsert?: QuestionTagUpsertWithWhereUniqueWithoutTagInput | QuestionTagUpsertWithWhereUniqueWithoutTagInput[]
+    createMany?: QuestionTagCreateManyTagInputEnvelope
+    set?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    disconnect?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    delete?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    connect?: QuestionTagWhereUniqueInput | QuestionTagWhereUniqueInput[]
+    update?: QuestionTagUpdateWithWhereUniqueWithoutTagInput | QuestionTagUpdateWithWhereUniqueWithoutTagInput[]
+    updateMany?: QuestionTagUpdateManyWithWhereWithoutTagInput | QuestionTagUpdateManyWithWhereWithoutTagInput[]
+    deleteMany?: QuestionTagScalarWhereInput | QuestionTagScalarWhereInput[]
+  }
+
+  export type QuestionCreateNestedOneWithoutTagsInput = {
+    create?: XOR<QuestionCreateWithoutTagsInput, QuestionUncheckedCreateWithoutTagsInput>
+    connectOrCreate?: QuestionCreateOrConnectWithoutTagsInput
+    connect?: QuestionWhereUniqueInput
+  }
+
+  export type TagCreateNestedOneWithoutQuestionsInput = {
+    create?: XOR<TagCreateWithoutQuestionsInput, TagUncheckedCreateWithoutQuestionsInput>
+    connectOrCreate?: TagCreateOrConnectWithoutQuestionsInput
+    connect?: TagWhereUniqueInput
+  }
+
+  export type QuestionUpdateOneRequiredWithoutTagsNestedInput = {
+    create?: XOR<QuestionCreateWithoutTagsInput, QuestionUncheckedCreateWithoutTagsInput>
+    connectOrCreate?: QuestionCreateOrConnectWithoutTagsInput
+    upsert?: QuestionUpsertWithoutTagsInput
+    connect?: QuestionWhereUniqueInput
+    update?: XOR<XOR<QuestionUpdateToOneWithWhereWithoutTagsInput, QuestionUpdateWithoutTagsInput>, QuestionUncheckedUpdateWithoutTagsInput>
+  }
+
+  export type TagUpdateOneRequiredWithoutQuestionsNestedInput = {
+    create?: XOR<TagCreateWithoutQuestionsInput, TagUncheckedCreateWithoutQuestionsInput>
+    connectOrCreate?: TagCreateOrConnectWithoutQuestionsInput
+    upsert?: TagUpsertWithoutQuestionsInput
+    connect?: TagWhereUniqueInput
+    update?: XOR<XOR<TagUpdateToOneWithWhereWithoutQuestionsInput, TagUpdateWithoutQuestionsInput>, TagUncheckedUpdateWithoutQuestionsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -19659,6 +29168,19 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -19725,11 +29247,6 @@ export namespace Prisma {
     not?: NestedEnumLessonTypeFilter<$PrismaModel> | $Enums.LessonType
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NestedEnumLessonTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.LessonType | EnumLessonTypeFieldRefInput<$PrismaModel>
     in?: $Enums.LessonType[] | ListEnumLessonTypeFieldRefInput<$PrismaModel>
@@ -19738,14 +29255,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumLessonTypeFilter<$PrismaModel>
     _max?: NestedEnumLessonTypeFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -19762,6 +29271,40 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDifficultyFilter<$PrismaModel = never> = {
+    equals?: $Enums.Difficulty | EnumDifficultyFieldRefInput<$PrismaModel>
+    in?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    not?: NestedEnumDifficultyFilter<$PrismaModel> | $Enums.Difficulty
+  }
+
+  export type NestedEnumQuestionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.QuestionStatus | EnumQuestionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.QuestionStatus[] | ListEnumQuestionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.QuestionStatus[] | ListEnumQuestionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumQuestionStatusFilter<$PrismaModel> | $Enums.QuestionStatus
+  }
+
+  export type NestedEnumDifficultyWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Difficulty | EnumDifficultyFieldRefInput<$PrismaModel>
+    in?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    not?: NestedEnumDifficultyWithAggregatesFilter<$PrismaModel> | $Enums.Difficulty
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDifficultyFilter<$PrismaModel>
+    _max?: NestedEnumDifficultyFilter<$PrismaModel>
+  }
+
+  export type NestedEnumQuestionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.QuestionStatus | EnumQuestionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.QuestionStatus[] | ListEnumQuestionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.QuestionStatus[] | ListEnumQuestionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumQuestionStatusWithAggregatesFilter<$PrismaModel> | $Enums.QuestionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumQuestionStatusFilter<$PrismaModel>
+    _max?: NestedEnumQuestionStatusFilter<$PrismaModel>
   }
 
   export type SessionCreateWithoutUserInput = {
@@ -19867,7 +29410,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.CourseStatus
     accessType?: $Enums.AccessType
-    displayOrder?: number | null
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutCourseTypesInput
@@ -19881,7 +29424,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.CourseStatus
     accessType?: $Enums.AccessType
-    displayOrder?: number | null
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     chapters?: ChapterUncheckedCreateNestedManyWithoutCourseTypeInput
@@ -20016,7 +29559,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutCourseTypesNestedInput
@@ -20030,7 +29573,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapters?: ChapterUncheckedUpdateManyWithoutCourseTypeNestedInput
@@ -20121,15 +29664,23 @@ export namespace Prisma {
 
   export type TopicCreateWithoutSubjectInput = {
     name: string
+    isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    questions?: QuestionCreateNestedManyWithoutTopicInput
+    quizzes?: QuizCreateNestedManyWithoutTopicInput
   }
 
   export type TopicUncheckedCreateWithoutSubjectInput = {
     id?: number
     name: string
+    isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    questions?: QuestionUncheckedCreateNestedManyWithoutTopicInput
+    quizzes?: QuizUncheckedCreateNestedManyWithoutTopicInput
   }
 
   export type TopicCreateOrConnectWithoutSubjectInput = {
@@ -20186,6 +29737,80 @@ export namespace Prisma {
     create: XOR<CourseCreateWithoutSubjectsInput, CourseUncheckedCreateWithoutSubjectsInput>
   }
 
+  export type QuestionCreateWithoutSubjectInput = {
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    topic: TopicCreateNestedOneWithoutQuestionsInput
+    options?: QuestionOptionCreateNestedManyWithoutQuestionInput
+    tags?: QuestionTagCreateNestedManyWithoutQuestionInput
+  }
+
+  export type QuestionUncheckedCreateWithoutSubjectInput = {
+    id?: number
+    topicId: number
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
+    tags?: QuestionTagUncheckedCreateNestedManyWithoutQuestionInput
+  }
+
+  export type QuestionCreateOrConnectWithoutSubjectInput = {
+    where: QuestionWhereUniqueInput
+    create: XOR<QuestionCreateWithoutSubjectInput, QuestionUncheckedCreateWithoutSubjectInput>
+  }
+
+  export type QuestionCreateManySubjectInputEnvelope = {
+    data: QuestionCreateManySubjectInput | QuestionCreateManySubjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type QuizCreateWithoutSubjectInput = {
+    title: string
+    examTag?: string | null
+    questionCount?: number | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    topic: TopicCreateNestedOneWithoutQuizzesInput
+    lesson?: LessonCreateNestedOneWithoutQuizInput
+  }
+
+  export type QuizUncheckedCreateWithoutSubjectInput = {
+    id?: number
+    title: string
+    topicId: number
+    examTag?: string | null
+    questionCount?: number | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lesson?: LessonUncheckedCreateNestedOneWithoutQuizInput
+  }
+
+  export type QuizCreateOrConnectWithoutSubjectInput = {
+    where: QuizWhereUniqueInput
+    create: XOR<QuizCreateWithoutSubjectInput, QuizUncheckedCreateWithoutSubjectInput>
+  }
+
+  export type QuizCreateManySubjectInputEnvelope = {
+    data: QuizCreateManySubjectInput | QuizCreateManySubjectInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TopicUpsertWithWhereUniqueWithoutSubjectInput = {
     where: TopicWhereUniqueInput
     update: XOR<TopicUpdateWithoutSubjectInput, TopicUncheckedUpdateWithoutSubjectInput>
@@ -20209,6 +29834,8 @@ export namespace Prisma {
     id?: IntFilter<"Topic"> | number
     name?: StringFilter<"Topic"> | string
     subjectId?: IntFilter<"Topic"> | number
+    isActive?: BoolFilter<"Topic"> | boolean
+    displayOrder?: IntFilter<"Topic"> | number
     createdAt?: DateTimeFilter<"Topic"> | Date | string
     updatedAt?: DateTimeFilter<"Topic"> | Date | string
   }
@@ -20229,24 +29856,171 @@ export namespace Prisma {
     data: XOR<CourseUpdateManyMutationInput, CourseUncheckedUpdateManyWithoutSubjectsInput>
   }
 
+  export type QuestionUpsertWithWhereUniqueWithoutSubjectInput = {
+    where: QuestionWhereUniqueInput
+    update: XOR<QuestionUpdateWithoutSubjectInput, QuestionUncheckedUpdateWithoutSubjectInput>
+    create: XOR<QuestionCreateWithoutSubjectInput, QuestionUncheckedCreateWithoutSubjectInput>
+  }
+
+  export type QuestionUpdateWithWhereUniqueWithoutSubjectInput = {
+    where: QuestionWhereUniqueInput
+    data: XOR<QuestionUpdateWithoutSubjectInput, QuestionUncheckedUpdateWithoutSubjectInput>
+  }
+
+  export type QuestionUpdateManyWithWhereWithoutSubjectInput = {
+    where: QuestionScalarWhereInput
+    data: XOR<QuestionUpdateManyMutationInput, QuestionUncheckedUpdateManyWithoutSubjectInput>
+  }
+
+  export type QuestionScalarWhereInput = {
+    AND?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
+    OR?: QuestionScalarWhereInput[]
+    NOT?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
+    id?: IntFilter<"Question"> | number
+    subjectId?: IntFilter<"Question"> | number
+    topicId?: IntFilter<"Question"> | number
+    questionText?: StringFilter<"Question"> | string
+    questionImageUrl?: StringNullableFilter<"Question"> | string | null
+    difficulty?: EnumDifficultyFilter<"Question"> | $Enums.Difficulty
+    marksCorrect?: FloatFilter<"Question"> | number
+    marksIncorrect?: FloatFilter<"Question"> | number
+    explanation?: StringNullableFilter<"Question"> | string | null
+    status?: EnumQuestionStatusFilter<"Question"> | $Enums.QuestionStatus
+    createdAt?: DateTimeFilter<"Question"> | Date | string
+    updatedAt?: DateTimeFilter<"Question"> | Date | string
+  }
+
+  export type QuizUpsertWithWhereUniqueWithoutSubjectInput = {
+    where: QuizWhereUniqueInput
+    update: XOR<QuizUpdateWithoutSubjectInput, QuizUncheckedUpdateWithoutSubjectInput>
+    create: XOR<QuizCreateWithoutSubjectInput, QuizUncheckedCreateWithoutSubjectInput>
+  }
+
+  export type QuizUpdateWithWhereUniqueWithoutSubjectInput = {
+    where: QuizWhereUniqueInput
+    data: XOR<QuizUpdateWithoutSubjectInput, QuizUncheckedUpdateWithoutSubjectInput>
+  }
+
+  export type QuizUpdateManyWithWhereWithoutSubjectInput = {
+    where: QuizScalarWhereInput
+    data: XOR<QuizUpdateManyMutationInput, QuizUncheckedUpdateManyWithoutSubjectInput>
+  }
+
+  export type QuizScalarWhereInput = {
+    AND?: QuizScalarWhereInput | QuizScalarWhereInput[]
+    OR?: QuizScalarWhereInput[]
+    NOT?: QuizScalarWhereInput | QuizScalarWhereInput[]
+    id?: IntFilter<"Quiz"> | number
+    title?: StringFilter<"Quiz"> | string
+    subjectId?: IntFilter<"Quiz"> | number
+    topicId?: IntFilter<"Quiz"> | number
+    examTag?: StringNullableFilter<"Quiz"> | string | null
+    questionCount?: IntNullableFilter<"Quiz"> | number | null
+    status?: EnumQuestionStatusFilter<"Quiz"> | $Enums.QuestionStatus
+    createdAt?: DateTimeFilter<"Quiz"> | Date | string
+    updatedAt?: DateTimeFilter<"Quiz"> | Date | string
+  }
+
   export type SubjectCreateWithoutTopicsInput = {
     name: string
+    isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     courses?: CourseCreateNestedManyWithoutSubjectsInput
+    questions?: QuestionCreateNestedManyWithoutSubjectInput
+    quizzes?: QuizCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateWithoutTopicsInput = {
     id?: number
     name: string
+    isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
+    questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
+    quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectCreateOrConnectWithoutTopicsInput = {
     where: SubjectWhereUniqueInput
     create: XOR<SubjectCreateWithoutTopicsInput, SubjectUncheckedCreateWithoutTopicsInput>
+  }
+
+  export type QuestionCreateWithoutTopicInput = {
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subject: SubjectCreateNestedOneWithoutQuestionsInput
+    options?: QuestionOptionCreateNestedManyWithoutQuestionInput
+    tags?: QuestionTagCreateNestedManyWithoutQuestionInput
+  }
+
+  export type QuestionUncheckedCreateWithoutTopicInput = {
+    id?: number
+    subjectId: number
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
+    tags?: QuestionTagUncheckedCreateNestedManyWithoutQuestionInput
+  }
+
+  export type QuestionCreateOrConnectWithoutTopicInput = {
+    where: QuestionWhereUniqueInput
+    create: XOR<QuestionCreateWithoutTopicInput, QuestionUncheckedCreateWithoutTopicInput>
+  }
+
+  export type QuestionCreateManyTopicInputEnvelope = {
+    data: QuestionCreateManyTopicInput | QuestionCreateManyTopicInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type QuizCreateWithoutTopicInput = {
+    title: string
+    examTag?: string | null
+    questionCount?: number | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subject: SubjectCreateNestedOneWithoutQuizzesInput
+    lesson?: LessonCreateNestedOneWithoutQuizInput
+  }
+
+  export type QuizUncheckedCreateWithoutTopicInput = {
+    id?: number
+    title: string
+    subjectId: number
+    examTag?: string | null
+    questionCount?: number | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lesson?: LessonUncheckedCreateNestedOneWithoutQuizInput
+  }
+
+  export type QuizCreateOrConnectWithoutTopicInput = {
+    where: QuizWhereUniqueInput
+    create: XOR<QuizCreateWithoutTopicInput, QuizUncheckedCreateWithoutTopicInput>
+  }
+
+  export type QuizCreateManyTopicInputEnvelope = {
+    data: QuizCreateManyTopicInput | QuizCreateManyTopicInput[]
+    skipDuplicates?: boolean
   }
 
   export type SubjectUpsertWithoutTopicsInput = {
@@ -20262,17 +30036,57 @@ export namespace Prisma {
 
   export type SubjectUpdateWithoutTopicsInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     courses?: CourseUpdateManyWithoutSubjectsNestedInput
+    questions?: QuestionUpdateManyWithoutSubjectNestedInput
+    quizzes?: QuizUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateWithoutTopicsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
+    questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
+    quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type QuestionUpsertWithWhereUniqueWithoutTopicInput = {
+    where: QuestionWhereUniqueInput
+    update: XOR<QuestionUpdateWithoutTopicInput, QuestionUncheckedUpdateWithoutTopicInput>
+    create: XOR<QuestionCreateWithoutTopicInput, QuestionUncheckedCreateWithoutTopicInput>
+  }
+
+  export type QuestionUpdateWithWhereUniqueWithoutTopicInput = {
+    where: QuestionWhereUniqueInput
+    data: XOR<QuestionUpdateWithoutTopicInput, QuestionUncheckedUpdateWithoutTopicInput>
+  }
+
+  export type QuestionUpdateManyWithWhereWithoutTopicInput = {
+    where: QuestionScalarWhereInput
+    data: XOR<QuestionUpdateManyMutationInput, QuestionUncheckedUpdateManyWithoutTopicInput>
+  }
+
+  export type QuizUpsertWithWhereUniqueWithoutTopicInput = {
+    where: QuizWhereUniqueInput
+    update: XOR<QuizUpdateWithoutTopicInput, QuizUncheckedUpdateWithoutTopicInput>
+    create: XOR<QuizCreateWithoutTopicInput, QuizUncheckedCreateWithoutTopicInput>
+  }
+
+  export type QuizUpdateWithWhereUniqueWithoutTopicInput = {
+    where: QuizWhereUniqueInput
+    data: XOR<QuizUpdateWithoutTopicInput, QuizUncheckedUpdateWithoutTopicInput>
+  }
+
+  export type QuizUpdateManyWithWhereWithoutTopicInput = {
+    where: QuizScalarWhereInput
+    data: XOR<QuizUpdateManyMutationInput, QuizUncheckedUpdateManyWithoutTopicInput>
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -20355,17 +30169,25 @@ export namespace Prisma {
 
   export type SubjectCreateWithoutCoursesInput = {
     name: string
+    isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     topics?: TopicCreateNestedManyWithoutSubjectInput
+    questions?: QuestionCreateNestedManyWithoutSubjectInput
+    quizzes?: QuizCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateWithoutCoursesInput = {
     id?: number
     name: string
+    isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     topics?: TopicUncheckedCreateNestedManyWithoutSubjectInput
+    questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
+    quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectCreateOrConnectWithoutCoursesInput = {
@@ -20433,7 +30255,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.CourseStatus
     accessType?: $Enums.AccessType
-    displayOrder?: number | null
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     chapters?: ChapterCreateNestedManyWithoutCourseTypeInput
@@ -20446,7 +30268,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.CourseStatus
     accessType?: $Enums.AccessType
-    displayOrder?: number | null
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     chapters?: ChapterUncheckedCreateNestedManyWithoutCourseTypeInput
@@ -20513,7 +30335,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subscriptions?: SubscriptionCreateNestedManyWithoutPlanInput
-    lessons?: LessonCreateNestedManyWithoutPlanInput
+    lessonPlans?: LessonPlanCreateNestedManyWithoutPlanInput
   }
 
   export type PlanUncheckedCreateWithoutCourseInput = {
@@ -20526,7 +30348,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutPlanInput
-    lessons?: LessonUncheckedCreateNestedManyWithoutPlanInput
+    lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutPlanInput
   }
 
   export type PlanCreateOrConnectWithoutCourseInput = {
@@ -20590,6 +30412,8 @@ export namespace Prisma {
     NOT?: SubjectScalarWhereInput | SubjectScalarWhereInput[]
     id?: IntFilter<"Subject"> | number
     name?: StringFilter<"Subject"> | string
+    isActive?: BoolFilter<"Subject"> | boolean
+    displayOrder?: IntFilter<"Subject"> | number
     createdAt?: DateTimeFilter<"Subject"> | Date | string
     updatedAt?: DateTimeFilter<"Subject"> | Date | string
   }
@@ -20681,7 +30505,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"CourseType"> | string | null
     status?: EnumCourseStatusFilter<"CourseType"> | $Enums.CourseStatus
     accessType?: EnumAccessTypeFilter<"CourseType"> | $Enums.AccessType
-    displayOrder?: IntNullableFilter<"CourseType"> | number | null
+    displayOrder?: IntFilter<"CourseType"> | number
     createdAt?: DateTimeFilter<"CourseType"> | Date | string
     updatedAt?: DateTimeFilter<"CourseType"> | Date | string
   }
@@ -21012,7 +30836,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.CourseStatus
     accessType?: $Enums.AccessType
-    displayOrder?: number | null
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutCourseTypesInput
@@ -21026,7 +30850,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.CourseStatus
     accessType?: $Enums.AccessType
-    displayOrder?: number | null
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     selectedBy?: UserUncheckedCreateNestedManyWithoutSelectedCourseTypeInput
@@ -21055,7 +30879,8 @@ export namespace Prisma {
     status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    plan?: PlanCreateNestedOneWithoutLessonsInput
+    quiz?: QuizCreateNestedOneWithoutLessonInput
+    lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutChapterInput = {
@@ -21075,9 +30900,10 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
-    planId?: number | null
+    quizId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutChapterInput = {
@@ -21156,7 +30982,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutCourseTypesNestedInput
@@ -21170,7 +30996,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     selectedBy?: UserUncheckedUpdateManyWithoutSelectedCourseTypeNestedInput
@@ -21213,7 +31039,7 @@ export namespace Prisma {
     isFreePreview?: BoolFilter<"Lesson"> | boolean
     accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
     status?: EnumCourseStatusFilter<"Lesson"> | $Enums.CourseStatus
-    planId?: IntNullableFilter<"Lesson"> | number | null
+    quizId?: IntNullableFilter<"Lesson"> | number | null
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
   }
@@ -21242,34 +31068,50 @@ export namespace Prisma {
     create: XOR<ChapterCreateWithoutLessonsInput, ChapterUncheckedCreateWithoutLessonsInput>
   }
 
-  export type PlanCreateWithoutLessonsInput = {
+  export type QuizCreateWithoutLessonInput = {
     title: string
-    description?: string | null
-    price: number
-    durationDays: number
-    isActive?: boolean
+    examTag?: string | null
+    questionCount?: number | null
+    status?: $Enums.QuestionStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    course: CourseCreateNestedOneWithoutPlansInput
-    subscriptions?: SubscriptionCreateNestedManyWithoutPlanInput
+    subject: SubjectCreateNestedOneWithoutQuizzesInput
+    topic: TopicCreateNestedOneWithoutQuizzesInput
   }
 
-  export type PlanUncheckedCreateWithoutLessonsInput = {
+  export type QuizUncheckedCreateWithoutLessonInput = {
     id?: number
-    courseId: number
     title: string
-    description?: string | null
-    price: number
-    durationDays: number
-    isActive?: boolean
+    subjectId: number
+    topicId: number
+    examTag?: string | null
+    questionCount?: number | null
+    status?: $Enums.QuestionStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutPlanInput
   }
 
-  export type PlanCreateOrConnectWithoutLessonsInput = {
-    where: PlanWhereUniqueInput
-    create: XOR<PlanCreateWithoutLessonsInput, PlanUncheckedCreateWithoutLessonsInput>
+  export type QuizCreateOrConnectWithoutLessonInput = {
+    where: QuizWhereUniqueInput
+    create: XOR<QuizCreateWithoutLessonInput, QuizUncheckedCreateWithoutLessonInput>
+  }
+
+  export type LessonPlanCreateWithoutLessonInput = {
+    plan: PlanCreateNestedOneWithoutLessonPlansInput
+  }
+
+  export type LessonPlanUncheckedCreateWithoutLessonInput = {
+    planId: number
+  }
+
+  export type LessonPlanCreateOrConnectWithoutLessonInput = {
+    where: LessonPlanWhereUniqueInput
+    create: XOR<LessonPlanCreateWithoutLessonInput, LessonPlanUncheckedCreateWithoutLessonInput>
+  }
+
+  export type LessonPlanCreateManyLessonInputEnvelope = {
+    data: LessonPlanCreateManyLessonInput | LessonPlanCreateManyLessonInput[]
+    skipDuplicates?: boolean
   }
 
   export type ChapterUpsertWithoutLessonsInput = {
@@ -21302,18 +31144,212 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PlanUpsertWithoutLessonsInput = {
-    update: XOR<PlanUpdateWithoutLessonsInput, PlanUncheckedUpdateWithoutLessonsInput>
-    create: XOR<PlanCreateWithoutLessonsInput, PlanUncheckedCreateWithoutLessonsInput>
+  export type QuizUpsertWithoutLessonInput = {
+    update: XOR<QuizUpdateWithoutLessonInput, QuizUncheckedUpdateWithoutLessonInput>
+    create: XOR<QuizCreateWithoutLessonInput, QuizUncheckedCreateWithoutLessonInput>
+    where?: QuizWhereInput
+  }
+
+  export type QuizUpdateToOneWithWhereWithoutLessonInput = {
+    where?: QuizWhereInput
+    data: XOR<QuizUpdateWithoutLessonInput, QuizUncheckedUpdateWithoutLessonInput>
+  }
+
+  export type QuizUpdateWithoutLessonInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    examTag?: NullableStringFieldUpdateOperationsInput | string | null
+    questionCount?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subject?: SubjectUpdateOneRequiredWithoutQuizzesNestedInput
+    topic?: TopicUpdateOneRequiredWithoutQuizzesNestedInput
+  }
+
+  export type QuizUncheckedUpdateWithoutLessonInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    subjectId?: IntFieldUpdateOperationsInput | number
+    topicId?: IntFieldUpdateOperationsInput | number
+    examTag?: NullableStringFieldUpdateOperationsInput | string | null
+    questionCount?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonPlanUpsertWithWhereUniqueWithoutLessonInput = {
+    where: LessonPlanWhereUniqueInput
+    update: XOR<LessonPlanUpdateWithoutLessonInput, LessonPlanUncheckedUpdateWithoutLessonInput>
+    create: XOR<LessonPlanCreateWithoutLessonInput, LessonPlanUncheckedCreateWithoutLessonInput>
+  }
+
+  export type LessonPlanUpdateWithWhereUniqueWithoutLessonInput = {
+    where: LessonPlanWhereUniqueInput
+    data: XOR<LessonPlanUpdateWithoutLessonInput, LessonPlanUncheckedUpdateWithoutLessonInput>
+  }
+
+  export type LessonPlanUpdateManyWithWhereWithoutLessonInput = {
+    where: LessonPlanScalarWhereInput
+    data: XOR<LessonPlanUpdateManyMutationInput, LessonPlanUncheckedUpdateManyWithoutLessonInput>
+  }
+
+  export type LessonPlanScalarWhereInput = {
+    AND?: LessonPlanScalarWhereInput | LessonPlanScalarWhereInput[]
+    OR?: LessonPlanScalarWhereInput[]
+    NOT?: LessonPlanScalarWhereInput | LessonPlanScalarWhereInput[]
+    lessonId?: IntFilter<"LessonPlan"> | number
+    planId?: IntFilter<"LessonPlan"> | number
+  }
+
+  export type LessonCreateWithoutLessonPlansInput = {
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    chapter: ChapterCreateNestedOneWithoutLessonsInput
+    quiz?: QuizCreateNestedOneWithoutLessonInput
+  }
+
+  export type LessonUncheckedCreateWithoutLessonPlansInput = {
+    id?: number
+    chapterId: number
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    quizId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LessonCreateOrConnectWithoutLessonPlansInput = {
+    where: LessonWhereUniqueInput
+    create: XOR<LessonCreateWithoutLessonPlansInput, LessonUncheckedCreateWithoutLessonPlansInput>
+  }
+
+  export type PlanCreateWithoutLessonPlansInput = {
+    title: string
+    description?: string | null
+    price: number
+    durationDays: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    course: CourseCreateNestedOneWithoutPlansInput
+    subscriptions?: SubscriptionCreateNestedManyWithoutPlanInput
+  }
+
+  export type PlanUncheckedCreateWithoutLessonPlansInput = {
+    id?: number
+    courseId: number
+    title: string
+    description?: string | null
+    price: number
+    durationDays: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutPlanInput
+  }
+
+  export type PlanCreateOrConnectWithoutLessonPlansInput = {
+    where: PlanWhereUniqueInput
+    create: XOR<PlanCreateWithoutLessonPlansInput, PlanUncheckedCreateWithoutLessonPlansInput>
+  }
+
+  export type LessonUpsertWithoutLessonPlansInput = {
+    update: XOR<LessonUpdateWithoutLessonPlansInput, LessonUncheckedUpdateWithoutLessonPlansInput>
+    create: XOR<LessonCreateWithoutLessonPlansInput, LessonUncheckedCreateWithoutLessonPlansInput>
+    where?: LessonWhereInput
+  }
+
+  export type LessonUpdateToOneWithWhereWithoutLessonPlansInput = {
+    where?: LessonWhereInput
+    data: XOR<LessonUpdateWithoutLessonPlansInput, LessonUncheckedUpdateWithoutLessonPlansInput>
+  }
+
+  export type LessonUpdateWithoutLessonPlansInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
+    quiz?: QuizUpdateOneWithoutLessonNestedInput
+  }
+
+  export type LessonUncheckedUpdateWithoutLessonPlansInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    chapterId?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    quizId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PlanUpsertWithoutLessonPlansInput = {
+    update: XOR<PlanUpdateWithoutLessonPlansInput, PlanUncheckedUpdateWithoutLessonPlansInput>
+    create: XOR<PlanCreateWithoutLessonPlansInput, PlanUncheckedCreateWithoutLessonPlansInput>
     where?: PlanWhereInput
   }
 
-  export type PlanUpdateToOneWithWhereWithoutLessonsInput = {
+  export type PlanUpdateToOneWithWhereWithoutLessonPlansInput = {
     where?: PlanWhereInput
-    data: XOR<PlanUpdateWithoutLessonsInput, PlanUncheckedUpdateWithoutLessonsInput>
+    data: XOR<PlanUpdateWithoutLessonPlansInput, PlanUncheckedUpdateWithoutLessonPlansInput>
   }
 
-  export type PlanUpdateWithoutLessonsInput = {
+  export type PlanUpdateWithoutLessonPlansInput = {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
@@ -21325,7 +31361,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutPlanNestedInput
   }
 
-  export type PlanUncheckedUpdateWithoutLessonsInput = {
+  export type PlanUncheckedUpdateWithoutLessonPlansInput = {
     id?: IntFieldUpdateOperationsInput | number
     courseId?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
@@ -21411,56 +31447,21 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type LessonCreateWithoutPlanInput = {
-    title: string
-    description?: string | null
-    type: $Enums.LessonType
-    videoUrl?: string | null
-    videoPublicId?: string | null
-    thumbnailUrl?: string | null
-    thumbnailPublicId?: string | null
-    noteUrl?: string | null
-    notePublicId?: string | null
-    noteFileType?: string | null
-    content?: string | null
-    displayOrder?: number
-    isFreePreview?: boolean
-    accessType?: $Enums.AccessType
-    status?: $Enums.CourseStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    chapter: ChapterCreateNestedOneWithoutLessonsInput
+  export type LessonPlanCreateWithoutPlanInput = {
+    lesson: LessonCreateNestedOneWithoutLessonPlansInput
   }
 
-  export type LessonUncheckedCreateWithoutPlanInput = {
-    id?: number
-    chapterId: number
-    title: string
-    description?: string | null
-    type: $Enums.LessonType
-    videoUrl?: string | null
-    videoPublicId?: string | null
-    thumbnailUrl?: string | null
-    thumbnailPublicId?: string | null
-    noteUrl?: string | null
-    notePublicId?: string | null
-    noteFileType?: string | null
-    content?: string | null
-    displayOrder?: number
-    isFreePreview?: boolean
-    accessType?: $Enums.AccessType
-    status?: $Enums.CourseStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
+  export type LessonPlanUncheckedCreateWithoutPlanInput = {
+    lessonId: number
   }
 
-  export type LessonCreateOrConnectWithoutPlanInput = {
-    where: LessonWhereUniqueInput
-    create: XOR<LessonCreateWithoutPlanInput, LessonUncheckedCreateWithoutPlanInput>
+  export type LessonPlanCreateOrConnectWithoutPlanInput = {
+    where: LessonPlanWhereUniqueInput
+    create: XOR<LessonPlanCreateWithoutPlanInput, LessonPlanUncheckedCreateWithoutPlanInput>
   }
 
-  export type LessonCreateManyPlanInputEnvelope = {
-    data: LessonCreateManyPlanInput | LessonCreateManyPlanInput[]
+  export type LessonPlanCreateManyPlanInputEnvelope = {
+    data: LessonPlanCreateManyPlanInput | LessonPlanCreateManyPlanInput[]
     skipDuplicates?: boolean
   }
 
@@ -21530,20 +31531,20 @@ export namespace Prisma {
     data: XOR<SubscriptionUpdateManyMutationInput, SubscriptionUncheckedUpdateManyWithoutPlanInput>
   }
 
-  export type LessonUpsertWithWhereUniqueWithoutPlanInput = {
-    where: LessonWhereUniqueInput
-    update: XOR<LessonUpdateWithoutPlanInput, LessonUncheckedUpdateWithoutPlanInput>
-    create: XOR<LessonCreateWithoutPlanInput, LessonUncheckedCreateWithoutPlanInput>
+  export type LessonPlanUpsertWithWhereUniqueWithoutPlanInput = {
+    where: LessonPlanWhereUniqueInput
+    update: XOR<LessonPlanUpdateWithoutPlanInput, LessonPlanUncheckedUpdateWithoutPlanInput>
+    create: XOR<LessonPlanCreateWithoutPlanInput, LessonPlanUncheckedCreateWithoutPlanInput>
   }
 
-  export type LessonUpdateWithWhereUniqueWithoutPlanInput = {
-    where: LessonWhereUniqueInput
-    data: XOR<LessonUpdateWithoutPlanInput, LessonUncheckedUpdateWithoutPlanInput>
+  export type LessonPlanUpdateWithWhereUniqueWithoutPlanInput = {
+    where: LessonPlanWhereUniqueInput
+    data: XOR<LessonPlanUpdateWithoutPlanInput, LessonPlanUncheckedUpdateWithoutPlanInput>
   }
 
-  export type LessonUpdateManyWithWhereWithoutPlanInput = {
-    where: LessonScalarWhereInput
-    data: XOR<LessonUpdateManyMutationInput, LessonUncheckedUpdateManyWithoutPlanInput>
+  export type LessonPlanUpdateManyWithWhereWithoutPlanInput = {
+    where: LessonPlanScalarWhereInput
+    data: XOR<LessonPlanUpdateManyMutationInput, LessonPlanUncheckedUpdateManyWithoutPlanInput>
   }
 
   export type UserCreateWithoutSubscriptionsInput = {
@@ -21635,7 +31636,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutPlansInput
-    lessons?: LessonCreateNestedManyWithoutPlanInput
+    lessonPlans?: LessonPlanCreateNestedManyWithoutPlanInput
   }
 
   export type PlanUncheckedCreateWithoutSubscriptionsInput = {
@@ -21648,7 +31649,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    lessons?: LessonUncheckedCreateNestedManyWithoutPlanInput
+    lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutPlanInput
   }
 
   export type PlanCreateOrConnectWithoutSubscriptionsInput = {
@@ -21768,7 +31769,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutPlansNestedInput
-    lessons?: LessonUpdateManyWithoutPlanNestedInput
+    lessonPlans?: LessonPlanUpdateManyWithoutPlanNestedInput
   }
 
   export type PlanUncheckedUpdateWithoutSubscriptionsInput = {
@@ -21781,7 +31782,672 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lessons?: LessonUncheckedUpdateManyWithoutPlanNestedInput
+    lessonPlans?: LessonPlanUncheckedUpdateManyWithoutPlanNestedInput
+  }
+
+  export type SubjectCreateWithoutQuestionsInput = {
+    name: string
+    isActive?: boolean
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    topics?: TopicCreateNestedManyWithoutSubjectInput
+    courses?: CourseCreateNestedManyWithoutSubjectsInput
+    quizzes?: QuizCreateNestedManyWithoutSubjectInput
+  }
+
+  export type SubjectUncheckedCreateWithoutQuestionsInput = {
+    id?: number
+    name: string
+    isActive?: boolean
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    topics?: TopicUncheckedCreateNestedManyWithoutSubjectInput
+    courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
+    quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
+  }
+
+  export type SubjectCreateOrConnectWithoutQuestionsInput = {
+    where: SubjectWhereUniqueInput
+    create: XOR<SubjectCreateWithoutQuestionsInput, SubjectUncheckedCreateWithoutQuestionsInput>
+  }
+
+  export type TopicCreateWithoutQuestionsInput = {
+    name: string
+    isActive?: boolean
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subject: SubjectCreateNestedOneWithoutTopicsInput
+    quizzes?: QuizCreateNestedManyWithoutTopicInput
+  }
+
+  export type TopicUncheckedCreateWithoutQuestionsInput = {
+    id?: number
+    name: string
+    subjectId: number
+    isActive?: boolean
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    quizzes?: QuizUncheckedCreateNestedManyWithoutTopicInput
+  }
+
+  export type TopicCreateOrConnectWithoutQuestionsInput = {
+    where: TopicWhereUniqueInput
+    create: XOR<TopicCreateWithoutQuestionsInput, TopicUncheckedCreateWithoutQuestionsInput>
+  }
+
+  export type QuestionOptionCreateWithoutQuestionInput = {
+    optionText: string
+    optionImageUrl?: string | null
+    isCorrect?: boolean
+    displayOrder?: number
+  }
+
+  export type QuestionOptionUncheckedCreateWithoutQuestionInput = {
+    id?: number
+    optionText: string
+    optionImageUrl?: string | null
+    isCorrect?: boolean
+    displayOrder?: number
+  }
+
+  export type QuestionOptionCreateOrConnectWithoutQuestionInput = {
+    where: QuestionOptionWhereUniqueInput
+    create: XOR<QuestionOptionCreateWithoutQuestionInput, QuestionOptionUncheckedCreateWithoutQuestionInput>
+  }
+
+  export type QuestionOptionCreateManyQuestionInputEnvelope = {
+    data: QuestionOptionCreateManyQuestionInput | QuestionOptionCreateManyQuestionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type QuestionTagCreateWithoutQuestionInput = {
+    tag: TagCreateNestedOneWithoutQuestionsInput
+  }
+
+  export type QuestionTagUncheckedCreateWithoutQuestionInput = {
+    tagId: number
+  }
+
+  export type QuestionTagCreateOrConnectWithoutQuestionInput = {
+    where: QuestionTagWhereUniqueInput
+    create: XOR<QuestionTagCreateWithoutQuestionInput, QuestionTagUncheckedCreateWithoutQuestionInput>
+  }
+
+  export type QuestionTagCreateManyQuestionInputEnvelope = {
+    data: QuestionTagCreateManyQuestionInput | QuestionTagCreateManyQuestionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SubjectUpsertWithoutQuestionsInput = {
+    update: XOR<SubjectUpdateWithoutQuestionsInput, SubjectUncheckedUpdateWithoutQuestionsInput>
+    create: XOR<SubjectCreateWithoutQuestionsInput, SubjectUncheckedCreateWithoutQuestionsInput>
+    where?: SubjectWhereInput
+  }
+
+  export type SubjectUpdateToOneWithWhereWithoutQuestionsInput = {
+    where?: SubjectWhereInput
+    data: XOR<SubjectUpdateWithoutQuestionsInput, SubjectUncheckedUpdateWithoutQuestionsInput>
+  }
+
+  export type SubjectUpdateWithoutQuestionsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topics?: TopicUpdateManyWithoutSubjectNestedInput
+    courses?: CourseUpdateManyWithoutSubjectsNestedInput
+    quizzes?: QuizUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type SubjectUncheckedUpdateWithoutQuestionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topics?: TopicUncheckedUpdateManyWithoutSubjectNestedInput
+    courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
+    quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type TopicUpsertWithoutQuestionsInput = {
+    update: XOR<TopicUpdateWithoutQuestionsInput, TopicUncheckedUpdateWithoutQuestionsInput>
+    create: XOR<TopicCreateWithoutQuestionsInput, TopicUncheckedCreateWithoutQuestionsInput>
+    where?: TopicWhereInput
+  }
+
+  export type TopicUpdateToOneWithWhereWithoutQuestionsInput = {
+    where?: TopicWhereInput
+    data: XOR<TopicUpdateWithoutQuestionsInput, TopicUncheckedUpdateWithoutQuestionsInput>
+  }
+
+  export type TopicUpdateWithoutQuestionsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subject?: SubjectUpdateOneRequiredWithoutTopicsNestedInput
+    quizzes?: QuizUpdateManyWithoutTopicNestedInput
+  }
+
+  export type TopicUncheckedUpdateWithoutQuestionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    subjectId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    quizzes?: QuizUncheckedUpdateManyWithoutTopicNestedInput
+  }
+
+  export type QuestionOptionUpsertWithWhereUniqueWithoutQuestionInput = {
+    where: QuestionOptionWhereUniqueInput
+    update: XOR<QuestionOptionUpdateWithoutQuestionInput, QuestionOptionUncheckedUpdateWithoutQuestionInput>
+    create: XOR<QuestionOptionCreateWithoutQuestionInput, QuestionOptionUncheckedCreateWithoutQuestionInput>
+  }
+
+  export type QuestionOptionUpdateWithWhereUniqueWithoutQuestionInput = {
+    where: QuestionOptionWhereUniqueInput
+    data: XOR<QuestionOptionUpdateWithoutQuestionInput, QuestionOptionUncheckedUpdateWithoutQuestionInput>
+  }
+
+  export type QuestionOptionUpdateManyWithWhereWithoutQuestionInput = {
+    where: QuestionOptionScalarWhereInput
+    data: XOR<QuestionOptionUpdateManyMutationInput, QuestionOptionUncheckedUpdateManyWithoutQuestionInput>
+  }
+
+  export type QuestionOptionScalarWhereInput = {
+    AND?: QuestionOptionScalarWhereInput | QuestionOptionScalarWhereInput[]
+    OR?: QuestionOptionScalarWhereInput[]
+    NOT?: QuestionOptionScalarWhereInput | QuestionOptionScalarWhereInput[]
+    id?: IntFilter<"QuestionOption"> | number
+    questionId?: IntFilter<"QuestionOption"> | number
+    optionText?: StringFilter<"QuestionOption"> | string
+    optionImageUrl?: StringNullableFilter<"QuestionOption"> | string | null
+    isCorrect?: BoolFilter<"QuestionOption"> | boolean
+    displayOrder?: IntFilter<"QuestionOption"> | number
+  }
+
+  export type QuestionTagUpsertWithWhereUniqueWithoutQuestionInput = {
+    where: QuestionTagWhereUniqueInput
+    update: XOR<QuestionTagUpdateWithoutQuestionInput, QuestionTagUncheckedUpdateWithoutQuestionInput>
+    create: XOR<QuestionTagCreateWithoutQuestionInput, QuestionTagUncheckedCreateWithoutQuestionInput>
+  }
+
+  export type QuestionTagUpdateWithWhereUniqueWithoutQuestionInput = {
+    where: QuestionTagWhereUniqueInput
+    data: XOR<QuestionTagUpdateWithoutQuestionInput, QuestionTagUncheckedUpdateWithoutQuestionInput>
+  }
+
+  export type QuestionTagUpdateManyWithWhereWithoutQuestionInput = {
+    where: QuestionTagScalarWhereInput
+    data: XOR<QuestionTagUpdateManyMutationInput, QuestionTagUncheckedUpdateManyWithoutQuestionInput>
+  }
+
+  export type QuestionTagScalarWhereInput = {
+    AND?: QuestionTagScalarWhereInput | QuestionTagScalarWhereInput[]
+    OR?: QuestionTagScalarWhereInput[]
+    NOT?: QuestionTagScalarWhereInput | QuestionTagScalarWhereInput[]
+    questionId?: IntFilter<"QuestionTag"> | number
+    tagId?: IntFilter<"QuestionTag"> | number
+  }
+
+  export type QuestionCreateWithoutOptionsInput = {
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subject: SubjectCreateNestedOneWithoutQuestionsInput
+    topic: TopicCreateNestedOneWithoutQuestionsInput
+    tags?: QuestionTagCreateNestedManyWithoutQuestionInput
+  }
+
+  export type QuestionUncheckedCreateWithoutOptionsInput = {
+    id?: number
+    subjectId: number
+    topicId: number
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    tags?: QuestionTagUncheckedCreateNestedManyWithoutQuestionInput
+  }
+
+  export type QuestionCreateOrConnectWithoutOptionsInput = {
+    where: QuestionWhereUniqueInput
+    create: XOR<QuestionCreateWithoutOptionsInput, QuestionUncheckedCreateWithoutOptionsInput>
+  }
+
+  export type QuestionUpsertWithoutOptionsInput = {
+    update: XOR<QuestionUpdateWithoutOptionsInput, QuestionUncheckedUpdateWithoutOptionsInput>
+    create: XOR<QuestionCreateWithoutOptionsInput, QuestionUncheckedCreateWithoutOptionsInput>
+    where?: QuestionWhereInput
+  }
+
+  export type QuestionUpdateToOneWithWhereWithoutOptionsInput = {
+    where?: QuestionWhereInput
+    data: XOR<QuestionUpdateWithoutOptionsInput, QuestionUncheckedUpdateWithoutOptionsInput>
+  }
+
+  export type QuestionUpdateWithoutOptionsInput = {
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subject?: SubjectUpdateOneRequiredWithoutQuestionsNestedInput
+    topic?: TopicUpdateOneRequiredWithoutQuestionsNestedInput
+    tags?: QuestionTagUpdateManyWithoutQuestionNestedInput
+  }
+
+  export type QuestionUncheckedUpdateWithoutOptionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    subjectId?: IntFieldUpdateOperationsInput | number
+    topicId?: IntFieldUpdateOperationsInput | number
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    tags?: QuestionTagUncheckedUpdateManyWithoutQuestionNestedInput
+  }
+
+  export type SubjectCreateWithoutQuizzesInput = {
+    name: string
+    isActive?: boolean
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    topics?: TopicCreateNestedManyWithoutSubjectInput
+    courses?: CourseCreateNestedManyWithoutSubjectsInput
+    questions?: QuestionCreateNestedManyWithoutSubjectInput
+  }
+
+  export type SubjectUncheckedCreateWithoutQuizzesInput = {
+    id?: number
+    name: string
+    isActive?: boolean
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    topics?: TopicUncheckedCreateNestedManyWithoutSubjectInput
+    courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
+    questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
+  }
+
+  export type SubjectCreateOrConnectWithoutQuizzesInput = {
+    where: SubjectWhereUniqueInput
+    create: XOR<SubjectCreateWithoutQuizzesInput, SubjectUncheckedCreateWithoutQuizzesInput>
+  }
+
+  export type TopicCreateWithoutQuizzesInput = {
+    name: string
+    isActive?: boolean
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subject: SubjectCreateNestedOneWithoutTopicsInput
+    questions?: QuestionCreateNestedManyWithoutTopicInput
+  }
+
+  export type TopicUncheckedCreateWithoutQuizzesInput = {
+    id?: number
+    name: string
+    subjectId: number
+    isActive?: boolean
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    questions?: QuestionUncheckedCreateNestedManyWithoutTopicInput
+  }
+
+  export type TopicCreateOrConnectWithoutQuizzesInput = {
+    where: TopicWhereUniqueInput
+    create: XOR<TopicCreateWithoutQuizzesInput, TopicUncheckedCreateWithoutQuizzesInput>
+  }
+
+  export type LessonCreateWithoutQuizInput = {
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    chapter: ChapterCreateNestedOneWithoutLessonsInput
+    lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
+  }
+
+  export type LessonUncheckedCreateWithoutQuizInput = {
+    id?: number
+    chapterId: number
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
+  }
+
+  export type LessonCreateOrConnectWithoutQuizInput = {
+    where: LessonWhereUniqueInput
+    create: XOR<LessonCreateWithoutQuizInput, LessonUncheckedCreateWithoutQuizInput>
+  }
+
+  export type SubjectUpsertWithoutQuizzesInput = {
+    update: XOR<SubjectUpdateWithoutQuizzesInput, SubjectUncheckedUpdateWithoutQuizzesInput>
+    create: XOR<SubjectCreateWithoutQuizzesInput, SubjectUncheckedCreateWithoutQuizzesInput>
+    where?: SubjectWhereInput
+  }
+
+  export type SubjectUpdateToOneWithWhereWithoutQuizzesInput = {
+    where?: SubjectWhereInput
+    data: XOR<SubjectUpdateWithoutQuizzesInput, SubjectUncheckedUpdateWithoutQuizzesInput>
+  }
+
+  export type SubjectUpdateWithoutQuizzesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topics?: TopicUpdateManyWithoutSubjectNestedInput
+    courses?: CourseUpdateManyWithoutSubjectsNestedInput
+    questions?: QuestionUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type SubjectUncheckedUpdateWithoutQuizzesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topics?: TopicUncheckedUpdateManyWithoutSubjectNestedInput
+    courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
+    questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type TopicUpsertWithoutQuizzesInput = {
+    update: XOR<TopicUpdateWithoutQuizzesInput, TopicUncheckedUpdateWithoutQuizzesInput>
+    create: XOR<TopicCreateWithoutQuizzesInput, TopicUncheckedCreateWithoutQuizzesInput>
+    where?: TopicWhereInput
+  }
+
+  export type TopicUpdateToOneWithWhereWithoutQuizzesInput = {
+    where?: TopicWhereInput
+    data: XOR<TopicUpdateWithoutQuizzesInput, TopicUncheckedUpdateWithoutQuizzesInput>
+  }
+
+  export type TopicUpdateWithoutQuizzesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subject?: SubjectUpdateOneRequiredWithoutTopicsNestedInput
+    questions?: QuestionUpdateManyWithoutTopicNestedInput
+  }
+
+  export type TopicUncheckedUpdateWithoutQuizzesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    subjectId?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: QuestionUncheckedUpdateManyWithoutTopicNestedInput
+  }
+
+  export type LessonUpsertWithoutQuizInput = {
+    update: XOR<LessonUpdateWithoutQuizInput, LessonUncheckedUpdateWithoutQuizInput>
+    create: XOR<LessonCreateWithoutQuizInput, LessonUncheckedCreateWithoutQuizInput>
+    where?: LessonWhereInput
+  }
+
+  export type LessonUpdateToOneWithWhereWithoutQuizInput = {
+    where?: LessonWhereInput
+    data: XOR<LessonUpdateWithoutQuizInput, LessonUncheckedUpdateWithoutQuizInput>
+  }
+
+  export type LessonUpdateWithoutQuizInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
+    lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
+  }
+
+  export type LessonUncheckedUpdateWithoutQuizInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    chapterId?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
+  }
+
+  export type QuestionTagCreateWithoutTagInput = {
+    question: QuestionCreateNestedOneWithoutTagsInput
+  }
+
+  export type QuestionTagUncheckedCreateWithoutTagInput = {
+    questionId: number
+  }
+
+  export type QuestionTagCreateOrConnectWithoutTagInput = {
+    where: QuestionTagWhereUniqueInput
+    create: XOR<QuestionTagCreateWithoutTagInput, QuestionTagUncheckedCreateWithoutTagInput>
+  }
+
+  export type QuestionTagCreateManyTagInputEnvelope = {
+    data: QuestionTagCreateManyTagInput | QuestionTagCreateManyTagInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type QuestionTagUpsertWithWhereUniqueWithoutTagInput = {
+    where: QuestionTagWhereUniqueInput
+    update: XOR<QuestionTagUpdateWithoutTagInput, QuestionTagUncheckedUpdateWithoutTagInput>
+    create: XOR<QuestionTagCreateWithoutTagInput, QuestionTagUncheckedCreateWithoutTagInput>
+  }
+
+  export type QuestionTagUpdateWithWhereUniqueWithoutTagInput = {
+    where: QuestionTagWhereUniqueInput
+    data: XOR<QuestionTagUpdateWithoutTagInput, QuestionTagUncheckedUpdateWithoutTagInput>
+  }
+
+  export type QuestionTagUpdateManyWithWhereWithoutTagInput = {
+    where: QuestionTagScalarWhereInput
+    data: XOR<QuestionTagUpdateManyMutationInput, QuestionTagUncheckedUpdateManyWithoutTagInput>
+  }
+
+  export type QuestionCreateWithoutTagsInput = {
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subject: SubjectCreateNestedOneWithoutQuestionsInput
+    topic: TopicCreateNestedOneWithoutQuestionsInput
+    options?: QuestionOptionCreateNestedManyWithoutQuestionInput
+  }
+
+  export type QuestionUncheckedCreateWithoutTagsInput = {
+    id?: number
+    subjectId: number
+    topicId: number
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
+  }
+
+  export type QuestionCreateOrConnectWithoutTagsInput = {
+    where: QuestionWhereUniqueInput
+    create: XOR<QuestionCreateWithoutTagsInput, QuestionUncheckedCreateWithoutTagsInput>
+  }
+
+  export type TagCreateWithoutQuestionsInput = {
+    name: string
+  }
+
+  export type TagUncheckedCreateWithoutQuestionsInput = {
+    id?: number
+    name: string
+  }
+
+  export type TagCreateOrConnectWithoutQuestionsInput = {
+    where: TagWhereUniqueInput
+    create: XOR<TagCreateWithoutQuestionsInput, TagUncheckedCreateWithoutQuestionsInput>
+  }
+
+  export type QuestionUpsertWithoutTagsInput = {
+    update: XOR<QuestionUpdateWithoutTagsInput, QuestionUncheckedUpdateWithoutTagsInput>
+    create: XOR<QuestionCreateWithoutTagsInput, QuestionUncheckedCreateWithoutTagsInput>
+    where?: QuestionWhereInput
+  }
+
+  export type QuestionUpdateToOneWithWhereWithoutTagsInput = {
+    where?: QuestionWhereInput
+    data: XOR<QuestionUpdateWithoutTagsInput, QuestionUncheckedUpdateWithoutTagsInput>
+  }
+
+  export type QuestionUpdateWithoutTagsInput = {
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subject?: SubjectUpdateOneRequiredWithoutQuestionsNestedInput
+    topic?: TopicUpdateOneRequiredWithoutQuestionsNestedInput
+    options?: QuestionOptionUpdateManyWithoutQuestionNestedInput
+  }
+
+  export type QuestionUncheckedUpdateWithoutTagsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    subjectId?: IntFieldUpdateOperationsInput | number
+    topicId?: IntFieldUpdateOperationsInput | number
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
+  }
+
+  export type TagUpsertWithoutQuestionsInput = {
+    update: XOR<TagUpdateWithoutQuestionsInput, TagUncheckedUpdateWithoutQuestionsInput>
+    create: XOR<TagCreateWithoutQuestionsInput, TagUncheckedCreateWithoutQuestionsInput>
+    where?: TagWhereInput
+  }
+
+  export type TagUpdateToOneWithWhereWithoutQuestionsInput = {
+    where?: TagWhereInput
+    data: XOR<TagUpdateWithoutQuestionsInput, TagUncheckedUpdateWithoutQuestionsInput>
+  }
+
+  export type TagUpdateWithoutQuestionsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type TagUncheckedUpdateWithoutQuestionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
   }
 
   export type SessionCreateManyUserInput = {
@@ -21924,26 +32590,63 @@ export namespace Prisma {
   export type TopicCreateManySubjectInput = {
     id?: number
     name: string
+    isActive?: boolean
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuestionCreateManySubjectInput = {
+    id?: number
+    topicId: number
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuizCreateManySubjectInput = {
+    id?: number
+    title: string
+    topicId: number
+    examTag?: string | null
+    questionCount?: number | null
+    status?: $Enums.QuestionStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type TopicUpdateWithoutSubjectInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: QuestionUpdateManyWithoutTopicNestedInput
+    quizzes?: QuizUpdateManyWithoutTopicNestedInput
   }
 
   export type TopicUncheckedUpdateWithoutSubjectInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: QuestionUncheckedUpdateManyWithoutTopicNestedInput
+    quizzes?: QuizUncheckedUpdateManyWithoutTopicNestedInput
   }
 
   export type TopicUncheckedUpdateManyWithoutSubjectInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22002,6 +32705,189 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type QuestionUpdateWithoutSubjectInput = {
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topic?: TopicUpdateOneRequiredWithoutQuestionsNestedInput
+    options?: QuestionOptionUpdateManyWithoutQuestionNestedInput
+    tags?: QuestionTagUpdateManyWithoutQuestionNestedInput
+  }
+
+  export type QuestionUncheckedUpdateWithoutSubjectInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    topicId?: IntFieldUpdateOperationsInput | number
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
+    tags?: QuestionTagUncheckedUpdateManyWithoutQuestionNestedInput
+  }
+
+  export type QuestionUncheckedUpdateManyWithoutSubjectInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    topicId?: IntFieldUpdateOperationsInput | number
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuizUpdateWithoutSubjectInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    examTag?: NullableStringFieldUpdateOperationsInput | string | null
+    questionCount?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topic?: TopicUpdateOneRequiredWithoutQuizzesNestedInput
+    lesson?: LessonUpdateOneWithoutQuizNestedInput
+  }
+
+  export type QuizUncheckedUpdateWithoutSubjectInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    topicId?: IntFieldUpdateOperationsInput | number
+    examTag?: NullableStringFieldUpdateOperationsInput | string | null
+    questionCount?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lesson?: LessonUncheckedUpdateOneWithoutQuizNestedInput
+  }
+
+  export type QuizUncheckedUpdateManyWithoutSubjectInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    topicId?: IntFieldUpdateOperationsInput | number
+    examTag?: NullableStringFieldUpdateOperationsInput | string | null
+    questionCount?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuestionCreateManyTopicInput = {
+    id?: number
+    subjectId: number
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuizCreateManyTopicInput = {
+    id?: number
+    title: string
+    subjectId: number
+    examTag?: string | null
+    questionCount?: number | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QuestionUpdateWithoutTopicInput = {
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subject?: SubjectUpdateOneRequiredWithoutQuestionsNestedInput
+    options?: QuestionOptionUpdateManyWithoutQuestionNestedInput
+    tags?: QuestionTagUpdateManyWithoutQuestionNestedInput
+  }
+
+  export type QuestionUncheckedUpdateWithoutTopicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    subjectId?: IntFieldUpdateOperationsInput | number
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
+    tags?: QuestionTagUncheckedUpdateManyWithoutQuestionNestedInput
+  }
+
+  export type QuestionUncheckedUpdateManyWithoutTopicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    subjectId?: IntFieldUpdateOperationsInput | number
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuizUpdateWithoutTopicInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    examTag?: NullableStringFieldUpdateOperationsInput | string | null
+    questionCount?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subject?: SubjectUpdateOneRequiredWithoutQuizzesNestedInput
+    lesson?: LessonUpdateOneWithoutQuizNestedInput
+  }
+
+  export type QuizUncheckedUpdateWithoutTopicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    subjectId?: IntFieldUpdateOperationsInput | number
+    examTag?: NullableStringFieldUpdateOperationsInput | string | null
+    questionCount?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lesson?: LessonUncheckedUpdateOneWithoutQuizNestedInput
+  }
+
+  export type QuizUncheckedUpdateManyWithoutTopicInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    subjectId?: IntFieldUpdateOperationsInput | number
+    examTag?: NullableStringFieldUpdateOperationsInput | string | null
+    questionCount?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ChapterCreateManyCourseInput = {
     id?: number
     courseTypeId?: number | null
@@ -22017,7 +32903,7 @@ export namespace Prisma {
     description?: string | null
     status?: $Enums.CourseStatus
     accessType?: $Enums.AccessType
-    displayOrder?: number | null
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22059,22 +32945,32 @@ export namespace Prisma {
 
   export type SubjectUpdateWithoutCoursesInput = {
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUpdateManyWithoutSubjectNestedInput
+    questions?: QuestionUpdateManyWithoutSubjectNestedInput
+    quizzes?: QuizUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateWithoutCoursesInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUncheckedUpdateManyWithoutSubjectNestedInput
+    questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
+    quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateManyWithoutCoursesInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22112,7 +33008,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapters?: ChapterUpdateManyWithoutCourseTypeNestedInput
@@ -22125,7 +33021,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapters?: ChapterUncheckedUpdateManyWithoutCourseTypeNestedInput
@@ -22138,7 +33034,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    displayOrder?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22197,7 +33093,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subscriptions?: SubscriptionUpdateManyWithoutPlanNestedInput
-    lessons?: LessonUpdateManyWithoutPlanNestedInput
+    lessonPlans?: LessonPlanUpdateManyWithoutPlanNestedInput
   }
 
   export type PlanUncheckedUpdateWithoutCourseInput = {
@@ -22210,7 +33106,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutPlanNestedInput
-    lessons?: LessonUncheckedUpdateManyWithoutPlanNestedInput
+    lessonPlans?: LessonPlanUncheckedUpdateManyWithoutPlanNestedInput
   }
 
   export type PlanUncheckedUpdateManyWithoutCourseInput = {
@@ -22366,7 +33262,7 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
-    planId?: number | null
+    quizId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22389,7 +33285,8 @@ export namespace Prisma {
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    plan?: PlanUpdateOneWithoutLessonsNestedInput
+    quiz?: QuizUpdateOneWithoutLessonNestedInput
+    lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutChapterInput = {
@@ -22409,9 +33306,10 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    planId?: NullableIntFieldUpdateOperationsInput | number | null
+    quizId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateManyWithoutChapterInput = {
@@ -22431,9 +33329,25 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    planId?: NullableIntFieldUpdateOperationsInput | number | null
+    quizId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonPlanCreateManyLessonInput = {
+    planId: number
+  }
+
+  export type LessonPlanUpdateWithoutLessonInput = {
+    plan?: PlanUpdateOneRequiredWithoutLessonPlansNestedInput
+  }
+
+  export type LessonPlanUncheckedUpdateWithoutLessonInput = {
+    planId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type LessonPlanUncheckedUpdateManyWithoutLessonInput = {
+    planId?: IntFieldUpdateOperationsInput | number
   }
 
   export type SubscriptionCreateManyPlanInput = {
@@ -22446,26 +33360,8 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type LessonCreateManyPlanInput = {
-    id?: number
-    chapterId: number
-    title: string
-    description?: string | null
-    type: $Enums.LessonType
-    videoUrl?: string | null
-    videoPublicId?: string | null
-    thumbnailUrl?: string | null
-    thumbnailPublicId?: string | null
-    noteUrl?: string | null
-    notePublicId?: string | null
-    noteFileType?: string | null
-    content?: string | null
-    displayOrder?: number
-    isFreePreview?: boolean
-    accessType?: $Enums.AccessType
-    status?: $Enums.CourseStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
+  export type LessonPlanCreateManyPlanInput = {
+    lessonId: number
   }
 
   export type SubscriptionUpdateWithoutPlanInput = {
@@ -22497,69 +33393,79 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type LessonUpdateWithoutPlanInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
-    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
-    content?: NullableStringFieldUpdateOperationsInput | string | null
-    displayOrder?: IntFieldUpdateOperationsInput | number
-    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
-    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
+  export type LessonPlanUpdateWithoutPlanInput = {
+    lesson?: LessonUpdateOneRequiredWithoutLessonPlansNestedInput
   }
 
-  export type LessonUncheckedUpdateWithoutPlanInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    chapterId?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
-    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
-    content?: NullableStringFieldUpdateOperationsInput | string | null
-    displayOrder?: IntFieldUpdateOperationsInput | number
-    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
-    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type LessonPlanUncheckedUpdateWithoutPlanInput = {
+    lessonId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type LessonUncheckedUpdateManyWithoutPlanInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    chapterId?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
-    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
-    content?: NullableStringFieldUpdateOperationsInput | string | null
+  export type LessonPlanUncheckedUpdateManyWithoutPlanInput = {
+    lessonId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type QuestionOptionCreateManyQuestionInput = {
+    id?: number
+    optionText: string
+    optionImageUrl?: string | null
+    isCorrect?: boolean
+    displayOrder?: number
+  }
+
+  export type QuestionTagCreateManyQuestionInput = {
+    tagId: number
+  }
+
+  export type QuestionOptionUpdateWithoutQuestionInput = {
+    optionText?: StringFieldUpdateOperationsInput | string
+    optionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isCorrect?: BoolFieldUpdateOperationsInput | boolean
     displayOrder?: IntFieldUpdateOperationsInput | number
-    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
-    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QuestionOptionUncheckedUpdateWithoutQuestionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    optionText?: StringFieldUpdateOperationsInput | string
+    optionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isCorrect?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type QuestionOptionUncheckedUpdateManyWithoutQuestionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    optionText?: StringFieldUpdateOperationsInput | string
+    optionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isCorrect?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type QuestionTagUpdateWithoutQuestionInput = {
+    tag?: TagUpdateOneRequiredWithoutQuestionsNestedInput
+  }
+
+  export type QuestionTagUncheckedUpdateWithoutQuestionInput = {
+    tagId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type QuestionTagUncheckedUpdateManyWithoutQuestionInput = {
+    tagId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type QuestionTagCreateManyTagInput = {
+    questionId: number
+  }
+
+  export type QuestionTagUpdateWithoutTagInput = {
+    question?: QuestionUpdateOneRequiredWithoutTagsNestedInput
+  }
+
+  export type QuestionTagUncheckedUpdateWithoutTagInput = {
+    questionId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type QuestionTagUncheckedUpdateManyWithoutTagInput = {
+    questionId?: IntFieldUpdateOperationsInput | number
   }
 
 

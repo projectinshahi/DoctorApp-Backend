@@ -1,6 +1,7 @@
 const { PrismaClient } = require('../generated/prisma');
 const { PrismaPg } = require('@prisma/adapter-pg');
 const cloudinary = require('../config/cloudinary');
+const { questionPoolWhere } = require('./quiz.controller');
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -24,38 +25,149 @@ const LESSON_SELECT = {
   notePublicId: true,
   noteFileType: true,
   content: true,
+  quizId: true,
+  quiz: {
+    select: { id: true, title: true, subjectId: true, topicId: true, examTag: true, questionCount: true, status: true },
+  },
   displayOrder: true,
   isFreePreview: true,
   accessType: true,
   status: true,
-  planId: true,
-  plan: { select: { id: true, title: true, price: true, durationDays: true, isActive: true } },
+  lessonPlans: {
+    select: {
+      plan: { select: { id: true, title: true, description: true, price: true, durationDays: true, isActive: true } },
+    },
+  },
   createdAt: true,
   updatedAt: true,
 };
 
+// The join rows are a storage detail. Every response flattens them to
+// `plans` (full objects) + `planIds`, and keeps `planId` as the first id so
+// clients written against the single-plan API keep working.
+function shapeLesson(lesson) {
+  if (!lesson) return lesson;
+  const { lessonPlans = [], ...rest } = lesson;
+  const plans = lessonPlans.map((lp) => lp.plan);
+  return {
+    ...rest,
+    // Quiz lessons carry a Quiz ref; `content` stays in the schema for older
+    // rows but is no longer written for them.
+    quiz: rest.quiz ?? null,
+    plans,
+    planIds: plans.map((p) => p.id),
+    planId: plans.length ? plans[0].id : null,
+    plan: plans.length ? plans[0] : null,
+  };
+}
 
-async function validatePlanForLesson(planId, effectiveAccessType, chapterId) {
-  if (effectiveAccessType !== 'premium') {
-    return 'planId can only be set when accessType is premium';
-  }
 
-  const plan = await prisma.plan.findUnique({
-    where: { id: planId },
-    select: { id: true, courseId: true },
-  });
-  if (!plan) return `Plan ${planId} not found`;
-
+// A chapter hangs off either the course or a course type — resolve either way.
+async function resolveCourseIdForChapter(chapterId) {
   const chapter = await prisma.chapter.findUnique({
     where: { id: chapterId },
     select: { courseId: true, courseType: { select: { courseId: true } } },
   });
+  return chapter?.courseId ?? chapter?.courseType?.courseId ?? null;
+}
 
-  // A chapter hangs off either the course or a course type — resolve either way.
-  const courseId = chapter?.courseId ?? chapter?.courseType?.courseId ?? null;
+// Reads the plan selection off a request body.
+//   planIds: [2, 5]  -> the multi-plan shape
+//   planId: 2        -> legacy single plan, treated as a one-item list
+//   planId: null     -> explicit "any active subscription"
+// Returns { provided, ids, error }. `provided` is false when the body says
+// nothing about plans, so an update leaves the existing links alone.
+function readPlanIds(body) {
+  if (body.planIds !== undefined) {
+    if (body.planIds === null) return { provided: true, ids: [] };
+    if (!Array.isArray(body.planIds)) {
+      return { provided: true, ids: [], error: 'planIds must be an array of integers' };
+    }
+    const ids = [];
+    for (const raw of body.planIds) {
+      const id = Number(raw);
+      if (!Number.isInteger(id)) {
+        return { provided: true, ids: [], error: 'planIds must be an array of integers' };
+      }
+      if (!ids.includes(id)) ids.push(id);
+    }
+    return { provided: true, ids };
+  }
+
+  if (body.planId !== undefined) {
+    if (body.planId === null) return { provided: true, ids: [] };
+    const id = Number(body.planId);
+    if (!Number.isInteger(id)) {
+      return { provided: true, ids: [], error: 'planId must be an integer' };
+    }
+    return { provided: true, ids: [id] };
+  }
+
+  return { provided: false, ids: [] };
+}
+
+// Every selected plan must exist and belong to the lesson's own course, and
+// plans only mean anything on a premium lesson.
+async function validatePlansForLesson(planIds, effectiveAccessType, chapterId) {
+  if (planIds.length === 0) return null;
+
+  if (effectiveAccessType !== 'premium') {
+    return 'plans can only be set when accessType is premium';
+  }
+
+  const courseId = await resolveCourseIdForChapter(chapterId);
   if (courseId === null) return 'Cannot resolve the course for this lesson';
-  if (plan.courseId !== courseId) {
-    return `Plan ${planId} belongs to course ${plan.courseId}, but this lesson is in course ${courseId}`;
+
+  const plans = await prisma.plan.findMany({
+    where: { id: { in: planIds } },
+    select: { id: true, courseId: true },
+  });
+
+  const found = new Map(plans.map((p) => [p.id, p]));
+  for (const id of planIds) {
+    const plan = found.get(id);
+    if (!plan) return `Plan ${id} not found`;
+    if (plan.courseId !== courseId) {
+      return `Plan ${id} belongs to course ${plan.courseId}, but this lesson is in course ${courseId}`;
+    }
+  }
+
+  return null;
+}
+
+// Reads the quiz selection off a request body, matching readPlanIds' shape.
+//   quizId: 7    -> link this quiz
+//   quizId: null -> unlink
+// `provided` is false when the body says nothing, so an update leaves the
+// existing link alone.
+function readQuizId(body) {
+  if (body.quizId === undefined) return { provided: false, id: null };
+  if (body.quizId === null) return { provided: true, id: null };
+  const id = Number(body.quizId);
+  if (!Number.isInteger(id)) {
+    return { provided: true, id: null, error: 'quizId must be an integer or null' };
+  }
+  return { provided: true, id };
+}
+
+// A quiz only belongs on a quiz-type lesson, has to exist, has to be active,
+// and can only be served by one lesson (the column is unique — catch it here
+// rather than letting Prisma throw a raw constraint error).
+async function validateQuizForLesson(quizId, effectiveType, lessonId) {
+  if (quizId === null) return null;
+
+  if (effectiveType !== 'quiz') {
+    return "quizId can only be set when type is 'quiz'";
+  }
+
+  const quiz = await prisma.quiz.findUnique({
+    where: { id: quizId },
+    select: { id: true, status: true, lesson: { select: { id: true } } },
+  });
+  if (!quiz) return `Quiz ${quizId} not found`;
+  if (quiz.status !== 'active') return `Quiz ${quizId} is inactive`;
+  if (quiz.lesson && quiz.lesson.id !== lessonId) {
+    return `Quiz ${quizId} is already linked to lesson ${quiz.lesson.id}`;
   }
 
   return null;
@@ -69,7 +181,7 @@ async function createLesson(req, res) {
       title, description, type, videoUrl, videoPublicId,
       thumbnailUrl, thumbnailPublicId,
       noteUrl, notePublicId, noteFileType,
-      content, displayOrder, isFreePreview, accessType, status, planId,
+      content, displayOrder, isFreePreview, accessType, status,
     } = req.body;
 
     if (isNaN(chapterId)) {
@@ -101,14 +213,22 @@ async function createLesson(req, res) {
       return res.status(400).json({ error: { message: `status must be one of: ${VALID_STATUSES.join(', ')}` } });
     }
 
-    if (planId !== undefined && planId !== null) {
-      if (!Number.isInteger(Number(planId))) {
-        return res.status(400).json({ error: { message: 'planId must be an integer' } });
-      }
-      const planError = await validatePlanForLesson(Number(planId), accessType ?? 'free', chapterId);
-      if (planError) {
-        return res.status(400).json({ error: { message: planError } });
-      }
+    const selection = readPlanIds(req.body);
+    if (selection.error) {
+      return res.status(400).json({ error: { message: selection.error } });
+    }
+    const planError = await validatePlansForLesson(selection.ids, accessType ?? 'free', chapterId);
+    if (planError) {
+      return res.status(400).json({ error: { message: planError } });
+    }
+
+    const quizSelection = readQuizId(req.body);
+    if (quizSelection.error) {
+      return res.status(400).json({ error: { message: quizSelection.error } });
+    }
+    const quizError = await validateQuizForLesson(quizSelection.id, type, null);
+    if (quizError) {
+      return res.status(400).json({ error: { message: quizError } });
     }
 
     const lesson = await prisma.lesson.create({
@@ -124,17 +244,19 @@ async function createLesson(req, res) {
         noteUrl: noteUrl ?? null,
         notePublicId: notePublicId ?? null,
         noteFileType: noteFileType ?? null,
-        content: content ?? null,
+        // A quiz lesson's questions come from its Quiz, never from `content`.
+        content: type === 'quiz' ? null : (content ?? null),
+        quizId: quizSelection.id,
         displayOrder: displayOrder !== undefined ? Number(displayOrder) : 0,
         isFreePreview: Boolean(isFreePreview) || false,
         accessType: accessType ?? 'free',
         status: status ?? 'draft',
-        planId: planId !== undefined && planId !== null ? Number(planId) : null,
+        lessonPlans: { create: selection.ids.map((id) => ({ planId: id })) },
       },
       select: LESSON_SELECT,
     });
 
-    return res.status(201).json({ lesson });
+    return res.status(201).json({ lesson: shapeLesson(lesson) });
   } catch (error) {
     console.error('Create lesson error:', error);
     return res.status(500).json({ error: { message: 'Something went wrong while creating the lesson' } });
@@ -173,7 +295,27 @@ async function getLesson(req, res) {
       return res.status(404).json({ error: { message: 'Lesson not found' } });
     }
 
-    return res.status(200).json({ lesson });
+    const shaped = shapeLesson(lesson);
+
+    // A quiz lesson's screen needs to know how many questions the filter
+    // actually matches — otherwise the admin has to guess whether the quiz is
+    // servable. Only costs a count, and only when there is a quiz.
+    if (shaped.quiz) {
+      const availableQuestions = await prisma.question.count({
+        where: questionPoolWhere(shaped.quiz),
+      });
+      shaped.quiz = {
+        ...shaped.quiz,
+        availableQuestions,
+        servedQuestions: shaped.quiz.questionCount
+          ? Math.min(shaped.quiz.questionCount, availableQuestions)
+          : availableQuestions,
+        isUnderfilled:
+          shaped.quiz.questionCount != null && availableQuestions < shaped.quiz.questionCount,
+      };
+    }
+
+    return res.status(200).json({ lesson: shaped });
   } catch (error) {
     console.error('Get lesson error:', error);
     return res.status(500).json({ error: { message: 'Something went wrong while fetching the lesson' } });
@@ -201,7 +343,7 @@ async function getLessonsByChapter(req, res) {
       select: LESSON_SELECT,
     });
 
-    return res.status(200).json({ lessons });
+    return res.status(200).json({ lessons: lessons.map(shapeLesson) });
   } catch (error) {
     console.error('Get lessons by chapter error:', error);
     return res.status(500).json({ error: { message: 'Something went wrong while fetching lessons' } });
@@ -225,7 +367,7 @@ async function updateLesson(req, res) {
       title, description, type, videoUrl, videoPublicId,
       thumbnailUrl, thumbnailPublicId,
       noteUrl, notePublicId, noteFileType,
-      content, displayOrder, isFreePreview, accessType, status, planId,
+      content, displayOrder, isFreePreview, accessType, status,
     } = req.body;
 
     const data = {};
@@ -265,26 +407,53 @@ async function updateLesson(req, res) {
       data.status = status;
     }
 
-    // planId and accessType interact, so resolve them together against whatever
+    // Plans and accessType interact, so resolve them together against whatever
     // the lesson will look like *after* this update, not what it looks like now.
     const effectiveAccessType = accessType !== undefined ? accessType : existing.accessType;
 
-    if (planId !== undefined) {
-      if (planId === null) {
-        data.planId = null;
-      } else {
-        if (!Number.isInteger(Number(planId))) {
-          return res.status(400).json({ error: { message: 'planId must be an integer' } });
-        }
-        const planError = await validatePlanForLesson(Number(planId), effectiveAccessType, existing.chapterId);
-        if (planError) {
-          return res.status(400).json({ error: { message: planError } });
-        }
-        data.planId = Number(planId);
+    const selection = readPlanIds(req.body);
+    if (selection.error) {
+      return res.status(400).json({ error: { message: selection.error } });
+    }
+
+    let nextPlanIds = null; // null = leave the existing links untouched
+    if (selection.provided) {
+      const planError = await validatePlansForLesson(selection.ids, effectiveAccessType, existing.chapterId);
+      if (planError) {
+        return res.status(400).json({ error: { message: planError } });
       }
-    } else if (effectiveAccessType !== 'premium' && existing.planId !== null) {
-      // Demoted to free while still carrying a plan — drop the now-meaningless link.
-      data.planId = null;
+      nextPlanIds = selection.ids;
+    } else if (effectiveAccessType !== 'premium') {
+      // Demoted to free while still carrying plans — drop the now-meaningless links.
+      nextPlanIds = [];
+    }
+
+    // Same deal as plans: resolve the quiz against the post-update type.
+    const effectiveType = type !== undefined ? type : existing.type;
+
+    const quizSelection = readQuizId(req.body);
+    if (quizSelection.error) {
+      return res.status(400).json({ error: { message: quizSelection.error } });
+    }
+
+    if (quizSelection.provided) {
+      const quizError = await validateQuizForLesson(quizSelection.id, effectiveType, lessonId);
+      if (quizError) {
+        return res.status(400).json({ error: { message: quizError } });
+      }
+      data.quizId = quizSelection.id;
+    } else if (effectiveType !== 'quiz' && existing.quizId !== null) {
+      // Retyped away from quiz while still linked — drop the dangling link.
+      data.quizId = null;
+    }
+
+    if (nextPlanIds !== null) {
+      // Replace wholesale: the client always sends the full selection, so a
+      // diff would only be more code for the same result.
+      data.lessonPlans = {
+        deleteMany: {},
+        create: nextPlanIds.map((id) => ({ planId: id })),
+      };
     }
 
     // Cleanup old Cloudinary files when they're being replaced or removed
@@ -319,7 +488,9 @@ async function updateLesson(req, res) {
     if (noteUrl !== undefined) data.noteUrl = noteUrl;
     if (notePublicId !== undefined) data.notePublicId = notePublicId;
     if (noteFileType !== undefined) data.noteFileType = noteFileType;
-    if (content !== undefined) data.content = content;
+    // `content` is kept in the schema for older rows, but a quiz lesson's
+    // questions live on its Quiz, so stop writing content for that type.
+    if (content !== undefined && effectiveType !== 'quiz') data.content = content;
     if (displayOrder !== undefined) data.displayOrder = Number(displayOrder);
     if (isFreePreview !== undefined) data.isFreePreview = Boolean(isFreePreview);
 
@@ -329,7 +500,7 @@ async function updateLesson(req, res) {
       select: LESSON_SELECT,
     });
 
-    return res.status(200).json({ lesson });
+    return res.status(200).json({ lesson: shapeLesson(lesson) });
   } catch (error) {
     console.error('Update lesson error:', error);
     return res.status(500).json({ error: { message: 'Something went wrong while updating the lesson' } });
@@ -384,6 +555,60 @@ async function deleteLesson(req, res) {
 
 
 
+// GET /api/lessons/:id/plans
+// Everything the admin panel's plan picker needs in one call: the plans that
+// belong to this lesson's course, and which ones are currently attached.
+// Inactive plans are still listed, flagged, so an already-attached plan that
+// was later deactivated doesn't silently vanish from the picker.
+async function getLessonPlans(req, res) {
+  try {
+    const lessonId = Number(req.params.id);
+    if (!Number.isInteger(lessonId)) {
+      return res.status(400).json({ error: { message: 'Invalid lesson id' } });
+    }
+
+    const lesson = await prisma.lesson.findUnique({
+      where: { id: lessonId },
+      select: {
+        id: true,
+        chapterId: true,
+        accessType: true,
+        lessonPlans: { select: { planId: true } },
+      },
+    });
+    if (!lesson) {
+      return res.status(404).json({ error: { message: 'Lesson not found' } });
+    }
+
+    const courseId = await resolveCourseIdForChapter(lesson.chapterId);
+    if (courseId === null) {
+      return res.status(409).json({
+        error: { message: "This lesson's chapter is not linked to a course or course type" },
+      });
+    }
+
+    const plans = await prisma.plan.findMany({
+      where: { courseId },
+      orderBy: { price: 'asc' },
+      select: { id: true, title: true, description: true, price: true, durationDays: true, isActive: true },
+    });
+
+    return res.status(200).json({
+      lessonId: lesson.id,
+      courseId,
+      accessType: lesson.accessType,
+      planSelectable: lesson.accessType === 'premium', // show the picker only when true
+      selectedPlanIds: lesson.lessonPlans.map((lp) => lp.planId),
+      // Legacy single-plan field, kept for older clients.
+      selectedPlanId: lesson.lessonPlans.length ? lesson.lessonPlans[0].planId : null,
+      plans,
+    });
+  } catch (error) {
+    console.error('Get lesson plans error:', error);
+    return res.status(500).json({ error: { message: 'Something went wrong while fetching plans for this lesson' } });
+  }
+}
+
 async function reorderLessons(req, res) {
   try {
     const chapterId = Number(req.params.chapterId);
@@ -432,7 +657,7 @@ async function reorderLessons(req, res) {
       select: LESSON_SELECT,
     });
 
-    return res.status(200).json({ lessons });
+    return res.status(200).json({ lessons: lessons.map(shapeLesson) });
   } catch (error) {
     console.error('Reorder lessons error:', error);
     return res.status(500).json({ error: { message: 'Something went wrong while reordering lessons' } });
@@ -446,4 +671,5 @@ module.exports = {
   updateLesson,
   deleteLesson,
   reorderLessons,
+  getLessonPlans,
 };
