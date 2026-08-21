@@ -439,7 +439,7 @@
           }
         },
         {
-          "name": "Delete question (expected 409 \u2014 deactivate instead)",
+          "name": "Delete question (200 \u2014 pools shrink, nothing dangles)",
           "request": {
             "method": "DELETE",
             "url": {
@@ -452,7 +452,8 @@
                 "questions",
                 "{{questionId}}"
               ]
-            }
+            },
+            "description": "Returns 200 with { message, questionId, affectedQuizzes }.\n\nIt used to 409 on the assumption that quizzes hold references to question rows. They hold a filter (subject + topic + optional exam tag) resolved at serve time, so deleting cannot dangle anything \u2014 the matching quiz pools just shrink by one. affectedQuizzes tells you how many shrank.\n\nPrefer PATCH /status -> inactive when you may want the question back: delete cascades its options and tags and is not recoverable."
           }
         }
       ]
