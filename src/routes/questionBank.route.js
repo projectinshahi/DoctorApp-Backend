@@ -8,6 +8,7 @@ const {
   deleteQuestion,
   activateOrDeactivateQuestion,
   bulkActivateOrDeactivate,
+  bulkCreateQuestions,
   duplicateQuestion,
 } = require('../controllers/questionBank.controller');
 const { updateTopic } = require('../controllers/subject.controller');
@@ -16,6 +17,7 @@ const authenticateAdmin = require('../middleware/authenticateAdmin');
 // Literal paths before parameterised ones, so /questions/bulk-status is never
 // swallowed by /questions/:id.
 router.patch('/questions/bulk-status', authenticateAdmin, bulkActivateOrDeactivate);
+router.post('/questions/bulk', authenticateAdmin, bulkCreateQuestions);
 
 router.post('/questions', authenticateAdmin, createQuestion);
 router.get('/questions', authenticateAdmin, listQuestions);

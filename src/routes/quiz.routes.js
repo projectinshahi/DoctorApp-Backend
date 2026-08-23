@@ -8,6 +8,10 @@ const {
   deleteQuiz,
   serveLessonQuizQuestions,
   previewQuizQuestions,
+  listQuizQuestions,
+  setQuizQuestions,
+  addQuizQuestions,
+  removeQuizQuestion,
 } = require('../controllers/quiz.controller');
 const authenticateAdmin = require('../middleware/authenticateAdmin');
 
@@ -16,6 +20,12 @@ router.get('/quizzes', authenticateAdmin, listQuizzes);
 router.get('/quizzes/:id', authenticateAdmin, getQuiz);
 // Answer-key preview for the admin, before publishing the lesson that serves it.
 router.get('/quizzes/:id/preview', authenticateAdmin, previewQuizQuestions);
+
+// Pinned questions. A quiz with none of these keeps using its filter.
+router.get('/quizzes/:id/questions', authenticateAdmin, listQuizQuestions);
+router.put('/quizzes/:id/questions', authenticateAdmin, setQuizQuestions);
+router.post('/quizzes/:id/questions', authenticateAdmin, addQuizQuestions);
+router.delete('/quizzes/:id/questions/:questionId', authenticateAdmin, removeQuizQuestion);
 router.patch('/quizzes/:id', authenticateAdmin, updateQuiz);
 router.delete('/quizzes/:id', authenticateAdmin, deleteQuiz);
 

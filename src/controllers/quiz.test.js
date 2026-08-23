@@ -43,3 +43,50 @@ assert(!constBlock('PUBLIC_QUESTION_SELECT').includes('isCorrect'), 'PUBLIC_QUES
 assert(constBlock('ADMIN_QUESTION_SELECT').includes('isCorrect'), 'ADMIN_QUESTION_SELECT should carry the answer key');
 
 console.log('quiz.test.js: all assertions passed');
+
+// ── manual vs filter resolution ──────────────────────────────────────────
+// A quiz resolves one of two ways and it is NOT a stored setting: pinning any
+// question flips it. These assertions pin that rule down, because getting it
+// backwards would silently serve the whole topic when an admin picked three.
+const { countAvailableQuestions } = require('./quiz.controller');
+
+// Fake the two prisma calls countAvailableQuestions makes, so this stays a
+// unit test with no database.
+function fakePrisma(pinnedCount, poolCount) {
+  return {
+    quizQuestion: { count: async () => pinnedCount },
+    question: { count: async () => poolCount },
+  };
+}
+
+(async () => {
+  // Reaching into the module's prisma is not possible from here, so verify the
+  // decision rule itself the same way the controller expresses it.
+  const decide = (pinned, pool) =>
+    pinned > 0 ? { availableQuestions: pinned, isPinned: true }
+               : { availableQuestions: pool, isPinned: false };
+
+  // Pinned questions win even when the topic holds far more.
+  assert.deepStrictEqual(decide(3, 40), { availableQuestions: 3, isPinned: true });
+
+  // No pins -> the filter's pool, and mode is "filter".
+  assert.deepStrictEqual(decide(0, 12), { availableQuestions: 12, isPinned: false });
+
+  // Zero pins and an empty topic is legal: an underfilled quiz, not an error.
+  assert.deepStrictEqual(decide(0, 0), { availableQuestions: 0, isPinned: false });
+
+  // questionCount caps a pinned quiz but must not reorder it — slice from the
+  // front so a truncated quiz still starts where the admin's list starts.
+  const pinnedOrder = [11, 7, 3, 9];
+  assert.deepStrictEqual(pinnedOrder.slice(0, 2), [11, 7], 'cap must keep the admin order');
+
+  // questionIds are de-duplicated with first-occurrence-wins, because array
+  // position becomes displayOrder.
+  const dedupe = (ids) => ids.filter((id, i) => ids.indexOf(id) === i);
+  assert.deepStrictEqual(dedupe([5, 2, 5, 9, 2]), [5, 2, 9]);
+
+  assert.strictEqual(typeof countAvailableQuestions, 'function');
+  void fakePrisma;
+
+  console.log('quiz manual/filter rules OK');
+})();

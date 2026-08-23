@@ -178,11 +178,15 @@ async function getQuiz(req, res) {
       return res.status(404).json({ error: { message: 'Quiz not found' } });
     }
 
-    const availableQuestions = await prisma.question.count({ where: questionPoolWhere(quiz) });
+    const { availableQuestions, isPinned } = await countAvailableQuestions(quiz);
 
     return res.status(200).json({
       quiz: {
         ...quiz,
+        // "manual" means the admin pinned specific questions; "filter" means it
+        // takes whatever matches subject+topic+examTag. The client needs this to
+        // know whether a question picker or a filter editor is the right UI.
+        mode: isPinned ? 'manual' : 'filter',
         availableQuestions,
         // Flags a quiz that promises more questions than the bank can supply.
         servedQuestions: quiz.questionCount
@@ -319,7 +323,33 @@ const ADMIN_QUESTION_SELECT = {
 // Resolves a quiz's filter into the actual question rows. One place, so the
 // admin preview and the student serve can never drift apart on which
 // questions a quiz means.
+/**
+ * A quiz resolves one of two ways, and which one is not a setting — it is
+ * whether the admin pinned any questions.
+ *
+ *   pinned rows exist -> serve exactly those, in the admin's order
+ *   none              -> fall back to the subject+topic+examTag filter
+ *
+ * The fallback is what every spreadsheet-built quiz uses, so pinning is purely
+ * additive: an existing quiz keeps behaving identically until someone picks
+ * questions for it.
+ */
 async function resolveQuizQuestions(quiz, { includeAnswers = false } = {}) {
+  const select = includeAnswers ? ADMIN_QUESTION_SELECT : PUBLIC_QUESTION_SELECT;
+
+  const pinned = await prisma.quizQuestion.findMany({
+    where: { quizId: quiz.id, question: { status: 'active' } },
+    orderBy: [{ displayOrder: 'asc' }, { questionId: 'asc' }],
+    select: { question: { select } },
+  });
+
+  if (pinned.length > 0) {
+    // questionCount still caps a pinned quiz, but never reshuffles it — the
+    // admin chose an order and a truncated quiz must respect its own start.
+    const questions = pinned.map((row) => row.question);
+    return quiz.questionCount ? questions.slice(0, quiz.questionCount) : questions;
+  }
+
   const poolWhere = questionPoolWhere(quiz);
 
   // A count-capped quiz samples ids first; an uncapped one takes the whole
@@ -330,9 +360,20 @@ async function resolveQuizQuestions(quiz, { includeAnswers = false } = {}) {
 
   return prisma.question.findMany({
     where,
-    select: includeAnswers ? ADMIN_QUESTION_SELECT : PUBLIC_QUESTION_SELECT,
+    select,
     orderBy: { id: 'asc' },
   });
+}
+
+/** How many active questions a quiz can draw on, whichever mode it is in. */
+async function countAvailableQuestions(quiz) {
+  const pinned = await prisma.quizQuestion.count({
+    where: { quizId: quiz.id, question: { status: 'active' } },
+  });
+  if (pinned > 0) return { availableQuestions: pinned, isPinned: true };
+
+  const availableQuestions = await prisma.question.count({ where: questionPoolWhere(quiz) });
+  return { availableQuestions, isPinned: false };
 }
 
 // Picks `count` ids out of the pool at random.
@@ -436,7 +477,183 @@ async function previewQuizQuestions(req, res) {
   }
 }
 
+// ─────────────────── pinned questions (manual quizzes) ───────────────────
+
+/**
+ * Reads a questionIds array and checks every id exists. Returns them
+ * de-duplicated in the caller's order, because that order becomes displayOrder.
+ */
+async function readQuestionIds(body) {
+  const { questionIds } = body;
+  if (!Array.isArray(questionIds)) {
+    return { error: 'questionIds must be an array' };
+  }
+
+  const ids = [];
+  for (const raw of questionIds) {
+    const id = Number(raw);
+    if (!Number.isInteger(id)) return { error: `questionIds must contain integers, got ${JSON.stringify(raw)}` };
+    if (!ids.includes(id)) ids.push(id);   // first occurrence wins the position
+  }
+
+  if (ids.length === 0) return { ids: [] };
+
+  const found = await prisma.question.findMany({ where: { id: { in: ids } }, select: { id: true } });
+  const foundIds = new Set(found.map((q) => q.id));
+  const missing = ids.filter((id) => !foundIds.has(id));
+  if (missing.length > 0) {
+    return { error: `Questions not found: ${missing.join(', ')}` };
+  }
+
+  return { ids };
+}
+
+// GET /api/quizzes/:id/questions
+// The admin's editing view of a manual quiz: every pinned question with its
+// answer key, in the pinned order. A filter quiz returns an empty list and
+// mode "filter" — it has nothing pinned to edit.
+async function listQuizQuestions(req, res) {
+  try {
+    const quizId = Number(req.params.id);
+    if (!Number.isInteger(quizId)) {
+      return res.status(400).json({ error: { message: 'Invalid quiz id' } });
+    }
+
+    const quiz = await prisma.quiz.findUnique({ where: { id: quizId }, select: QUIZ_SELECT });
+    if (!quiz) return res.status(404).json({ error: { message: 'Quiz not found' } });
+
+    const rows = await prisma.quizQuestion.findMany({
+      where: { quizId },
+      orderBy: [{ displayOrder: 'asc' }, { questionId: 'asc' }],
+      select: { displayOrder: true, question: { select: ADMIN_QUESTION_SELECT } },
+    });
+
+    return res.status(200).json({
+      quizId,
+      mode: rows.length > 0 ? 'manual' : 'filter',
+      totalQuestions: rows.length,
+      questions: rows.map((row) => ({ ...row.question, displayOrder: row.displayOrder })),
+    });
+  } catch (error) {
+    console.error('List quiz questions error:', error);
+    return res.status(500).json({ error: { message: 'Something went wrong while fetching quiz questions' } });
+  }
+}
+
+// PUT /api/quizzes/:id/questions   body: { questionIds: [...] }
+// Replaces the whole pinned set. Array order becomes display order, so this is
+// also how reordering works — send the full list in the order you want.
+// An empty array unpins everything and returns the quiz to filter mode.
+async function setQuizQuestions(req, res) {
+  try {
+    const quizId = Number(req.params.id);
+    if (!Number.isInteger(quizId)) {
+      return res.status(400).json({ error: { message: 'Invalid quiz id' } });
+    }
+
+    const quiz = await prisma.quiz.findUnique({ where: { id: quizId }, select: { id: true } });
+    if (!quiz) return res.status(404).json({ error: { message: 'Quiz not found' } });
+
+    const parsed = await readQuestionIds(req.body);
+    if (parsed.error) return res.status(400).json({ error: { message: parsed.error } });
+
+    // Replace wholesale inside a transaction: a half-applied reorder would
+    // leave the quiz serving a mix of the old and new sets.
+    await prisma.$transaction([
+      prisma.quizQuestion.deleteMany({ where: { quizId } }),
+      prisma.quizQuestion.createMany({
+        data: parsed.ids.map((questionId, index) => ({ quizId, questionId, displayOrder: index })),
+      }),
+    ]);
+
+    return res.status(200).json({
+      quizId,
+      mode: parsed.ids.length > 0 ? 'manual' : 'filter',
+      totalQuestions: parsed.ids.length,
+      questionIds: parsed.ids,
+    });
+  } catch (error) {
+    console.error('Set quiz questions error:', error);
+    return res.status(500).json({ error: { message: 'Something went wrong while setting quiz questions' } });
+  }
+}
+
+// POST /api/quizzes/:id/questions   body: { questionIds: [...] }
+// Appends to the end of the pinned set, skipping ids already pinned.
+async function addQuizQuestions(req, res) {
+  try {
+    const quizId = Number(req.params.id);
+    if (!Number.isInteger(quizId)) {
+      return res.status(400).json({ error: { message: 'Invalid quiz id' } });
+    }
+
+    const quiz = await prisma.quiz.findUnique({ where: { id: quizId }, select: { id: true } });
+    if (!quiz) return res.status(404).json({ error: { message: 'Quiz not found' } });
+
+    const parsed = await readQuestionIds(req.body);
+    if (parsed.error) return res.status(400).json({ error: { message: parsed.error } });
+
+    const existing = await prisma.quizQuestion.findMany({
+      where: { quizId },
+      select: { questionId: true, displayOrder: true },
+    });
+    const alreadyPinned = new Set(existing.map((row) => row.questionId));
+    const nextOrder = existing.reduce((max, row) => Math.max(max, row.displayOrder + 1), 0);
+
+    const toAdd = parsed.ids.filter((id) => !alreadyPinned.has(id));
+    if (toAdd.length > 0) {
+      await prisma.quizQuestion.createMany({
+        data: toAdd.map((questionId, index) => ({ quizId, questionId, displayOrder: nextOrder + index })),
+      });
+    }
+
+    return res.status(200).json({
+      quizId,
+      added: toAdd.length,
+      skipped: parsed.ids.length - toAdd.length,
+      totalQuestions: alreadyPinned.size + toAdd.length,
+    });
+  } catch (error) {
+    console.error('Add quiz questions error:', error);
+    return res.status(500).json({ error: { message: 'Something went wrong while adding quiz questions' } });
+  }
+}
+
+// DELETE /api/quizzes/:id/questions/:questionId
+// Unpins one question. The question itself is untouched — it stays in the bank
+// and in any other quiz that pinned it.
+async function removeQuizQuestion(req, res) {
+  try {
+    const quizId = Number(req.params.id);
+    const questionId = Number(req.params.questionId);
+    if (!Number.isInteger(quizId) || !Number.isInteger(questionId)) {
+      return res.status(400).json({ error: { message: 'Invalid quiz or question id' } });
+    }
+
+    const removed = await prisma.quizQuestion.deleteMany({ where: { quizId, questionId } });
+    if (removed.count === 0) {
+      return res.status(404).json({ error: { message: 'That question is not pinned to this quiz' } });
+    }
+
+    const remaining = await prisma.quizQuestion.count({ where: { quizId } });
+    return res.status(200).json({
+      quizId,
+      questionId,
+      totalQuestions: remaining,
+      // Unpinning the last one hands the quiz back to its filter.
+      mode: remaining > 0 ? 'manual' : 'filter',
+    });
+  } catch (error) {
+    console.error('Remove quiz question error:', error);
+    return res.status(500).json({ error: { message: 'Something went wrong while removing the question' } });
+  }
+}
+
 module.exports = {
+  listQuizQuestions,
+  setQuizQuestions,
+  addQuizQuestions,
+  removeQuizQuestion,
   createQuiz,
   listQuizzes,
   getQuiz,
@@ -446,6 +663,7 @@ module.exports = {
   previewQuizQuestions,
   // Reused by selected-course.controller.js for the student-facing serve.
   resolveQuizQuestions,
+  countAvailableQuestions,
   // Exported for quiz.test.js — pure, no DB.
   questionPoolWhere,
   readExamTag,

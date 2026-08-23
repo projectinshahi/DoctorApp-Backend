@@ -176,13 +176,20 @@ async function countQuizUsage(questionId) {
   });
   if (!question) return 0;
 
-  return prisma.quiz.count({
-    where: quizzesMatchingQuestionWhere({
-      subjectId: question.subjectId,
-      topicId: question.topicId,
-      tagNames: question.tags.map((qt) => qt.tag.name),
+  // A quiz that pinned this question explicitly is affected regardless of its
+  // filter, so both routes count.
+  const [pinned, matchedByFilter] = await Promise.all([
+    prisma.quizQuestion.count({ where: { questionId } }),
+    prisma.quiz.count({
+      where: quizzesMatchingQuestionWhere({
+        subjectId: question.subjectId,
+        topicId: question.topicId,
+        tagNames: question.tags.map((qt) => qt.tag.name),
+      }),
     }),
-  });
+  ]);
+
+  return pinned + matchedByFilter;
 }
 
 /**
@@ -210,72 +217,80 @@ function tagCreatePayload(names) {
 
 // ─────────────────────────── questions ───────────────────────────
 
+/**
+ * Validates one question payload and returns the exact `data` object for
+ * prisma.question.create. Shared by the single and bulk create endpoints so a
+ * batch can never accept something a single create would reject.
+ */
+async function buildQuestionCreateData(body) {
+  const {
+    subjectId, topicId, questionText, questionImageUrl,
+    difficulty, marksCorrect, marksIncorrect, explanation, status,
+  } = body;
+
+  if (!questionText || typeof questionText !== 'string' || questionText.trim().length === 0) {
+    return { error: 'questionText is required' };
+  }
+
+  if (questionImageUrl !== undefined && questionImageUrl !== null && typeof questionImageUrl !== 'string') {
+    return { error: 'questionImageUrl must be a string' };
+  }
+
+  if (!difficulty || !VALID_DIFFICULTIES.includes(difficulty)) {
+    return { error: `difficulty must be one of: ${VALID_DIFFICULTIES.join(', ')}` };
+  }
+
+  if (status !== undefined && !VALID_QUESTION_STATUSES.includes(status)) {
+    return { error: `status must be one of: ${VALID_QUESTION_STATUSES.join(', ')}` };
+  }
+
+  if (explanation !== undefined && explanation !== null && typeof explanation !== 'string') {
+    return { error: 'explanation must be a string' };
+  }
+
+  const taxonomyError = await validateSubjectAndTopic(Number(subjectId), Number(topicId));
+  if (taxonomyError) return { error: taxonomyError };
+
+  const correct = readMarks(marksCorrect, 'marksCorrect', { required: true });
+  if (correct.error) return { error: correct.error };
+
+  const incorrect = readMarks(marksIncorrect, 'marksIncorrect', { required: false });
+  if (incorrect.error) return { error: incorrect.error };
+
+  const optionSelection = readOptions(body);
+  if (optionSelection.error) return { error: optionSelection.error };
+  if (!optionSelection.provided) return { error: 'options are required' };
+
+  const tagSelection = readTagNames(body);
+  if (tagSelection.error) return { error: tagSelection.error };
+
+  return {
+    data: {
+      subjectId: Number(subjectId),
+      topicId: Number(topicId),
+      questionText: questionText.trim(),
+      questionImageUrl: questionImageUrl ?? null,
+      difficulty,
+      marksCorrect: correct.value,
+      marksIncorrect: incorrect.skip ? 0 : incorrect.value,
+      explanation: explanation !== undefined ? explanation : null,
+      status: status ?? 'active',
+      options: { create: optionSelection.options },
+      tags: { create: tagCreatePayload(tagSelection.names) },
+    },
+  };
+}
+
 // POST /api/questions
 async function createQuestion(req, res) {
   try {
-    const {
-      subjectId, topicId, questionText, questionImageUrl,
-      difficulty, marksCorrect, marksIncorrect, explanation, status,
-    } = req.body;
-
-    if (!questionText || typeof questionText !== 'string' || questionText.trim().length === 0) {
-      return res.status(400).json({ error: { message: 'questionText is required' } });
-    }
-
-    if (questionImageUrl !== undefined && questionImageUrl !== null && typeof questionImageUrl !== 'string') {
-      return res.status(400).json({ error: { message: 'questionImageUrl must be a string' } });
-    }
-
-    if (!difficulty || !VALID_DIFFICULTIES.includes(difficulty)) {
-      return res.status(400).json({ error: { message: `difficulty must be one of: ${VALID_DIFFICULTIES.join(', ')}` } });
-    }
-
-    if (status !== undefined && !VALID_QUESTION_STATUSES.includes(status)) {
-      return res.status(400).json({ error: { message: `status must be one of: ${VALID_QUESTION_STATUSES.join(', ')}` } });
-    }
-
-    if (explanation !== undefined && explanation !== null && typeof explanation !== 'string') {
-      return res.status(400).json({ error: { message: 'explanation must be a string' } });
-    }
-
-    const taxonomyError = await validateSubjectAndTopic(Number(subjectId), Number(topicId));
-    if (taxonomyError) {
-      return res.status(400).json({ error: { message: taxonomyError } });
-    }
-
-    const correct = readMarks(marksCorrect, 'marksCorrect', { required: true });
-    if (correct.error) return res.status(400).json({ error: { message: correct.error } });
-
-    const incorrect = readMarks(marksIncorrect, 'marksIncorrect', { required: false });
-    if (incorrect.error) return res.status(400).json({ error: { message: incorrect.error } });
-
-    const optionSelection = readOptions(req.body);
-    if (optionSelection.error) {
-      return res.status(400).json({ error: { message: optionSelection.error } });
-    }
-    if (!optionSelection.provided) {
-      return res.status(400).json({ error: { message: 'options are required' } });
-    }
-
-    const tagSelection = readTagNames(req.body);
-    if (tagSelection.error) {
-      return res.status(400).json({ error: { message: tagSelection.error } });
+    const built = await buildQuestionCreateData(req.body);
+    if (built.error) {
+      return res.status(400).json({ error: { message: built.error } });
     }
 
     const question = await prisma.question.create({
-      data: {
-        subjectId: Number(subjectId),
-        topicId: Number(topicId),
-        questionText: questionText.trim(),
-        questionImageUrl: questionImageUrl ?? null,
-        difficulty,
-        marksCorrect: correct.value,
-        marksIncorrect: incorrect.skip ? 0 : incorrect.value,
-        explanation: explanation !== undefined ? explanation : null,
-        status: status ?? 'active',
-        options: { create: optionSelection.options },
-        tags: { create: tagCreatePayload(tagSelection.names) },
-      },
+      data: built.data,
       select: QUESTION_SELECT,
     });
 
@@ -407,6 +422,59 @@ async function getQuestion(req, res) {
   } catch (error) {
     console.error('Get question error:', error);
     return res.status(500).json({ error: { message: 'Something went wrong while fetching the question' } });
+  }
+}
+
+// POST /api/questions/bulk   body: { questions: [ {...}, {...} ] }
+// One request for a whole form's worth of questions. All-or-nothing: if any
+// row is invalid nothing is written, and the response says which index failed
+// and why, so the admin panel can mark that card red instead of guessing.
+const MAX_BULK_QUESTIONS = 100;
+
+async function bulkCreateQuestions(req, res) {
+  try {
+    const { questions } = req.body;
+
+    if (!Array.isArray(questions) || questions.length === 0) {
+      return res.status(400).json({ error: { message: 'questions must be a non-empty array' } });
+    }
+    if (questions.length > MAX_BULK_QUESTIONS) {
+      return res.status(400).json({
+        error: { message: `A bulk create accepts at most ${MAX_BULK_QUESTIONS} questions, got ${questions.length}` },
+      });
+    }
+
+    // Validate everything before writing anything.
+    const rows = [];
+    const problems = [];
+    for (let index = 0; index < questions.length; index += 1) {
+      const built = await buildQuestionCreateData(questions[index] || {});
+      if (built.error) problems.push({ index, message: built.error });
+      else rows.push(built.data);
+    }
+
+    if (problems.length > 0) {
+      return res.status(400).json({
+        error: { message: `${problems.length} of ${questions.length} question(s) are invalid. Nothing was saved.` },
+        problems,
+      });
+    }
+
+    // createMany cannot write the nested options and tags, so this is one
+    // create per row inside a transaction — still a single round trip from the
+    // client, and still all-or-nothing.
+    const created = await prisma.$transaction(
+      rows.map((data) => prisma.question.create({ data, select: QUESTION_SELECT })),
+    );
+
+    return res.status(201).json({
+      created: created.length,
+      questions: created.map(shapeQuestion),
+      questionIds: created.map((q) => q.id),
+    });
+  } catch (error) {
+    console.error('Bulk create questions error:', error);
+    return res.status(500).json({ error: { message: 'Something went wrong while creating the questions' } });
   }
 }
 
@@ -685,6 +753,7 @@ async function duplicateQuestion(req, res) {
 }
 
 module.exports = {
+  bulkCreateQuestions,
   // Exported for questionBank.test.js — pure, no DB.
   quizzesMatchingQuestionWhere,
   createQuestion,

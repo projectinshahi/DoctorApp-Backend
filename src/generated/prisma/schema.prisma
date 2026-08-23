@@ -300,9 +300,9 @@ model Question {
   options QuestionOption[]
   tags    QuestionTag[]
 
-  // TODO(quiz-module): add `quizQuestions QuizQuestion[]` once the Quiz model
-  // exists. Until then countQuizUsage() in questionBank.controller.js cannot
-  // count usage and the delete guard falls back to a hard block.
+  // Quizzes that pinned this question explicitly. Filter-based quizzes do not
+  // appear here — they match on subject/topic/tag at serve time.
+  quizQuestions QuizQuestion[]
 
   @@index([subjectId, topicId, status])
   @@map("questions")
@@ -343,8 +343,30 @@ model Quiz {
   topic   Topic   @relation(fields: [topicId], references: [id])
   lesson  Lesson?
 
+  // Hand-picked questions. When this is empty the quiz falls back to the
+  // subject+topic+examTag filter above, which is how every quiz built from the
+  // spreadsheet works. Any rows here mean the admin chose exactly these, in
+  // this order, and the filter is ignored.
+  quizQuestions QuizQuestion[]
+
   @@index([subjectId, topicId, status])
   @@map("quizzes")
+}
+
+// Join row for a hand-authored quiz. Both sides cascade: deleting the quiz
+// drops its picks, and deleting a question removes it from every quiz that
+// pinned it rather than leaving a dangling reference.
+model QuizQuestion {
+  quizId       Int
+  questionId   Int
+  displayOrder Int @default(0)
+
+  quiz     Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@id([quizId, questionId])
+  @@index([questionId])
+  @@map("quiz_questions")
 }
 
 model Tag {

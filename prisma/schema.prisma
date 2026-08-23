@@ -24,8 +24,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions  Session[]
-  subscriptions Subscription[] 
+  sessions      Session[]
+  subscriptions Subscription[]
 
   selectedCourseId     Int?
   selectedCourseTypeId Int?
@@ -34,7 +34,6 @@ model User {
 
   @@map("users")
 }
-
 
 model Admin {
   id        Int      @id @default(autoincrement())
@@ -46,11 +45,10 @@ model Admin {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  courses   Course[]
+  courses Course[]
 
   @@map("admins")
 }
-
 
 model Subject {
   id           Int      @id @default(autoincrement())
@@ -100,7 +98,6 @@ model Session {
   @@map("sessions")
 }
 
-
 enum CourseStatus {
   draft
   published
@@ -126,13 +123,13 @@ model Course {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
-  subjects    Subject[]
-  admin       Admin?       @relation(fields: [createdBy], references: [id])
-  chapters    Chapter[]
-  courseTypes CourseType[]
-  selectedBy  User[]
-   plans         Plan[]  
-  subscriptions Subscription[] 
+  subjects      Subject[]
+  admin         Admin?         @relation(fields: [createdBy], references: [id])
+  chapters      Chapter[]
+  courseTypes   CourseType[]
+  selectedBy    User[]
+  plans         Plan[]
+  subscriptions Subscription[]
 
   @@index([createdBy])
   @@map("courses")
@@ -159,11 +156,10 @@ model CourseType {
   @@map("course_types")
 }
 
-
 model Chapter {
   id           Int      @id @default(autoincrement())
-  courseId     Int?                       // nulRlable now
-  courseTypeId Int?                       // NEW: nullable
+  courseId     Int? // nulRlable now
+  courseTypeId Int? // NEW: nullable
   title        String
   displayOrder Int      @default(0)
   createdAt    DateTime @default(now())
@@ -185,7 +181,7 @@ enum LessonType {
 }
 
 model Lesson {
-  id                Int        @id @default(autoincrement())
+  id                Int          @id @default(autoincrement())
   chapterId         Int
   title             String
   description       String?
@@ -198,22 +194,22 @@ model Lesson {
   notePublicId      String?
   noteFileType      String?
   content           String?
-  displayOrder      Int        @default(0)
-  isFreePreview     Boolean    @default(false)
-  accessType        AccessType @default(free)
+  displayOrder      Int          @default(0)
+  isFreePreview     Boolean      @default(false)
+  accessType        AccessType   @default(free)
   status            CourseStatus @default(draft)
   // A quiz-type lesson points at a Quiz instead of stuffing a ref into
   // `content`. Unique: a quiz is served by at most one lesson.
-  quizId            Int?       @unique
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
+  quizId            Int?         @unique
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 
-  chapter           Chapter    @relation(fields: [chapterId], references: [id])
-  quiz              Quiz?      @relation(fields: [quizId], references: [id])
+  chapter Chapter @relation(fields: [chapterId], references: [id])
+  quiz    Quiz?   @relation(fields: [quizId], references: [id])
 
   // A premium lesson can be unlocked by any number of plans. No rows means
   // "any active subscription for the course" — the old planId = null case.
-  lessonPlans       LessonPlan[]
+  lessonPlans LessonPlan[]
 
   @@index([chapterId, displayOrder])
   @@map("lessons")
@@ -236,11 +232,11 @@ model LessonPlan {
 model Plan {
   id           Int      @id @default(autoincrement())
   courseId     Int
-  title        String                    // e.g. "3-month access"
+  title        String // e.g. "3-month access"
   description  String?
-  price        Float                     // e.g. 199.00
-  durationDays Int                       // e.g. 90
-  isActive     Boolean  @default(true)   // admin can disable a plan without deleting it
+  price        Float // e.g. 199.00
+  durationDays Int // e.g. 90
+  isActive     Boolean  @default(true) // admin can disable a plan without deleting it
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -270,7 +266,6 @@ model Subscription {
   @@index([courseId])
   @@map("subscriptions")
 }
-
 
 // ─────────────────────────── Question Bank ───────────────────────────
 
@@ -305,9 +300,9 @@ model Question {
   options QuestionOption[]
   tags    QuestionTag[]
 
-  // TODO(quiz-module): add `quizQuestions QuizQuestion[]` once the Quiz model
-  // exists. Until then countQuizUsage() in questionBank.controller.js cannot
-  // count usage and the delete guard falls back to a hard block.
+  // Quizzes that pinned this question explicitly. Filter-based quizzes do not
+  // appear here — they match on subject/topic/tag at serve time.
+  quizQuestions QuizQuestion[]
 
   @@index([subjectId, topicId, status])
   @@map("questions")
@@ -348,8 +343,30 @@ model Quiz {
   topic   Topic   @relation(fields: [topicId], references: [id])
   lesson  Lesson?
 
+  // Hand-picked questions. When this is empty the quiz falls back to the
+  // subject+topic+examTag filter above, which is how every quiz built from the
+  // spreadsheet works. Any rows here mean the admin chose exactly these, in
+  // this order, and the filter is ignored.
+  quizQuestions QuizQuestion[]
+
   @@index([subjectId, topicId, status])
   @@map("quizzes")
+}
+
+// Join row for a hand-authored quiz. Both sides cascade: deleting the quiz
+// drops its picks, and deleting a question removes it from every quiz that
+// pinned it rather than leaving a dangling reference.
+model QuizQuestion {
+  quizId       Int
+  questionId   Int
+  displayOrder Int @default(0)
+
+  quiz     Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@id([quizId, questionId])
+  @@index([questionId])
+  @@map("quiz_questions")
 }
 
 model Tag {
