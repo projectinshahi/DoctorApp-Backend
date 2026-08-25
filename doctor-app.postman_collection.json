@@ -37,11 +37,11 @@
     },
     {
       "key": "quizId",
-      "value": "1"
+      "value": "12"
     },
     {
       "key": "lessonId",
-      "value": "21"
+      "value": "26"
     },
     {
       "key": "chapterId",
@@ -50,6 +50,11 @@
     {
       "key": "courseTypeId",
       "value": "15"
+    },
+    {
+      "key": "studentToken",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI4LCJyb2xlIjoic3R1ZGVudCIsInNlc3Npb25JZCI6NTEsImlhdCI6MTc4NzU0NDczOCwiZXhwIjoxNzg3NTY2MzM4fQ.uIaqGGuEIOhcA2iEXKvM5GI8dK3Y2E8AOkrCo39yDbY",
+      "type": "string"
     }
   ],
   "item": [
@@ -842,6 +847,227 @@
             },
             "description": "Gated on published + belongs to selected course + unlocked. 403 with requiredPlans when locked."
           }
+        }
+      ]
+    },
+    {
+      "name": "6. Student quiz flow (verified live)",
+      "description": "Set {{studentToken}} first. A student token is NOT email/password \u2014 login is Google-only (POST /api/auth/google with a real Google idToken + deviceId), and the token must carry a sessionId matching a live row in the sessions table. Easiest path: sign in on the Flutter app and copy its access token.\n\nEvery response documented below was captured from the live backend.",
+      "item": [
+        {
+          "name": "1. Who am I",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            },
+            "description": "Confirms the student token works. 200 = good."
+          },
+          "response": []
+        },
+        {
+          "name": "2. My selected course",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me/selection",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me",
+                "selection"
+              ]
+            },
+            "description": "A student with no selection gets null here, and every quiz call below returns 409."
+          },
+          "response": []
+        },
+        {
+          "name": "3. My course content (find quiz lessons)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me/selection/content",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me",
+                "selection",
+                "content"
+              ]
+            },
+            "description": "Lists chapters and lessons. Look for type=\"quiz\". Note  and  \u2014 a locked lesson has quiz stripped to null.\n\nLive result: lesson 26 'ENT' type=quiz locked=true quizId=12; lesson 27 'Internal Medicine' type=quiz locked=false quizId=null."
+          },
+          "response": []
+        },
+        {
+          "name": "4. Lesson detail",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me/lessons/26",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me",
+                "lessons",
+                "26"
+              ]
+            },
+            "description": "Same call the video screen uses. Branch on lesson.type == 'quiz'."
+          },
+          "response": []
+        },
+        {
+          "name": "5. Quiz questions \u2014 LOCKED (403)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me/lessons/26/quiz-questions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me",
+                "lessons",
+                "26",
+                "quiz-questions"
+              ]
+            },
+            "description": "Lesson 26 is premium and this student has not paid.\n\nVERIFIED LIVE:\n403 {\"error\":{\"message\":\"This lesson is locked. Subscribe to unlock it.\"},\"requiredPlans\":[{\"id\":5,\"title\":\"Plan for Offer price\",\"price\":500,\"durationDays\":60}]}\n\nrequiredPlans arrives WITH the error, so the paywall needs no second call."
+          },
+          "response": []
+        },
+        {
+          "name": "6. Quiz questions \u2014 NO QUIZ LINKED (409)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me/lessons/27/quiz-questions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me",
+                "lessons",
+                "27",
+                "quiz-questions"
+              ]
+            },
+            "description": "Lesson 27 is a quiz-type lesson that is unlocked but has quizId=null.\n\nVERIFIED LIVE:\n409 {\"error\":{\"message\":\"This lesson has no quiz linked\"}}\n\nThis is an empty state, not an error to show as a crash."
+          },
+          "response": []
+        },
+        {
+          "name": "7. Quiz questions \u2014 SUCCESS (200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me/lessons/26/quiz-questions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me",
+                "lessons",
+                "26",
+                "quiz-questions"
+              ]
+            },
+            "description": "Returns 403 until lesson 26 is unlocked. To get a 200, an admin must either give this student an active subscription to plan 5, or set isFreePreview=true on lesson 26 (PUT /api/lessons/26).\n\nShape when it succeeds \u2014 confirmed via the admin twin on the same quiz:\n{\n  \"lessonId\": 26,\n  \"quiz\": {\"id\":12,\"title\":\"ENT\",\"questionCount\":1},\n  \"totalQuestions\": 1,\n  \"totalMarks\": 2,\n  \"questions\": [{\n    \"id\": 26,\n    \"questionText\": \"Sudden unilateral hearing loss with vertigo and tinnitus is most consistent with?\",\n    \"questionImageUrl\": null,\n    \"difficulty\": \"medium\",\n    \"marksCorrect\": 2,\n    \"marksIncorrect\": -0.5,\n    \"options\": [{\"id\":312,\"optionText\":\"Meniere's disease\",\"optionImageUrl\":null,\"displayOrder\":0}]\n  }]\n}\n\nNOTE: no isCorrect, no explanation. Stripped at the database select \u2014 the answer key never reaches a student."
+          },
+          "response": []
+        },
+        {
+          "name": "8. Admin view of the same quiz (compare)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/quizzes/12/preview",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "quizzes",
+                "12",
+                "preview"
+              ]
+            },
+            "description": "Uses {{adminToken}}, not the student one. This is the ONLY endpoint that returns isCorrect. Compare its options against request 7 to see exactly what students do not receive."
+          },
+          "response": []
         }
       ]
     }
