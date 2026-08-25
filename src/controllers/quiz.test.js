@@ -90,3 +90,41 @@ function fakePrisma(pinnedCount, poolCount) {
 
   console.log('quiz manual/filter rules OK');
 })();
+
+// ── scoring ────────────────────────────────────────────────────────────────
+const { scoreSubmission } = require('./selected-course.controller');
+
+const Q = [
+  { id: 1, questionText: 'a', questionImageUrl: null, explanation: 'because', marksCorrect: 2, marksIncorrect: -0.5,
+    options: [{ id: 10, isCorrect: true }, { id: 11, isCorrect: false }] },
+  { id: 2, questionText: 'b', questionImageUrl: null, explanation: null, marksCorrect: 4, marksIncorrect: -1,
+    options: [{ id: 20, isCorrect: false }, { id: 21, isCorrect: true }] },
+  { id: 3, questionText: 'c', questionImageUrl: null, explanation: null, marksCorrect: 1, marksIncorrect: -1,
+    options: [{ id: 30, isCorrect: true }, { id: 31, isCorrect: false }] },
+];
+
+// One right (+2), one wrong (-1), one skipped (0).
+const s = scoreSubmission(Q, [{ questionId: 1, optionId: 10 }, { questionId: 2, optionId: 20 }]);
+assert.strictEqual(s.score, 1, '2 + (-1) + 0');
+assert.deepStrictEqual([s.correctCount, s.wrongCount, s.skippedCount], [1, 1, 1]);
+assert.strictEqual(s.totalMarks, 7, 'totalMarks is the perfect score, not the achieved one');
+
+// A skipped question must score 0, never the negative mark — that is the rule
+// most easily broken by treating "not correct" as "wrong".
+assert.strictEqual(s.results[2].marksAwarded, 0, 'skipped must not be penalised');
+assert.strictEqual(s.results[2].answered, false);
+assert.strictEqual(s.results[2].selectedOptionId, null);
+
+// The answer key and explanation ride back on every result, answered or not.
+assert.strictEqual(s.results[0].correctOptionId, 10);
+assert.strictEqual(s.results[0].explanation, 'because');
+assert.strictEqual(s.results[1].correctOptionId, 21, 'correct id, not the chosen one');
+assert.strictEqual(s.results[1].isCorrect, false);
+
+// Negative marks are stored negative and added, so a bad run can go below zero.
+assert.strictEqual(scoreSubmission(Q, [{ questionId: 1, optionId: 11 }, { questionId: 2, optionId: 20 }]).score, -1.5);
+
+// String ids from JSON must match numeric question ids.
+assert.strictEqual(scoreSubmission(Q, [{ questionId: '1', optionId: '10' }]).correctCount, 1, 'ids arrive as strings');
+
+console.log('quiz.test.js: scoring assertions passed');

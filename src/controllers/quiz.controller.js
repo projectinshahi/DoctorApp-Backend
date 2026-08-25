@@ -365,6 +365,36 @@ async function resolveQuizQuestions(quiz, { includeAnswers = false } = {}) {
   });
 }
 
+/**
+ * The questions a quiz is *allowed* to serve, narrowed to specific ids.
+ *
+ * Not the same as resolveQuizQuestions: a filter quiz with a questionCount
+ * samples randomly, so calling it twice gives two different sets. Scoring a
+ * submission against a fresh sample would reject answers the student was
+ * genuinely served. This checks eligibility instead of re-sampling.
+ *
+ * Ids outside the quiz's pinned set or filter are dropped, so a student cannot
+ * smuggle in a question from another quiz to get its answer key back.
+ */
+async function fetchEligibleQuestions(quiz, ids) {
+  if (ids.length === 0) return [];
+
+  const pinnedIds = (await prisma.quizQuestion.findMany({
+    where: { quizId: quiz.id, question: { status: 'active' } },
+    select: { questionId: true },
+  })).map((row) => row.questionId);
+
+  const where = pinnedIds.length > 0
+    ? { id: { in: ids.filter((id) => pinnedIds.includes(id)) }, status: 'active' }
+    : { ...questionPoolWhere(quiz), id: { in: ids } };
+
+  return prisma.question.findMany({
+    where,
+    select: ADMIN_QUESTION_SELECT,
+    orderBy: { id: 'asc' },
+  });
+}
+
 /** How many active questions a quiz can draw on, whichever mode it is in. */
 async function countAvailableQuestions(quiz) {
   const pinned = await prisma.quizQuestion.count({
@@ -663,6 +693,7 @@ module.exports = {
   previewQuizQuestions,
   // Reused by selected-course.controller.js for the student-facing serve.
   resolveQuizQuestions,
+  fetchEligibleQuestions,
   countAvailableQuestions,
   // Exported for quiz.test.js — pure, no DB.
   questionPoolWhere,
