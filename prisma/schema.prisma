@@ -26,6 +26,7 @@ model User {
 
   sessions      Session[]
   subscriptions Subscription[]
+  quizAttempts  QuizAttempt[]
 
   selectedCourseId     Int?
   selectedCourseTypeId Int?
@@ -348,6 +349,7 @@ model Quiz {
   // spreadsheet works. Any rows here mean the admin chose exactly these, in
   // this order, and the filter is ignored.
   quizQuestions QuizQuestion[]
+  attempts      QuizAttempt[]
 
   @@index([subjectId, topicId, status])
   @@map("quizzes")
@@ -387,4 +389,49 @@ model QuestionTag {
   @@id([questionId, tagId])
   @@index([tagId])
   @@map("question_tags")
+}
+
+// One student's run at one quiz. Created when they open it, closed when they
+// finish, and answered one question at a time in between.
+//
+// questionIds freezes the set that was served. A filter quiz samples randomly,
+// so without this the server could not tell later which questions this student
+// actually saw — the review screen would be scored against a different draw.
+model QuizAttempt {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  quizId      Int
+  lessonId    Int
+  questionIds Int[]
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz    Quiz            @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers AttemptAnswer[]
+
+  // "This student's attempts at this lesson, newest first" is every history
+  // and resume query the app makes.
+  @@index([userId, lessonId, startedAt])
+  @@map("quiz_attempts")
+}
+
+// One answered question. Skipped questions have no row at all — absence is
+// what "skipped" means, which keeps re-answering a simple upsert.
+//
+// isCorrect and marksAwarded are stored rather than recomputed: an admin can
+// edit a question's options after the fact, and a past attempt must keep the
+// result the student actually got.
+model AttemptAnswer {
+  attemptId        Int
+  questionId       Int
+  selectedOptionId Int
+  isCorrect        Boolean
+  marksAwarded     Float
+  answeredAt       DateTime @default(now())
+
+  attempt QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  @@id([attemptId, questionId])
+  @@map("attempt_answers")
 }

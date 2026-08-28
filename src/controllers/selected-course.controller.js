@@ -443,6 +443,8 @@ module.exports = {
   getStudentLesson,
   getStudentQuizQuestions,
   submitStudentQuiz,
+  // Reused by quizAttempt.controller.js so the attempt flow runs the same gates.
+  loadStudentQuiz,
   isLessonUnlocked,
   // Exported for quiz.test.js — pure, no DB.
   scoreSubmission,

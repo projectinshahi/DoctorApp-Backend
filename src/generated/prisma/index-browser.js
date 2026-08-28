@@ -314,6 +314,25 @@ exports.Prisma.QuestionTagScalarFieldEnum = {
   tagId: 'tagId'
 };
 
+exports.Prisma.QuizAttemptScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  quizId: 'quizId',
+  lessonId: 'lessonId',
+  questionIds: 'questionIds',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+};
+
+exports.Prisma.AttemptAnswerScalarFieldEnum = {
+  attemptId: 'attemptId',
+  questionId: 'questionId',
+  selectedOptionId: 'selectedOptionId',
+  isCorrect: 'isCorrect',
+  marksAwarded: 'marksAwarded',
+  answeredAt: 'answeredAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -374,7 +393,9 @@ exports.Prisma.ModelName = {
   Quiz: 'Quiz',
   QuizQuestion: 'QuizQuestion',
   Tag: 'Tag',
-  QuestionTag: 'QuestionTag'
+  QuestionTag: 'QuestionTag',
+  QuizAttempt: 'QuizAttempt',
+  AttemptAnswer: 'AttemptAnswer'
 };
 
 /**
