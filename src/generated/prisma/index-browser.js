@@ -345,6 +345,14 @@ exports.Prisma.SavedLessonScalarFieldEnum = {
   savedAt: 'savedAt'
 };
 
+exports.Prisma.LessonProgressScalarFieldEnum = {
+  userId: 'userId',
+  lessonId: 'lessonId',
+  completed: 'completed',
+  lastPositionSeconds: 'lastPositionSeconds',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -409,7 +417,8 @@ exports.Prisma.ModelName = {
   QuizAttempt: 'QuizAttempt',
   AttemptAnswer: 'AttemptAnswer',
   SavedQuestion: 'SavedQuestion',
-  SavedLesson: 'SavedLesson'
+  SavedLesson: 'SavedLesson',
+  LessonProgress: 'LessonProgress'
 };
 
 /**

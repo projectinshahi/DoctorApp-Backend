@@ -9,13 +9,18 @@ const {
   saveQuestion, unsaveQuestion, listSavedQuestions,
   saveLesson, unsaveLesson, listSavedLessons,
 } = require('../controllers/saved.controller');
+const { getHome, saveProgress } = require('../controllers/home.controller');
 const authenticateStudent = require('../middleware/authenticateStudent');
 
 router.get('/', authenticateStudent, getProfile);
 router.put('/', authenticateStudent, updateProfile);
 
 // Mounted under /api/users/me -> GET /api/users/me/lessons/:id
+// One call for the whole home screen: module counts plus the two continue rows.
+router.get('/home', authenticateStudent, getHome);
+
 router.get('/lessons/:id', authenticateStudent, getStudentLesson);
+router.put('/lessons/:id/progress', authenticateStudent, saveProgress);
 // Quiz content for a quiz-type lesson, behind the same published/unlock gates.
 router.get('/lessons/:id/quiz-questions', authenticateStudent, getStudentQuizQuestions);
 // Scoring happens here, not in the app — this is the only student route that

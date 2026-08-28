@@ -29,6 +29,7 @@ model User {
   quizAttempts   QuizAttempt[]
   savedQuestions SavedQuestion[]
   savedLessons   SavedLesson[]
+  lessonProgress LessonProgress[]
 
   selectedCourseId     Int?
   selectedCourseTypeId Int?
@@ -214,6 +215,7 @@ model Lesson {
   // "any active subscription for the course" — the old planId = null case.
   lessonPlans LessonPlan[]
   savedBy     SavedLesson[]
+  progress    LessonProgress[]
 
   @@index([chapterId, displayOrder])
   @@map("lessons")
@@ -468,4 +470,26 @@ model SavedLesson {
   @@id([userId, lessonId])
   @@index([userId, savedAt])
   @@map("saved_lessons")
+}
+
+// How far a student got in one lesson. Without this the home screen cannot say
+// "12 of 40 videos", which is the whole point of a module card.
+//
+// completed is stored rather than derived from lastPositionSeconds: a student
+// who scrubs to the end has not watched it, and one who stops at 95% has. Only
+// the client knows which, so it says so explicitly.
+model LessonProgress {
+  userId              Int
+  lessonId            Int
+  completed           Boolean  @default(false)
+  lastPositionSeconds Int      @default(0)
+  updatedAt           DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@id([userId, lessonId])
+  // "what did this student touch last" drives Continue Watching.
+  @@index([userId, updatedAt])
+  @@map("lesson_progress")
 }
