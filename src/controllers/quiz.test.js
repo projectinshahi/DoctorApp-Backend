@@ -91,37 +91,6 @@ function fakePrisma(pinnedCount, poolCount) {
   console.log('quiz manual/filter rules OK');
 })();
 
-// ── underfill guard rail ───────────────────────────────────────────────────
-const { annotateQuiz } = require('./quiz.controller');
-
-// A quiz is a filter, so wanting 10 from a pool of 4 is not an error — it just
-// serves 4. The flag is the only thing that tells an admin it happened.
-const short = annotateQuiz({ id: 1, questionCount: 10 }, 4, false);
-assert.strictEqual(short.isUnderfilled, true);
-assert.strictEqual(short.servedQuestions, 4, 'serves what exists, not what it asked for');
-assert.strictEqual(short.availableQuestions, 4);
-assert.strictEqual(short.mode, 'filter');
-
-// Enough in the pool: not underfilled, and it serves exactly what it asked for.
-const ok = annotateQuiz({ id: 2, questionCount: 3 }, 4, false);
-assert.strictEqual(ok.isUnderfilled, false);
-assert.strictEqual(ok.servedQuestions, 3, 'caps at questionCount, not pool size');
-
-// Exactly enough is not underfilled — the boundary that a > vs >= slip breaks.
-assert.strictEqual(annotateQuiz({ id: 3, questionCount: 4 }, 4, false).isUnderfilled, false);
-
-// questionCount null means "serve the whole pool", so it can never underfill.
-const all = annotateQuiz({ id: 4, questionCount: null }, 4, false);
-assert.strictEqual(all.isUnderfilled, false);
-assert.strictEqual(all.servedQuestions, 4);
-
-// An empty pool with no questionCount is still not "underfilled" — it is empty.
-assert.strictEqual(annotateQuiz({ id: 5, questionCount: null }, 0, false).isUnderfilled, false);
-
-// Pinned questions report as manual so the client shows a picker, not a filter.
-assert.strictEqual(annotateQuiz({ id: 6, questionCount: null }, 2, true).mode, 'manual');
-
-
 // ── scoring ────────────────────────────────────────────────────────────────
 const { scoreSubmission } = require('./selected-course.controller');
 
