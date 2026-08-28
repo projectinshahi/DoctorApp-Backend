@@ -106,7 +106,10 @@ async function createQuiz(req, res) {
       select: QUIZ_SELECT,
     });
 
-    return res.status(201).json({ quiz });
+    // Say it at creation, not when a student opens the quiz and gets 4 of 10.
+    const { availableQuestions, isPinned } = await countAvailableQuestions(quiz);
+
+    return res.status(201).json({ quiz: annotateQuiz(quiz, availableQuestions, isPinned) });
   } catch (error) {
     console.error('Create quiz error:', error);
     return res.status(500).json({ error: { message: 'Something went wrong while creating the quiz' } });
@@ -156,7 +159,7 @@ async function listQuizzes(req, res) {
       select: QUIZ_SELECT,
     });
 
-    return res.status(200).json({ quizzes });
+    return res.status(200).json({ quizzes: await annotateQuizzes(quizzes) });
   } catch (error) {
     console.error('List quizzes error:', error);
     return res.status(500).json({ error: { message: 'Something went wrong while fetching quizzes' } });
@@ -178,23 +181,12 @@ async function getQuiz(req, res) {
       return res.status(404).json({ error: { message: 'Quiz not found' } });
     }
 
+    // "manual" means the admin pinned specific questions; "filter" means it
+    // takes whatever matches subject+topic+examTag. The client needs this to
+    // know whether a question picker or a filter editor is the right UI.
     const { availableQuestions, isPinned } = await countAvailableQuestions(quiz);
 
-    return res.status(200).json({
-      quiz: {
-        ...quiz,
-        // "manual" means the admin pinned specific questions; "filter" means it
-        // takes whatever matches subject+topic+examTag. The client needs this to
-        // know whether a question picker or a filter editor is the right UI.
-        mode: isPinned ? 'manual' : 'filter',
-        availableQuestions,
-        // Flags a quiz that promises more questions than the bank can supply.
-        servedQuestions: quiz.questionCount
-          ? Math.min(quiz.questionCount, availableQuestions)
-          : availableQuestions,
-        isUnderfilled: quiz.questionCount !== null && availableQuestions < quiz.questionCount,
-      },
-    });
+    return res.status(200).json({ quiz: annotateQuiz(quiz, availableQuestions, isPinned) });
   } catch (error) {
     console.error('Get quiz error:', error);
     return res.status(500).json({ error: { message: 'Something went wrong while fetching the quiz' } });
@@ -254,7 +246,11 @@ async function updateQuiz(req, res) {
 
     const quiz = await prisma.quiz.update({ where: { id: quizId }, data, select: QUIZ_SELECT });
 
-    return res.status(200).json({ quiz });
+    // Raising questionCount or retargeting the filter can underfill a quiz that
+    // was fine a moment ago, so the counts come back on every update too.
+    const { availableQuestions, isPinned } = await countAvailableQuestions(quiz);
+
+    return res.status(200).json({ quiz: annotateQuiz(quiz, availableQuestions, isPinned) });
   } catch (error) {
     console.error('Update quiz error:', error);
     return res.status(500).json({ error: { message: 'Something went wrong while updating the quiz' } });
@@ -393,6 +389,67 @@ async function fetchEligibleQuestions(quiz, ids) {
     select: ADMIN_QUESTION_SELECT,
     orderBy: { id: 'asc' },
   });
+}
+
+/**
+ * The pool figures the admin needs to see: how many questions this quiz can
+ * actually draw on, how many it will serve, and whether it promises more than
+ * the bank can supply.
+ *
+ * A quiz is a filter, not a list, so `questionCount: 10` against a pool of 4
+ * silently serves 4. Nothing is wrong with the quiz — the bank is just short —
+ * but the admin has no way to notice unless it is said out loud.
+ */
+function annotateQuiz(quiz, availableQuestions, isPinned) {
+  return {
+    ...quiz,
+    mode: isPinned ? 'manual' : 'filter',
+    availableQuestions,
+    servedQuestions: quiz.questionCount
+      ? Math.min(quiz.questionCount, availableQuestions)
+      : availableQuestions,
+    isUnderfilled: quiz.questionCount !== null && availableQuestions < quiz.questionCount,
+  };
+}
+
+/**
+ * annotateQuiz for a whole list, in a fixed number of queries.
+ *
+ * Calling countAvailableQuestions per quiz would be two round trips each — 42
+ * for the current 21 quizzes, and it grows with the list. Two groupBys cover
+ * every quiz instead. An examTag needs a tag join that groupBy cannot express,
+ * so those few fall back to the per-quiz count.
+ */
+async function annotateQuizzes(quizzes) {
+  if (quizzes.length === 0) return [];
+
+  const [pinnedRows, poolRows] = await Promise.all([
+    prisma.quizQuestion.groupBy({
+      by: ['quizId'],
+      where: { quizId: { in: quizzes.map((q) => q.id) }, question: { status: 'active' } },
+      _count: { questionId: true },
+    }),
+    prisma.question.groupBy({
+      by: ['subjectId', 'topicId'],
+      where: { status: 'active' },
+      _count: { id: true },
+    }),
+  ]);
+
+  const pinnedByQuiz = new Map(pinnedRows.map((r) => [r.quizId, r._count.questionId]));
+  const poolByTopic = new Map(poolRows.map((r) => [`${r.subjectId}:${r.topicId}`, r._count.id]));
+
+  return Promise.all(quizzes.map(async (quiz) => {
+    const pinned = pinnedByQuiz.get(quiz.id) ?? 0;
+    if (pinned > 0) return annotateQuiz(quiz, pinned, true);
+
+    if (quiz.examTag) {
+      const { availableQuestions } = await countAvailableQuestions(quiz);
+      return annotateQuiz(quiz, availableQuestions, false);
+    }
+
+    return annotateQuiz(quiz, poolByTopic.get(`${quiz.subjectId}:${quiz.topicId}`) ?? 0, false);
+  }));
 }
 
 /** How many active questions a quiz can draw on, whichever mode it is in. */
@@ -695,6 +752,7 @@ module.exports = {
   resolveQuizQuestions,
   fetchEligibleQuestions,
   countAvailableQuestions,
+  annotateQuiz,
   // Exported for quiz.test.js — pure, no DB.
   questionPoolWhere,
   readExamTag,
