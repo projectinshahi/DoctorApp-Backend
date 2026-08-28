@@ -3,8 +3,12 @@ const router = express.Router();
 const { getProfile, updateProfile } = require('../controllers/profile.controller');
 const { getStudentLesson, getStudentQuizQuestions, submitStudentQuiz } = require('../controllers/selected-course.controller');
 const {
-  startAttempt, saveAnswer, finishAttempt, getAttempt, listAttempts,
+  startAttempt, saveAnswer, finishAttempt, getAttempt, listAttempts, listInProgress,
 } = require('../controllers/quizAttempt.controller');
+const {
+  saveQuestion, unsaveQuestion, listSavedQuestions,
+  saveLesson, unsaveLesson, listSavedLessons,
+} = require('../controllers/saved.controller');
 const authenticateStudent = require('../middleware/authenticateStudent');
 
 router.get('/', authenticateStudent, getProfile);
@@ -23,6 +27,18 @@ router.post('/lessons/:id/quiz-attempts', authenticateStudent, startAttempt);
 router.get('/lessons/:id/quiz-attempts', authenticateStudent, listAttempts);
 router.post('/quiz-attempts/:attemptId/answers', authenticateStudent, saveAnswer);
 router.post('/quiz-attempts/:attemptId/finish', authenticateStudent, finishAttempt);
+// Registered before /:attemptId so "quiz-attempts" with a query string is not
+// swallowed as an attempt id.
+router.get('/quiz-attempts', authenticateStudent, listInProgress);
 router.get('/quiz-attempts/:attemptId', authenticateStudent, getAttempt);
+
+// Bookmarks, synced to the account instead of the device.
+router.post('/saved-questions', authenticateStudent, saveQuestion);
+router.get('/saved-questions', authenticateStudent, listSavedQuestions);
+router.delete('/saved-questions/:questionId', authenticateStudent, unsaveQuestion);
+
+router.post('/saved-lessons', authenticateStudent, saveLesson);
+router.get('/saved-lessons', authenticateStudent, listSavedLessons);
+router.delete('/saved-lessons/:lessonId', authenticateStudent, unsaveLesson);
 
 module.exports = router;

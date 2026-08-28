@@ -113,6 +113,16 @@ export type QuizAttempt = $Result.DefaultSelection<Prisma.$QuizAttemptPayload>
  * 
  */
 export type AttemptAnswer = $Result.DefaultSelection<Prisma.$AttemptAnswerPayload>
+/**
+ * Model SavedQuestion
+ * 
+ */
+export type SavedQuestion = $Result.DefaultSelection<Prisma.$SavedQuestionPayload>
+/**
+ * Model SavedLesson
+ * 
+ */
+export type SavedLesson = $Result.DefaultSelection<Prisma.$SavedLessonPayload>
 
 /**
  * Enums
@@ -502,6 +512,26 @@ export class PrismaClient<
     * ```
     */
   get attemptAnswer(): Prisma.AttemptAnswerDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.savedQuestion`: Exposes CRUD operations for the **SavedQuestion** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SavedQuestions
+    * const savedQuestions = await prisma.savedQuestion.findMany()
+    * ```
+    */
+  get savedQuestion(): Prisma.SavedQuestionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.savedLesson`: Exposes CRUD operations for the **SavedLesson** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SavedLessons
+    * const savedLessons = await prisma.savedLesson.findMany()
+    * ```
+    */
+  get savedLesson(): Prisma.SavedLessonDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -968,7 +998,9 @@ export namespace Prisma {
     Tag: 'Tag',
     QuestionTag: 'QuestionTag',
     QuizAttempt: 'QuizAttempt',
-    AttemptAnswer: 'AttemptAnswer'
+    AttemptAnswer: 'AttemptAnswer',
+    SavedQuestion: 'SavedQuestion',
+    SavedLesson: 'SavedLesson'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -984,7 +1016,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "quizQuestion" | "tag" | "questionTag" | "quizAttempt" | "attemptAnswer"
+      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "quizQuestion" | "tag" | "questionTag" | "quizAttempt" | "attemptAnswer" | "savedQuestion" | "savedLesson"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2468,6 +2500,154 @@ export namespace Prisma {
           }
         }
       }
+      SavedQuestion: {
+        payload: Prisma.$SavedQuestionPayload<ExtArgs>
+        fields: Prisma.SavedQuestionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SavedQuestionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedQuestionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SavedQuestionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedQuestionPayload>
+          }
+          findFirst: {
+            args: Prisma.SavedQuestionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedQuestionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SavedQuestionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedQuestionPayload>
+          }
+          findMany: {
+            args: Prisma.SavedQuestionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedQuestionPayload>[]
+          }
+          create: {
+            args: Prisma.SavedQuestionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedQuestionPayload>
+          }
+          createMany: {
+            args: Prisma.SavedQuestionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SavedQuestionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedQuestionPayload>[]
+          }
+          delete: {
+            args: Prisma.SavedQuestionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedQuestionPayload>
+          }
+          update: {
+            args: Prisma.SavedQuestionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedQuestionPayload>
+          }
+          deleteMany: {
+            args: Prisma.SavedQuestionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SavedQuestionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SavedQuestionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedQuestionPayload>[]
+          }
+          upsert: {
+            args: Prisma.SavedQuestionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedQuestionPayload>
+          }
+          aggregate: {
+            args: Prisma.SavedQuestionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSavedQuestion>
+          }
+          groupBy: {
+            args: Prisma.SavedQuestionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SavedQuestionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SavedQuestionCountArgs<ExtArgs>
+            result: $Utils.Optional<SavedQuestionCountAggregateOutputType> | number
+          }
+        }
+      }
+      SavedLesson: {
+        payload: Prisma.$SavedLessonPayload<ExtArgs>
+        fields: Prisma.SavedLessonFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SavedLessonFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedLessonPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SavedLessonFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedLessonPayload>
+          }
+          findFirst: {
+            args: Prisma.SavedLessonFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedLessonPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SavedLessonFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedLessonPayload>
+          }
+          findMany: {
+            args: Prisma.SavedLessonFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedLessonPayload>[]
+          }
+          create: {
+            args: Prisma.SavedLessonCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedLessonPayload>
+          }
+          createMany: {
+            args: Prisma.SavedLessonCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SavedLessonCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedLessonPayload>[]
+          }
+          delete: {
+            args: Prisma.SavedLessonDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedLessonPayload>
+          }
+          update: {
+            args: Prisma.SavedLessonUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedLessonPayload>
+          }
+          deleteMany: {
+            args: Prisma.SavedLessonDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SavedLessonUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SavedLessonUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedLessonPayload>[]
+          }
+          upsert: {
+            args: Prisma.SavedLessonUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedLessonPayload>
+          }
+          aggregate: {
+            args: Prisma.SavedLessonAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSavedLesson>
+          }
+          groupBy: {
+            args: Prisma.SavedLessonGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SavedLessonGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SavedLessonCountArgs<ExtArgs>
+            result: $Utils.Optional<SavedLessonCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2611,6 +2791,8 @@ export namespace Prisma {
     questionTag?: QuestionTagOmit
     quizAttempt?: QuizAttemptOmit
     attemptAnswer?: AttemptAnswerOmit
+    savedQuestion?: SavedQuestionOmit
+    savedLesson?: SavedLessonOmit
   }
 
   /* Types for Logging */
@@ -2694,12 +2876,16 @@ export namespace Prisma {
     sessions: number
     subscriptions: number
     quizAttempts: number
+    savedQuestions: number
+    savedLessons: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     subscriptions?: boolean | UserCountOutputTypeCountSubscriptionsArgs
     quizAttempts?: boolean | UserCountOutputTypeCountQuizAttemptsArgs
+    savedQuestions?: boolean | UserCountOutputTypeCountSavedQuestionsArgs
+    savedLessons?: boolean | UserCountOutputTypeCountSavedLessonsArgs
   }
 
   // Custom InputTypes
@@ -2732,6 +2918,20 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountQuizAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: QuizAttemptWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSavedQuestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SavedQuestionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSavedLessonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SavedLessonWhereInput
   }
 
 
@@ -3017,10 +3217,12 @@ export namespace Prisma {
 
   export type LessonCountOutputType = {
     lessonPlans: number
+    savedBy: number
   }
 
   export type LessonCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lessonPlans?: boolean | LessonCountOutputTypeCountLessonPlansArgs
+    savedBy?: boolean | LessonCountOutputTypeCountSavedByArgs
   }
 
   // Custom InputTypes
@@ -3039,6 +3241,13 @@ export namespace Prisma {
    */
   export type LessonCountOutputTypeCountLessonPlansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: LessonPlanWhereInput
+  }
+
+  /**
+   * LessonCountOutputType without action
+   */
+  export type LessonCountOutputTypeCountSavedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SavedLessonWhereInput
   }
 
 
@@ -3090,12 +3299,14 @@ export namespace Prisma {
     options: number
     tags: number
     quizQuestions: number
+    savedBy: number
   }
 
   export type QuestionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     options?: boolean | QuestionCountOutputTypeCountOptionsArgs
     tags?: boolean | QuestionCountOutputTypeCountTagsArgs
     quizQuestions?: boolean | QuestionCountOutputTypeCountQuizQuestionsArgs
+    savedBy?: boolean | QuestionCountOutputTypeCountSavedByArgs
   }
 
   // Custom InputTypes
@@ -3128,6 +3339,13 @@ export namespace Prisma {
    */
   export type QuestionCountOutputTypeCountQuizQuestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: QuizQuestionWhereInput
+  }
+
+  /**
+   * QuestionCountOutputType without action
+   */
+  export type QuestionCountOutputTypeCountSavedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SavedQuestionWhereInput
   }
 
 
@@ -3502,6 +3720,8 @@ export namespace Prisma {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     subscriptions?: boolean | User$subscriptionsArgs<ExtArgs>
     quizAttempts?: boolean | User$quizAttemptsArgs<ExtArgs>
+    savedQuestions?: boolean | User$savedQuestionsArgs<ExtArgs>
+    savedLessons?: boolean | User$savedLessonsArgs<ExtArgs>
     selectedCourse?: boolean | User$selectedCourseArgs<ExtArgs>
     selectedCourseType?: boolean | User$selectedCourseTypeArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3561,6 +3781,8 @@ export namespace Prisma {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     subscriptions?: boolean | User$subscriptionsArgs<ExtArgs>
     quizAttempts?: boolean | User$quizAttemptsArgs<ExtArgs>
+    savedQuestions?: boolean | User$savedQuestionsArgs<ExtArgs>
+    savedLessons?: boolean | User$savedLessonsArgs<ExtArgs>
     selectedCourse?: boolean | User$selectedCourseArgs<ExtArgs>
     selectedCourseType?: boolean | User$selectedCourseTypeArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -3580,6 +3802,8 @@ export namespace Prisma {
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
       quizAttempts: Prisma.$QuizAttemptPayload<ExtArgs>[]
+      savedQuestions: Prisma.$SavedQuestionPayload<ExtArgs>[]
+      savedLessons: Prisma.$SavedLessonPayload<ExtArgs>[]
       selectedCourse: Prisma.$CoursePayload<ExtArgs> | null
       selectedCourseType: Prisma.$CourseTypePayload<ExtArgs> | null
     }
@@ -3993,6 +4217,8 @@ export namespace Prisma {
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     subscriptions<T extends User$subscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, User$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     quizAttempts<T extends User$quizAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$quizAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuizAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    savedQuestions<T extends User$savedQuestionsArgs<ExtArgs> = {}>(args?: Subset<T, User$savedQuestionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    savedLessons<T extends User$savedLessonsArgs<ExtArgs> = {}>(args?: Subset<T, User$savedLessonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     selectedCourse<T extends User$selectedCourseArgs<ExtArgs> = {}>(args?: Subset<T, User$selectedCourseArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     selectedCourseType<T extends User$selectedCourseTypeArgs<ExtArgs> = {}>(args?: Subset<T, User$selectedCourseTypeArgs<ExtArgs>>): Prisma__CourseTypeClient<$Result.GetResult<Prisma.$CourseTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -4506,6 +4732,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: QuizAttemptScalarFieldEnum | QuizAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * User.savedQuestions
+   */
+  export type User$savedQuestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedQuestion
+     */
+    select?: SavedQuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedQuestion
+     */
+    omit?: SavedQuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedQuestionInclude<ExtArgs> | null
+    where?: SavedQuestionWhereInput
+    orderBy?: SavedQuestionOrderByWithRelationInput | SavedQuestionOrderByWithRelationInput[]
+    cursor?: SavedQuestionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SavedQuestionScalarFieldEnum | SavedQuestionScalarFieldEnum[]
+  }
+
+  /**
+   * User.savedLessons
+   */
+  export type User$savedLessonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedLesson
+     */
+    select?: SavedLessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedLesson
+     */
+    omit?: SavedLessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedLessonInclude<ExtArgs> | null
+    where?: SavedLessonWhereInput
+    orderBy?: SavedLessonOrderByWithRelationInput | SavedLessonOrderByWithRelationInput[]
+    cursor?: SavedLessonWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SavedLessonScalarFieldEnum | SavedLessonScalarFieldEnum[]
   }
 
   /**
@@ -13370,6 +13644,7 @@ export namespace Prisma {
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
     quiz?: boolean | Lesson$quizArgs<ExtArgs>
     lessonPlans?: boolean | Lesson$lessonPlansArgs<ExtArgs>
+    savedBy?: boolean | Lesson$savedByArgs<ExtArgs>
     _count?: boolean | LessonCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lesson"]>
 
@@ -13451,6 +13726,7 @@ export namespace Prisma {
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
     quiz?: boolean | Lesson$quizArgs<ExtArgs>
     lessonPlans?: boolean | Lesson$lessonPlansArgs<ExtArgs>
+    savedBy?: boolean | Lesson$savedByArgs<ExtArgs>
     _count?: boolean | LessonCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LessonIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -13468,6 +13744,7 @@ export namespace Prisma {
       chapter: Prisma.$ChapterPayload<ExtArgs>
       quiz: Prisma.$QuizPayload<ExtArgs> | null
       lessonPlans: Prisma.$LessonPlanPayload<ExtArgs>[]
+      savedBy: Prisma.$SavedLessonPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -13887,6 +14164,7 @@ export namespace Prisma {
     chapter<T extends ChapterDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChapterDefaultArgs<ExtArgs>>): Prisma__ChapterClient<$Result.GetResult<Prisma.$ChapterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     quiz<T extends Lesson$quizArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$quizArgs<ExtArgs>>): Prisma__QuizClient<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     lessonPlans<T extends Lesson$lessonPlansArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$lessonPlansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    savedBy<T extends Lesson$savedByArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$savedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14377,6 +14655,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: LessonPlanScalarFieldEnum | LessonPlanScalarFieldEnum[]
+  }
+
+  /**
+   * Lesson.savedBy
+   */
+  export type Lesson$savedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedLesson
+     */
+    select?: SavedLessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedLesson
+     */
+    omit?: SavedLessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedLessonInclude<ExtArgs> | null
+    where?: SavedLessonWhereInput
+    orderBy?: SavedLessonOrderByWithRelationInput | SavedLessonOrderByWithRelationInput[]
+    cursor?: SavedLessonWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SavedLessonScalarFieldEnum | SavedLessonScalarFieldEnum[]
   }
 
   /**
@@ -18126,6 +18428,7 @@ export namespace Prisma {
     options?: boolean | Question$optionsArgs<ExtArgs>
     tags?: boolean | Question$tagsArgs<ExtArgs>
     quizQuestions?: boolean | Question$quizQuestionsArgs<ExtArgs>
+    savedBy?: boolean | Question$savedByArgs<ExtArgs>
     _count?: boolean | QuestionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["question"]>
 
@@ -18185,6 +18488,7 @@ export namespace Prisma {
     options?: boolean | Question$optionsArgs<ExtArgs>
     tags?: boolean | Question$tagsArgs<ExtArgs>
     quizQuestions?: boolean | Question$quizQuestionsArgs<ExtArgs>
+    savedBy?: boolean | Question$savedByArgs<ExtArgs>
     _count?: boolean | QuestionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type QuestionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -18204,6 +18508,7 @@ export namespace Prisma {
       options: Prisma.$QuestionOptionPayload<ExtArgs>[]
       tags: Prisma.$QuestionTagPayload<ExtArgs>[]
       quizQuestions: Prisma.$QuizQuestionPayload<ExtArgs>[]
+      savedBy: Prisma.$SavedQuestionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -18617,6 +18922,7 @@ export namespace Prisma {
     options<T extends Question$optionsArgs<ExtArgs> = {}>(args?: Subset<T, Question$optionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionOptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tags<T extends Question$tagsArgs<ExtArgs> = {}>(args?: Subset<T, Question$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionTagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     quizQuestions<T extends Question$quizQuestionsArgs<ExtArgs> = {}>(args?: Subset<T, Question$quizQuestionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuizQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    savedBy<T extends Question$savedByArgs<ExtArgs> = {}>(args?: Subset<T, Question$savedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -19128,6 +19434,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: QuizQuestionScalarFieldEnum | QuizQuestionScalarFieldEnum[]
+  }
+
+  /**
+   * Question.savedBy
+   */
+  export type Question$savedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedQuestion
+     */
+    select?: SavedQuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedQuestion
+     */
+    omit?: SavedQuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedQuestionInclude<ExtArgs> | null
+    where?: SavedQuestionWhereInput
+    orderBy?: SavedQuestionOrderByWithRelationInput | SavedQuestionOrderByWithRelationInput[]
+    cursor?: SavedQuestionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SavedQuestionScalarFieldEnum | SavedQuestionScalarFieldEnum[]
   }
 
   /**
@@ -27040,6 +27370,2172 @@ export namespace Prisma {
 
 
   /**
+   * Model SavedQuestion
+   */
+
+  export type AggregateSavedQuestion = {
+    _count: SavedQuestionCountAggregateOutputType | null
+    _avg: SavedQuestionAvgAggregateOutputType | null
+    _sum: SavedQuestionSumAggregateOutputType | null
+    _min: SavedQuestionMinAggregateOutputType | null
+    _max: SavedQuestionMaxAggregateOutputType | null
+  }
+
+  export type SavedQuestionAvgAggregateOutputType = {
+    userId: number | null
+    questionId: number | null
+  }
+
+  export type SavedQuestionSumAggregateOutputType = {
+    userId: number | null
+    questionId: number | null
+  }
+
+  export type SavedQuestionMinAggregateOutputType = {
+    userId: number | null
+    questionId: number | null
+    savedAt: Date | null
+  }
+
+  export type SavedQuestionMaxAggregateOutputType = {
+    userId: number | null
+    questionId: number | null
+    savedAt: Date | null
+  }
+
+  export type SavedQuestionCountAggregateOutputType = {
+    userId: number
+    questionId: number
+    savedAt: number
+    _all: number
+  }
+
+
+  export type SavedQuestionAvgAggregateInputType = {
+    userId?: true
+    questionId?: true
+  }
+
+  export type SavedQuestionSumAggregateInputType = {
+    userId?: true
+    questionId?: true
+  }
+
+  export type SavedQuestionMinAggregateInputType = {
+    userId?: true
+    questionId?: true
+    savedAt?: true
+  }
+
+  export type SavedQuestionMaxAggregateInputType = {
+    userId?: true
+    questionId?: true
+    savedAt?: true
+  }
+
+  export type SavedQuestionCountAggregateInputType = {
+    userId?: true
+    questionId?: true
+    savedAt?: true
+    _all?: true
+  }
+
+  export type SavedQuestionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SavedQuestion to aggregate.
+     */
+    where?: SavedQuestionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SavedQuestions to fetch.
+     */
+    orderBy?: SavedQuestionOrderByWithRelationInput | SavedQuestionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SavedQuestionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SavedQuestions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SavedQuestions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SavedQuestions
+    **/
+    _count?: true | SavedQuestionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SavedQuestionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SavedQuestionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SavedQuestionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SavedQuestionMaxAggregateInputType
+  }
+
+  export type GetSavedQuestionAggregateType<T extends SavedQuestionAggregateArgs> = {
+        [P in keyof T & keyof AggregateSavedQuestion]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSavedQuestion[P]>
+      : GetScalarType<T[P], AggregateSavedQuestion[P]>
+  }
+
+
+
+
+  export type SavedQuestionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SavedQuestionWhereInput
+    orderBy?: SavedQuestionOrderByWithAggregationInput | SavedQuestionOrderByWithAggregationInput[]
+    by: SavedQuestionScalarFieldEnum[] | SavedQuestionScalarFieldEnum
+    having?: SavedQuestionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SavedQuestionCountAggregateInputType | true
+    _avg?: SavedQuestionAvgAggregateInputType
+    _sum?: SavedQuestionSumAggregateInputType
+    _min?: SavedQuestionMinAggregateInputType
+    _max?: SavedQuestionMaxAggregateInputType
+  }
+
+  export type SavedQuestionGroupByOutputType = {
+    userId: number
+    questionId: number
+    savedAt: Date
+    _count: SavedQuestionCountAggregateOutputType | null
+    _avg: SavedQuestionAvgAggregateOutputType | null
+    _sum: SavedQuestionSumAggregateOutputType | null
+    _min: SavedQuestionMinAggregateOutputType | null
+    _max: SavedQuestionMaxAggregateOutputType | null
+  }
+
+  type GetSavedQuestionGroupByPayload<T extends SavedQuestionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SavedQuestionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SavedQuestionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SavedQuestionGroupByOutputType[P]>
+            : GetScalarType<T[P], SavedQuestionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SavedQuestionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    questionId?: boolean
+    savedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["savedQuestion"]>
+
+  export type SavedQuestionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    questionId?: boolean
+    savedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["savedQuestion"]>
+
+  export type SavedQuestionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    questionId?: boolean
+    savedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["savedQuestion"]>
+
+  export type SavedQuestionSelectScalar = {
+    userId?: boolean
+    questionId?: boolean
+    savedAt?: boolean
+  }
+
+  export type SavedQuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "questionId" | "savedAt", ExtArgs["result"]["savedQuestion"]>
+  export type SavedQuestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+  }
+  export type SavedQuestionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+  }
+  export type SavedQuestionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    question?: boolean | QuestionDefaultArgs<ExtArgs>
+  }
+
+  export type $SavedQuestionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SavedQuestion"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      question: Prisma.$QuestionPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      userId: number
+      questionId: number
+      savedAt: Date
+    }, ExtArgs["result"]["savedQuestion"]>
+    composites: {}
+  }
+
+  type SavedQuestionGetPayload<S extends boolean | null | undefined | SavedQuestionDefaultArgs> = $Result.GetResult<Prisma.$SavedQuestionPayload, S>
+
+  type SavedQuestionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SavedQuestionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SavedQuestionCountAggregateInputType | true
+    }
+
+  export interface SavedQuestionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SavedQuestion'], meta: { name: 'SavedQuestion' } }
+    /**
+     * Find zero or one SavedQuestion that matches the filter.
+     * @param {SavedQuestionFindUniqueArgs} args - Arguments to find a SavedQuestion
+     * @example
+     * // Get one SavedQuestion
+     * const savedQuestion = await prisma.savedQuestion.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SavedQuestionFindUniqueArgs>(args: SelectSubset<T, SavedQuestionFindUniqueArgs<ExtArgs>>): Prisma__SavedQuestionClient<$Result.GetResult<Prisma.$SavedQuestionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SavedQuestion that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SavedQuestionFindUniqueOrThrowArgs} args - Arguments to find a SavedQuestion
+     * @example
+     * // Get one SavedQuestion
+     * const savedQuestion = await prisma.savedQuestion.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SavedQuestionFindUniqueOrThrowArgs>(args: SelectSubset<T, SavedQuestionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SavedQuestionClient<$Result.GetResult<Prisma.$SavedQuestionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SavedQuestion that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedQuestionFindFirstArgs} args - Arguments to find a SavedQuestion
+     * @example
+     * // Get one SavedQuestion
+     * const savedQuestion = await prisma.savedQuestion.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SavedQuestionFindFirstArgs>(args?: SelectSubset<T, SavedQuestionFindFirstArgs<ExtArgs>>): Prisma__SavedQuestionClient<$Result.GetResult<Prisma.$SavedQuestionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SavedQuestion that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedQuestionFindFirstOrThrowArgs} args - Arguments to find a SavedQuestion
+     * @example
+     * // Get one SavedQuestion
+     * const savedQuestion = await prisma.savedQuestion.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SavedQuestionFindFirstOrThrowArgs>(args?: SelectSubset<T, SavedQuestionFindFirstOrThrowArgs<ExtArgs>>): Prisma__SavedQuestionClient<$Result.GetResult<Prisma.$SavedQuestionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SavedQuestions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedQuestionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SavedQuestions
+     * const savedQuestions = await prisma.savedQuestion.findMany()
+     * 
+     * // Get first 10 SavedQuestions
+     * const savedQuestions = await prisma.savedQuestion.findMany({ take: 10 })
+     * 
+     * // Only select the `userId`
+     * const savedQuestionWithUserIdOnly = await prisma.savedQuestion.findMany({ select: { userId: true } })
+     * 
+     */
+    findMany<T extends SavedQuestionFindManyArgs>(args?: SelectSubset<T, SavedQuestionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SavedQuestion.
+     * @param {SavedQuestionCreateArgs} args - Arguments to create a SavedQuestion.
+     * @example
+     * // Create one SavedQuestion
+     * const SavedQuestion = await prisma.savedQuestion.create({
+     *   data: {
+     *     // ... data to create a SavedQuestion
+     *   }
+     * })
+     * 
+     */
+    create<T extends SavedQuestionCreateArgs>(args: SelectSubset<T, SavedQuestionCreateArgs<ExtArgs>>): Prisma__SavedQuestionClient<$Result.GetResult<Prisma.$SavedQuestionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SavedQuestions.
+     * @param {SavedQuestionCreateManyArgs} args - Arguments to create many SavedQuestions.
+     * @example
+     * // Create many SavedQuestions
+     * const savedQuestion = await prisma.savedQuestion.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SavedQuestionCreateManyArgs>(args?: SelectSubset<T, SavedQuestionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SavedQuestions and returns the data saved in the database.
+     * @param {SavedQuestionCreateManyAndReturnArgs} args - Arguments to create many SavedQuestions.
+     * @example
+     * // Create many SavedQuestions
+     * const savedQuestion = await prisma.savedQuestion.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SavedQuestions and only return the `userId`
+     * const savedQuestionWithUserIdOnly = await prisma.savedQuestion.createManyAndReturn({
+     *   select: { userId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SavedQuestionCreateManyAndReturnArgs>(args?: SelectSubset<T, SavedQuestionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedQuestionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SavedQuestion.
+     * @param {SavedQuestionDeleteArgs} args - Arguments to delete one SavedQuestion.
+     * @example
+     * // Delete one SavedQuestion
+     * const SavedQuestion = await prisma.savedQuestion.delete({
+     *   where: {
+     *     // ... filter to delete one SavedQuestion
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SavedQuestionDeleteArgs>(args: SelectSubset<T, SavedQuestionDeleteArgs<ExtArgs>>): Prisma__SavedQuestionClient<$Result.GetResult<Prisma.$SavedQuestionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SavedQuestion.
+     * @param {SavedQuestionUpdateArgs} args - Arguments to update one SavedQuestion.
+     * @example
+     * // Update one SavedQuestion
+     * const savedQuestion = await prisma.savedQuestion.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SavedQuestionUpdateArgs>(args: SelectSubset<T, SavedQuestionUpdateArgs<ExtArgs>>): Prisma__SavedQuestionClient<$Result.GetResult<Prisma.$SavedQuestionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SavedQuestions.
+     * @param {SavedQuestionDeleteManyArgs} args - Arguments to filter SavedQuestions to delete.
+     * @example
+     * // Delete a few SavedQuestions
+     * const { count } = await prisma.savedQuestion.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SavedQuestionDeleteManyArgs>(args?: SelectSubset<T, SavedQuestionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SavedQuestions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedQuestionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SavedQuestions
+     * const savedQuestion = await prisma.savedQuestion.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SavedQuestionUpdateManyArgs>(args: SelectSubset<T, SavedQuestionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SavedQuestions and returns the data updated in the database.
+     * @param {SavedQuestionUpdateManyAndReturnArgs} args - Arguments to update many SavedQuestions.
+     * @example
+     * // Update many SavedQuestions
+     * const savedQuestion = await prisma.savedQuestion.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SavedQuestions and only return the `userId`
+     * const savedQuestionWithUserIdOnly = await prisma.savedQuestion.updateManyAndReturn({
+     *   select: { userId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SavedQuestionUpdateManyAndReturnArgs>(args: SelectSubset<T, SavedQuestionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedQuestionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SavedQuestion.
+     * @param {SavedQuestionUpsertArgs} args - Arguments to update or create a SavedQuestion.
+     * @example
+     * // Update or create a SavedQuestion
+     * const savedQuestion = await prisma.savedQuestion.upsert({
+     *   create: {
+     *     // ... data to create a SavedQuestion
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SavedQuestion we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SavedQuestionUpsertArgs>(args: SelectSubset<T, SavedQuestionUpsertArgs<ExtArgs>>): Prisma__SavedQuestionClient<$Result.GetResult<Prisma.$SavedQuestionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SavedQuestions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedQuestionCountArgs} args - Arguments to filter SavedQuestions to count.
+     * @example
+     * // Count the number of SavedQuestions
+     * const count = await prisma.savedQuestion.count({
+     *   where: {
+     *     // ... the filter for the SavedQuestions we want to count
+     *   }
+     * })
+    **/
+    count<T extends SavedQuestionCountArgs>(
+      args?: Subset<T, SavedQuestionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SavedQuestionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SavedQuestion.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedQuestionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SavedQuestionAggregateArgs>(args: Subset<T, SavedQuestionAggregateArgs>): Prisma.PrismaPromise<GetSavedQuestionAggregateType<T>>
+
+    /**
+     * Group by SavedQuestion.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedQuestionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SavedQuestionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SavedQuestionGroupByArgs['orderBy'] }
+        : { orderBy?: SavedQuestionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SavedQuestionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSavedQuestionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SavedQuestion model
+   */
+  readonly fields: SavedQuestionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SavedQuestion.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SavedQuestionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    question<T extends QuestionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, QuestionDefaultArgs<ExtArgs>>): Prisma__QuestionClient<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SavedQuestion model
+   */
+  interface SavedQuestionFieldRefs {
+    readonly userId: FieldRef<"SavedQuestion", 'Int'>
+    readonly questionId: FieldRef<"SavedQuestion", 'Int'>
+    readonly savedAt: FieldRef<"SavedQuestion", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SavedQuestion findUnique
+   */
+  export type SavedQuestionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedQuestion
+     */
+    select?: SavedQuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedQuestion
+     */
+    omit?: SavedQuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedQuestionInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedQuestion to fetch.
+     */
+    where: SavedQuestionWhereUniqueInput
+  }
+
+  /**
+   * SavedQuestion findUniqueOrThrow
+   */
+  export type SavedQuestionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedQuestion
+     */
+    select?: SavedQuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedQuestion
+     */
+    omit?: SavedQuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedQuestionInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedQuestion to fetch.
+     */
+    where: SavedQuestionWhereUniqueInput
+  }
+
+  /**
+   * SavedQuestion findFirst
+   */
+  export type SavedQuestionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedQuestion
+     */
+    select?: SavedQuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedQuestion
+     */
+    omit?: SavedQuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedQuestionInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedQuestion to fetch.
+     */
+    where?: SavedQuestionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SavedQuestions to fetch.
+     */
+    orderBy?: SavedQuestionOrderByWithRelationInput | SavedQuestionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SavedQuestions.
+     */
+    cursor?: SavedQuestionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SavedQuestions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SavedQuestions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SavedQuestions.
+     */
+    distinct?: SavedQuestionScalarFieldEnum | SavedQuestionScalarFieldEnum[]
+  }
+
+  /**
+   * SavedQuestion findFirstOrThrow
+   */
+  export type SavedQuestionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedQuestion
+     */
+    select?: SavedQuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedQuestion
+     */
+    omit?: SavedQuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedQuestionInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedQuestion to fetch.
+     */
+    where?: SavedQuestionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SavedQuestions to fetch.
+     */
+    orderBy?: SavedQuestionOrderByWithRelationInput | SavedQuestionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SavedQuestions.
+     */
+    cursor?: SavedQuestionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SavedQuestions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SavedQuestions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SavedQuestions.
+     */
+    distinct?: SavedQuestionScalarFieldEnum | SavedQuestionScalarFieldEnum[]
+  }
+
+  /**
+   * SavedQuestion findMany
+   */
+  export type SavedQuestionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedQuestion
+     */
+    select?: SavedQuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedQuestion
+     */
+    omit?: SavedQuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedQuestionInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedQuestions to fetch.
+     */
+    where?: SavedQuestionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SavedQuestions to fetch.
+     */
+    orderBy?: SavedQuestionOrderByWithRelationInput | SavedQuestionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SavedQuestions.
+     */
+    cursor?: SavedQuestionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SavedQuestions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SavedQuestions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SavedQuestions.
+     */
+    distinct?: SavedQuestionScalarFieldEnum | SavedQuestionScalarFieldEnum[]
+  }
+
+  /**
+   * SavedQuestion create
+   */
+  export type SavedQuestionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedQuestion
+     */
+    select?: SavedQuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedQuestion
+     */
+    omit?: SavedQuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedQuestionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SavedQuestion.
+     */
+    data: XOR<SavedQuestionCreateInput, SavedQuestionUncheckedCreateInput>
+  }
+
+  /**
+   * SavedQuestion createMany
+   */
+  export type SavedQuestionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SavedQuestions.
+     */
+    data: SavedQuestionCreateManyInput | SavedQuestionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SavedQuestion createManyAndReturn
+   */
+  export type SavedQuestionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedQuestion
+     */
+    select?: SavedQuestionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedQuestion
+     */
+    omit?: SavedQuestionOmit<ExtArgs> | null
+    /**
+     * The data used to create many SavedQuestions.
+     */
+    data: SavedQuestionCreateManyInput | SavedQuestionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedQuestionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SavedQuestion update
+   */
+  export type SavedQuestionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedQuestion
+     */
+    select?: SavedQuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedQuestion
+     */
+    omit?: SavedQuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedQuestionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SavedQuestion.
+     */
+    data: XOR<SavedQuestionUpdateInput, SavedQuestionUncheckedUpdateInput>
+    /**
+     * Choose, which SavedQuestion to update.
+     */
+    where: SavedQuestionWhereUniqueInput
+  }
+
+  /**
+   * SavedQuestion updateMany
+   */
+  export type SavedQuestionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SavedQuestions.
+     */
+    data: XOR<SavedQuestionUpdateManyMutationInput, SavedQuestionUncheckedUpdateManyInput>
+    /**
+     * Filter which SavedQuestions to update
+     */
+    where?: SavedQuestionWhereInput
+    /**
+     * Limit how many SavedQuestions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SavedQuestion updateManyAndReturn
+   */
+  export type SavedQuestionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedQuestion
+     */
+    select?: SavedQuestionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedQuestion
+     */
+    omit?: SavedQuestionOmit<ExtArgs> | null
+    /**
+     * The data used to update SavedQuestions.
+     */
+    data: XOR<SavedQuestionUpdateManyMutationInput, SavedQuestionUncheckedUpdateManyInput>
+    /**
+     * Filter which SavedQuestions to update
+     */
+    where?: SavedQuestionWhereInput
+    /**
+     * Limit how many SavedQuestions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedQuestionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SavedQuestion upsert
+   */
+  export type SavedQuestionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedQuestion
+     */
+    select?: SavedQuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedQuestion
+     */
+    omit?: SavedQuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedQuestionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SavedQuestion to update in case it exists.
+     */
+    where: SavedQuestionWhereUniqueInput
+    /**
+     * In case the SavedQuestion found by the `where` argument doesn't exist, create a new SavedQuestion with this data.
+     */
+    create: XOR<SavedQuestionCreateInput, SavedQuestionUncheckedCreateInput>
+    /**
+     * In case the SavedQuestion was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SavedQuestionUpdateInput, SavedQuestionUncheckedUpdateInput>
+  }
+
+  /**
+   * SavedQuestion delete
+   */
+  export type SavedQuestionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedQuestion
+     */
+    select?: SavedQuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedQuestion
+     */
+    omit?: SavedQuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedQuestionInclude<ExtArgs> | null
+    /**
+     * Filter which SavedQuestion to delete.
+     */
+    where: SavedQuestionWhereUniqueInput
+  }
+
+  /**
+   * SavedQuestion deleteMany
+   */
+  export type SavedQuestionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SavedQuestions to delete
+     */
+    where?: SavedQuestionWhereInput
+    /**
+     * Limit how many SavedQuestions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SavedQuestion without action
+   */
+  export type SavedQuestionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedQuestion
+     */
+    select?: SavedQuestionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedQuestion
+     */
+    omit?: SavedQuestionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedQuestionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SavedLesson
+   */
+
+  export type AggregateSavedLesson = {
+    _count: SavedLessonCountAggregateOutputType | null
+    _avg: SavedLessonAvgAggregateOutputType | null
+    _sum: SavedLessonSumAggregateOutputType | null
+    _min: SavedLessonMinAggregateOutputType | null
+    _max: SavedLessonMaxAggregateOutputType | null
+  }
+
+  export type SavedLessonAvgAggregateOutputType = {
+    userId: number | null
+    lessonId: number | null
+  }
+
+  export type SavedLessonSumAggregateOutputType = {
+    userId: number | null
+    lessonId: number | null
+  }
+
+  export type SavedLessonMinAggregateOutputType = {
+    userId: number | null
+    lessonId: number | null
+    savedAt: Date | null
+  }
+
+  export type SavedLessonMaxAggregateOutputType = {
+    userId: number | null
+    lessonId: number | null
+    savedAt: Date | null
+  }
+
+  export type SavedLessonCountAggregateOutputType = {
+    userId: number
+    lessonId: number
+    savedAt: number
+    _all: number
+  }
+
+
+  export type SavedLessonAvgAggregateInputType = {
+    userId?: true
+    lessonId?: true
+  }
+
+  export type SavedLessonSumAggregateInputType = {
+    userId?: true
+    lessonId?: true
+  }
+
+  export type SavedLessonMinAggregateInputType = {
+    userId?: true
+    lessonId?: true
+    savedAt?: true
+  }
+
+  export type SavedLessonMaxAggregateInputType = {
+    userId?: true
+    lessonId?: true
+    savedAt?: true
+  }
+
+  export type SavedLessonCountAggregateInputType = {
+    userId?: true
+    lessonId?: true
+    savedAt?: true
+    _all?: true
+  }
+
+  export type SavedLessonAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SavedLesson to aggregate.
+     */
+    where?: SavedLessonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SavedLessons to fetch.
+     */
+    orderBy?: SavedLessonOrderByWithRelationInput | SavedLessonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SavedLessonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SavedLessons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SavedLessons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SavedLessons
+    **/
+    _count?: true | SavedLessonCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SavedLessonAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SavedLessonSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SavedLessonMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SavedLessonMaxAggregateInputType
+  }
+
+  export type GetSavedLessonAggregateType<T extends SavedLessonAggregateArgs> = {
+        [P in keyof T & keyof AggregateSavedLesson]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSavedLesson[P]>
+      : GetScalarType<T[P], AggregateSavedLesson[P]>
+  }
+
+
+
+
+  export type SavedLessonGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SavedLessonWhereInput
+    orderBy?: SavedLessonOrderByWithAggregationInput | SavedLessonOrderByWithAggregationInput[]
+    by: SavedLessonScalarFieldEnum[] | SavedLessonScalarFieldEnum
+    having?: SavedLessonScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SavedLessonCountAggregateInputType | true
+    _avg?: SavedLessonAvgAggregateInputType
+    _sum?: SavedLessonSumAggregateInputType
+    _min?: SavedLessonMinAggregateInputType
+    _max?: SavedLessonMaxAggregateInputType
+  }
+
+  export type SavedLessonGroupByOutputType = {
+    userId: number
+    lessonId: number
+    savedAt: Date
+    _count: SavedLessonCountAggregateOutputType | null
+    _avg: SavedLessonAvgAggregateOutputType | null
+    _sum: SavedLessonSumAggregateOutputType | null
+    _min: SavedLessonMinAggregateOutputType | null
+    _max: SavedLessonMaxAggregateOutputType | null
+  }
+
+  type GetSavedLessonGroupByPayload<T extends SavedLessonGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SavedLessonGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SavedLessonGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SavedLessonGroupByOutputType[P]>
+            : GetScalarType<T[P], SavedLessonGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SavedLessonSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    lessonId?: boolean
+    savedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["savedLesson"]>
+
+  export type SavedLessonSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    lessonId?: boolean
+    savedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["savedLesson"]>
+
+  export type SavedLessonSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    lessonId?: boolean
+    savedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["savedLesson"]>
+
+  export type SavedLessonSelectScalar = {
+    userId?: boolean
+    lessonId?: boolean
+    savedAt?: boolean
+  }
+
+  export type SavedLessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "lessonId" | "savedAt", ExtArgs["result"]["savedLesson"]>
+  export type SavedLessonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+  }
+  export type SavedLessonIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+  }
+  export type SavedLessonIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+  }
+
+  export type $SavedLessonPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SavedLesson"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      lesson: Prisma.$LessonPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      userId: number
+      lessonId: number
+      savedAt: Date
+    }, ExtArgs["result"]["savedLesson"]>
+    composites: {}
+  }
+
+  type SavedLessonGetPayload<S extends boolean | null | undefined | SavedLessonDefaultArgs> = $Result.GetResult<Prisma.$SavedLessonPayload, S>
+
+  type SavedLessonCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SavedLessonFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SavedLessonCountAggregateInputType | true
+    }
+
+  export interface SavedLessonDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SavedLesson'], meta: { name: 'SavedLesson' } }
+    /**
+     * Find zero or one SavedLesson that matches the filter.
+     * @param {SavedLessonFindUniqueArgs} args - Arguments to find a SavedLesson
+     * @example
+     * // Get one SavedLesson
+     * const savedLesson = await prisma.savedLesson.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SavedLessonFindUniqueArgs>(args: SelectSubset<T, SavedLessonFindUniqueArgs<ExtArgs>>): Prisma__SavedLessonClient<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SavedLesson that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SavedLessonFindUniqueOrThrowArgs} args - Arguments to find a SavedLesson
+     * @example
+     * // Get one SavedLesson
+     * const savedLesson = await prisma.savedLesson.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SavedLessonFindUniqueOrThrowArgs>(args: SelectSubset<T, SavedLessonFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SavedLessonClient<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SavedLesson that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedLessonFindFirstArgs} args - Arguments to find a SavedLesson
+     * @example
+     * // Get one SavedLesson
+     * const savedLesson = await prisma.savedLesson.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SavedLessonFindFirstArgs>(args?: SelectSubset<T, SavedLessonFindFirstArgs<ExtArgs>>): Prisma__SavedLessonClient<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SavedLesson that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedLessonFindFirstOrThrowArgs} args - Arguments to find a SavedLesson
+     * @example
+     * // Get one SavedLesson
+     * const savedLesson = await prisma.savedLesson.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SavedLessonFindFirstOrThrowArgs>(args?: SelectSubset<T, SavedLessonFindFirstOrThrowArgs<ExtArgs>>): Prisma__SavedLessonClient<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SavedLessons that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedLessonFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SavedLessons
+     * const savedLessons = await prisma.savedLesson.findMany()
+     * 
+     * // Get first 10 SavedLessons
+     * const savedLessons = await prisma.savedLesson.findMany({ take: 10 })
+     * 
+     * // Only select the `userId`
+     * const savedLessonWithUserIdOnly = await prisma.savedLesson.findMany({ select: { userId: true } })
+     * 
+     */
+    findMany<T extends SavedLessonFindManyArgs>(args?: SelectSubset<T, SavedLessonFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SavedLesson.
+     * @param {SavedLessonCreateArgs} args - Arguments to create a SavedLesson.
+     * @example
+     * // Create one SavedLesson
+     * const SavedLesson = await prisma.savedLesson.create({
+     *   data: {
+     *     // ... data to create a SavedLesson
+     *   }
+     * })
+     * 
+     */
+    create<T extends SavedLessonCreateArgs>(args: SelectSubset<T, SavedLessonCreateArgs<ExtArgs>>): Prisma__SavedLessonClient<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SavedLessons.
+     * @param {SavedLessonCreateManyArgs} args - Arguments to create many SavedLessons.
+     * @example
+     * // Create many SavedLessons
+     * const savedLesson = await prisma.savedLesson.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SavedLessonCreateManyArgs>(args?: SelectSubset<T, SavedLessonCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SavedLessons and returns the data saved in the database.
+     * @param {SavedLessonCreateManyAndReturnArgs} args - Arguments to create many SavedLessons.
+     * @example
+     * // Create many SavedLessons
+     * const savedLesson = await prisma.savedLesson.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SavedLessons and only return the `userId`
+     * const savedLessonWithUserIdOnly = await prisma.savedLesson.createManyAndReturn({
+     *   select: { userId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SavedLessonCreateManyAndReturnArgs>(args?: SelectSubset<T, SavedLessonCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SavedLesson.
+     * @param {SavedLessonDeleteArgs} args - Arguments to delete one SavedLesson.
+     * @example
+     * // Delete one SavedLesson
+     * const SavedLesson = await prisma.savedLesson.delete({
+     *   where: {
+     *     // ... filter to delete one SavedLesson
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SavedLessonDeleteArgs>(args: SelectSubset<T, SavedLessonDeleteArgs<ExtArgs>>): Prisma__SavedLessonClient<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SavedLesson.
+     * @param {SavedLessonUpdateArgs} args - Arguments to update one SavedLesson.
+     * @example
+     * // Update one SavedLesson
+     * const savedLesson = await prisma.savedLesson.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SavedLessonUpdateArgs>(args: SelectSubset<T, SavedLessonUpdateArgs<ExtArgs>>): Prisma__SavedLessonClient<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SavedLessons.
+     * @param {SavedLessonDeleteManyArgs} args - Arguments to filter SavedLessons to delete.
+     * @example
+     * // Delete a few SavedLessons
+     * const { count } = await prisma.savedLesson.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SavedLessonDeleteManyArgs>(args?: SelectSubset<T, SavedLessonDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SavedLessons.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedLessonUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SavedLessons
+     * const savedLesson = await prisma.savedLesson.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SavedLessonUpdateManyArgs>(args: SelectSubset<T, SavedLessonUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SavedLessons and returns the data updated in the database.
+     * @param {SavedLessonUpdateManyAndReturnArgs} args - Arguments to update many SavedLessons.
+     * @example
+     * // Update many SavedLessons
+     * const savedLesson = await prisma.savedLesson.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SavedLessons and only return the `userId`
+     * const savedLessonWithUserIdOnly = await prisma.savedLesson.updateManyAndReturn({
+     *   select: { userId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SavedLessonUpdateManyAndReturnArgs>(args: SelectSubset<T, SavedLessonUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SavedLesson.
+     * @param {SavedLessonUpsertArgs} args - Arguments to update or create a SavedLesson.
+     * @example
+     * // Update or create a SavedLesson
+     * const savedLesson = await prisma.savedLesson.upsert({
+     *   create: {
+     *     // ... data to create a SavedLesson
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SavedLesson we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SavedLessonUpsertArgs>(args: SelectSubset<T, SavedLessonUpsertArgs<ExtArgs>>): Prisma__SavedLessonClient<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SavedLessons.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedLessonCountArgs} args - Arguments to filter SavedLessons to count.
+     * @example
+     * // Count the number of SavedLessons
+     * const count = await prisma.savedLesson.count({
+     *   where: {
+     *     // ... the filter for the SavedLessons we want to count
+     *   }
+     * })
+    **/
+    count<T extends SavedLessonCountArgs>(
+      args?: Subset<T, SavedLessonCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SavedLessonCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SavedLesson.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedLessonAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SavedLessonAggregateArgs>(args: Subset<T, SavedLessonAggregateArgs>): Prisma.PrismaPromise<GetSavedLessonAggregateType<T>>
+
+    /**
+     * Group by SavedLesson.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedLessonGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SavedLessonGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SavedLessonGroupByArgs['orderBy'] }
+        : { orderBy?: SavedLessonGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SavedLessonGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSavedLessonGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SavedLesson model
+   */
+  readonly fields: SavedLessonFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SavedLesson.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SavedLessonClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    lesson<T extends LessonDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LessonDefaultArgs<ExtArgs>>): Prisma__LessonClient<$Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SavedLesson model
+   */
+  interface SavedLessonFieldRefs {
+    readonly userId: FieldRef<"SavedLesson", 'Int'>
+    readonly lessonId: FieldRef<"SavedLesson", 'Int'>
+    readonly savedAt: FieldRef<"SavedLesson", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SavedLesson findUnique
+   */
+  export type SavedLessonFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedLesson
+     */
+    select?: SavedLessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedLesson
+     */
+    omit?: SavedLessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedLessonInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedLesson to fetch.
+     */
+    where: SavedLessonWhereUniqueInput
+  }
+
+  /**
+   * SavedLesson findUniqueOrThrow
+   */
+  export type SavedLessonFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedLesson
+     */
+    select?: SavedLessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedLesson
+     */
+    omit?: SavedLessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedLessonInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedLesson to fetch.
+     */
+    where: SavedLessonWhereUniqueInput
+  }
+
+  /**
+   * SavedLesson findFirst
+   */
+  export type SavedLessonFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedLesson
+     */
+    select?: SavedLessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedLesson
+     */
+    omit?: SavedLessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedLessonInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedLesson to fetch.
+     */
+    where?: SavedLessonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SavedLessons to fetch.
+     */
+    orderBy?: SavedLessonOrderByWithRelationInput | SavedLessonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SavedLessons.
+     */
+    cursor?: SavedLessonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SavedLessons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SavedLessons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SavedLessons.
+     */
+    distinct?: SavedLessonScalarFieldEnum | SavedLessonScalarFieldEnum[]
+  }
+
+  /**
+   * SavedLesson findFirstOrThrow
+   */
+  export type SavedLessonFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedLesson
+     */
+    select?: SavedLessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedLesson
+     */
+    omit?: SavedLessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedLessonInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedLesson to fetch.
+     */
+    where?: SavedLessonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SavedLessons to fetch.
+     */
+    orderBy?: SavedLessonOrderByWithRelationInput | SavedLessonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SavedLessons.
+     */
+    cursor?: SavedLessonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SavedLessons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SavedLessons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SavedLessons.
+     */
+    distinct?: SavedLessonScalarFieldEnum | SavedLessonScalarFieldEnum[]
+  }
+
+  /**
+   * SavedLesson findMany
+   */
+  export type SavedLessonFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedLesson
+     */
+    select?: SavedLessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedLesson
+     */
+    omit?: SavedLessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedLessonInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedLessons to fetch.
+     */
+    where?: SavedLessonWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SavedLessons to fetch.
+     */
+    orderBy?: SavedLessonOrderByWithRelationInput | SavedLessonOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SavedLessons.
+     */
+    cursor?: SavedLessonWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SavedLessons from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SavedLessons.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SavedLessons.
+     */
+    distinct?: SavedLessonScalarFieldEnum | SavedLessonScalarFieldEnum[]
+  }
+
+  /**
+   * SavedLesson create
+   */
+  export type SavedLessonCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedLesson
+     */
+    select?: SavedLessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedLesson
+     */
+    omit?: SavedLessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedLessonInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SavedLesson.
+     */
+    data: XOR<SavedLessonCreateInput, SavedLessonUncheckedCreateInput>
+  }
+
+  /**
+   * SavedLesson createMany
+   */
+  export type SavedLessonCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SavedLessons.
+     */
+    data: SavedLessonCreateManyInput | SavedLessonCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SavedLesson createManyAndReturn
+   */
+  export type SavedLessonCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedLesson
+     */
+    select?: SavedLessonSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedLesson
+     */
+    omit?: SavedLessonOmit<ExtArgs> | null
+    /**
+     * The data used to create many SavedLessons.
+     */
+    data: SavedLessonCreateManyInput | SavedLessonCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedLessonIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SavedLesson update
+   */
+  export type SavedLessonUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedLesson
+     */
+    select?: SavedLessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedLesson
+     */
+    omit?: SavedLessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedLessonInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SavedLesson.
+     */
+    data: XOR<SavedLessonUpdateInput, SavedLessonUncheckedUpdateInput>
+    /**
+     * Choose, which SavedLesson to update.
+     */
+    where: SavedLessonWhereUniqueInput
+  }
+
+  /**
+   * SavedLesson updateMany
+   */
+  export type SavedLessonUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SavedLessons.
+     */
+    data: XOR<SavedLessonUpdateManyMutationInput, SavedLessonUncheckedUpdateManyInput>
+    /**
+     * Filter which SavedLessons to update
+     */
+    where?: SavedLessonWhereInput
+    /**
+     * Limit how many SavedLessons to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SavedLesson updateManyAndReturn
+   */
+  export type SavedLessonUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedLesson
+     */
+    select?: SavedLessonSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedLesson
+     */
+    omit?: SavedLessonOmit<ExtArgs> | null
+    /**
+     * The data used to update SavedLessons.
+     */
+    data: XOR<SavedLessonUpdateManyMutationInput, SavedLessonUncheckedUpdateManyInput>
+    /**
+     * Filter which SavedLessons to update
+     */
+    where?: SavedLessonWhereInput
+    /**
+     * Limit how many SavedLessons to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedLessonIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SavedLesson upsert
+   */
+  export type SavedLessonUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedLesson
+     */
+    select?: SavedLessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedLesson
+     */
+    omit?: SavedLessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedLessonInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SavedLesson to update in case it exists.
+     */
+    where: SavedLessonWhereUniqueInput
+    /**
+     * In case the SavedLesson found by the `where` argument doesn't exist, create a new SavedLesson with this data.
+     */
+    create: XOR<SavedLessonCreateInput, SavedLessonUncheckedCreateInput>
+    /**
+     * In case the SavedLesson was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SavedLessonUpdateInput, SavedLessonUncheckedUpdateInput>
+  }
+
+  /**
+   * SavedLesson delete
+   */
+  export type SavedLessonDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedLesson
+     */
+    select?: SavedLessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedLesson
+     */
+    omit?: SavedLessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedLessonInclude<ExtArgs> | null
+    /**
+     * Filter which SavedLesson to delete.
+     */
+    where: SavedLessonWhereUniqueInput
+  }
+
+  /**
+   * SavedLesson deleteMany
+   */
+  export type SavedLessonDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SavedLessons to delete
+     */
+    where?: SavedLessonWhereInput
+    /**
+     * Limit how many SavedLessons to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SavedLesson without action
+   */
+  export type SavedLessonDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedLesson
+     */
+    select?: SavedLessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedLesson
+     */
+    omit?: SavedLessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedLessonInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -27326,6 +29822,24 @@ export namespace Prisma {
   export type AttemptAnswerScalarFieldEnum = (typeof AttemptAnswerScalarFieldEnum)[keyof typeof AttemptAnswerScalarFieldEnum]
 
 
+  export const SavedQuestionScalarFieldEnum: {
+    userId: 'userId',
+    questionId: 'questionId',
+    savedAt: 'savedAt'
+  };
+
+  export type SavedQuestionScalarFieldEnum = (typeof SavedQuestionScalarFieldEnum)[keyof typeof SavedQuestionScalarFieldEnum]
+
+
+  export const SavedLessonScalarFieldEnum: {
+    userId: 'userId',
+    lessonId: 'lessonId',
+    savedAt: 'savedAt'
+  };
+
+  export type SavedLessonScalarFieldEnum = (typeof SavedLessonScalarFieldEnum)[keyof typeof SavedLessonScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -27510,6 +30024,8 @@ export namespace Prisma {
     sessions?: SessionListRelationFilter
     subscriptions?: SubscriptionListRelationFilter
     quizAttempts?: QuizAttemptListRelationFilter
+    savedQuestions?: SavedQuestionListRelationFilter
+    savedLessons?: SavedLessonListRelationFilter
     selectedCourse?: XOR<CourseNullableScalarRelationFilter, CourseWhereInput> | null
     selectedCourseType?: XOR<CourseTypeNullableScalarRelationFilter, CourseTypeWhereInput> | null
   }
@@ -27530,6 +30046,8 @@ export namespace Prisma {
     sessions?: SessionOrderByRelationAggregateInput
     subscriptions?: SubscriptionOrderByRelationAggregateInput
     quizAttempts?: QuizAttemptOrderByRelationAggregateInput
+    savedQuestions?: SavedQuestionOrderByRelationAggregateInput
+    savedLessons?: SavedLessonOrderByRelationAggregateInput
     selectedCourse?: CourseOrderByWithRelationInput
     selectedCourseType?: CourseTypeOrderByWithRelationInput
   }
@@ -27553,6 +30071,8 @@ export namespace Prisma {
     sessions?: SessionListRelationFilter
     subscriptions?: SubscriptionListRelationFilter
     quizAttempts?: QuizAttemptListRelationFilter
+    savedQuestions?: SavedQuestionListRelationFilter
+    savedLessons?: SavedLessonListRelationFilter
     selectedCourse?: XOR<CourseNullableScalarRelationFilter, CourseWhereInput> | null
     selectedCourseType?: XOR<CourseTypeNullableScalarRelationFilter, CourseTypeWhereInput> | null
   }, "id" | "email">
@@ -28167,6 +30687,7 @@ export namespace Prisma {
     chapter?: XOR<ChapterScalarRelationFilter, ChapterWhereInput>
     quiz?: XOR<QuizNullableScalarRelationFilter, QuizWhereInput> | null
     lessonPlans?: LessonPlanListRelationFilter
+    savedBy?: SavedLessonListRelationFilter
   }
 
   export type LessonOrderByWithRelationInput = {
@@ -28193,6 +30714,7 @@ export namespace Prisma {
     chapter?: ChapterOrderByWithRelationInput
     quiz?: QuizOrderByWithRelationInput
     lessonPlans?: LessonPlanOrderByRelationAggregateInput
+    savedBy?: SavedLessonOrderByRelationAggregateInput
   }
 
   export type LessonWhereUniqueInput = Prisma.AtLeast<{
@@ -28222,6 +30744,7 @@ export namespace Prisma {
     chapter?: XOR<ChapterScalarRelationFilter, ChapterWhereInput>
     quiz?: XOR<QuizNullableScalarRelationFilter, QuizWhereInput> | null
     lessonPlans?: LessonPlanListRelationFilter
+    savedBy?: SavedLessonListRelationFilter
   }, "id" | "quizId">
 
   export type LessonOrderByWithAggregationInput = {
@@ -28506,6 +31029,7 @@ export namespace Prisma {
     options?: QuestionOptionListRelationFilter
     tags?: QuestionTagListRelationFilter
     quizQuestions?: QuizQuestionListRelationFilter
+    savedBy?: SavedQuestionListRelationFilter
   }
 
   export type QuestionOrderByWithRelationInput = {
@@ -28526,6 +31050,7 @@ export namespace Prisma {
     options?: QuestionOptionOrderByRelationAggregateInput
     tags?: QuestionTagOrderByRelationAggregateInput
     quizQuestions?: QuizQuestionOrderByRelationAggregateInput
+    savedBy?: SavedQuestionOrderByRelationAggregateInput
   }
 
   export type QuestionWhereUniqueInput = Prisma.AtLeast<{
@@ -28549,6 +31074,7 @@ export namespace Prisma {
     options?: QuestionOptionListRelationFilter
     tags?: QuestionTagListRelationFilter
     quizQuestions?: QuizQuestionListRelationFilter
+    savedBy?: SavedQuestionListRelationFilter
   }, "id">
 
   export type QuestionOrderByWithAggregationInput = {
@@ -29015,6 +31541,108 @@ export namespace Prisma {
     answeredAt?: DateTimeWithAggregatesFilter<"AttemptAnswer"> | Date | string
   }
 
+  export type SavedQuestionWhereInput = {
+    AND?: SavedQuestionWhereInput | SavedQuestionWhereInput[]
+    OR?: SavedQuestionWhereInput[]
+    NOT?: SavedQuestionWhereInput | SavedQuestionWhereInput[]
+    userId?: IntFilter<"SavedQuestion"> | number
+    questionId?: IntFilter<"SavedQuestion"> | number
+    savedAt?: DateTimeFilter<"SavedQuestion"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    question?: XOR<QuestionScalarRelationFilter, QuestionWhereInput>
+  }
+
+  export type SavedQuestionOrderByWithRelationInput = {
+    userId?: SortOrder
+    questionId?: SortOrder
+    savedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    question?: QuestionOrderByWithRelationInput
+  }
+
+  export type SavedQuestionWhereUniqueInput = Prisma.AtLeast<{
+    userId_questionId?: SavedQuestionUserIdQuestionIdCompoundUniqueInput
+    AND?: SavedQuestionWhereInput | SavedQuestionWhereInput[]
+    OR?: SavedQuestionWhereInput[]
+    NOT?: SavedQuestionWhereInput | SavedQuestionWhereInput[]
+    userId?: IntFilter<"SavedQuestion"> | number
+    questionId?: IntFilter<"SavedQuestion"> | number
+    savedAt?: DateTimeFilter<"SavedQuestion"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    question?: XOR<QuestionScalarRelationFilter, QuestionWhereInput>
+  }, "userId_questionId">
+
+  export type SavedQuestionOrderByWithAggregationInput = {
+    userId?: SortOrder
+    questionId?: SortOrder
+    savedAt?: SortOrder
+    _count?: SavedQuestionCountOrderByAggregateInput
+    _avg?: SavedQuestionAvgOrderByAggregateInput
+    _max?: SavedQuestionMaxOrderByAggregateInput
+    _min?: SavedQuestionMinOrderByAggregateInput
+    _sum?: SavedQuestionSumOrderByAggregateInput
+  }
+
+  export type SavedQuestionScalarWhereWithAggregatesInput = {
+    AND?: SavedQuestionScalarWhereWithAggregatesInput | SavedQuestionScalarWhereWithAggregatesInput[]
+    OR?: SavedQuestionScalarWhereWithAggregatesInput[]
+    NOT?: SavedQuestionScalarWhereWithAggregatesInput | SavedQuestionScalarWhereWithAggregatesInput[]
+    userId?: IntWithAggregatesFilter<"SavedQuestion"> | number
+    questionId?: IntWithAggregatesFilter<"SavedQuestion"> | number
+    savedAt?: DateTimeWithAggregatesFilter<"SavedQuestion"> | Date | string
+  }
+
+  export type SavedLessonWhereInput = {
+    AND?: SavedLessonWhereInput | SavedLessonWhereInput[]
+    OR?: SavedLessonWhereInput[]
+    NOT?: SavedLessonWhereInput | SavedLessonWhereInput[]
+    userId?: IntFilter<"SavedLesson"> | number
+    lessonId?: IntFilter<"SavedLesson"> | number
+    savedAt?: DateTimeFilter<"SavedLesson"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    lesson?: XOR<LessonScalarRelationFilter, LessonWhereInput>
+  }
+
+  export type SavedLessonOrderByWithRelationInput = {
+    userId?: SortOrder
+    lessonId?: SortOrder
+    savedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    lesson?: LessonOrderByWithRelationInput
+  }
+
+  export type SavedLessonWhereUniqueInput = Prisma.AtLeast<{
+    userId_lessonId?: SavedLessonUserIdLessonIdCompoundUniqueInput
+    AND?: SavedLessonWhereInput | SavedLessonWhereInput[]
+    OR?: SavedLessonWhereInput[]
+    NOT?: SavedLessonWhereInput | SavedLessonWhereInput[]
+    userId?: IntFilter<"SavedLesson"> | number
+    lessonId?: IntFilter<"SavedLesson"> | number
+    savedAt?: DateTimeFilter<"SavedLesson"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    lesson?: XOR<LessonScalarRelationFilter, LessonWhereInput>
+  }, "userId_lessonId">
+
+  export type SavedLessonOrderByWithAggregationInput = {
+    userId?: SortOrder
+    lessonId?: SortOrder
+    savedAt?: SortOrder
+    _count?: SavedLessonCountOrderByAggregateInput
+    _avg?: SavedLessonAvgOrderByAggregateInput
+    _max?: SavedLessonMaxOrderByAggregateInput
+    _min?: SavedLessonMinOrderByAggregateInput
+    _sum?: SavedLessonSumOrderByAggregateInput
+  }
+
+  export type SavedLessonScalarWhereWithAggregatesInput = {
+    AND?: SavedLessonScalarWhereWithAggregatesInput | SavedLessonScalarWhereWithAggregatesInput[]
+    OR?: SavedLessonScalarWhereWithAggregatesInput[]
+    NOT?: SavedLessonScalarWhereWithAggregatesInput | SavedLessonScalarWhereWithAggregatesInput[]
+    userId?: IntWithAggregatesFilter<"SavedLesson"> | number
+    lessonId?: IntWithAggregatesFilter<"SavedLesson"> | number
+    savedAt?: DateTimeWithAggregatesFilter<"SavedLesson"> | Date | string
+  }
+
   export type UserCreateInput = {
     email: string
     password?: string | null
@@ -29028,6 +31656,8 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -29048,6 +31678,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -29063,6 +31695,8 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -29083,6 +31717,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -29717,6 +32353,7 @@ export namespace Prisma {
     chapter: ChapterCreateNestedOneWithoutLessonsInput
     quiz?: QuizCreateNestedOneWithoutLessonInput
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
+    savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateInput = {
@@ -29741,6 +32378,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
+    savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUpdateInput = {
@@ -29764,6 +32402,7 @@ export namespace Prisma {
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
     quiz?: QuizUpdateOneWithoutLessonNestedInput
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
+    savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateInput = {
@@ -29788,6 +32427,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
+    savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonCreateManyInput = {
@@ -30064,6 +32704,7 @@ export namespace Prisma {
     options?: QuestionOptionCreateNestedManyWithoutQuestionInput
     tags?: QuestionTagCreateNestedManyWithoutQuestionInput
     quizQuestions?: QuizQuestionCreateNestedManyWithoutQuestionInput
+    savedBy?: SavedQuestionCreateNestedManyWithoutQuestionInput
   }
 
   export type QuestionUncheckedCreateInput = {
@@ -30082,6 +32723,7 @@ export namespace Prisma {
     options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
     tags?: QuestionTagUncheckedCreateNestedManyWithoutQuestionInput
     quizQuestions?: QuizQuestionUncheckedCreateNestedManyWithoutQuestionInput
+    savedBy?: SavedQuestionUncheckedCreateNestedManyWithoutQuestionInput
   }
 
   export type QuestionUpdateInput = {
@@ -30099,6 +32741,7 @@ export namespace Prisma {
     options?: QuestionOptionUpdateManyWithoutQuestionNestedInput
     tags?: QuestionTagUpdateManyWithoutQuestionNestedInput
     quizQuestions?: QuizQuestionUpdateManyWithoutQuestionNestedInput
+    savedBy?: SavedQuestionUpdateManyWithoutQuestionNestedInput
   }
 
   export type QuestionUncheckedUpdateInput = {
@@ -30117,6 +32760,7 @@ export namespace Prisma {
     options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
     tags?: QuestionTagUncheckedUpdateManyWithoutQuestionNestedInput
     quizQuestions?: QuizQuestionUncheckedUpdateManyWithoutQuestionNestedInput
+    savedBy?: SavedQuestionUncheckedUpdateManyWithoutQuestionNestedInput
   }
 
   export type QuestionCreateManyInput = {
@@ -30552,6 +33196,86 @@ export namespace Prisma {
     answeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SavedQuestionCreateInput = {
+    savedAt?: Date | string
+    user: UserCreateNestedOneWithoutSavedQuestionsInput
+    question: QuestionCreateNestedOneWithoutSavedByInput
+  }
+
+  export type SavedQuestionUncheckedCreateInput = {
+    userId: number
+    questionId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedQuestionUpdateInput = {
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSavedQuestionsNestedInput
+    question?: QuestionUpdateOneRequiredWithoutSavedByNestedInput
+  }
+
+  export type SavedQuestionUncheckedUpdateInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    questionId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedQuestionCreateManyInput = {
+    userId: number
+    questionId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedQuestionUpdateManyMutationInput = {
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedQuestionUncheckedUpdateManyInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    questionId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedLessonCreateInput = {
+    savedAt?: Date | string
+    user: UserCreateNestedOneWithoutSavedLessonsInput
+    lesson: LessonCreateNestedOneWithoutSavedByInput
+  }
+
+  export type SavedLessonUncheckedCreateInput = {
+    userId: number
+    lessonId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedLessonUpdateInput = {
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSavedLessonsNestedInput
+    lesson?: LessonUpdateOneRequiredWithoutSavedByNestedInput
+  }
+
+  export type SavedLessonUncheckedUpdateInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedLessonCreateManyInput = {
+    userId: number
+    lessonId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedLessonUpdateManyMutationInput = {
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedLessonUncheckedUpdateManyInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -30633,6 +33357,18 @@ export namespace Prisma {
     none?: QuizAttemptWhereInput
   }
 
+  export type SavedQuestionListRelationFilter = {
+    every?: SavedQuestionWhereInput
+    some?: SavedQuestionWhereInput
+    none?: SavedQuestionWhereInput
+  }
+
+  export type SavedLessonListRelationFilter = {
+    every?: SavedLessonWhereInput
+    some?: SavedLessonWhereInput
+    none?: SavedLessonWhereInput
+  }
+
   export type CourseNullableScalarRelationFilter = {
     is?: CourseWhereInput | null
     isNot?: CourseWhereInput | null
@@ -30657,6 +33393,14 @@ export namespace Prisma {
   }
 
   export type QuizAttemptOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SavedQuestionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SavedLessonOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -32026,6 +34770,72 @@ export namespace Prisma {
     marksAwarded?: SortOrder
   }
 
+  export type SavedQuestionUserIdQuestionIdCompoundUniqueInput = {
+    userId: number
+    questionId: number
+  }
+
+  export type SavedQuestionCountOrderByAggregateInput = {
+    userId?: SortOrder
+    questionId?: SortOrder
+    savedAt?: SortOrder
+  }
+
+  export type SavedQuestionAvgOrderByAggregateInput = {
+    userId?: SortOrder
+    questionId?: SortOrder
+  }
+
+  export type SavedQuestionMaxOrderByAggregateInput = {
+    userId?: SortOrder
+    questionId?: SortOrder
+    savedAt?: SortOrder
+  }
+
+  export type SavedQuestionMinOrderByAggregateInput = {
+    userId?: SortOrder
+    questionId?: SortOrder
+    savedAt?: SortOrder
+  }
+
+  export type SavedQuestionSumOrderByAggregateInput = {
+    userId?: SortOrder
+    questionId?: SortOrder
+  }
+
+  export type SavedLessonUserIdLessonIdCompoundUniqueInput = {
+    userId: number
+    lessonId: number
+  }
+
+  export type SavedLessonCountOrderByAggregateInput = {
+    userId?: SortOrder
+    lessonId?: SortOrder
+    savedAt?: SortOrder
+  }
+
+  export type SavedLessonAvgOrderByAggregateInput = {
+    userId?: SortOrder
+    lessonId?: SortOrder
+  }
+
+  export type SavedLessonMaxOrderByAggregateInput = {
+    userId?: SortOrder
+    lessonId?: SortOrder
+    savedAt?: SortOrder
+  }
+
+  export type SavedLessonMinOrderByAggregateInput = {
+    userId?: SortOrder
+    lessonId?: SortOrder
+    savedAt?: SortOrder
+  }
+
+  export type SavedLessonSumOrderByAggregateInput = {
+    userId?: SortOrder
+    lessonId?: SortOrder
+  }
+
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -32045,6 +34855,20 @@ export namespace Prisma {
     connectOrCreate?: QuizAttemptCreateOrConnectWithoutUserInput | QuizAttemptCreateOrConnectWithoutUserInput[]
     createMany?: QuizAttemptCreateManyUserInputEnvelope
     connect?: QuizAttemptWhereUniqueInput | QuizAttemptWhereUniqueInput[]
+  }
+
+  export type SavedQuestionCreateNestedManyWithoutUserInput = {
+    create?: XOR<SavedQuestionCreateWithoutUserInput, SavedQuestionUncheckedCreateWithoutUserInput> | SavedQuestionCreateWithoutUserInput[] | SavedQuestionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SavedQuestionCreateOrConnectWithoutUserInput | SavedQuestionCreateOrConnectWithoutUserInput[]
+    createMany?: SavedQuestionCreateManyUserInputEnvelope
+    connect?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+  }
+
+  export type SavedLessonCreateNestedManyWithoutUserInput = {
+    create?: XOR<SavedLessonCreateWithoutUserInput, SavedLessonUncheckedCreateWithoutUserInput> | SavedLessonCreateWithoutUserInput[] | SavedLessonUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SavedLessonCreateOrConnectWithoutUserInput | SavedLessonCreateOrConnectWithoutUserInput[]
+    createMany?: SavedLessonCreateManyUserInputEnvelope
+    connect?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
   }
 
   export type CourseCreateNestedOneWithoutSelectedByInput = {
@@ -32078,6 +34902,20 @@ export namespace Prisma {
     connectOrCreate?: QuizAttemptCreateOrConnectWithoutUserInput | QuizAttemptCreateOrConnectWithoutUserInput[]
     createMany?: QuizAttemptCreateManyUserInputEnvelope
     connect?: QuizAttemptWhereUniqueInput | QuizAttemptWhereUniqueInput[]
+  }
+
+  export type SavedQuestionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SavedQuestionCreateWithoutUserInput, SavedQuestionUncheckedCreateWithoutUserInput> | SavedQuestionCreateWithoutUserInput[] | SavedQuestionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SavedQuestionCreateOrConnectWithoutUserInput | SavedQuestionCreateOrConnectWithoutUserInput[]
+    createMany?: SavedQuestionCreateManyUserInputEnvelope
+    connect?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+  }
+
+  export type SavedLessonUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SavedLessonCreateWithoutUserInput, SavedLessonUncheckedCreateWithoutUserInput> | SavedLessonCreateWithoutUserInput[] | SavedLessonUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SavedLessonCreateOrConnectWithoutUserInput | SavedLessonCreateOrConnectWithoutUserInput[]
+    createMany?: SavedLessonCreateManyUserInputEnvelope
+    connect?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -32132,6 +34970,34 @@ export namespace Prisma {
     update?: QuizAttemptUpdateWithWhereUniqueWithoutUserInput | QuizAttemptUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: QuizAttemptUpdateManyWithWhereWithoutUserInput | QuizAttemptUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: QuizAttemptScalarWhereInput | QuizAttemptScalarWhereInput[]
+  }
+
+  export type SavedQuestionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SavedQuestionCreateWithoutUserInput, SavedQuestionUncheckedCreateWithoutUserInput> | SavedQuestionCreateWithoutUserInput[] | SavedQuestionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SavedQuestionCreateOrConnectWithoutUserInput | SavedQuestionCreateOrConnectWithoutUserInput[]
+    upsert?: SavedQuestionUpsertWithWhereUniqueWithoutUserInput | SavedQuestionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SavedQuestionCreateManyUserInputEnvelope
+    set?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    disconnect?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    delete?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    connect?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    update?: SavedQuestionUpdateWithWhereUniqueWithoutUserInput | SavedQuestionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SavedQuestionUpdateManyWithWhereWithoutUserInput | SavedQuestionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SavedQuestionScalarWhereInput | SavedQuestionScalarWhereInput[]
+  }
+
+  export type SavedLessonUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SavedLessonCreateWithoutUserInput, SavedLessonUncheckedCreateWithoutUserInput> | SavedLessonCreateWithoutUserInput[] | SavedLessonUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SavedLessonCreateOrConnectWithoutUserInput | SavedLessonCreateOrConnectWithoutUserInput[]
+    upsert?: SavedLessonUpsertWithWhereUniqueWithoutUserInput | SavedLessonUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SavedLessonCreateManyUserInputEnvelope
+    set?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    disconnect?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    delete?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    connect?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    update?: SavedLessonUpdateWithWhereUniqueWithoutUserInput | SavedLessonUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SavedLessonUpdateManyWithWhereWithoutUserInput | SavedLessonUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SavedLessonScalarWhereInput | SavedLessonScalarWhereInput[]
   }
 
   export type CourseUpdateOneWithoutSelectedByNestedInput = {
@@ -32210,6 +35076,34 @@ export namespace Prisma {
     update?: QuizAttemptUpdateWithWhereUniqueWithoutUserInput | QuizAttemptUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: QuizAttemptUpdateManyWithWhereWithoutUserInput | QuizAttemptUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: QuizAttemptScalarWhereInput | QuizAttemptScalarWhereInput[]
+  }
+
+  export type SavedQuestionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SavedQuestionCreateWithoutUserInput, SavedQuestionUncheckedCreateWithoutUserInput> | SavedQuestionCreateWithoutUserInput[] | SavedQuestionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SavedQuestionCreateOrConnectWithoutUserInput | SavedQuestionCreateOrConnectWithoutUserInput[]
+    upsert?: SavedQuestionUpsertWithWhereUniqueWithoutUserInput | SavedQuestionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SavedQuestionCreateManyUserInputEnvelope
+    set?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    disconnect?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    delete?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    connect?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    update?: SavedQuestionUpdateWithWhereUniqueWithoutUserInput | SavedQuestionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SavedQuestionUpdateManyWithWhereWithoutUserInput | SavedQuestionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SavedQuestionScalarWhereInput | SavedQuestionScalarWhereInput[]
+  }
+
+  export type SavedLessonUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SavedLessonCreateWithoutUserInput, SavedLessonUncheckedCreateWithoutUserInput> | SavedLessonCreateWithoutUserInput[] | SavedLessonUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SavedLessonCreateOrConnectWithoutUserInput | SavedLessonCreateOrConnectWithoutUserInput[]
+    upsert?: SavedLessonUpsertWithWhereUniqueWithoutUserInput | SavedLessonUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SavedLessonCreateManyUserInputEnvelope
+    set?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    disconnect?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    delete?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    connect?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    update?: SavedLessonUpdateWithWhereUniqueWithoutUserInput | SavedLessonUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SavedLessonUpdateManyWithWhereWithoutUserInput | SavedLessonUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SavedLessonScalarWhereInput | SavedLessonScalarWhereInput[]
   }
 
   export type CourseCreateNestedManyWithoutAdminInput = {
@@ -33001,11 +35895,25 @@ export namespace Prisma {
     connect?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
   }
 
+  export type SavedLessonCreateNestedManyWithoutLessonInput = {
+    create?: XOR<SavedLessonCreateWithoutLessonInput, SavedLessonUncheckedCreateWithoutLessonInput> | SavedLessonCreateWithoutLessonInput[] | SavedLessonUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: SavedLessonCreateOrConnectWithoutLessonInput | SavedLessonCreateOrConnectWithoutLessonInput[]
+    createMany?: SavedLessonCreateManyLessonInputEnvelope
+    connect?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+  }
+
   export type LessonPlanUncheckedCreateNestedManyWithoutLessonInput = {
     create?: XOR<LessonPlanCreateWithoutLessonInput, LessonPlanUncheckedCreateWithoutLessonInput> | LessonPlanCreateWithoutLessonInput[] | LessonPlanUncheckedCreateWithoutLessonInput[]
     connectOrCreate?: LessonPlanCreateOrConnectWithoutLessonInput | LessonPlanCreateOrConnectWithoutLessonInput[]
     createMany?: LessonPlanCreateManyLessonInputEnvelope
     connect?: LessonPlanWhereUniqueInput | LessonPlanWhereUniqueInput[]
+  }
+
+  export type SavedLessonUncheckedCreateNestedManyWithoutLessonInput = {
+    create?: XOR<SavedLessonCreateWithoutLessonInput, SavedLessonUncheckedCreateWithoutLessonInput> | SavedLessonCreateWithoutLessonInput[] | SavedLessonUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: SavedLessonCreateOrConnectWithoutLessonInput | SavedLessonCreateOrConnectWithoutLessonInput[]
+    createMany?: SavedLessonCreateManyLessonInputEnvelope
+    connect?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
   }
 
   export type EnumLessonTypeFieldUpdateOperationsInput = {
@@ -33044,6 +35952,20 @@ export namespace Prisma {
     deleteMany?: LessonPlanScalarWhereInput | LessonPlanScalarWhereInput[]
   }
 
+  export type SavedLessonUpdateManyWithoutLessonNestedInput = {
+    create?: XOR<SavedLessonCreateWithoutLessonInput, SavedLessonUncheckedCreateWithoutLessonInput> | SavedLessonCreateWithoutLessonInput[] | SavedLessonUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: SavedLessonCreateOrConnectWithoutLessonInput | SavedLessonCreateOrConnectWithoutLessonInput[]
+    upsert?: SavedLessonUpsertWithWhereUniqueWithoutLessonInput | SavedLessonUpsertWithWhereUniqueWithoutLessonInput[]
+    createMany?: SavedLessonCreateManyLessonInputEnvelope
+    set?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    disconnect?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    delete?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    connect?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    update?: SavedLessonUpdateWithWhereUniqueWithoutLessonInput | SavedLessonUpdateWithWhereUniqueWithoutLessonInput[]
+    updateMany?: SavedLessonUpdateManyWithWhereWithoutLessonInput | SavedLessonUpdateManyWithWhereWithoutLessonInput[]
+    deleteMany?: SavedLessonScalarWhereInput | SavedLessonScalarWhereInput[]
+  }
+
   export type LessonPlanUncheckedUpdateManyWithoutLessonNestedInput = {
     create?: XOR<LessonPlanCreateWithoutLessonInput, LessonPlanUncheckedCreateWithoutLessonInput> | LessonPlanCreateWithoutLessonInput[] | LessonPlanUncheckedCreateWithoutLessonInput[]
     connectOrCreate?: LessonPlanCreateOrConnectWithoutLessonInput | LessonPlanCreateOrConnectWithoutLessonInput[]
@@ -33056,6 +35978,20 @@ export namespace Prisma {
     update?: LessonPlanUpdateWithWhereUniqueWithoutLessonInput | LessonPlanUpdateWithWhereUniqueWithoutLessonInput[]
     updateMany?: LessonPlanUpdateManyWithWhereWithoutLessonInput | LessonPlanUpdateManyWithWhereWithoutLessonInput[]
     deleteMany?: LessonPlanScalarWhereInput | LessonPlanScalarWhereInput[]
+  }
+
+  export type SavedLessonUncheckedUpdateManyWithoutLessonNestedInput = {
+    create?: XOR<SavedLessonCreateWithoutLessonInput, SavedLessonUncheckedCreateWithoutLessonInput> | SavedLessonCreateWithoutLessonInput[] | SavedLessonUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: SavedLessonCreateOrConnectWithoutLessonInput | SavedLessonCreateOrConnectWithoutLessonInput[]
+    upsert?: SavedLessonUpsertWithWhereUniqueWithoutLessonInput | SavedLessonUpsertWithWhereUniqueWithoutLessonInput[]
+    createMany?: SavedLessonCreateManyLessonInputEnvelope
+    set?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    disconnect?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    delete?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    connect?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+    update?: SavedLessonUpdateWithWhereUniqueWithoutLessonInput | SavedLessonUpdateWithWhereUniqueWithoutLessonInput[]
+    updateMany?: SavedLessonUpdateManyWithWhereWithoutLessonInput | SavedLessonUpdateManyWithWhereWithoutLessonInput[]
+    deleteMany?: SavedLessonScalarWhereInput | SavedLessonScalarWhereInput[]
   }
 
   export type LessonCreateNestedOneWithoutLessonPlansInput = {
@@ -33267,6 +36203,13 @@ export namespace Prisma {
     connect?: QuizQuestionWhereUniqueInput | QuizQuestionWhereUniqueInput[]
   }
 
+  export type SavedQuestionCreateNestedManyWithoutQuestionInput = {
+    create?: XOR<SavedQuestionCreateWithoutQuestionInput, SavedQuestionUncheckedCreateWithoutQuestionInput> | SavedQuestionCreateWithoutQuestionInput[] | SavedQuestionUncheckedCreateWithoutQuestionInput[]
+    connectOrCreate?: SavedQuestionCreateOrConnectWithoutQuestionInput | SavedQuestionCreateOrConnectWithoutQuestionInput[]
+    createMany?: SavedQuestionCreateManyQuestionInputEnvelope
+    connect?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+  }
+
   export type QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput = {
     create?: XOR<QuestionOptionCreateWithoutQuestionInput, QuestionOptionUncheckedCreateWithoutQuestionInput> | QuestionOptionCreateWithoutQuestionInput[] | QuestionOptionUncheckedCreateWithoutQuestionInput[]
     connectOrCreate?: QuestionOptionCreateOrConnectWithoutQuestionInput | QuestionOptionCreateOrConnectWithoutQuestionInput[]
@@ -33286,6 +36229,13 @@ export namespace Prisma {
     connectOrCreate?: QuizQuestionCreateOrConnectWithoutQuestionInput | QuizQuestionCreateOrConnectWithoutQuestionInput[]
     createMany?: QuizQuestionCreateManyQuestionInputEnvelope
     connect?: QuizQuestionWhereUniqueInput | QuizQuestionWhereUniqueInput[]
+  }
+
+  export type SavedQuestionUncheckedCreateNestedManyWithoutQuestionInput = {
+    create?: XOR<SavedQuestionCreateWithoutQuestionInput, SavedQuestionUncheckedCreateWithoutQuestionInput> | SavedQuestionCreateWithoutQuestionInput[] | SavedQuestionUncheckedCreateWithoutQuestionInput[]
+    connectOrCreate?: SavedQuestionCreateOrConnectWithoutQuestionInput | SavedQuestionCreateOrConnectWithoutQuestionInput[]
+    createMany?: SavedQuestionCreateManyQuestionInputEnvelope
+    connect?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
   }
 
   export type EnumDifficultyFieldUpdateOperationsInput = {
@@ -33354,6 +36304,20 @@ export namespace Prisma {
     deleteMany?: QuizQuestionScalarWhereInput | QuizQuestionScalarWhereInput[]
   }
 
+  export type SavedQuestionUpdateManyWithoutQuestionNestedInput = {
+    create?: XOR<SavedQuestionCreateWithoutQuestionInput, SavedQuestionUncheckedCreateWithoutQuestionInput> | SavedQuestionCreateWithoutQuestionInput[] | SavedQuestionUncheckedCreateWithoutQuestionInput[]
+    connectOrCreate?: SavedQuestionCreateOrConnectWithoutQuestionInput | SavedQuestionCreateOrConnectWithoutQuestionInput[]
+    upsert?: SavedQuestionUpsertWithWhereUniqueWithoutQuestionInput | SavedQuestionUpsertWithWhereUniqueWithoutQuestionInput[]
+    createMany?: SavedQuestionCreateManyQuestionInputEnvelope
+    set?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    disconnect?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    delete?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    connect?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    update?: SavedQuestionUpdateWithWhereUniqueWithoutQuestionInput | SavedQuestionUpdateWithWhereUniqueWithoutQuestionInput[]
+    updateMany?: SavedQuestionUpdateManyWithWhereWithoutQuestionInput | SavedQuestionUpdateManyWithWhereWithoutQuestionInput[]
+    deleteMany?: SavedQuestionScalarWhereInput | SavedQuestionScalarWhereInput[]
+  }
+
   export type QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput = {
     create?: XOR<QuestionOptionCreateWithoutQuestionInput, QuestionOptionUncheckedCreateWithoutQuestionInput> | QuestionOptionCreateWithoutQuestionInput[] | QuestionOptionUncheckedCreateWithoutQuestionInput[]
     connectOrCreate?: QuestionOptionCreateOrConnectWithoutQuestionInput | QuestionOptionCreateOrConnectWithoutQuestionInput[]
@@ -33394,6 +36358,20 @@ export namespace Prisma {
     update?: QuizQuestionUpdateWithWhereUniqueWithoutQuestionInput | QuizQuestionUpdateWithWhereUniqueWithoutQuestionInput[]
     updateMany?: QuizQuestionUpdateManyWithWhereWithoutQuestionInput | QuizQuestionUpdateManyWithWhereWithoutQuestionInput[]
     deleteMany?: QuizQuestionScalarWhereInput | QuizQuestionScalarWhereInput[]
+  }
+
+  export type SavedQuestionUncheckedUpdateManyWithoutQuestionNestedInput = {
+    create?: XOR<SavedQuestionCreateWithoutQuestionInput, SavedQuestionUncheckedCreateWithoutQuestionInput> | SavedQuestionCreateWithoutQuestionInput[] | SavedQuestionUncheckedCreateWithoutQuestionInput[]
+    connectOrCreate?: SavedQuestionCreateOrConnectWithoutQuestionInput | SavedQuestionCreateOrConnectWithoutQuestionInput[]
+    upsert?: SavedQuestionUpsertWithWhereUniqueWithoutQuestionInput | SavedQuestionUpsertWithWhereUniqueWithoutQuestionInput[]
+    createMany?: SavedQuestionCreateManyQuestionInputEnvelope
+    set?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    disconnect?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    delete?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    connect?: SavedQuestionWhereUniqueInput | SavedQuestionWhereUniqueInput[]
+    update?: SavedQuestionUpdateWithWhereUniqueWithoutQuestionInput | SavedQuestionUpdateWithWhereUniqueWithoutQuestionInput[]
+    updateMany?: SavedQuestionUpdateManyWithWhereWithoutQuestionInput | SavedQuestionUpdateManyWithWhereWithoutQuestionInput[]
+    deleteMany?: SavedQuestionScalarWhereInput | SavedQuestionScalarWhereInput[]
   }
 
   export type QuestionCreateNestedOneWithoutOptionsInput = {
@@ -33743,6 +36721,62 @@ export namespace Prisma {
     upsert?: QuizAttemptUpsertWithoutAnswersInput
     connect?: QuizAttemptWhereUniqueInput
     update?: XOR<XOR<QuizAttemptUpdateToOneWithWhereWithoutAnswersInput, QuizAttemptUpdateWithoutAnswersInput>, QuizAttemptUncheckedUpdateWithoutAnswersInput>
+  }
+
+  export type UserCreateNestedOneWithoutSavedQuestionsInput = {
+    create?: XOR<UserCreateWithoutSavedQuestionsInput, UserUncheckedCreateWithoutSavedQuestionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSavedQuestionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type QuestionCreateNestedOneWithoutSavedByInput = {
+    create?: XOR<QuestionCreateWithoutSavedByInput, QuestionUncheckedCreateWithoutSavedByInput>
+    connectOrCreate?: QuestionCreateOrConnectWithoutSavedByInput
+    connect?: QuestionWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutSavedQuestionsNestedInput = {
+    create?: XOR<UserCreateWithoutSavedQuestionsInput, UserUncheckedCreateWithoutSavedQuestionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSavedQuestionsInput
+    upsert?: UserUpsertWithoutSavedQuestionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSavedQuestionsInput, UserUpdateWithoutSavedQuestionsInput>, UserUncheckedUpdateWithoutSavedQuestionsInput>
+  }
+
+  export type QuestionUpdateOneRequiredWithoutSavedByNestedInput = {
+    create?: XOR<QuestionCreateWithoutSavedByInput, QuestionUncheckedCreateWithoutSavedByInput>
+    connectOrCreate?: QuestionCreateOrConnectWithoutSavedByInput
+    upsert?: QuestionUpsertWithoutSavedByInput
+    connect?: QuestionWhereUniqueInput
+    update?: XOR<XOR<QuestionUpdateToOneWithWhereWithoutSavedByInput, QuestionUpdateWithoutSavedByInput>, QuestionUncheckedUpdateWithoutSavedByInput>
+  }
+
+  export type UserCreateNestedOneWithoutSavedLessonsInput = {
+    create?: XOR<UserCreateWithoutSavedLessonsInput, UserUncheckedCreateWithoutSavedLessonsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSavedLessonsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type LessonCreateNestedOneWithoutSavedByInput = {
+    create?: XOR<LessonCreateWithoutSavedByInput, LessonUncheckedCreateWithoutSavedByInput>
+    connectOrCreate?: LessonCreateOrConnectWithoutSavedByInput
+    connect?: LessonWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutSavedLessonsNestedInput = {
+    create?: XOR<UserCreateWithoutSavedLessonsInput, UserUncheckedCreateWithoutSavedLessonsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSavedLessonsInput
+    upsert?: UserUpsertWithoutSavedLessonsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSavedLessonsInput, UserUpdateWithoutSavedLessonsInput>, UserUncheckedUpdateWithoutSavedLessonsInput>
+  }
+
+  export type LessonUpdateOneRequiredWithoutSavedByNestedInput = {
+    create?: XOR<LessonCreateWithoutSavedByInput, LessonUncheckedCreateWithoutSavedByInput>
+    connectOrCreate?: LessonCreateOrConnectWithoutSavedByInput
+    upsert?: LessonUpsertWithoutSavedByInput
+    connect?: LessonWhereUniqueInput
+    update?: XOR<XOR<LessonUpdateToOneWithWhereWithoutSavedByInput, LessonUpdateWithoutSavedByInput>, LessonUncheckedUpdateWithoutSavedByInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -34130,6 +37164,46 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SavedQuestionCreateWithoutUserInput = {
+    savedAt?: Date | string
+    question: QuestionCreateNestedOneWithoutSavedByInput
+  }
+
+  export type SavedQuestionUncheckedCreateWithoutUserInput = {
+    questionId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedQuestionCreateOrConnectWithoutUserInput = {
+    where: SavedQuestionWhereUniqueInput
+    create: XOR<SavedQuestionCreateWithoutUserInput, SavedQuestionUncheckedCreateWithoutUserInput>
+  }
+
+  export type SavedQuestionCreateManyUserInputEnvelope = {
+    data: SavedQuestionCreateManyUserInput | SavedQuestionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SavedLessonCreateWithoutUserInput = {
+    savedAt?: Date | string
+    lesson: LessonCreateNestedOneWithoutSavedByInput
+  }
+
+  export type SavedLessonUncheckedCreateWithoutUserInput = {
+    lessonId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedLessonCreateOrConnectWithoutUserInput = {
+    where: SavedLessonWhereUniqueInput
+    create: XOR<SavedLessonCreateWithoutUserInput, SavedLessonUncheckedCreateWithoutUserInput>
+  }
+
+  export type SavedLessonCreateManyUserInputEnvelope = {
+    data: SavedLessonCreateManyUserInput | SavedLessonCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CourseCreateWithoutSelectedByInput = {
     title: string
     description?: string | null
@@ -34289,6 +37363,56 @@ export namespace Prisma {
     questionIds?: IntNullableListFilter<"QuizAttempt">
     startedAt?: DateTimeFilter<"QuizAttempt"> | Date | string
     completedAt?: DateTimeNullableFilter<"QuizAttempt"> | Date | string | null
+  }
+
+  export type SavedQuestionUpsertWithWhereUniqueWithoutUserInput = {
+    where: SavedQuestionWhereUniqueInput
+    update: XOR<SavedQuestionUpdateWithoutUserInput, SavedQuestionUncheckedUpdateWithoutUserInput>
+    create: XOR<SavedQuestionCreateWithoutUserInput, SavedQuestionUncheckedCreateWithoutUserInput>
+  }
+
+  export type SavedQuestionUpdateWithWhereUniqueWithoutUserInput = {
+    where: SavedQuestionWhereUniqueInput
+    data: XOR<SavedQuestionUpdateWithoutUserInput, SavedQuestionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SavedQuestionUpdateManyWithWhereWithoutUserInput = {
+    where: SavedQuestionScalarWhereInput
+    data: XOR<SavedQuestionUpdateManyMutationInput, SavedQuestionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type SavedQuestionScalarWhereInput = {
+    AND?: SavedQuestionScalarWhereInput | SavedQuestionScalarWhereInput[]
+    OR?: SavedQuestionScalarWhereInput[]
+    NOT?: SavedQuestionScalarWhereInput | SavedQuestionScalarWhereInput[]
+    userId?: IntFilter<"SavedQuestion"> | number
+    questionId?: IntFilter<"SavedQuestion"> | number
+    savedAt?: DateTimeFilter<"SavedQuestion"> | Date | string
+  }
+
+  export type SavedLessonUpsertWithWhereUniqueWithoutUserInput = {
+    where: SavedLessonWhereUniqueInput
+    update: XOR<SavedLessonUpdateWithoutUserInput, SavedLessonUncheckedUpdateWithoutUserInput>
+    create: XOR<SavedLessonCreateWithoutUserInput, SavedLessonUncheckedCreateWithoutUserInput>
+  }
+
+  export type SavedLessonUpdateWithWhereUniqueWithoutUserInput = {
+    where: SavedLessonWhereUniqueInput
+    data: XOR<SavedLessonUpdateWithoutUserInput, SavedLessonUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SavedLessonUpdateManyWithWhereWithoutUserInput = {
+    where: SavedLessonScalarWhereInput
+    data: XOR<SavedLessonUpdateManyMutationInput, SavedLessonUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type SavedLessonScalarWhereInput = {
+    AND?: SavedLessonScalarWhereInput | SavedLessonScalarWhereInput[]
+    OR?: SavedLessonScalarWhereInput[]
+    NOT?: SavedLessonScalarWhereInput | SavedLessonScalarWhereInput[]
+    userId?: IntFilter<"SavedLesson"> | number
+    lessonId?: IntFilter<"SavedLesson"> | number
+    savedAt?: DateTimeFilter<"SavedLesson"> | Date | string
   }
 
   export type CourseUpsertWithoutSelectedByInput = {
@@ -34549,6 +37673,7 @@ export namespace Prisma {
     options?: QuestionOptionCreateNestedManyWithoutQuestionInput
     tags?: QuestionTagCreateNestedManyWithoutQuestionInput
     quizQuestions?: QuizQuestionCreateNestedManyWithoutQuestionInput
+    savedBy?: SavedQuestionCreateNestedManyWithoutQuestionInput
   }
 
   export type QuestionUncheckedCreateWithoutSubjectInput = {
@@ -34566,6 +37691,7 @@ export namespace Prisma {
     options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
     tags?: QuestionTagUncheckedCreateNestedManyWithoutQuestionInput
     quizQuestions?: QuizQuestionUncheckedCreateNestedManyWithoutQuestionInput
+    savedBy?: SavedQuestionUncheckedCreateNestedManyWithoutQuestionInput
   }
 
   export type QuestionCreateOrConnectWithoutSubjectInput = {
@@ -34767,6 +37893,7 @@ export namespace Prisma {
     options?: QuestionOptionCreateNestedManyWithoutQuestionInput
     tags?: QuestionTagCreateNestedManyWithoutQuestionInput
     quizQuestions?: QuizQuestionCreateNestedManyWithoutQuestionInput
+    savedBy?: SavedQuestionCreateNestedManyWithoutQuestionInput
   }
 
   export type QuestionUncheckedCreateWithoutTopicInput = {
@@ -34784,6 +37911,7 @@ export namespace Prisma {
     options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
     tags?: QuestionTagUncheckedCreateNestedManyWithoutQuestionInput
     quizQuestions?: QuizQuestionUncheckedCreateNestedManyWithoutQuestionInput
+    savedBy?: SavedQuestionUncheckedCreateNestedManyWithoutQuestionInput
   }
 
   export type QuestionCreateOrConnectWithoutTopicInput = {
@@ -34911,6 +38039,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -34930,6 +38060,8 @@ export namespace Prisma {
     selectedCourseTypeId?: number | null
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -34960,6 +38092,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -34979,6 +38113,8 @@ export namespace Prisma {
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SubjectCreateWithoutCoursesInput = {
@@ -35112,6 +38248,8 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
 
@@ -35130,6 +38268,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSelectedCourseInput = {
@@ -35493,6 +38633,8 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
   }
 
@@ -35511,6 +38653,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSelectedCourseTypeInput = {
@@ -35699,6 +38843,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     quiz?: QuizCreateNestedOneWithoutLessonInput
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
+    savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutChapterInput = {
@@ -35722,6 +38867,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
+    savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutChapterInput = {
@@ -35936,6 +39082,26 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SavedLessonCreateWithoutLessonInput = {
+    savedAt?: Date | string
+    user: UserCreateNestedOneWithoutSavedLessonsInput
+  }
+
+  export type SavedLessonUncheckedCreateWithoutLessonInput = {
+    userId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedLessonCreateOrConnectWithoutLessonInput = {
+    where: SavedLessonWhereUniqueInput
+    create: XOR<SavedLessonCreateWithoutLessonInput, SavedLessonUncheckedCreateWithoutLessonInput>
+  }
+
+  export type SavedLessonCreateManyLessonInputEnvelope = {
+    data: SavedLessonCreateManyLessonInput | SavedLessonCreateManyLessonInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ChapterUpsertWithoutLessonsInput = {
     update: XOR<ChapterUpdateWithoutLessonsInput, ChapterUncheckedUpdateWithoutLessonsInput>
     create: XOR<ChapterCreateWithoutLessonsInput, ChapterUncheckedCreateWithoutLessonsInput>
@@ -36028,6 +39194,22 @@ export namespace Prisma {
     planId?: IntFilter<"LessonPlan"> | number
   }
 
+  export type SavedLessonUpsertWithWhereUniqueWithoutLessonInput = {
+    where: SavedLessonWhereUniqueInput
+    update: XOR<SavedLessonUpdateWithoutLessonInput, SavedLessonUncheckedUpdateWithoutLessonInput>
+    create: XOR<SavedLessonCreateWithoutLessonInput, SavedLessonUncheckedCreateWithoutLessonInput>
+  }
+
+  export type SavedLessonUpdateWithWhereUniqueWithoutLessonInput = {
+    where: SavedLessonWhereUniqueInput
+    data: XOR<SavedLessonUpdateWithoutLessonInput, SavedLessonUncheckedUpdateWithoutLessonInput>
+  }
+
+  export type SavedLessonUpdateManyWithWhereWithoutLessonInput = {
+    where: SavedLessonScalarWhereInput
+    data: XOR<SavedLessonUpdateManyMutationInput, SavedLessonUncheckedUpdateManyWithoutLessonInput>
+  }
+
   export type LessonCreateWithoutLessonPlansInput = {
     title: string
     description?: string | null
@@ -36048,6 +39230,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
     quiz?: QuizCreateNestedOneWithoutLessonInput
+    savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutLessonPlansInput = {
@@ -36071,6 +39254,7 @@ export namespace Prisma {
     quizId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutLessonPlansInput = {
@@ -36139,6 +39323,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
     quiz?: QuizUpdateOneWithoutLessonNestedInput
+    savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutLessonPlansInput = {
@@ -36162,6 +39347,7 @@ export namespace Prisma {
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type PlanUpsertWithoutLessonPlansInput = {
@@ -36385,6 +39571,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -36404,6 +39592,8 @@ export namespace Prisma {
     selectedCourseTypeId?: number | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSubscriptionsInput = {
@@ -36508,6 +39698,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -36527,6 +39719,8 @@ export namespace Prisma {
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CourseUpsertWithoutSubscriptionsInput = {
@@ -36732,6 +39926,26 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SavedQuestionCreateWithoutQuestionInput = {
+    savedAt?: Date | string
+    user: UserCreateNestedOneWithoutSavedQuestionsInput
+  }
+
+  export type SavedQuestionUncheckedCreateWithoutQuestionInput = {
+    userId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedQuestionCreateOrConnectWithoutQuestionInput = {
+    where: SavedQuestionWhereUniqueInput
+    create: XOR<SavedQuestionCreateWithoutQuestionInput, SavedQuestionUncheckedCreateWithoutQuestionInput>
+  }
+
+  export type SavedQuestionCreateManyQuestionInputEnvelope = {
+    data: SavedQuestionCreateManyQuestionInput | SavedQuestionCreateManyQuestionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SubjectUpsertWithoutQuestionsInput = {
     update: XOR<SubjectUpdateWithoutQuestionsInput, SubjectUncheckedUpdateWithoutQuestionsInput>
     create: XOR<SubjectCreateWithoutQuestionsInput, SubjectUncheckedCreateWithoutQuestionsInput>
@@ -36875,6 +40089,22 @@ export namespace Prisma {
     displayOrder?: IntFilter<"QuizQuestion"> | number
   }
 
+  export type SavedQuestionUpsertWithWhereUniqueWithoutQuestionInput = {
+    where: SavedQuestionWhereUniqueInput
+    update: XOR<SavedQuestionUpdateWithoutQuestionInput, SavedQuestionUncheckedUpdateWithoutQuestionInput>
+    create: XOR<SavedQuestionCreateWithoutQuestionInput, SavedQuestionUncheckedCreateWithoutQuestionInput>
+  }
+
+  export type SavedQuestionUpdateWithWhereUniqueWithoutQuestionInput = {
+    where: SavedQuestionWhereUniqueInput
+    data: XOR<SavedQuestionUpdateWithoutQuestionInput, SavedQuestionUncheckedUpdateWithoutQuestionInput>
+  }
+
+  export type SavedQuestionUpdateManyWithWhereWithoutQuestionInput = {
+    where: SavedQuestionScalarWhereInput
+    data: XOR<SavedQuestionUpdateManyMutationInput, SavedQuestionUncheckedUpdateManyWithoutQuestionInput>
+  }
+
   export type QuestionCreateWithoutOptionsInput = {
     questionText: string
     questionImageUrl?: string | null
@@ -36889,6 +40119,7 @@ export namespace Prisma {
     topic: TopicCreateNestedOneWithoutQuestionsInput
     tags?: QuestionTagCreateNestedManyWithoutQuestionInput
     quizQuestions?: QuizQuestionCreateNestedManyWithoutQuestionInput
+    savedBy?: SavedQuestionCreateNestedManyWithoutQuestionInput
   }
 
   export type QuestionUncheckedCreateWithoutOptionsInput = {
@@ -36906,6 +40137,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     tags?: QuestionTagUncheckedCreateNestedManyWithoutQuestionInput
     quizQuestions?: QuizQuestionUncheckedCreateNestedManyWithoutQuestionInput
+    savedBy?: SavedQuestionUncheckedCreateNestedManyWithoutQuestionInput
   }
 
   export type QuestionCreateOrConnectWithoutOptionsInput = {
@@ -36938,6 +40170,7 @@ export namespace Prisma {
     topic?: TopicUpdateOneRequiredWithoutQuestionsNestedInput
     tags?: QuestionTagUpdateManyWithoutQuestionNestedInput
     quizQuestions?: QuizQuestionUpdateManyWithoutQuestionNestedInput
+    savedBy?: SavedQuestionUpdateManyWithoutQuestionNestedInput
   }
 
   export type QuestionUncheckedUpdateWithoutOptionsInput = {
@@ -36955,6 +40188,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: QuestionTagUncheckedUpdateManyWithoutQuestionNestedInput
     quizQuestions?: QuizQuestionUncheckedUpdateManyWithoutQuestionNestedInput
+    savedBy?: SavedQuestionUncheckedUpdateManyWithoutQuestionNestedInput
   }
 
   export type SubjectCreateWithoutQuizzesInput = {
@@ -37031,6 +40265,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
+    savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutQuizInput = {
@@ -37054,6 +40289,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
+    savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutQuizInput = {
@@ -37207,6 +40443,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
+    savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutQuizInput = {
@@ -37230,6 +40467,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
+    savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type QuizQuestionUpsertWithWhereUniqueWithoutQuizInput = {
@@ -37310,6 +40548,7 @@ export namespace Prisma {
     topic: TopicCreateNestedOneWithoutQuestionsInput
     options?: QuestionOptionCreateNestedManyWithoutQuestionInput
     tags?: QuestionTagCreateNestedManyWithoutQuestionInput
+    savedBy?: SavedQuestionCreateNestedManyWithoutQuestionInput
   }
 
   export type QuestionUncheckedCreateWithoutQuizQuestionsInput = {
@@ -37327,6 +40566,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
     tags?: QuestionTagUncheckedCreateNestedManyWithoutQuestionInput
+    savedBy?: SavedQuestionUncheckedCreateNestedManyWithoutQuestionInput
   }
 
   export type QuestionCreateOrConnectWithoutQuizQuestionsInput = {
@@ -37397,6 +40637,7 @@ export namespace Prisma {
     topic?: TopicUpdateOneRequiredWithoutQuestionsNestedInput
     options?: QuestionOptionUpdateManyWithoutQuestionNestedInput
     tags?: QuestionTagUpdateManyWithoutQuestionNestedInput
+    savedBy?: SavedQuestionUpdateManyWithoutQuestionNestedInput
   }
 
   export type QuestionUncheckedUpdateWithoutQuizQuestionsInput = {
@@ -37414,6 +40655,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
     tags?: QuestionTagUncheckedUpdateManyWithoutQuestionNestedInput
+    savedBy?: SavedQuestionUncheckedUpdateManyWithoutQuestionNestedInput
   }
 
   export type QuestionTagCreateWithoutTagInput = {
@@ -37464,6 +40706,7 @@ export namespace Prisma {
     topic: TopicCreateNestedOneWithoutQuestionsInput
     options?: QuestionOptionCreateNestedManyWithoutQuestionInput
     quizQuestions?: QuizQuestionCreateNestedManyWithoutQuestionInput
+    savedBy?: SavedQuestionCreateNestedManyWithoutQuestionInput
   }
 
   export type QuestionUncheckedCreateWithoutTagsInput = {
@@ -37481,6 +40724,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
     quizQuestions?: QuizQuestionUncheckedCreateNestedManyWithoutQuestionInput
+    savedBy?: SavedQuestionUncheckedCreateNestedManyWithoutQuestionInput
   }
 
   export type QuestionCreateOrConnectWithoutTagsInput = {
@@ -37527,6 +40771,7 @@ export namespace Prisma {
     topic?: TopicUpdateOneRequiredWithoutQuestionsNestedInput
     options?: QuestionOptionUpdateManyWithoutQuestionNestedInput
     quizQuestions?: QuizQuestionUpdateManyWithoutQuestionNestedInput
+    savedBy?: SavedQuestionUpdateManyWithoutQuestionNestedInput
   }
 
   export type QuestionUncheckedUpdateWithoutTagsInput = {
@@ -37544,6 +40789,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
     quizQuestions?: QuizQuestionUncheckedUpdateManyWithoutQuestionNestedInput
+    savedBy?: SavedQuestionUncheckedUpdateManyWithoutQuestionNestedInput
   }
 
   export type TagUpsertWithoutQuestionsInput = {
@@ -37578,6 +40824,8 @@ export namespace Prisma {
     updatedAt?: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -37597,6 +40845,8 @@ export namespace Prisma {
     selectedCourseTypeId?: number | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutQuizAttemptsInput = {
@@ -37685,6 +40935,8 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -37704,6 +40956,8 @@ export namespace Prisma {
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type QuizUpsertWithoutAttemptsInput = {
@@ -37826,6 +41080,382 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type UserCreateWithoutSavedQuestionsInput = {
+    email: string
+    password?: string | null
+    name?: string | null
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
+    quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
+    selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSavedQuestionsInput = {
+    id?: number
+    email: string
+    password?: string | null
+    name?: string | null
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    selectedCourseId?: number | null
+    selectedCourseTypeId?: number | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
+    quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSavedQuestionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSavedQuestionsInput, UserUncheckedCreateWithoutSavedQuestionsInput>
+  }
+
+  export type QuestionCreateWithoutSavedByInput = {
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subject: SubjectCreateNestedOneWithoutQuestionsInput
+    topic: TopicCreateNestedOneWithoutQuestionsInput
+    options?: QuestionOptionCreateNestedManyWithoutQuestionInput
+    tags?: QuestionTagCreateNestedManyWithoutQuestionInput
+    quizQuestions?: QuizQuestionCreateNestedManyWithoutQuestionInput
+  }
+
+  export type QuestionUncheckedCreateWithoutSavedByInput = {
+    id?: number
+    subjectId: number
+    topicId: number
+    questionText: string
+    questionImageUrl?: string | null
+    difficulty: $Enums.Difficulty
+    marksCorrect: number
+    marksIncorrect?: number
+    explanation?: string | null
+    status?: $Enums.QuestionStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
+    tags?: QuestionTagUncheckedCreateNestedManyWithoutQuestionInput
+    quizQuestions?: QuizQuestionUncheckedCreateNestedManyWithoutQuestionInput
+  }
+
+  export type QuestionCreateOrConnectWithoutSavedByInput = {
+    where: QuestionWhereUniqueInput
+    create: XOR<QuestionCreateWithoutSavedByInput, QuestionUncheckedCreateWithoutSavedByInput>
+  }
+
+  export type UserUpsertWithoutSavedQuestionsInput = {
+    update: XOR<UserUpdateWithoutSavedQuestionsInput, UserUncheckedUpdateWithoutSavedQuestionsInput>
+    create: XOR<UserCreateWithoutSavedQuestionsInput, UserUncheckedCreateWithoutSavedQuestionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSavedQuestionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSavedQuestionsInput, UserUncheckedUpdateWithoutSavedQuestionsInput>
+  }
+
+  export type UserUpdateWithoutSavedQuestionsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
+    quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
+    selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSavedQuestionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
+    selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type QuestionUpsertWithoutSavedByInput = {
+    update: XOR<QuestionUpdateWithoutSavedByInput, QuestionUncheckedUpdateWithoutSavedByInput>
+    create: XOR<QuestionCreateWithoutSavedByInput, QuestionUncheckedCreateWithoutSavedByInput>
+    where?: QuestionWhereInput
+  }
+
+  export type QuestionUpdateToOneWithWhereWithoutSavedByInput = {
+    where?: QuestionWhereInput
+    data: XOR<QuestionUpdateWithoutSavedByInput, QuestionUncheckedUpdateWithoutSavedByInput>
+  }
+
+  export type QuestionUpdateWithoutSavedByInput = {
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subject?: SubjectUpdateOneRequiredWithoutQuestionsNestedInput
+    topic?: TopicUpdateOneRequiredWithoutQuestionsNestedInput
+    options?: QuestionOptionUpdateManyWithoutQuestionNestedInput
+    tags?: QuestionTagUpdateManyWithoutQuestionNestedInput
+    quizQuestions?: QuizQuestionUpdateManyWithoutQuestionNestedInput
+  }
+
+  export type QuestionUncheckedUpdateWithoutSavedByInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    subjectId?: IntFieldUpdateOperationsInput | number
+    topicId?: IntFieldUpdateOperationsInput | number
+    questionText?: StringFieldUpdateOperationsInput | string
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
+    tags?: QuestionTagUncheckedUpdateManyWithoutQuestionNestedInput
+    quizQuestions?: QuizQuestionUncheckedUpdateManyWithoutQuestionNestedInput
+  }
+
+  export type UserCreateWithoutSavedLessonsInput = {
+    email: string
+    password?: string | null
+    name?: string | null
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
+    quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
+    selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
+    selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSavedLessonsInput = {
+    id?: number
+    email: string
+    password?: string | null
+    name?: string | null
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    selectedCourseId?: number | null
+    selectedCourseTypeId?: number | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
+    quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSavedLessonsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSavedLessonsInput, UserUncheckedCreateWithoutSavedLessonsInput>
+  }
+
+  export type LessonCreateWithoutSavedByInput = {
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    chapter: ChapterCreateNestedOneWithoutLessonsInput
+    quiz?: QuizCreateNestedOneWithoutLessonInput
+    lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
+  }
+
+  export type LessonUncheckedCreateWithoutSavedByInput = {
+    id?: number
+    chapterId: number
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    quizId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
+  }
+
+  export type LessonCreateOrConnectWithoutSavedByInput = {
+    where: LessonWhereUniqueInput
+    create: XOR<LessonCreateWithoutSavedByInput, LessonUncheckedCreateWithoutSavedByInput>
+  }
+
+  export type UserUpsertWithoutSavedLessonsInput = {
+    update: XOR<UserUpdateWithoutSavedLessonsInput, UserUncheckedUpdateWithoutSavedLessonsInput>
+    create: XOR<UserCreateWithoutSavedLessonsInput, UserUncheckedCreateWithoutSavedLessonsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSavedLessonsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSavedLessonsInput, UserUncheckedUpdateWithoutSavedLessonsInput>
+  }
+
+  export type UserUpdateWithoutSavedLessonsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
+    quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
+    selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
+    selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSavedLessonsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
+    selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type LessonUpsertWithoutSavedByInput = {
+    update: XOR<LessonUpdateWithoutSavedByInput, LessonUncheckedUpdateWithoutSavedByInput>
+    create: XOR<LessonCreateWithoutSavedByInput, LessonUncheckedCreateWithoutSavedByInput>
+    where?: LessonWhereInput
+  }
+
+  export type LessonUpdateToOneWithWhereWithoutSavedByInput = {
+    where?: LessonWhereInput
+    data: XOR<LessonUpdateWithoutSavedByInput, LessonUncheckedUpdateWithoutSavedByInput>
+  }
+
+  export type LessonUpdateWithoutSavedByInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
+    quiz?: QuizUpdateOneWithoutLessonNestedInput
+    lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
+  }
+
+  export type LessonUncheckedUpdateWithoutSavedByInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    chapterId?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    quizId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
+  }
+
   export type SessionCreateManyUserInput = {
     id?: number
     deviceId: string
@@ -37851,6 +41481,16 @@ export namespace Prisma {
     questionIds?: QuizAttemptCreatequestionIdsInput | number[]
     startedAt?: Date | string
     completedAt?: Date | string | null
+  }
+
+  export type SavedQuestionCreateManyUserInput = {
+    questionId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedLessonCreateManyUserInput = {
+    lessonId: number
+    savedAt?: Date | string
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -37931,6 +41571,36 @@ export namespace Prisma {
     questionIds?: QuizAttemptUpdatequestionIdsInput | number[]
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type SavedQuestionUpdateWithoutUserInput = {
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    question?: QuestionUpdateOneRequiredWithoutSavedByNestedInput
+  }
+
+  export type SavedQuestionUncheckedUpdateWithoutUserInput = {
+    questionId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedQuestionUncheckedUpdateManyWithoutUserInput = {
+    questionId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedLessonUpdateWithoutUserInput = {
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lesson?: LessonUpdateOneRequiredWithoutSavedByNestedInput
+  }
+
+  export type SavedLessonUncheckedUpdateWithoutUserInput = {
+    lessonId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedLessonUncheckedUpdateManyWithoutUserInput = {
+    lessonId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CourseCreateManyAdminInput = {
@@ -38132,6 +41802,7 @@ export namespace Prisma {
     options?: QuestionOptionUpdateManyWithoutQuestionNestedInput
     tags?: QuestionTagUpdateManyWithoutQuestionNestedInput
     quizQuestions?: QuizQuestionUpdateManyWithoutQuestionNestedInput
+    savedBy?: SavedQuestionUpdateManyWithoutQuestionNestedInput
   }
 
   export type QuestionUncheckedUpdateWithoutSubjectInput = {
@@ -38149,6 +41820,7 @@ export namespace Prisma {
     options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
     tags?: QuestionTagUncheckedUpdateManyWithoutQuestionNestedInput
     quizQuestions?: QuizQuestionUncheckedUpdateManyWithoutQuestionNestedInput
+    savedBy?: SavedQuestionUncheckedUpdateManyWithoutQuestionNestedInput
   }
 
   export type QuestionUncheckedUpdateManyWithoutSubjectInput = {
@@ -38242,6 +41914,7 @@ export namespace Prisma {
     options?: QuestionOptionUpdateManyWithoutQuestionNestedInput
     tags?: QuestionTagUpdateManyWithoutQuestionNestedInput
     quizQuestions?: QuizQuestionUpdateManyWithoutQuestionNestedInput
+    savedBy?: SavedQuestionUpdateManyWithoutQuestionNestedInput
   }
 
   export type QuestionUncheckedUpdateWithoutTopicInput = {
@@ -38259,6 +41932,7 @@ export namespace Prisma {
     options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
     tags?: QuestionTagUncheckedUpdateManyWithoutQuestionNestedInput
     quizQuestions?: QuizQuestionUncheckedUpdateManyWithoutQuestionNestedInput
+    savedBy?: SavedQuestionUncheckedUpdateManyWithoutQuestionNestedInput
   }
 
   export type QuestionUncheckedUpdateManyWithoutTopicInput = {
@@ -38477,6 +42151,8 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
 
@@ -38495,6 +42171,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutSelectedCourseInput = {
@@ -38640,6 +42318,8 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
   }
 
@@ -38658,6 +42338,8 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutSelectedCourseTypeInput = {
@@ -38716,6 +42398,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quiz?: QuizUpdateOneWithoutLessonNestedInput
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
+    savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutChapterInput = {
@@ -38739,6 +42422,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
+    savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateManyWithoutChapterInput = {
@@ -38767,6 +42451,11 @@ export namespace Prisma {
     planId: number
   }
 
+  export type SavedLessonCreateManyLessonInput = {
+    userId: number
+    savedAt?: Date | string
+  }
+
   export type LessonPlanUpdateWithoutLessonInput = {
     plan?: PlanUpdateOneRequiredWithoutLessonPlansNestedInput
   }
@@ -38777,6 +42466,21 @@ export namespace Prisma {
 
   export type LessonPlanUncheckedUpdateManyWithoutLessonInput = {
     planId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type SavedLessonUpdateWithoutLessonInput = {
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSavedLessonsNestedInput
+  }
+
+  export type SavedLessonUncheckedUpdateWithoutLessonInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedLessonUncheckedUpdateManyWithoutLessonInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SubscriptionCreateManyPlanInput = {
@@ -38851,6 +42555,11 @@ export namespace Prisma {
     displayOrder?: number
   }
 
+  export type SavedQuestionCreateManyQuestionInput = {
+    userId: number
+    savedAt?: Date | string
+  }
+
   export type QuestionOptionUpdateWithoutQuestionInput = {
     optionText?: StringFieldUpdateOperationsInput | string
     optionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38899,6 +42608,21 @@ export namespace Prisma {
   export type QuizQuestionUncheckedUpdateManyWithoutQuestionInput = {
     quizId?: IntFieldUpdateOperationsInput | number
     displayOrder?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type SavedQuestionUpdateWithoutQuestionInput = {
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSavedQuestionsNestedInput
+  }
+
+  export type SavedQuestionUncheckedUpdateWithoutQuestionInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedQuestionUncheckedUpdateManyWithoutQuestionInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type QuizQuestionCreateManyQuizInput = {

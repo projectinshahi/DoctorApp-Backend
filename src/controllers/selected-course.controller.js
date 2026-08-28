@@ -5,6 +5,10 @@ const { PrismaPg } = require('@prisma/adapter-pg');
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 const { resolveQuizQuestions, fetchEligibleQuestions } = require('./quiz.controller');
+// Required lazily: quizAttempt.controller requires this file back for its
+// gates, and a top-level require here would resolve to a half-built module.
+const attemptStatusByLesson = (...args) =>
+  require('./quizAttempt.controller').attemptStatusByLesson(...args);
 
 // Free lessons and free previews are always open. A premium lesson tied to
 // plans needs *one of* them; one with no plans accepts any active subscription
@@ -107,13 +111,22 @@ async function getSelectedCourseContent(req, res) {
       },
     });
 
+    // One batched lookup for every quiz lesson in the tree. The topic screen
+    // used to ask per quiz, which is a query per pill on the page.
+    const quizLessonIds = chapters.flatMap((ch) =>
+      ch.lessons.filter((l) => l.type === 'quiz').map((l) => l.id));
+    const attemptByLesson = await attemptStatusByLesson(userId, quizLessonIds);
+
     const shaped = chapters.map((ch) => ({
       ...ch,
       lessons: ch.lessons.map((l) => {
         const unlocked = isLessonUnlocked(l, paidPlanIds);
         const { lessonPlans = [], ...rest } = l;
         const plans = lessonPlans.map((lp) => lp.plan);
-        const base = { ...rest, plans, planIds: plans.map((p) => p.id) };
+        // null, not omitted: the app can tell "no attempt yet" from "not a
+        // quiz" without checking type twice.
+        const attempt = l.type === 'quiz' ? attemptByLesson.get(l.id) ?? null : null;
+        const base = { ...rest, plans, planIds: plans.map((p) => p.id), attempt };
         return unlocked
           ? { ...base, locked: false }
           : { ...base, videoUrl: null, noteUrl: null, content: null, quiz: null, locked: true };

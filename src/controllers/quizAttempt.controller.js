@@ -137,7 +137,15 @@ async function startAttempt(req, res) {
       include: { answers: { select: { questionId: true, selectedOptionId: true } } },
     });
 
-    if (open) {
+    // An open attempt with no answers is not progress — it is a quiz someone
+    // opened and closed. Resuming it would pin them to a stale draw, and
+    // leaving it behind puts an empty row in their history. Drop it and start
+    // clean; only an attempt with at least one answer is worth resuming.
+    if (open && open.answers.length === 0) {
+      await prisma.quizAttempt.delete({ where: { id: open.id } });
+    }
+
+    if (open && open.answers.length > 0) {
       const questions = await fetchAttemptQuestions(open.questionIds);
       return res.status(200).json({
         attemptId: open.id,
@@ -324,8 +332,9 @@ async function listAttempts(req, res) {
       return res.status(400).json({ error: { message: 'Invalid lesson id' } });
     }
 
+    // Same rule as start: an attempt nobody answered is not history.
     const attempts = await prisma.quizAttempt.findMany({
-      where: { userId: req.user.userId, lessonId },
+      where: { userId: req.user.userId, lessonId, answers: { some: {} } },
       orderBy: { startedAt: 'desc' },
       include: { answers: { select: { isCorrect: true, marksAwarded: true } } },
     });
@@ -350,12 +359,103 @@ async function listAttempts(req, res) {
   }
 }
 
+
+/**
+ * The per-lesson attempt state the app needs to draw a "Continue" or "Review"
+ * pill. Batched by lesson so a screen showing many quizzes costs one query,
+ * not one per quiz.
+ *
+ * Empty attempts are excluded here too — a lesson someone opened and closed
+ * should show no pill at all.
+ */
+async function attemptStatusByLesson(userId, lessonIds) {
+  if (lessonIds.length === 0) return new Map();
+
+  const attempts = await prisma.quizAttempt.findMany({
+    where: { userId, lessonId: { in: lessonIds }, answers: { some: {} } },
+    orderBy: { startedAt: 'desc' },
+    include: { answers: { select: { isCorrect: true, marksAwarded: true } } },
+  });
+
+  const byLesson = new Map();
+  for (const a of attempts) {
+    // Ordered newest first, so the first one seen for a lesson is the latest.
+    if (byLesson.has(a.lessonId)) {
+      byLesson.get(a.lessonId).attemptCount += 1;
+      continue;
+    }
+    byLesson.set(a.lessonId, {
+      attemptId: a.id,
+      completed: Boolean(a.completedAt),
+      startedAt: a.startedAt,
+      completedAt: a.completedAt,
+      totalQuestions: a.questionIds.length,
+      answeredCount: a.answers.length,
+      remainingCount: a.questionIds.length - a.answers.length,
+      correctCount: a.answers.filter((x) => x.isCorrect).length,
+      score: a.answers.reduce((sum, x) => sum + x.marksAwarded, 0),
+      attemptCount: 1,
+    });
+  }
+  return byLesson;
+}
+
+
+// GET /api/users/me/quiz-attempts?status=in_progress
+// Every unfinished quiz across the whole course, so the "Continue" card can be
+// answered without walking every lesson.
+async function listInProgress(req, res) {
+  try {
+    const status = req.query.status ?? 'in_progress';
+    if (!['in_progress', 'completed', 'all'].includes(status)) {
+      return res.status(400).json({ error: { message: 'status must be one of: in_progress, completed, all' } });
+    }
+
+    const where = { userId: req.user.userId, answers: { some: {} } };
+    if (status === 'in_progress') where.completedAt = null;
+    if (status === 'completed') where.completedAt = { not: null };
+
+    const attempts = await prisma.quizAttempt.findMany({
+      where,
+      orderBy: { startedAt: 'desc' },
+      include: {
+        answers: { select: { isCorrect: true, marksAwarded: true } },
+        quiz: { select: { id: true, title: true, lesson: { select: { id: true, title: true } } } },
+      },
+    });
+
+    return res.status(200).json({
+      status,
+      count: attempts.length,
+      attempts: attempts.map((a) => ({
+        attemptId: a.id,
+        lessonId: a.lessonId,
+        lessonTitle: a.quiz.lesson ? a.quiz.lesson.title : null,
+        quiz: { id: a.quiz.id, title: a.quiz.title },
+        completed: Boolean(a.completedAt),
+        startedAt: a.startedAt,
+        completedAt: a.completedAt,
+        totalQuestions: a.questionIds.length,
+        answeredCount: a.answers.length,
+        remainingCount: a.questionIds.length - a.answers.length,
+        correctCount: a.answers.filter((x) => x.isCorrect).length,
+        score: a.answers.reduce((sum, x) => sum + x.marksAwarded, 0),
+      })),
+    });
+  } catch (error) {
+    console.error('listInProgress error:', error);
+    return res.status(500).json({ error: { message: 'Failed to load attempts' } });
+  }
+}
+
 module.exports = {
   startAttempt,
   saveAnswer,
   finishAttempt,
   getAttempt,
   listAttempts,
+  listInProgress,
+  attemptStatusByLesson,
   // Exported for quizAttempt.test.js — pure, no DB.
   summarise,
   reviewedQuestion,

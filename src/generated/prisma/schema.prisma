@@ -24,9 +24,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions      Session[]
-  subscriptions Subscription[]
-  quizAttempts  QuizAttempt[]
+  sessions       Session[]
+  subscriptions  Subscription[]
+  quizAttempts   QuizAttempt[]
+  savedQuestions SavedQuestion[]
+  savedLessons   SavedLesson[]
 
   selectedCourseId     Int?
   selectedCourseTypeId Int?
@@ -211,6 +213,7 @@ model Lesson {
   // A premium lesson can be unlocked by any number of plans. No rows means
   // "any active subscription for the course" — the old planId = null case.
   lessonPlans LessonPlan[]
+  savedBy     SavedLesson[]
 
   @@index([chapterId, displayOrder])
   @@map("lessons")
@@ -304,6 +307,7 @@ model Question {
   // Quizzes that pinned this question explicitly. Filter-based quizzes do not
   // appear here — they match on subject/topic/tag at serve time.
   quizQuestions QuizQuestion[]
+  savedBy       SavedQuestion[]
 
   @@index([subjectId, topicId, status])
   @@map("questions")
@@ -434,4 +438,34 @@ model AttemptAnswer {
 
   @@id([attemptId, questionId])
   @@map("attempt_answers")
+}
+
+// A student's bookmarked question. The pair is the identity, so saving twice is
+// an upsert rather than a duplicate.
+model SavedQuestion {
+  userId     Int
+  questionId Int
+  savedAt    DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@id([userId, questionId])
+  @@index([userId, savedAt])
+  @@map("saved_questions")
+}
+
+// Same idea for a lesson. Separate table rather than a polymorphic one so both
+// foreign keys stay real and a deleted lesson takes its bookmarks with it.
+model SavedLesson {
+  userId   Int
+  lessonId Int
+  savedAt  DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@id([userId, lessonId])
+  @@index([userId, savedAt])
+  @@map("saved_lessons")
 }
