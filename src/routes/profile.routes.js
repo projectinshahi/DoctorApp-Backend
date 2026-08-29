@@ -10,6 +10,10 @@ const {
   saveLesson, unsaveLesson, listSavedLessons,
 } = require('../controllers/saved.controller');
 const { getHome, saveProgress } = require('../controllers/home.controller');
+const {
+  listTests: listStudentTests, startTestAttempt, answerTestQuestion,
+  clearTestAnswer, submitTestAttempt, getTestResult,
+} = require('../controllers/testAttempt.controller');
 const authenticateStudent = require('../middleware/authenticateStudent');
 
 router.get('/', authenticateStudent, getProfile);
@@ -45,5 +49,14 @@ router.delete('/saved-questions/:questionId', authenticateStudent, unsaveQuestio
 router.post('/saved-lessons', authenticateStudent, saveLesson);
 router.get('/saved-lessons', authenticateStudent, listSavedLessons);
 router.delete('/saved-lessons/:lessonId', authenticateStudent, unsaveLesson);
+
+// Grand Test. Separate from the quiz flow on purpose: a Test is a fixed paper
+// with a server-enforced timer, not a filter that samples the question bank.
+router.get('/courses/:courseId/tests', authenticateStudent, listStudentTests);
+router.post('/tests/:testId/attempts', authenticateStudent, startTestAttempt);
+router.patch('/test-attempts/:attemptId/answers/:testQuestionId', authenticateStudent, answerTestQuestion);
+router.delete('/test-attempts/:attemptId/answers/:testQuestionId', authenticateStudent, clearTestAnswer);
+router.post('/test-attempts/:attemptId/submit', authenticateStudent, submitTestAttempt);
+router.get('/test-attempts/:attemptId/result', authenticateStudent, getTestResult);
 
 module.exports = router;

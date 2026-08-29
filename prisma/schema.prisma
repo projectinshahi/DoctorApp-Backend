@@ -30,6 +30,7 @@ model User {
   savedQuestions SavedQuestion[]
   savedLessons   SavedLesson[]
   lessonProgress LessonProgress[]
+  testAttempts   TestAttempt[]
 
   selectedCourseId     Int?
   selectedCourseTypeId Int?
@@ -37,6 +38,11 @@ model User {
   selectedCourseType   CourseType? @relation(fields: [selectedCourseTypeId], references: [id])
 
   @@map("users")
+}
+
+enum TestType {
+  GRAND_TEST
+  // PREVIOUS_YEAR_PAPER, MOCK_TEST — adding one needs no schema change.
 }
 
 model Admin {
@@ -134,6 +140,7 @@ model Course {
   selectedBy    User[]
   plans         Plan[]
   subscriptions Subscription[]
+  tests         Test[]
 
   @@index([createdBy])
   @@map("courses")
@@ -492,4 +499,96 @@ model LessonProgress {
   // "what did this student touch last" drives Continue Watching.
   @@index([userId, updatedAt])
   @@map("lesson_progress")
+}
+
+// A fixed exam paper. Deliberately NOT built on the question bank: a Grand Test
+// is the same paper for everyone, so it owns its questions outright rather than
+// resolving a subject/topic filter the way a Quiz does. Nothing here is shared
+// with the quiz tables.
+model Test {
+  id              Int      @id @default(autoincrement())
+  courseId        Int
+  name            String
+  type            TestType @default(GRAND_TEST)
+  // Declared up front and checked against the CSV at import, so a paper that
+  // says 200 questions cannot quietly serve 198.
+  totalQuestions  Int
+  durationMinutes Int
+  marksCorrect    Float    @default(1)
+  marksIncorrect  Float    @default(0)
+  isPublished     Boolean  @default(false)
+  // Set on the first submitted attempt. Editing the paper after someone has sat
+  // it would rewrite their score, so the questions freeze instead.
+  isLocked        Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  course    Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  questions TestQuestion[]
+  attempts  TestAttempt[]
+
+  @@index([courseId, type, isPublished])
+  @@map("tests")
+}
+
+// One question on one paper. Four fixed options rather than a rows table: an
+// exam paper is always A-D, and the flat shape is what the CSV import produces.
+model TestQuestion {
+  id            Int     @id @default(autoincrement())
+  testId        Int
+  questionOrder Int
+  questionText  String
+  questionImage String?
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
+  correctOption String
+  explanation   String?
+  // Free text, for analytics only. Not a link to the question bank's taxonomy.
+  subject       String?
+  topic         String?
+
+  test    Test @relation(fields: [testId], references: [id], onDelete: Cascade)
+  answers TestAttemptAnswer[]
+
+  @@unique([testId, questionOrder])
+  @@index([testId])
+  @@map("test_questions")
+}
+
+model TestAttempt {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  testId      Int
+  startedAt   DateTime  @default(now())
+  // Null means in progress. The deadline is startedAt + test.durationMinutes.
+  submittedAt DateTime?
+  score       Float?
+
+  user    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  test    Test                @relation(fields: [testId], references: [id], onDelete: Cascade)
+  answers TestAttemptAnswer[]
+
+  @@index([userId, testId, startedAt])
+  @@map("test_attempts")
+}
+
+// No row means skipped, matching attempt_answers. isCorrect and marksAwarded are
+// computed server-side at write time and stored, so a later edit to the paper
+// cannot change what someone already scored.
+model TestAttemptAnswer {
+  attemptId      Int
+  testQuestionId Int
+  selectedOption String
+  isCorrect      Boolean
+  marksAwarded   Float
+  answeredAt     DateTime @default(now())
+
+  attempt      TestAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  testQuestion TestQuestion @relation(fields: [testQuestionId], references: [id], onDelete: Cascade)
+
+  @@id([attemptId, testQuestionId])
+  @@index([testQuestionId])
+  @@map("test_attempt_answers")
 }

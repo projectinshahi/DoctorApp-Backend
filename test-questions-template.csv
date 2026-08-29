@@ -1,0 +1,3 @@
+question_order,question_text,option_a,option_b,option_c,option_d,correct_option,explanation,subject,topic
+1,"A 60-year-old man with crushing chest pain and ST elevation in II, III and aVF has an infarct of which wall?",Inferior wall,Anterior wall,Lateral wall,Posterior wall,A,"Leads II, III and aVF face the inferior wall.",Cardiology,MI
+2,Which lab finding confirms diabetic ketoacidosis?,"Hyperglycemia, ketosis and acidosis",Hyperglycemia alone,Ketosis alone,Normal glucose with acidosis,A,DKA is defined by all three together.,Endocrinology,DKA

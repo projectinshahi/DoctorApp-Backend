@@ -353,6 +353,55 @@ exports.Prisma.LessonProgressScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.TestScalarFieldEnum = {
+  id: 'id',
+  courseId: 'courseId',
+  name: 'name',
+  type: 'type',
+  totalQuestions: 'totalQuestions',
+  durationMinutes: 'durationMinutes',
+  marksCorrect: 'marksCorrect',
+  marksIncorrect: 'marksIncorrect',
+  isPublished: 'isPublished',
+  isLocked: 'isLocked',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TestQuestionScalarFieldEnum = {
+  id: 'id',
+  testId: 'testId',
+  questionOrder: 'questionOrder',
+  questionText: 'questionText',
+  questionImage: 'questionImage',
+  optionA: 'optionA',
+  optionB: 'optionB',
+  optionC: 'optionC',
+  optionD: 'optionD',
+  correctOption: 'correctOption',
+  explanation: 'explanation',
+  subject: 'subject',
+  topic: 'topic'
+};
+
+exports.Prisma.TestAttemptScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  testId: 'testId',
+  startedAt: 'startedAt',
+  submittedAt: 'submittedAt',
+  score: 'score'
+};
+
+exports.Prisma.TestAttemptAnswerScalarFieldEnum = {
+  attemptId: 'attemptId',
+  testQuestionId: 'testQuestionId',
+  selectedOption: 'selectedOption',
+  isCorrect: 'isCorrect',
+  marksAwarded: 'marksAwarded',
+  answeredAt: 'answeredAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -395,6 +444,10 @@ exports.QuestionStatus = exports.$Enums.QuestionStatus = {
   inactive: 'inactive'
 };
 
+exports.TestType = exports.$Enums.TestType = {
+  GRAND_TEST: 'GRAND_TEST'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Admin: 'Admin',
@@ -418,7 +471,11 @@ exports.Prisma.ModelName = {
   AttemptAnswer: 'AttemptAnswer',
   SavedQuestion: 'SavedQuestion',
   SavedLesson: 'SavedLesson',
-  LessonProgress: 'LessonProgress'
+  LessonProgress: 'LessonProgress',
+  Test: 'Test',
+  TestQuestion: 'TestQuestion',
+  TestAttempt: 'TestAttempt',
+  TestAttemptAnswer: 'TestAttemptAnswer'
 };
 
 /**

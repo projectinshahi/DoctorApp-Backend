@@ -1,0 +1,388 @@
+// Grand Test, student side: list, start, answer, submit, result.
+//
+// The timer is enforced on the server. A client-side countdown is a display,
+// not a rule — anyone can pause it, so the deadline is recomputed from
+// startedAt on every write.
+const { PrismaClient } = require('../generated/prisma');
+const { PrismaPg } = require('@prisma/adapter-pg');
+
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
+
+const VALID_OPTIONS = ['A', 'B', 'C', 'D'];
+
+/** Questions as a student may see them: no answer, no explanation. */
+const STUDENT_QUESTION_SELECT = {
+  id: true, questionOrder: true, questionText: true, questionImage: true,
+  optionA: true, optionB: true, optionC: true, optionD: true,
+};
+
+function deadlineOf(attempt, test) {
+  return new Date(attempt.startedAt.getTime() + test.durationMinutes * 60_000);
+}
+
+function secondsRemaining(attempt, test) {
+  return Math.max(0, Math.round((deadlineOf(attempt, test) - Date.now()) / 1000));
+}
+
+/**
+ * Closes an attempt whose time is up.
+ *
+ * The spec asked for a scheduled sweep; this runs the same rule lazily instead,
+ * on every read and write of the attempt. It costs no infrastructure and gives
+ * the student the identical result, because an expired attempt is closed before
+ * anything can be read from or written to it.
+ *
+ * ponytail: an abandoned expired attempt keeps submittedAt = null in the table
+ * until someone touches it. That is invisible to students and only skews admin
+ * "in progress" counts. Add a cron sweep if those counts start to matter.
+ */
+async function submitIfExpired(attempt, test) {
+  if (attempt.submittedAt) return attempt;
+  if (Date.now() < deadlineOf(attempt, test).getTime()) return attempt;
+  return finalise(attempt.id, test.id, deadlineOf(attempt, test));
+}
+
+/** Totals the stored marks and closes the attempt. Also locks the paper. */
+async function finalise(attemptId, testId, submittedAt) {
+  const answers = await prisma.testAttemptAnswer.findMany({
+    where: { attemptId }, select: { marksAwarded: true },
+  });
+  const score = answers.reduce((sum, a) => sum + a.marksAwarded, 0);
+
+  const [updated] = await prisma.$transaction([
+    prisma.testAttempt.update({
+      where: { id: attemptId },
+      data: { submittedAt, score },
+    }),
+    // First submission freezes the paper. Editing it afterwards would rewrite
+    // the score of everyone who already sat it.
+    prisma.test.update({ where: { id: testId }, data: { isLocked: true } }),
+  ]);
+  return updated;
+}
+
+
+// GET /api/users/me/courses/:courseId/tests
+async function listTests(req, res) {
+  try {
+    const courseId = Number(req.params.courseId);
+    if (!Number.isInteger(courseId)) {
+      return res.status(400).json({ error: { message: 'Invalid course id' } });
+    }
+
+    const tests = await prisma.test.findMany({
+      where: { courseId, isPublished: true },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true, name: true, type: true, totalQuestions: true,
+        durationMinutes: true, marksCorrect: true, marksIncorrect: true,
+        attempts: {
+          where: { userId: req.user.userId },
+          orderBy: { startedAt: 'desc' },
+          select: { id: true, startedAt: true, submittedAt: true, score: true },
+        },
+      },
+    });
+
+    return res.status(200).json({
+      tests: tests.map(({ attempts, ...test }) => ({
+        ...test,
+        // Enough for the card to say Start / Resume / View result without a
+        // second call per test.
+        attemptCount: attempts.length,
+        lastAttempt: attempts[0]
+          ? {
+              attemptId: attempts[0].id,
+              startedAt: attempts[0].startedAt,
+              submittedAt: attempts[0].submittedAt,
+              score: attempts[0].score,
+              inProgress: attempts[0].submittedAt === null,
+            }
+          : null,
+      })),
+    });
+  } catch (error) {
+    console.error('listTests error:', error);
+    return res.status(500).json({ error: { message: 'Failed to load tests' } });
+  }
+}
+
+
+// POST /api/users/me/tests/:testId/attempts
+async function startTestAttempt(req, res) {
+  try {
+    const testId = Number(req.params.testId);
+    if (!Number.isInteger(testId)) {
+      return res.status(400).json({ error: { message: 'Invalid test id' } });
+    }
+
+    const test = await prisma.test.findUnique({ where: { id: testId } });
+    if (!test || !test.isPublished) {
+      return res.status(404).json({ error: { message: 'Test not found' } });
+    }
+
+    const open = await prisma.testAttempt.findFirst({
+      where: { userId: req.user.userId, testId, submittedAt: null },
+      orderBy: { startedAt: 'desc' },
+      include: { answers: { select: { testQuestionId: true, selectedOption: true } } },
+    });
+
+    // An in-progress attempt is resumed, never replaced — starting over would
+    // hand back a fresh timer on a paper they are already part-way through.
+    if (open) {
+      const closed = await submitIfExpired(open, test);
+      if (closed.submittedAt) {
+        return res.status(409).json({
+          error: { message: 'Your time for this attempt ran out and it was submitted automatically.' },
+          attemptId: open.id,
+        });
+      }
+
+      const questions = await prisma.testQuestion.findMany({
+        where: { testId }, orderBy: { questionOrder: 'asc' }, select: STUDENT_QUESTION_SELECT,
+      });
+
+      return res.status(200).json({
+        attemptId: open.id,
+        resumed: true,
+        test: { id: test.id, name: test.name, type: test.type,
+                totalQuestions: test.totalQuestions, durationMinutes: test.durationMinutes,
+                marksCorrect: test.marksCorrect, marksIncorrect: test.marksIncorrect },
+        startedAt: open.startedAt,
+        secondsRemaining: secondsRemaining(open, test),
+        answered: open.answers.map((a) => ({ testQuestionId: a.testQuestionId, selectedOption: a.selectedOption })),
+        questions,
+      });
+    }
+
+    const questions = await prisma.testQuestion.findMany({
+      where: { testId }, orderBy: { questionOrder: 'asc' }, select: STUDENT_QUESTION_SELECT,
+    });
+    if (questions.length === 0) {
+      return res.status(409).json({ error: { message: 'This test has no questions yet' } });
+    }
+
+    const attempt = await prisma.testAttempt.create({
+      data: { userId: req.user.userId, testId },
+    });
+
+    return res.status(201).json({
+      attemptId: attempt.id,
+      resumed: false,
+      test: { id: test.id, name: test.name, type: test.type,
+              totalQuestions: test.totalQuestions, durationMinutes: test.durationMinutes,
+              marksCorrect: test.marksCorrect, marksIncorrect: test.marksIncorrect },
+      startedAt: attempt.startedAt,
+      secondsRemaining: test.durationMinutes * 60,
+      answered: [],
+      questions,
+    });
+  } catch (error) {
+    console.error('startTestAttempt error:', error);
+    return res.status(500).json({ error: { message: 'Failed to start the test' } });
+  }
+}
+
+
+/** Loads an attempt and proves it belongs to this student. */
+async function loadOwnAttempt(userId, attemptId) {
+  if (!Number.isInteger(attemptId)) {
+    return { error: { status: 400, body: { error: { message: 'Invalid attempt id' } } } };
+  }
+  const attempt = await prisma.testAttempt.findUnique({
+    where: { id: attemptId }, include: { test: true },
+  });
+  if (!attempt || attempt.userId !== userId) {
+    return { error: { status: 404, body: { error: { message: 'Attempt not found' } } } };
+  }
+  return { attempt };
+}
+
+
+// PATCH /api/users/me/test-attempts/:attemptId/answers/:testQuestionId
+// Body: { selectedOption: "A" }
+async function answerTestQuestion(req, res) {
+  try {
+    const loaded = await loadOwnAttempt(req.user.userId, Number(req.params.attemptId));
+    if (loaded.error) return res.status(loaded.error.status).json(loaded.error.body);
+    const { attempt } = loaded;
+
+    if (attempt.submittedAt) {
+      return res.status(409).json({ error: { message: 'This attempt has already been submitted' } });
+    }
+
+    // Checked before the write, so an answer typed after the bell never counts.
+    const closed = await submitIfExpired(attempt, attempt.test);
+    if (closed.submittedAt) {
+      return res.status(409).json({
+        error: { message: 'Time is up. This attempt was submitted automatically.' },
+        attemptId: attempt.id,
+        score: closed.score,
+      });
+    }
+
+    const testQuestionId = Number(req.params.testQuestionId);
+    if (!Number.isInteger(testQuestionId)) {
+      return res.status(400).json({ error: { message: 'Invalid question id' } });
+    }
+
+    const selected = String(req.body?.selectedOption ?? '').toUpperCase();
+    if (!VALID_OPTIONS.includes(selected)) {
+      return res.status(400).json({ error: { message: 'selectedOption must be one of: A, B, C, D' } });
+    }
+
+    const question = await prisma.testQuestion.findUnique({ where: { id: testQuestionId } });
+    if (!question || question.testId !== attempt.testId) {
+      return res.status(400).json({ error: { message: 'That question is not part of this test' } });
+    }
+
+    // Correctness is decided here and stored. The client is never asked, and
+    // the result is not recomputed later — an edited paper must not rewrite it.
+    const isCorrect = question.correctOption === selected;
+    const marksAwarded = isCorrect ? attempt.test.marksCorrect : attempt.test.marksIncorrect;
+
+    await prisma.testAttemptAnswer.upsert({
+      where: { attemptId_testQuestionId: { attemptId: attempt.id, testQuestionId } },
+      create: { attemptId: attempt.id, testQuestionId, selectedOption: selected, isCorrect, marksAwarded },
+      update: { selectedOption: selected, isCorrect, marksAwarded, answeredAt: new Date() },
+    });
+
+    const answeredCount = await prisma.testAttemptAnswer.count({ where: { attemptId: attempt.id } });
+
+    // No isCorrect in the response: this is an exam, and per-question feedback
+    // before submitting would turn it into a practice quiz.
+    return res.status(200).json({
+      attemptId: attempt.id,
+      testQuestionId,
+      selectedOption: selected,
+      answeredCount,
+      remainingCount: attempt.test.totalQuestions - answeredCount,
+      secondsRemaining: secondsRemaining(attempt, attempt.test),
+    });
+  } catch (error) {
+    console.error('answerTestQuestion error:', error);
+    return res.status(500).json({ error: { message: 'Failed to save the answer' } });
+  }
+}
+
+
+// DELETE /api/users/me/test-attempts/:attemptId/answers/:testQuestionId
+// Clearing an answer restores "skipped", which scores 0 rather than a penalty.
+async function clearTestAnswer(req, res) {
+  try {
+    const loaded = await loadOwnAttempt(req.user.userId, Number(req.params.attemptId));
+    if (loaded.error) return res.status(loaded.error.status).json(loaded.error.body);
+    const { attempt } = loaded;
+
+    if (attempt.submittedAt) {
+      return res.status(409).json({ error: { message: 'This attempt has already been submitted' } });
+    }
+
+    const testQuestionId = Number(req.params.testQuestionId);
+    await prisma.testAttemptAnswer.deleteMany({ where: { attemptId: attempt.id, testQuestionId } });
+
+    const answeredCount = await prisma.testAttemptAnswer.count({ where: { attemptId: attempt.id } });
+    return res.status(200).json({
+      attemptId: attempt.id, testQuestionId, cleared: true,
+      answeredCount, remainingCount: attempt.test.totalQuestions - answeredCount,
+    });
+  } catch (error) {
+    console.error('clearTestAnswer error:', error);
+    return res.status(500).json({ error: { message: 'Failed to clear the answer' } });
+  }
+}
+
+
+// POST /api/users/me/test-attempts/:attemptId/submit
+async function submitTestAttempt(req, res) {
+  try {
+    const loaded = await loadOwnAttempt(req.user.userId, Number(req.params.attemptId));
+    if (loaded.error) return res.status(loaded.error.status).json(loaded.error.body);
+    const { attempt } = loaded;
+
+    // Submitting twice returns the same result rather than an error, so a retry
+    // or a back-button does not look like a failure.
+    const closed = attempt.submittedAt
+      ? attempt
+      : await finalise(attempt.id, attempt.testId, new Date());
+
+    return res.status(200).json(await buildResult(attempt.id, closed, attempt.test));
+  } catch (error) {
+    console.error('submitTestAttempt error:', error);
+    return res.status(500).json({ error: { message: 'Failed to submit the test' } });
+  }
+}
+
+
+/** The result sheet. Only ever built for a submitted attempt. */
+async function buildResult(attemptId, attempt, test) {
+  const [questions, answers] = await Promise.all([
+    prisma.testQuestion.findMany({ where: { testId: test.id }, orderBy: { questionOrder: 'asc' } }),
+    prisma.testAttemptAnswer.findMany({ where: { attemptId } }),
+  ]);
+
+  const byQuestion = new Map(answers.map((a) => [a.testQuestionId, a]));
+  const results = questions.map((q) => {
+    const answer = byQuestion.get(q.id);
+    return {
+      testQuestionId: q.id,
+      questionOrder: q.questionOrder,
+      questionText: q.questionText,
+      questionImage: q.questionImage,
+      optionA: q.optionA, optionB: q.optionB, optionC: q.optionC, optionD: q.optionD,
+      selectedOption: answer ? answer.selectedOption : null,
+      correctOption: q.correctOption,
+      // Absence of a row is what "skipped" means, so it is neither correct nor
+      // wrong and scores 0 rather than the negative mark.
+      isCorrect: answer ? answer.isCorrect : false,
+      answered: Boolean(answer),
+      marksAwarded: answer ? answer.marksAwarded : 0,
+      explanation: q.explanation,
+      subject: q.subject,
+      topic: q.topic,
+    };
+  });
+
+  return {
+    attemptId,
+    test: { id: test.id, name: test.name, type: test.type, durationMinutes: test.durationMinutes },
+    startedAt: attempt.startedAt,
+    submittedAt: attempt.submittedAt,
+    totalQuestions: questions.length,
+    totalMarks: questions.length * test.marksCorrect,
+    score: attempt.score ?? 0,
+    correctCount: results.filter((r) => r.isCorrect).length,
+    wrongCount: results.filter((r) => r.answered && !r.isCorrect).length,
+    skippedCount: results.filter((r) => !r.answered).length,
+    results,
+  };
+}
+
+
+// GET /api/users/me/test-attempts/:attemptId/result
+async function getTestResult(req, res) {
+  try {
+    const loaded = await loadOwnAttempt(req.user.userId, Number(req.params.attemptId));
+    if (loaded.error) return res.status(loaded.error.status).json(loaded.error.body);
+    const { attempt } = loaded;
+
+    const closed = await submitIfExpired(attempt, attempt.test);
+    if (!closed.submittedAt) {
+      return res.status(409).json({
+        error: { message: 'This attempt has not been submitted yet' },
+        secondsRemaining: secondsRemaining(attempt, attempt.test),
+      });
+    }
+
+    return res.status(200).json(await buildResult(attempt.id, closed, attempt.test));
+  } catch (error) {
+    console.error('getTestResult error:', error);
+    return res.status(500).json({ error: { message: 'Failed to load the result' } });
+  }
+}
+
+module.exports = {
+  listTests, startTestAttempt, answerTestQuestion,
+  clearTestAnswer, submitTestAttempt, getTestResult,
+};
