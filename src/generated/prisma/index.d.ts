@@ -139,6 +139,11 @@ export type Test = $Result.DefaultSelection<Prisma.$TestPayload>
  */
 export type TestQuestion = $Result.DefaultSelection<Prisma.$TestQuestionPayload>
 /**
+ * Model TestImage
+ * 
+ */
+export type TestImage = $Result.DefaultSelection<Prisma.$TestImagePayload>
+/**
  * Model TestAttempt
  * 
  */
@@ -598,6 +603,16 @@ export class PrismaClient<
     * ```
     */
   get testQuestion(): Prisma.TestQuestionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.testImage`: Exposes CRUD operations for the **TestImage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TestImages
+    * const testImages = await prisma.testImage.findMany()
+    * ```
+    */
+  get testImage(): Prisma.TestImageDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.testAttempt`: Exposes CRUD operations for the **TestAttempt** model.
@@ -1090,6 +1105,7 @@ export namespace Prisma {
     LessonProgress: 'LessonProgress',
     Test: 'Test',
     TestQuestion: 'TestQuestion',
+    TestImage: 'TestImage',
     TestAttempt: 'TestAttempt',
     TestAttemptAnswer: 'TestAttemptAnswer'
   };
@@ -1107,7 +1123,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "quizQuestion" | "tag" | "questionTag" | "quizAttempt" | "attemptAnswer" | "savedQuestion" | "savedLesson" | "lessonProgress" | "test" | "testQuestion" | "testAttempt" | "testAttemptAnswer"
+      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "quizQuestion" | "tag" | "questionTag" | "quizAttempt" | "attemptAnswer" | "savedQuestion" | "savedLesson" | "lessonProgress" | "test" | "testQuestion" | "testImage" | "testAttempt" | "testAttemptAnswer"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2961,6 +2977,80 @@ export namespace Prisma {
           }
         }
       }
+      TestImage: {
+        payload: Prisma.$TestImagePayload<ExtArgs>
+        fields: Prisma.TestImageFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TestImageFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestImagePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TestImageFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestImagePayload>
+          }
+          findFirst: {
+            args: Prisma.TestImageFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestImagePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TestImageFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestImagePayload>
+          }
+          findMany: {
+            args: Prisma.TestImageFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestImagePayload>[]
+          }
+          create: {
+            args: Prisma.TestImageCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestImagePayload>
+          }
+          createMany: {
+            args: Prisma.TestImageCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TestImageCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestImagePayload>[]
+          }
+          delete: {
+            args: Prisma.TestImageDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestImagePayload>
+          }
+          update: {
+            args: Prisma.TestImageUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestImagePayload>
+          }
+          deleteMany: {
+            args: Prisma.TestImageDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TestImageUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TestImageUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestImagePayload>[]
+          }
+          upsert: {
+            args: Prisma.TestImageUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TestImagePayload>
+          }
+          aggregate: {
+            args: Prisma.TestImageAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTestImage>
+          }
+          groupBy: {
+            args: Prisma.TestImageGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TestImageGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TestImageCountArgs<ExtArgs>
+            result: $Utils.Optional<TestImageCountAggregateOutputType> | number
+          }
+        }
+      }
       TestAttempt: {
         payload: Prisma.$TestAttemptPayload<ExtArgs>
         fields: Prisma.TestAttemptFieldRefs
@@ -3257,6 +3347,7 @@ export namespace Prisma {
     lessonProgress?: LessonProgressOmit
     test?: TestOmit
     testQuestion?: TestQuestionOmit
+    testImage?: TestImageOmit
     testAttempt?: TestAttemptOmit
     testAttemptAnswer?: TestAttemptAnswerOmit
   }
@@ -3960,11 +4051,13 @@ export namespace Prisma {
   export type TestCountOutputType = {
     questions: number
     attempts: number
+    images: number
   }
 
   export type TestCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     questions?: boolean | TestCountOutputTypeCountQuestionsArgs
     attempts?: boolean | TestCountOutputTypeCountAttemptsArgs
+    images?: boolean | TestCountOutputTypeCountImagesArgs
   }
 
   // Custom InputTypes
@@ -3990,6 +4083,13 @@ export namespace Prisma {
    */
   export type TestCountOutputTypeCountAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TestAttemptWhereInput
+  }
+
+  /**
+   * TestCountOutputType without action
+   */
+  export type TestCountOutputTypeCountImagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TestImageWhereInput
   }
 
 
@@ -31641,6 +31741,7 @@ export namespace Prisma {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     questions?: boolean | Test$questionsArgs<ExtArgs>
     attempts?: boolean | Test$attemptsArgs<ExtArgs>
+    images?: boolean | Test$imagesArgs<ExtArgs>
     _count?: boolean | TestCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["test"]>
 
@@ -31696,6 +31797,7 @@ export namespace Prisma {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     questions?: boolean | Test$questionsArgs<ExtArgs>
     attempts?: boolean | Test$attemptsArgs<ExtArgs>
+    images?: boolean | Test$imagesArgs<ExtArgs>
     _count?: boolean | TestCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TestIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -31711,6 +31813,7 @@ export namespace Prisma {
       course: Prisma.$CoursePayload<ExtArgs>
       questions: Prisma.$TestQuestionPayload<ExtArgs>[]
       attempts: Prisma.$TestAttemptPayload<ExtArgs>[]
+      images: Prisma.$TestImagePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -32122,6 +32225,7 @@ export namespace Prisma {
     course<T extends CourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourseDefaultArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     questions<T extends Test$questionsArgs<ExtArgs> = {}>(args?: Subset<T, Test$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     attempts<T extends Test$attemptsArgs<ExtArgs> = {}>(args?: Subset<T, Test$attemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    images<T extends Test$imagesArgs<ExtArgs> = {}>(args?: Subset<T, Test$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -32612,6 +32716,30 @@ export namespace Prisma {
   }
 
   /**
+   * Test.images
+   */
+  export type Test$imagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestImage
+     */
+    select?: TestImageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestImage
+     */
+    omit?: TestImageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestImageInclude<ExtArgs> | null
+    where?: TestImageWhereInput
+    orderBy?: TestImageOrderByWithRelationInput | TestImageOrderByWithRelationInput[]
+    cursor?: TestImageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TestImageScalarFieldEnum | TestImageScalarFieldEnum[]
+  }
+
+  /**
    * Test without action
    */
   export type TestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -32659,11 +32787,15 @@ export namespace Prisma {
     testId: number | null
     questionOrder: number | null
     questionText: string | null
-    questionImage: string | null
+    questionImageUrl: string | null
     optionA: string | null
+    optionAImageUrl: string | null
     optionB: string | null
+    optionBImageUrl: string | null
     optionC: string | null
+    optionCImageUrl: string | null
     optionD: string | null
+    optionDImageUrl: string | null
     correctOption: string | null
     explanation: string | null
     subject: string | null
@@ -32675,11 +32807,15 @@ export namespace Prisma {
     testId: number | null
     questionOrder: number | null
     questionText: string | null
-    questionImage: string | null
+    questionImageUrl: string | null
     optionA: string | null
+    optionAImageUrl: string | null
     optionB: string | null
+    optionBImageUrl: string | null
     optionC: string | null
+    optionCImageUrl: string | null
     optionD: string | null
+    optionDImageUrl: string | null
     correctOption: string | null
     explanation: string | null
     subject: string | null
@@ -32691,11 +32827,15 @@ export namespace Prisma {
     testId: number
     questionOrder: number
     questionText: number
-    questionImage: number
+    questionImageUrl: number
     optionA: number
+    optionAImageUrl: number
     optionB: number
+    optionBImageUrl: number
     optionC: number
+    optionCImageUrl: number
     optionD: number
+    optionDImageUrl: number
     correctOption: number
     explanation: number
     subject: number
@@ -32721,11 +32861,15 @@ export namespace Prisma {
     testId?: true
     questionOrder?: true
     questionText?: true
-    questionImage?: true
+    questionImageUrl?: true
     optionA?: true
+    optionAImageUrl?: true
     optionB?: true
+    optionBImageUrl?: true
     optionC?: true
+    optionCImageUrl?: true
     optionD?: true
+    optionDImageUrl?: true
     correctOption?: true
     explanation?: true
     subject?: true
@@ -32737,11 +32881,15 @@ export namespace Prisma {
     testId?: true
     questionOrder?: true
     questionText?: true
-    questionImage?: true
+    questionImageUrl?: true
     optionA?: true
+    optionAImageUrl?: true
     optionB?: true
+    optionBImageUrl?: true
     optionC?: true
+    optionCImageUrl?: true
     optionD?: true
+    optionDImageUrl?: true
     correctOption?: true
     explanation?: true
     subject?: true
@@ -32753,11 +32901,15 @@ export namespace Prisma {
     testId?: true
     questionOrder?: true
     questionText?: true
-    questionImage?: true
+    questionImageUrl?: true
     optionA?: true
+    optionAImageUrl?: true
     optionB?: true
+    optionBImageUrl?: true
     optionC?: true
+    optionCImageUrl?: true
     optionD?: true
+    optionDImageUrl?: true
     correctOption?: true
     explanation?: true
     subject?: true
@@ -32855,12 +33007,16 @@ export namespace Prisma {
     id: number
     testId: number
     questionOrder: number
-    questionText: string
-    questionImage: string | null
-    optionA: string
-    optionB: string
-    optionC: string
-    optionD: string
+    questionText: string | null
+    questionImageUrl: string | null
+    optionA: string | null
+    optionAImageUrl: string | null
+    optionB: string | null
+    optionBImageUrl: string | null
+    optionC: string | null
+    optionCImageUrl: string | null
+    optionD: string | null
+    optionDImageUrl: string | null
     correctOption: string
     explanation: string | null
     subject: string | null
@@ -32891,11 +33047,15 @@ export namespace Prisma {
     testId?: boolean
     questionOrder?: boolean
     questionText?: boolean
-    questionImage?: boolean
+    questionImageUrl?: boolean
     optionA?: boolean
+    optionAImageUrl?: boolean
     optionB?: boolean
+    optionBImageUrl?: boolean
     optionC?: boolean
+    optionCImageUrl?: boolean
     optionD?: boolean
+    optionDImageUrl?: boolean
     correctOption?: boolean
     explanation?: boolean
     subject?: boolean
@@ -32910,11 +33070,15 @@ export namespace Prisma {
     testId?: boolean
     questionOrder?: boolean
     questionText?: boolean
-    questionImage?: boolean
+    questionImageUrl?: boolean
     optionA?: boolean
+    optionAImageUrl?: boolean
     optionB?: boolean
+    optionBImageUrl?: boolean
     optionC?: boolean
+    optionCImageUrl?: boolean
     optionD?: boolean
+    optionDImageUrl?: boolean
     correctOption?: boolean
     explanation?: boolean
     subject?: boolean
@@ -32927,11 +33091,15 @@ export namespace Prisma {
     testId?: boolean
     questionOrder?: boolean
     questionText?: boolean
-    questionImage?: boolean
+    questionImageUrl?: boolean
     optionA?: boolean
+    optionAImageUrl?: boolean
     optionB?: boolean
+    optionBImageUrl?: boolean
     optionC?: boolean
+    optionCImageUrl?: boolean
     optionD?: boolean
+    optionDImageUrl?: boolean
     correctOption?: boolean
     explanation?: boolean
     subject?: boolean
@@ -32944,18 +33112,22 @@ export namespace Prisma {
     testId?: boolean
     questionOrder?: boolean
     questionText?: boolean
-    questionImage?: boolean
+    questionImageUrl?: boolean
     optionA?: boolean
+    optionAImageUrl?: boolean
     optionB?: boolean
+    optionBImageUrl?: boolean
     optionC?: boolean
+    optionCImageUrl?: boolean
     optionD?: boolean
+    optionDImageUrl?: boolean
     correctOption?: boolean
     explanation?: boolean
     subject?: boolean
     topic?: boolean
   }
 
-  export type TestQuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "testId" | "questionOrder" | "questionText" | "questionImage" | "optionA" | "optionB" | "optionC" | "optionD" | "correctOption" | "explanation" | "subject" | "topic", ExtArgs["result"]["testQuestion"]>
+  export type TestQuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "testId" | "questionOrder" | "questionText" | "questionImageUrl" | "optionA" | "optionAImageUrl" | "optionB" | "optionBImageUrl" | "optionC" | "optionCImageUrl" | "optionD" | "optionDImageUrl" | "correctOption" | "explanation" | "subject" | "topic", ExtArgs["result"]["testQuestion"]>
   export type TestQuestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     test?: boolean | TestDefaultArgs<ExtArgs>
     answers?: boolean | TestQuestion$answersArgs<ExtArgs>
@@ -32978,12 +33150,16 @@ export namespace Prisma {
       id: number
       testId: number
       questionOrder: number
-      questionText: string
-      questionImage: string | null
-      optionA: string
-      optionB: string
-      optionC: string
-      optionD: string
+      questionText: string | null
+      questionImageUrl: string | null
+      optionA: string | null
+      optionAImageUrl: string | null
+      optionB: string | null
+      optionBImageUrl: string | null
+      optionC: string | null
+      optionCImageUrl: string | null
+      optionD: string | null
+      optionDImageUrl: string | null
       correctOption: string
       explanation: string | null
       subject: string | null
@@ -33417,11 +33593,15 @@ export namespace Prisma {
     readonly testId: FieldRef<"TestQuestion", 'Int'>
     readonly questionOrder: FieldRef<"TestQuestion", 'Int'>
     readonly questionText: FieldRef<"TestQuestion", 'String'>
-    readonly questionImage: FieldRef<"TestQuestion", 'String'>
+    readonly questionImageUrl: FieldRef<"TestQuestion", 'String'>
     readonly optionA: FieldRef<"TestQuestion", 'String'>
+    readonly optionAImageUrl: FieldRef<"TestQuestion", 'String'>
     readonly optionB: FieldRef<"TestQuestion", 'String'>
+    readonly optionBImageUrl: FieldRef<"TestQuestion", 'String'>
     readonly optionC: FieldRef<"TestQuestion", 'String'>
+    readonly optionCImageUrl: FieldRef<"TestQuestion", 'String'>
     readonly optionD: FieldRef<"TestQuestion", 'String'>
+    readonly optionDImageUrl: FieldRef<"TestQuestion", 'String'>
     readonly correctOption: FieldRef<"TestQuestion", 'String'>
     readonly explanation: FieldRef<"TestQuestion", 'String'>
     readonly subject: FieldRef<"TestQuestion", 'String'>
@@ -33866,6 +34046,1137 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: TestQuestionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TestImage
+   */
+
+  export type AggregateTestImage = {
+    _count: TestImageCountAggregateOutputType | null
+    _avg: TestImageAvgAggregateOutputType | null
+    _sum: TestImageSumAggregateOutputType | null
+    _min: TestImageMinAggregateOutputType | null
+    _max: TestImageMaxAggregateOutputType | null
+  }
+
+  export type TestImageAvgAggregateOutputType = {
+    id: number | null
+    testId: number | null
+    bytes: number | null
+  }
+
+  export type TestImageSumAggregateOutputType = {
+    id: number | null
+    testId: number | null
+    bytes: number | null
+  }
+
+  export type TestImageMinAggregateOutputType = {
+    id: number | null
+    testId: number | null
+    url: string | null
+    publicId: string | null
+    originalFilename: string | null
+    bytes: number | null
+    createdAt: Date | null
+  }
+
+  export type TestImageMaxAggregateOutputType = {
+    id: number | null
+    testId: number | null
+    url: string | null
+    publicId: string | null
+    originalFilename: string | null
+    bytes: number | null
+    createdAt: Date | null
+  }
+
+  export type TestImageCountAggregateOutputType = {
+    id: number
+    testId: number
+    url: number
+    publicId: number
+    originalFilename: number
+    bytes: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TestImageAvgAggregateInputType = {
+    id?: true
+    testId?: true
+    bytes?: true
+  }
+
+  export type TestImageSumAggregateInputType = {
+    id?: true
+    testId?: true
+    bytes?: true
+  }
+
+  export type TestImageMinAggregateInputType = {
+    id?: true
+    testId?: true
+    url?: true
+    publicId?: true
+    originalFilename?: true
+    bytes?: true
+    createdAt?: true
+  }
+
+  export type TestImageMaxAggregateInputType = {
+    id?: true
+    testId?: true
+    url?: true
+    publicId?: true
+    originalFilename?: true
+    bytes?: true
+    createdAt?: true
+  }
+
+  export type TestImageCountAggregateInputType = {
+    id?: true
+    testId?: true
+    url?: true
+    publicId?: true
+    originalFilename?: true
+    bytes?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TestImageAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TestImage to aggregate.
+     */
+    where?: TestImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TestImages to fetch.
+     */
+    orderBy?: TestImageOrderByWithRelationInput | TestImageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TestImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TestImages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TestImages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TestImages
+    **/
+    _count?: true | TestImageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TestImageAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TestImageSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TestImageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TestImageMaxAggregateInputType
+  }
+
+  export type GetTestImageAggregateType<T extends TestImageAggregateArgs> = {
+        [P in keyof T & keyof AggregateTestImage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTestImage[P]>
+      : GetScalarType<T[P], AggregateTestImage[P]>
+  }
+
+
+
+
+  export type TestImageGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TestImageWhereInput
+    orderBy?: TestImageOrderByWithAggregationInput | TestImageOrderByWithAggregationInput[]
+    by: TestImageScalarFieldEnum[] | TestImageScalarFieldEnum
+    having?: TestImageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TestImageCountAggregateInputType | true
+    _avg?: TestImageAvgAggregateInputType
+    _sum?: TestImageSumAggregateInputType
+    _min?: TestImageMinAggregateInputType
+    _max?: TestImageMaxAggregateInputType
+  }
+
+  export type TestImageGroupByOutputType = {
+    id: number
+    testId: number
+    url: string
+    publicId: string
+    originalFilename: string
+    bytes: number
+    createdAt: Date
+    _count: TestImageCountAggregateOutputType | null
+    _avg: TestImageAvgAggregateOutputType | null
+    _sum: TestImageSumAggregateOutputType | null
+    _min: TestImageMinAggregateOutputType | null
+    _max: TestImageMaxAggregateOutputType | null
+  }
+
+  type GetTestImageGroupByPayload<T extends TestImageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TestImageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TestImageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TestImageGroupByOutputType[P]>
+            : GetScalarType<T[P], TestImageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TestImageSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    testId?: boolean
+    url?: boolean
+    publicId?: boolean
+    originalFilename?: boolean
+    bytes?: boolean
+    createdAt?: boolean
+    test?: boolean | TestDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["testImage"]>
+
+  export type TestImageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    testId?: boolean
+    url?: boolean
+    publicId?: boolean
+    originalFilename?: boolean
+    bytes?: boolean
+    createdAt?: boolean
+    test?: boolean | TestDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["testImage"]>
+
+  export type TestImageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    testId?: boolean
+    url?: boolean
+    publicId?: boolean
+    originalFilename?: boolean
+    bytes?: boolean
+    createdAt?: boolean
+    test?: boolean | TestDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["testImage"]>
+
+  export type TestImageSelectScalar = {
+    id?: boolean
+    testId?: boolean
+    url?: boolean
+    publicId?: boolean
+    originalFilename?: boolean
+    bytes?: boolean
+    createdAt?: boolean
+  }
+
+  export type TestImageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "testId" | "url" | "publicId" | "originalFilename" | "bytes" | "createdAt", ExtArgs["result"]["testImage"]>
+  export type TestImageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    test?: boolean | TestDefaultArgs<ExtArgs>
+  }
+  export type TestImageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    test?: boolean | TestDefaultArgs<ExtArgs>
+  }
+  export type TestImageIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    test?: boolean | TestDefaultArgs<ExtArgs>
+  }
+
+  export type $TestImagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TestImage"
+    objects: {
+      test: Prisma.$TestPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      testId: number
+      url: string
+      publicId: string
+      originalFilename: string
+      bytes: number
+      createdAt: Date
+    }, ExtArgs["result"]["testImage"]>
+    composites: {}
+  }
+
+  type TestImageGetPayload<S extends boolean | null | undefined | TestImageDefaultArgs> = $Result.GetResult<Prisma.$TestImagePayload, S>
+
+  type TestImageCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TestImageFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TestImageCountAggregateInputType | true
+    }
+
+  export interface TestImageDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TestImage'], meta: { name: 'TestImage' } }
+    /**
+     * Find zero or one TestImage that matches the filter.
+     * @param {TestImageFindUniqueArgs} args - Arguments to find a TestImage
+     * @example
+     * // Get one TestImage
+     * const testImage = await prisma.testImage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TestImageFindUniqueArgs>(args: SelectSubset<T, TestImageFindUniqueArgs<ExtArgs>>): Prisma__TestImageClient<$Result.GetResult<Prisma.$TestImagePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TestImage that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TestImageFindUniqueOrThrowArgs} args - Arguments to find a TestImage
+     * @example
+     * // Get one TestImage
+     * const testImage = await prisma.testImage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TestImageFindUniqueOrThrowArgs>(args: SelectSubset<T, TestImageFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TestImageClient<$Result.GetResult<Prisma.$TestImagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TestImage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TestImageFindFirstArgs} args - Arguments to find a TestImage
+     * @example
+     * // Get one TestImage
+     * const testImage = await prisma.testImage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TestImageFindFirstArgs>(args?: SelectSubset<T, TestImageFindFirstArgs<ExtArgs>>): Prisma__TestImageClient<$Result.GetResult<Prisma.$TestImagePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TestImage that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TestImageFindFirstOrThrowArgs} args - Arguments to find a TestImage
+     * @example
+     * // Get one TestImage
+     * const testImage = await prisma.testImage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TestImageFindFirstOrThrowArgs>(args?: SelectSubset<T, TestImageFindFirstOrThrowArgs<ExtArgs>>): Prisma__TestImageClient<$Result.GetResult<Prisma.$TestImagePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TestImages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TestImageFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TestImages
+     * const testImages = await prisma.testImage.findMany()
+     * 
+     * // Get first 10 TestImages
+     * const testImages = await prisma.testImage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const testImageWithIdOnly = await prisma.testImage.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TestImageFindManyArgs>(args?: SelectSubset<T, TestImageFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestImagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TestImage.
+     * @param {TestImageCreateArgs} args - Arguments to create a TestImage.
+     * @example
+     * // Create one TestImage
+     * const TestImage = await prisma.testImage.create({
+     *   data: {
+     *     // ... data to create a TestImage
+     *   }
+     * })
+     * 
+     */
+    create<T extends TestImageCreateArgs>(args: SelectSubset<T, TestImageCreateArgs<ExtArgs>>): Prisma__TestImageClient<$Result.GetResult<Prisma.$TestImagePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TestImages.
+     * @param {TestImageCreateManyArgs} args - Arguments to create many TestImages.
+     * @example
+     * // Create many TestImages
+     * const testImage = await prisma.testImage.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TestImageCreateManyArgs>(args?: SelectSubset<T, TestImageCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TestImages and returns the data saved in the database.
+     * @param {TestImageCreateManyAndReturnArgs} args - Arguments to create many TestImages.
+     * @example
+     * // Create many TestImages
+     * const testImage = await prisma.testImage.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TestImages and only return the `id`
+     * const testImageWithIdOnly = await prisma.testImage.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TestImageCreateManyAndReturnArgs>(args?: SelectSubset<T, TestImageCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestImagePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TestImage.
+     * @param {TestImageDeleteArgs} args - Arguments to delete one TestImage.
+     * @example
+     * // Delete one TestImage
+     * const TestImage = await prisma.testImage.delete({
+     *   where: {
+     *     // ... filter to delete one TestImage
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TestImageDeleteArgs>(args: SelectSubset<T, TestImageDeleteArgs<ExtArgs>>): Prisma__TestImageClient<$Result.GetResult<Prisma.$TestImagePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TestImage.
+     * @param {TestImageUpdateArgs} args - Arguments to update one TestImage.
+     * @example
+     * // Update one TestImage
+     * const testImage = await prisma.testImage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TestImageUpdateArgs>(args: SelectSubset<T, TestImageUpdateArgs<ExtArgs>>): Prisma__TestImageClient<$Result.GetResult<Prisma.$TestImagePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TestImages.
+     * @param {TestImageDeleteManyArgs} args - Arguments to filter TestImages to delete.
+     * @example
+     * // Delete a few TestImages
+     * const { count } = await prisma.testImage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TestImageDeleteManyArgs>(args?: SelectSubset<T, TestImageDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TestImages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TestImageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TestImages
+     * const testImage = await prisma.testImage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TestImageUpdateManyArgs>(args: SelectSubset<T, TestImageUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TestImages and returns the data updated in the database.
+     * @param {TestImageUpdateManyAndReturnArgs} args - Arguments to update many TestImages.
+     * @example
+     * // Update many TestImages
+     * const testImage = await prisma.testImage.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TestImages and only return the `id`
+     * const testImageWithIdOnly = await prisma.testImage.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TestImageUpdateManyAndReturnArgs>(args: SelectSubset<T, TestImageUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestImagePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TestImage.
+     * @param {TestImageUpsertArgs} args - Arguments to update or create a TestImage.
+     * @example
+     * // Update or create a TestImage
+     * const testImage = await prisma.testImage.upsert({
+     *   create: {
+     *     // ... data to create a TestImage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TestImage we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TestImageUpsertArgs>(args: SelectSubset<T, TestImageUpsertArgs<ExtArgs>>): Prisma__TestImageClient<$Result.GetResult<Prisma.$TestImagePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TestImages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TestImageCountArgs} args - Arguments to filter TestImages to count.
+     * @example
+     * // Count the number of TestImages
+     * const count = await prisma.testImage.count({
+     *   where: {
+     *     // ... the filter for the TestImages we want to count
+     *   }
+     * })
+    **/
+    count<T extends TestImageCountArgs>(
+      args?: Subset<T, TestImageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TestImageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TestImage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TestImageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TestImageAggregateArgs>(args: Subset<T, TestImageAggregateArgs>): Prisma.PrismaPromise<GetTestImageAggregateType<T>>
+
+    /**
+     * Group by TestImage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TestImageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TestImageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TestImageGroupByArgs['orderBy'] }
+        : { orderBy?: TestImageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TestImageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTestImageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TestImage model
+   */
+  readonly fields: TestImageFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TestImage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TestImageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    test<T extends TestDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TestDefaultArgs<ExtArgs>>): Prisma__TestClient<$Result.GetResult<Prisma.$TestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TestImage model
+   */
+  interface TestImageFieldRefs {
+    readonly id: FieldRef<"TestImage", 'Int'>
+    readonly testId: FieldRef<"TestImage", 'Int'>
+    readonly url: FieldRef<"TestImage", 'String'>
+    readonly publicId: FieldRef<"TestImage", 'String'>
+    readonly originalFilename: FieldRef<"TestImage", 'String'>
+    readonly bytes: FieldRef<"TestImage", 'Int'>
+    readonly createdAt: FieldRef<"TestImage", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TestImage findUnique
+   */
+  export type TestImageFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestImage
+     */
+    select?: TestImageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestImage
+     */
+    omit?: TestImageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestImageInclude<ExtArgs> | null
+    /**
+     * Filter, which TestImage to fetch.
+     */
+    where: TestImageWhereUniqueInput
+  }
+
+  /**
+   * TestImage findUniqueOrThrow
+   */
+  export type TestImageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestImage
+     */
+    select?: TestImageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestImage
+     */
+    omit?: TestImageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestImageInclude<ExtArgs> | null
+    /**
+     * Filter, which TestImage to fetch.
+     */
+    where: TestImageWhereUniqueInput
+  }
+
+  /**
+   * TestImage findFirst
+   */
+  export type TestImageFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestImage
+     */
+    select?: TestImageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestImage
+     */
+    omit?: TestImageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestImageInclude<ExtArgs> | null
+    /**
+     * Filter, which TestImage to fetch.
+     */
+    where?: TestImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TestImages to fetch.
+     */
+    orderBy?: TestImageOrderByWithRelationInput | TestImageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TestImages.
+     */
+    cursor?: TestImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TestImages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TestImages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TestImages.
+     */
+    distinct?: TestImageScalarFieldEnum | TestImageScalarFieldEnum[]
+  }
+
+  /**
+   * TestImage findFirstOrThrow
+   */
+  export type TestImageFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestImage
+     */
+    select?: TestImageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestImage
+     */
+    omit?: TestImageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestImageInclude<ExtArgs> | null
+    /**
+     * Filter, which TestImage to fetch.
+     */
+    where?: TestImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TestImages to fetch.
+     */
+    orderBy?: TestImageOrderByWithRelationInput | TestImageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TestImages.
+     */
+    cursor?: TestImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TestImages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TestImages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TestImages.
+     */
+    distinct?: TestImageScalarFieldEnum | TestImageScalarFieldEnum[]
+  }
+
+  /**
+   * TestImage findMany
+   */
+  export type TestImageFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestImage
+     */
+    select?: TestImageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestImage
+     */
+    omit?: TestImageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestImageInclude<ExtArgs> | null
+    /**
+     * Filter, which TestImages to fetch.
+     */
+    where?: TestImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TestImages to fetch.
+     */
+    orderBy?: TestImageOrderByWithRelationInput | TestImageOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TestImages.
+     */
+    cursor?: TestImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TestImages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TestImages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TestImages.
+     */
+    distinct?: TestImageScalarFieldEnum | TestImageScalarFieldEnum[]
+  }
+
+  /**
+   * TestImage create
+   */
+  export type TestImageCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestImage
+     */
+    select?: TestImageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestImage
+     */
+    omit?: TestImageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestImageInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TestImage.
+     */
+    data: XOR<TestImageCreateInput, TestImageUncheckedCreateInput>
+  }
+
+  /**
+   * TestImage createMany
+   */
+  export type TestImageCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TestImages.
+     */
+    data: TestImageCreateManyInput | TestImageCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TestImage createManyAndReturn
+   */
+  export type TestImageCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestImage
+     */
+    select?: TestImageSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestImage
+     */
+    omit?: TestImageOmit<ExtArgs> | null
+    /**
+     * The data used to create many TestImages.
+     */
+    data: TestImageCreateManyInput | TestImageCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestImageIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TestImage update
+   */
+  export type TestImageUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestImage
+     */
+    select?: TestImageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestImage
+     */
+    omit?: TestImageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestImageInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TestImage.
+     */
+    data: XOR<TestImageUpdateInput, TestImageUncheckedUpdateInput>
+    /**
+     * Choose, which TestImage to update.
+     */
+    where: TestImageWhereUniqueInput
+  }
+
+  /**
+   * TestImage updateMany
+   */
+  export type TestImageUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TestImages.
+     */
+    data: XOR<TestImageUpdateManyMutationInput, TestImageUncheckedUpdateManyInput>
+    /**
+     * Filter which TestImages to update
+     */
+    where?: TestImageWhereInput
+    /**
+     * Limit how many TestImages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TestImage updateManyAndReturn
+   */
+  export type TestImageUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestImage
+     */
+    select?: TestImageSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestImage
+     */
+    omit?: TestImageOmit<ExtArgs> | null
+    /**
+     * The data used to update TestImages.
+     */
+    data: XOR<TestImageUpdateManyMutationInput, TestImageUncheckedUpdateManyInput>
+    /**
+     * Filter which TestImages to update
+     */
+    where?: TestImageWhereInput
+    /**
+     * Limit how many TestImages to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestImageIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TestImage upsert
+   */
+  export type TestImageUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestImage
+     */
+    select?: TestImageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestImage
+     */
+    omit?: TestImageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestImageInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TestImage to update in case it exists.
+     */
+    where: TestImageWhereUniqueInput
+    /**
+     * In case the TestImage found by the `where` argument doesn't exist, create a new TestImage with this data.
+     */
+    create: XOR<TestImageCreateInput, TestImageUncheckedCreateInput>
+    /**
+     * In case the TestImage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TestImageUpdateInput, TestImageUncheckedUpdateInput>
+  }
+
+  /**
+   * TestImage delete
+   */
+  export type TestImageDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestImage
+     */
+    select?: TestImageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestImage
+     */
+    omit?: TestImageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestImageInclude<ExtArgs> | null
+    /**
+     * Filter which TestImage to delete.
+     */
+    where: TestImageWhereUniqueInput
+  }
+
+  /**
+   * TestImage deleteMany
+   */
+  export type TestImageDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TestImages to delete
+     */
+    where?: TestImageWhereInput
+    /**
+     * Limit how many TestImages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TestImage without action
+   */
+  export type TestImageDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TestImage
+     */
+    select?: TestImageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TestImage
+     */
+    omit?: TestImageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TestImageInclude<ExtArgs> | null
   }
 
 
@@ -36494,11 +37805,15 @@ export namespace Prisma {
     testId: 'testId',
     questionOrder: 'questionOrder',
     questionText: 'questionText',
-    questionImage: 'questionImage',
+    questionImageUrl: 'questionImageUrl',
     optionA: 'optionA',
+    optionAImageUrl: 'optionAImageUrl',
     optionB: 'optionB',
+    optionBImageUrl: 'optionBImageUrl',
     optionC: 'optionC',
+    optionCImageUrl: 'optionCImageUrl',
     optionD: 'optionD',
+    optionDImageUrl: 'optionDImageUrl',
     correctOption: 'correctOption',
     explanation: 'explanation',
     subject: 'subject',
@@ -36506,6 +37821,19 @@ export namespace Prisma {
   };
 
   export type TestQuestionScalarFieldEnum = (typeof TestQuestionScalarFieldEnum)[keyof typeof TestQuestionScalarFieldEnum]
+
+
+  export const TestImageScalarFieldEnum: {
+    id: 'id',
+    testId: 'testId',
+    url: 'url',
+    publicId: 'publicId',
+    originalFilename: 'originalFilename',
+    bytes: 'bytes',
+    createdAt: 'createdAt'
+  };
+
+  export type TestImageScalarFieldEnum = (typeof TestImageScalarFieldEnum)[keyof typeof TestImageScalarFieldEnum]
 
 
   export const TestAttemptScalarFieldEnum: {
@@ -38441,6 +39769,7 @@ export namespace Prisma {
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     questions?: TestQuestionListRelationFilter
     attempts?: TestAttemptListRelationFilter
+    images?: TestImageListRelationFilter
   }
 
   export type TestOrderByWithRelationInput = {
@@ -38459,6 +39788,7 @@ export namespace Prisma {
     course?: CourseOrderByWithRelationInput
     questions?: TestQuestionOrderByRelationAggregateInput
     attempts?: TestAttemptOrderByRelationAggregateInput
+    images?: TestImageOrderByRelationAggregateInput
   }
 
   export type TestWhereUniqueInput = Prisma.AtLeast<{
@@ -38480,6 +39810,7 @@ export namespace Prisma {
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     questions?: TestQuestionListRelationFilter
     attempts?: TestAttemptListRelationFilter
+    images?: TestImageListRelationFilter
   }, "id">
 
   export type TestOrderByWithAggregationInput = {
@@ -38527,12 +39858,16 @@ export namespace Prisma {
     id?: IntFilter<"TestQuestion"> | number
     testId?: IntFilter<"TestQuestion"> | number
     questionOrder?: IntFilter<"TestQuestion"> | number
-    questionText?: StringFilter<"TestQuestion"> | string
-    questionImage?: StringNullableFilter<"TestQuestion"> | string | null
-    optionA?: StringFilter<"TestQuestion"> | string
-    optionB?: StringFilter<"TestQuestion"> | string
-    optionC?: StringFilter<"TestQuestion"> | string
-    optionD?: StringFilter<"TestQuestion"> | string
+    questionText?: StringNullableFilter<"TestQuestion"> | string | null
+    questionImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionA?: StringNullableFilter<"TestQuestion"> | string | null
+    optionAImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionB?: StringNullableFilter<"TestQuestion"> | string | null
+    optionBImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionC?: StringNullableFilter<"TestQuestion"> | string | null
+    optionCImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionD?: StringNullableFilter<"TestQuestion"> | string | null
+    optionDImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
     correctOption?: StringFilter<"TestQuestion"> | string
     explanation?: StringNullableFilter<"TestQuestion"> | string | null
     subject?: StringNullableFilter<"TestQuestion"> | string | null
@@ -38545,12 +39880,16 @@ export namespace Prisma {
     id?: SortOrder
     testId?: SortOrder
     questionOrder?: SortOrder
-    questionText?: SortOrder
-    questionImage?: SortOrderInput | SortOrder
-    optionA?: SortOrder
-    optionB?: SortOrder
-    optionC?: SortOrder
-    optionD?: SortOrder
+    questionText?: SortOrderInput | SortOrder
+    questionImageUrl?: SortOrderInput | SortOrder
+    optionA?: SortOrderInput | SortOrder
+    optionAImageUrl?: SortOrderInput | SortOrder
+    optionB?: SortOrderInput | SortOrder
+    optionBImageUrl?: SortOrderInput | SortOrder
+    optionC?: SortOrderInput | SortOrder
+    optionCImageUrl?: SortOrderInput | SortOrder
+    optionD?: SortOrderInput | SortOrder
+    optionDImageUrl?: SortOrderInput | SortOrder
     correctOption?: SortOrder
     explanation?: SortOrderInput | SortOrder
     subject?: SortOrderInput | SortOrder
@@ -38567,12 +39906,16 @@ export namespace Prisma {
     NOT?: TestQuestionWhereInput | TestQuestionWhereInput[]
     testId?: IntFilter<"TestQuestion"> | number
     questionOrder?: IntFilter<"TestQuestion"> | number
-    questionText?: StringFilter<"TestQuestion"> | string
-    questionImage?: StringNullableFilter<"TestQuestion"> | string | null
-    optionA?: StringFilter<"TestQuestion"> | string
-    optionB?: StringFilter<"TestQuestion"> | string
-    optionC?: StringFilter<"TestQuestion"> | string
-    optionD?: StringFilter<"TestQuestion"> | string
+    questionText?: StringNullableFilter<"TestQuestion"> | string | null
+    questionImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionA?: StringNullableFilter<"TestQuestion"> | string | null
+    optionAImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionB?: StringNullableFilter<"TestQuestion"> | string | null
+    optionBImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionC?: StringNullableFilter<"TestQuestion"> | string | null
+    optionCImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionD?: StringNullableFilter<"TestQuestion"> | string | null
+    optionDImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
     correctOption?: StringFilter<"TestQuestion"> | string
     explanation?: StringNullableFilter<"TestQuestion"> | string | null
     subject?: StringNullableFilter<"TestQuestion"> | string | null
@@ -38585,12 +39928,16 @@ export namespace Prisma {
     id?: SortOrder
     testId?: SortOrder
     questionOrder?: SortOrder
-    questionText?: SortOrder
-    questionImage?: SortOrderInput | SortOrder
-    optionA?: SortOrder
-    optionB?: SortOrder
-    optionC?: SortOrder
-    optionD?: SortOrder
+    questionText?: SortOrderInput | SortOrder
+    questionImageUrl?: SortOrderInput | SortOrder
+    optionA?: SortOrderInput | SortOrder
+    optionAImageUrl?: SortOrderInput | SortOrder
+    optionB?: SortOrderInput | SortOrder
+    optionBImageUrl?: SortOrderInput | SortOrder
+    optionC?: SortOrderInput | SortOrder
+    optionCImageUrl?: SortOrderInput | SortOrder
+    optionD?: SortOrderInput | SortOrder
+    optionDImageUrl?: SortOrderInput | SortOrder
     correctOption?: SortOrder
     explanation?: SortOrderInput | SortOrder
     subject?: SortOrderInput | SortOrder
@@ -38609,16 +39956,87 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"TestQuestion"> | number
     testId?: IntWithAggregatesFilter<"TestQuestion"> | number
     questionOrder?: IntWithAggregatesFilter<"TestQuestion"> | number
-    questionText?: StringWithAggregatesFilter<"TestQuestion"> | string
-    questionImage?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
-    optionA?: StringWithAggregatesFilter<"TestQuestion"> | string
-    optionB?: StringWithAggregatesFilter<"TestQuestion"> | string
-    optionC?: StringWithAggregatesFilter<"TestQuestion"> | string
-    optionD?: StringWithAggregatesFilter<"TestQuestion"> | string
+    questionText?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+    questionImageUrl?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+    optionA?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+    optionAImageUrl?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+    optionB?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+    optionBImageUrl?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+    optionC?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+    optionCImageUrl?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+    optionD?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+    optionDImageUrl?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
     correctOption?: StringWithAggregatesFilter<"TestQuestion"> | string
     explanation?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
     subject?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
     topic?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+  }
+
+  export type TestImageWhereInput = {
+    AND?: TestImageWhereInput | TestImageWhereInput[]
+    OR?: TestImageWhereInput[]
+    NOT?: TestImageWhereInput | TestImageWhereInput[]
+    id?: IntFilter<"TestImage"> | number
+    testId?: IntFilter<"TestImage"> | number
+    url?: StringFilter<"TestImage"> | string
+    publicId?: StringFilter<"TestImage"> | string
+    originalFilename?: StringFilter<"TestImage"> | string
+    bytes?: IntFilter<"TestImage"> | number
+    createdAt?: DateTimeFilter<"TestImage"> | Date | string
+    test?: XOR<TestScalarRelationFilter, TestWhereInput>
+  }
+
+  export type TestImageOrderByWithRelationInput = {
+    id?: SortOrder
+    testId?: SortOrder
+    url?: SortOrder
+    publicId?: SortOrder
+    originalFilename?: SortOrder
+    bytes?: SortOrder
+    createdAt?: SortOrder
+    test?: TestOrderByWithRelationInput
+  }
+
+  export type TestImageWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    url?: string
+    AND?: TestImageWhereInput | TestImageWhereInput[]
+    OR?: TestImageWhereInput[]
+    NOT?: TestImageWhereInput | TestImageWhereInput[]
+    testId?: IntFilter<"TestImage"> | number
+    publicId?: StringFilter<"TestImage"> | string
+    originalFilename?: StringFilter<"TestImage"> | string
+    bytes?: IntFilter<"TestImage"> | number
+    createdAt?: DateTimeFilter<"TestImage"> | Date | string
+    test?: XOR<TestScalarRelationFilter, TestWhereInput>
+  }, "id" | "url">
+
+  export type TestImageOrderByWithAggregationInput = {
+    id?: SortOrder
+    testId?: SortOrder
+    url?: SortOrder
+    publicId?: SortOrder
+    originalFilename?: SortOrder
+    bytes?: SortOrder
+    createdAt?: SortOrder
+    _count?: TestImageCountOrderByAggregateInput
+    _avg?: TestImageAvgOrderByAggregateInput
+    _max?: TestImageMaxOrderByAggregateInput
+    _min?: TestImageMinOrderByAggregateInput
+    _sum?: TestImageSumOrderByAggregateInput
+  }
+
+  export type TestImageScalarWhereWithAggregatesInput = {
+    AND?: TestImageScalarWhereWithAggregatesInput | TestImageScalarWhereWithAggregatesInput[]
+    OR?: TestImageScalarWhereWithAggregatesInput[]
+    NOT?: TestImageScalarWhereWithAggregatesInput | TestImageScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TestImage"> | number
+    testId?: IntWithAggregatesFilter<"TestImage"> | number
+    url?: StringWithAggregatesFilter<"TestImage"> | string
+    publicId?: StringWithAggregatesFilter<"TestImage"> | string
+    originalFilename?: StringWithAggregatesFilter<"TestImage"> | string
+    bytes?: IntWithAggregatesFilter<"TestImage"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"TestImage"> | Date | string
   }
 
   export type TestAttemptWhereInput = {
@@ -40472,6 +41890,7 @@ export namespace Prisma {
     course: CourseCreateNestedOneWithoutTestsInput
     questions?: TestQuestionCreateNestedManyWithoutTestInput
     attempts?: TestAttemptCreateNestedManyWithoutTestInput
+    images?: TestImageCreateNestedManyWithoutTestInput
   }
 
   export type TestUncheckedCreateInput = {
@@ -40489,6 +41908,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     questions?: TestQuestionUncheckedCreateNestedManyWithoutTestInput
     attempts?: TestAttemptUncheckedCreateNestedManyWithoutTestInput
+    images?: TestImageUncheckedCreateNestedManyWithoutTestInput
   }
 
   export type TestUpdateInput = {
@@ -40505,6 +41925,7 @@ export namespace Prisma {
     course?: CourseUpdateOneRequiredWithoutTestsNestedInput
     questions?: TestQuestionUpdateManyWithoutTestNestedInput
     attempts?: TestAttemptUpdateManyWithoutTestNestedInput
+    images?: TestImageUpdateManyWithoutTestNestedInput
   }
 
   export type TestUncheckedUpdateInput = {
@@ -40522,6 +41943,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: TestQuestionUncheckedUpdateManyWithoutTestNestedInput
     attempts?: TestAttemptUncheckedUpdateManyWithoutTestNestedInput
+    images?: TestImageUncheckedUpdateManyWithoutTestNestedInput
   }
 
   export type TestCreateManyInput = {
@@ -40569,12 +41991,16 @@ export namespace Prisma {
 
   export type TestQuestionCreateInput = {
     questionOrder: number
-    questionText: string
-    questionImage?: string | null
-    optionA: string
-    optionB: string
-    optionC: string
-    optionD: string
+    questionText?: string | null
+    questionImageUrl?: string | null
+    optionA?: string | null
+    optionAImageUrl?: string | null
+    optionB?: string | null
+    optionBImageUrl?: string | null
+    optionC?: string | null
+    optionCImageUrl?: string | null
+    optionD?: string | null
+    optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     subject?: string | null
@@ -40587,12 +42013,16 @@ export namespace Prisma {
     id?: number
     testId: number
     questionOrder: number
-    questionText: string
-    questionImage?: string | null
-    optionA: string
-    optionB: string
-    optionC: string
-    optionD: string
+    questionText?: string | null
+    questionImageUrl?: string | null
+    optionA?: string | null
+    optionAImageUrl?: string | null
+    optionB?: string | null
+    optionBImageUrl?: string | null
+    optionC?: string | null
+    optionCImageUrl?: string | null
+    optionD?: string | null
+    optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     subject?: string | null
@@ -40602,12 +42032,16 @@ export namespace Prisma {
 
   export type TestQuestionUpdateInput = {
     questionOrder?: IntFieldUpdateOperationsInput | number
-    questionText?: StringFieldUpdateOperationsInput | string
-    questionImage?: NullableStringFieldUpdateOperationsInput | string | null
-    optionA?: StringFieldUpdateOperationsInput | string
-    optionB?: StringFieldUpdateOperationsInput | string
-    optionC?: StringFieldUpdateOperationsInput | string
-    optionD?: StringFieldUpdateOperationsInput | string
+    questionText?: NullableStringFieldUpdateOperationsInput | string | null
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionA?: NullableStringFieldUpdateOperationsInput | string | null
+    optionAImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionB?: NullableStringFieldUpdateOperationsInput | string | null
+    optionBImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionC?: NullableStringFieldUpdateOperationsInput | string | null
+    optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionD?: NullableStringFieldUpdateOperationsInput | string | null
+    optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40620,12 +42054,16 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     testId?: IntFieldUpdateOperationsInput | number
     questionOrder?: IntFieldUpdateOperationsInput | number
-    questionText?: StringFieldUpdateOperationsInput | string
-    questionImage?: NullableStringFieldUpdateOperationsInput | string | null
-    optionA?: StringFieldUpdateOperationsInput | string
-    optionB?: StringFieldUpdateOperationsInput | string
-    optionC?: StringFieldUpdateOperationsInput | string
-    optionD?: StringFieldUpdateOperationsInput | string
+    questionText?: NullableStringFieldUpdateOperationsInput | string | null
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionA?: NullableStringFieldUpdateOperationsInput | string | null
+    optionAImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionB?: NullableStringFieldUpdateOperationsInput | string | null
+    optionBImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionC?: NullableStringFieldUpdateOperationsInput | string | null
+    optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionD?: NullableStringFieldUpdateOperationsInput | string | null
+    optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40637,12 +42075,16 @@ export namespace Prisma {
     id?: number
     testId: number
     questionOrder: number
-    questionText: string
-    questionImage?: string | null
-    optionA: string
-    optionB: string
-    optionC: string
-    optionD: string
+    questionText?: string | null
+    questionImageUrl?: string | null
+    optionA?: string | null
+    optionAImageUrl?: string | null
+    optionB?: string | null
+    optionBImageUrl?: string | null
+    optionC?: string | null
+    optionCImageUrl?: string | null
+    optionD?: string | null
+    optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     subject?: string | null
@@ -40651,12 +42093,16 @@ export namespace Prisma {
 
   export type TestQuestionUpdateManyMutationInput = {
     questionOrder?: IntFieldUpdateOperationsInput | number
-    questionText?: StringFieldUpdateOperationsInput | string
-    questionImage?: NullableStringFieldUpdateOperationsInput | string | null
-    optionA?: StringFieldUpdateOperationsInput | string
-    optionB?: StringFieldUpdateOperationsInput | string
-    optionC?: StringFieldUpdateOperationsInput | string
-    optionD?: StringFieldUpdateOperationsInput | string
+    questionText?: NullableStringFieldUpdateOperationsInput | string | null
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionA?: NullableStringFieldUpdateOperationsInput | string | null
+    optionAImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionB?: NullableStringFieldUpdateOperationsInput | string | null
+    optionBImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionC?: NullableStringFieldUpdateOperationsInput | string | null
+    optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionD?: NullableStringFieldUpdateOperationsInput | string | null
+    optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40667,16 +42113,86 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     testId?: IntFieldUpdateOperationsInput | number
     questionOrder?: IntFieldUpdateOperationsInput | number
-    questionText?: StringFieldUpdateOperationsInput | string
-    questionImage?: NullableStringFieldUpdateOperationsInput | string | null
-    optionA?: StringFieldUpdateOperationsInput | string
-    optionB?: StringFieldUpdateOperationsInput | string
-    optionC?: StringFieldUpdateOperationsInput | string
-    optionD?: StringFieldUpdateOperationsInput | string
+    questionText?: NullableStringFieldUpdateOperationsInput | string | null
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionA?: NullableStringFieldUpdateOperationsInput | string | null
+    optionAImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionB?: NullableStringFieldUpdateOperationsInput | string | null
+    optionBImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionC?: NullableStringFieldUpdateOperationsInput | string | null
+    optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionD?: NullableStringFieldUpdateOperationsInput | string | null
+    optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     topic?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type TestImageCreateInput = {
+    url: string
+    publicId: string
+    originalFilename: string
+    bytes: number
+    createdAt?: Date | string
+    test: TestCreateNestedOneWithoutImagesInput
+  }
+
+  export type TestImageUncheckedCreateInput = {
+    id?: number
+    testId: number
+    url: string
+    publicId: string
+    originalFilename: string
+    bytes: number
+    createdAt?: Date | string
+  }
+
+  export type TestImageUpdateInput = {
+    url?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
+    originalFilename?: StringFieldUpdateOperationsInput | string
+    bytes?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    test?: TestUpdateOneRequiredWithoutImagesNestedInput
+  }
+
+  export type TestImageUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    testId?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
+    originalFilename?: StringFieldUpdateOperationsInput | string
+    bytes?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestImageCreateManyInput = {
+    id?: number
+    testId: number
+    url: string
+    publicId: string
+    originalFilename: string
+    bytes: number
+    createdAt?: Date | string
+  }
+
+  export type TestImageUpdateManyMutationInput = {
+    url?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
+    originalFilename?: StringFieldUpdateOperationsInput | string
+    bytes?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestImageUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    testId?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
+    originalFilename?: StringFieldUpdateOperationsInput | string
+    bytes?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TestAttemptCreateInput = {
@@ -42446,7 +43962,17 @@ export namespace Prisma {
     none?: TestQuestionWhereInput
   }
 
+  export type TestImageListRelationFilter = {
+    every?: TestImageWhereInput
+    some?: TestImageWhereInput
+    none?: TestImageWhereInput
+  }
+
   export type TestQuestionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TestImageOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -42548,11 +44074,15 @@ export namespace Prisma {
     testId?: SortOrder
     questionOrder?: SortOrder
     questionText?: SortOrder
-    questionImage?: SortOrder
+    questionImageUrl?: SortOrder
     optionA?: SortOrder
+    optionAImageUrl?: SortOrder
     optionB?: SortOrder
+    optionBImageUrl?: SortOrder
     optionC?: SortOrder
+    optionCImageUrl?: SortOrder
     optionD?: SortOrder
+    optionDImageUrl?: SortOrder
     correctOption?: SortOrder
     explanation?: SortOrder
     subject?: SortOrder
@@ -42570,11 +44100,15 @@ export namespace Prisma {
     testId?: SortOrder
     questionOrder?: SortOrder
     questionText?: SortOrder
-    questionImage?: SortOrder
+    questionImageUrl?: SortOrder
     optionA?: SortOrder
+    optionAImageUrl?: SortOrder
     optionB?: SortOrder
+    optionBImageUrl?: SortOrder
     optionC?: SortOrder
+    optionCImageUrl?: SortOrder
     optionD?: SortOrder
+    optionDImageUrl?: SortOrder
     correctOption?: SortOrder
     explanation?: SortOrder
     subject?: SortOrder
@@ -42586,11 +44120,15 @@ export namespace Prisma {
     testId?: SortOrder
     questionOrder?: SortOrder
     questionText?: SortOrder
-    questionImage?: SortOrder
+    questionImageUrl?: SortOrder
     optionA?: SortOrder
+    optionAImageUrl?: SortOrder
     optionB?: SortOrder
+    optionBImageUrl?: SortOrder
     optionC?: SortOrder
+    optionCImageUrl?: SortOrder
     optionD?: SortOrder
+    optionDImageUrl?: SortOrder
     correctOption?: SortOrder
     explanation?: SortOrder
     subject?: SortOrder
@@ -42601,6 +44139,48 @@ export namespace Prisma {
     id?: SortOrder
     testId?: SortOrder
     questionOrder?: SortOrder
+  }
+
+  export type TestImageCountOrderByAggregateInput = {
+    id?: SortOrder
+    testId?: SortOrder
+    url?: SortOrder
+    publicId?: SortOrder
+    originalFilename?: SortOrder
+    bytes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TestImageAvgOrderByAggregateInput = {
+    id?: SortOrder
+    testId?: SortOrder
+    bytes?: SortOrder
+  }
+
+  export type TestImageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    testId?: SortOrder
+    url?: SortOrder
+    publicId?: SortOrder
+    originalFilename?: SortOrder
+    bytes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TestImageMinOrderByAggregateInput = {
+    id?: SortOrder
+    testId?: SortOrder
+    url?: SortOrder
+    publicId?: SortOrder
+    originalFilename?: SortOrder
+    bytes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TestImageSumOrderByAggregateInput = {
+    id?: SortOrder
+    testId?: SortOrder
+    bytes?: SortOrder
   }
 
   export type FloatNullableFilter<$PrismaModel = never> = {
@@ -44884,6 +46464,13 @@ export namespace Prisma {
     connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
   }
 
+  export type TestImageCreateNestedManyWithoutTestInput = {
+    create?: XOR<TestImageCreateWithoutTestInput, TestImageUncheckedCreateWithoutTestInput> | TestImageCreateWithoutTestInput[] | TestImageUncheckedCreateWithoutTestInput[]
+    connectOrCreate?: TestImageCreateOrConnectWithoutTestInput | TestImageCreateOrConnectWithoutTestInput[]
+    createMany?: TestImageCreateManyTestInputEnvelope
+    connect?: TestImageWhereUniqueInput | TestImageWhereUniqueInput[]
+  }
+
   export type TestQuestionUncheckedCreateNestedManyWithoutTestInput = {
     create?: XOR<TestQuestionCreateWithoutTestInput, TestQuestionUncheckedCreateWithoutTestInput> | TestQuestionCreateWithoutTestInput[] | TestQuestionUncheckedCreateWithoutTestInput[]
     connectOrCreate?: TestQuestionCreateOrConnectWithoutTestInput | TestQuestionCreateOrConnectWithoutTestInput[]
@@ -44896,6 +46483,13 @@ export namespace Prisma {
     connectOrCreate?: TestAttemptCreateOrConnectWithoutTestInput | TestAttemptCreateOrConnectWithoutTestInput[]
     createMany?: TestAttemptCreateManyTestInputEnvelope
     connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+  }
+
+  export type TestImageUncheckedCreateNestedManyWithoutTestInput = {
+    create?: XOR<TestImageCreateWithoutTestInput, TestImageUncheckedCreateWithoutTestInput> | TestImageCreateWithoutTestInput[] | TestImageUncheckedCreateWithoutTestInput[]
+    connectOrCreate?: TestImageCreateOrConnectWithoutTestInput | TestImageCreateOrConnectWithoutTestInput[]
+    createMany?: TestImageCreateManyTestInputEnvelope
+    connect?: TestImageWhereUniqueInput | TestImageWhereUniqueInput[]
   }
 
   export type EnumTestTypeFieldUpdateOperationsInput = {
@@ -44938,6 +46532,20 @@ export namespace Prisma {
     deleteMany?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
   }
 
+  export type TestImageUpdateManyWithoutTestNestedInput = {
+    create?: XOR<TestImageCreateWithoutTestInput, TestImageUncheckedCreateWithoutTestInput> | TestImageCreateWithoutTestInput[] | TestImageUncheckedCreateWithoutTestInput[]
+    connectOrCreate?: TestImageCreateOrConnectWithoutTestInput | TestImageCreateOrConnectWithoutTestInput[]
+    upsert?: TestImageUpsertWithWhereUniqueWithoutTestInput | TestImageUpsertWithWhereUniqueWithoutTestInput[]
+    createMany?: TestImageCreateManyTestInputEnvelope
+    set?: TestImageWhereUniqueInput | TestImageWhereUniqueInput[]
+    disconnect?: TestImageWhereUniqueInput | TestImageWhereUniqueInput[]
+    delete?: TestImageWhereUniqueInput | TestImageWhereUniqueInput[]
+    connect?: TestImageWhereUniqueInput | TestImageWhereUniqueInput[]
+    update?: TestImageUpdateWithWhereUniqueWithoutTestInput | TestImageUpdateWithWhereUniqueWithoutTestInput[]
+    updateMany?: TestImageUpdateManyWithWhereWithoutTestInput | TestImageUpdateManyWithWhereWithoutTestInput[]
+    deleteMany?: TestImageScalarWhereInput | TestImageScalarWhereInput[]
+  }
+
   export type TestQuestionUncheckedUpdateManyWithoutTestNestedInput = {
     create?: XOR<TestQuestionCreateWithoutTestInput, TestQuestionUncheckedCreateWithoutTestInput> | TestQuestionCreateWithoutTestInput[] | TestQuestionUncheckedCreateWithoutTestInput[]
     connectOrCreate?: TestQuestionCreateOrConnectWithoutTestInput | TestQuestionCreateOrConnectWithoutTestInput[]
@@ -44964,6 +46572,20 @@ export namespace Prisma {
     update?: TestAttemptUpdateWithWhereUniqueWithoutTestInput | TestAttemptUpdateWithWhereUniqueWithoutTestInput[]
     updateMany?: TestAttemptUpdateManyWithWhereWithoutTestInput | TestAttemptUpdateManyWithWhereWithoutTestInput[]
     deleteMany?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
+  }
+
+  export type TestImageUncheckedUpdateManyWithoutTestNestedInput = {
+    create?: XOR<TestImageCreateWithoutTestInput, TestImageUncheckedCreateWithoutTestInput> | TestImageCreateWithoutTestInput[] | TestImageUncheckedCreateWithoutTestInput[]
+    connectOrCreate?: TestImageCreateOrConnectWithoutTestInput | TestImageCreateOrConnectWithoutTestInput[]
+    upsert?: TestImageUpsertWithWhereUniqueWithoutTestInput | TestImageUpsertWithWhereUniqueWithoutTestInput[]
+    createMany?: TestImageCreateManyTestInputEnvelope
+    set?: TestImageWhereUniqueInput | TestImageWhereUniqueInput[]
+    disconnect?: TestImageWhereUniqueInput | TestImageWhereUniqueInput[]
+    delete?: TestImageWhereUniqueInput | TestImageWhereUniqueInput[]
+    connect?: TestImageWhereUniqueInput | TestImageWhereUniqueInput[]
+    update?: TestImageUpdateWithWhereUniqueWithoutTestInput | TestImageUpdateWithWhereUniqueWithoutTestInput[]
+    updateMany?: TestImageUpdateManyWithWhereWithoutTestInput | TestImageUpdateManyWithWhereWithoutTestInput[]
+    deleteMany?: TestImageScalarWhereInput | TestImageScalarWhereInput[]
   }
 
   export type TestCreateNestedOneWithoutQuestionsInput = {
@@ -45020,6 +46642,20 @@ export namespace Prisma {
     update?: TestAttemptAnswerUpdateWithWhereUniqueWithoutTestQuestionInput | TestAttemptAnswerUpdateWithWhereUniqueWithoutTestQuestionInput[]
     updateMany?: TestAttemptAnswerUpdateManyWithWhereWithoutTestQuestionInput | TestAttemptAnswerUpdateManyWithWhereWithoutTestQuestionInput[]
     deleteMany?: TestAttemptAnswerScalarWhereInput | TestAttemptAnswerScalarWhereInput[]
+  }
+
+  export type TestCreateNestedOneWithoutImagesInput = {
+    create?: XOR<TestCreateWithoutImagesInput, TestUncheckedCreateWithoutImagesInput>
+    connectOrCreate?: TestCreateOrConnectWithoutImagesInput
+    connect?: TestWhereUniqueInput
+  }
+
+  export type TestUpdateOneRequiredWithoutImagesNestedInput = {
+    create?: XOR<TestCreateWithoutImagesInput, TestUncheckedCreateWithoutImagesInput>
+    connectOrCreate?: TestCreateOrConnectWithoutImagesInput
+    upsert?: TestUpsertWithoutImagesInput
+    connect?: TestWhereUniqueInput
+    update?: XOR<XOR<TestUpdateToOneWithWhereWithoutImagesInput, TestUpdateWithoutImagesInput>, TestUncheckedUpdateWithoutImagesInput>
   }
 
   export type UserCreateNestedOneWithoutTestAttemptsInput = {
@@ -46867,6 +48503,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     questions?: TestQuestionCreateNestedManyWithoutTestInput
     attempts?: TestAttemptCreateNestedManyWithoutTestInput
+    images?: TestImageCreateNestedManyWithoutTestInput
   }
 
   export type TestUncheckedCreateWithoutCourseInput = {
@@ -46883,6 +48520,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     questions?: TestQuestionUncheckedCreateNestedManyWithoutTestInput
     attempts?: TestAttemptUncheckedCreateNestedManyWithoutTestInput
+    images?: TestImageUncheckedCreateNestedManyWithoutTestInput
   }
 
   export type TestCreateOrConnectWithoutCourseInput = {
@@ -50405,12 +52043,16 @@ export namespace Prisma {
 
   export type TestQuestionCreateWithoutTestInput = {
     questionOrder: number
-    questionText: string
-    questionImage?: string | null
-    optionA: string
-    optionB: string
-    optionC: string
-    optionD: string
+    questionText?: string | null
+    questionImageUrl?: string | null
+    optionA?: string | null
+    optionAImageUrl?: string | null
+    optionB?: string | null
+    optionBImageUrl?: string | null
+    optionC?: string | null
+    optionCImageUrl?: string | null
+    optionD?: string | null
+    optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     subject?: string | null
@@ -50421,12 +52063,16 @@ export namespace Prisma {
   export type TestQuestionUncheckedCreateWithoutTestInput = {
     id?: number
     questionOrder: number
-    questionText: string
-    questionImage?: string | null
-    optionA: string
-    optionB: string
-    optionC: string
-    optionD: string
+    questionText?: string | null
+    questionImageUrl?: string | null
+    optionA?: string | null
+    optionAImageUrl?: string | null
+    optionB?: string | null
+    optionBImageUrl?: string | null
+    optionC?: string | null
+    optionCImageUrl?: string | null
+    optionD?: string | null
+    optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     subject?: string | null
@@ -50468,6 +52114,33 @@ export namespace Prisma {
 
   export type TestAttemptCreateManyTestInputEnvelope = {
     data: TestAttemptCreateManyTestInput | TestAttemptCreateManyTestInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TestImageCreateWithoutTestInput = {
+    url: string
+    publicId: string
+    originalFilename: string
+    bytes: number
+    createdAt?: Date | string
+  }
+
+  export type TestImageUncheckedCreateWithoutTestInput = {
+    id?: number
+    url: string
+    publicId: string
+    originalFilename: string
+    bytes: number
+    createdAt?: Date | string
+  }
+
+  export type TestImageCreateOrConnectWithoutTestInput = {
+    where: TestImageWhereUniqueInput
+    create: XOR<TestImageCreateWithoutTestInput, TestImageUncheckedCreateWithoutTestInput>
+  }
+
+  export type TestImageCreateManyTestInputEnvelope = {
+    data: TestImageCreateManyTestInput | TestImageCreateManyTestInput[]
     skipDuplicates?: boolean
   }
 
@@ -50546,12 +52219,16 @@ export namespace Prisma {
     id?: IntFilter<"TestQuestion"> | number
     testId?: IntFilter<"TestQuestion"> | number
     questionOrder?: IntFilter<"TestQuestion"> | number
-    questionText?: StringFilter<"TestQuestion"> | string
-    questionImage?: StringNullableFilter<"TestQuestion"> | string | null
-    optionA?: StringFilter<"TestQuestion"> | string
-    optionB?: StringFilter<"TestQuestion"> | string
-    optionC?: StringFilter<"TestQuestion"> | string
-    optionD?: StringFilter<"TestQuestion"> | string
+    questionText?: StringNullableFilter<"TestQuestion"> | string | null
+    questionImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionA?: StringNullableFilter<"TestQuestion"> | string | null
+    optionAImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionB?: StringNullableFilter<"TestQuestion"> | string | null
+    optionBImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionC?: StringNullableFilter<"TestQuestion"> | string | null
+    optionCImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionD?: StringNullableFilter<"TestQuestion"> | string | null
+    optionDImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
     correctOption?: StringFilter<"TestQuestion"> | string
     explanation?: StringNullableFilter<"TestQuestion"> | string | null
     subject?: StringNullableFilter<"TestQuestion"> | string | null
@@ -50574,6 +52251,35 @@ export namespace Prisma {
     data: XOR<TestAttemptUpdateManyMutationInput, TestAttemptUncheckedUpdateManyWithoutTestInput>
   }
 
+  export type TestImageUpsertWithWhereUniqueWithoutTestInput = {
+    where: TestImageWhereUniqueInput
+    update: XOR<TestImageUpdateWithoutTestInput, TestImageUncheckedUpdateWithoutTestInput>
+    create: XOR<TestImageCreateWithoutTestInput, TestImageUncheckedCreateWithoutTestInput>
+  }
+
+  export type TestImageUpdateWithWhereUniqueWithoutTestInput = {
+    where: TestImageWhereUniqueInput
+    data: XOR<TestImageUpdateWithoutTestInput, TestImageUncheckedUpdateWithoutTestInput>
+  }
+
+  export type TestImageUpdateManyWithWhereWithoutTestInput = {
+    where: TestImageScalarWhereInput
+    data: XOR<TestImageUpdateManyMutationInput, TestImageUncheckedUpdateManyWithoutTestInput>
+  }
+
+  export type TestImageScalarWhereInput = {
+    AND?: TestImageScalarWhereInput | TestImageScalarWhereInput[]
+    OR?: TestImageScalarWhereInput[]
+    NOT?: TestImageScalarWhereInput | TestImageScalarWhereInput[]
+    id?: IntFilter<"TestImage"> | number
+    testId?: IntFilter<"TestImage"> | number
+    url?: StringFilter<"TestImage"> | string
+    publicId?: StringFilter<"TestImage"> | string
+    originalFilename?: StringFilter<"TestImage"> | string
+    bytes?: IntFilter<"TestImage"> | number
+    createdAt?: DateTimeFilter<"TestImage"> | Date | string
+  }
+
   export type TestCreateWithoutQuestionsInput = {
     name: string
     type?: $Enums.TestType
@@ -50587,6 +52293,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutTestsInput
     attempts?: TestAttemptCreateNestedManyWithoutTestInput
+    images?: TestImageCreateNestedManyWithoutTestInput
   }
 
   export type TestUncheckedCreateWithoutQuestionsInput = {
@@ -50603,6 +52310,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     attempts?: TestAttemptUncheckedCreateNestedManyWithoutTestInput
+    images?: TestImageUncheckedCreateNestedManyWithoutTestInput
   }
 
   export type TestCreateOrConnectWithoutQuestionsInput = {
@@ -50660,6 +52368,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutTestsNestedInput
     attempts?: TestAttemptUpdateManyWithoutTestNestedInput
+    images?: TestImageUpdateManyWithoutTestNestedInput
   }
 
   export type TestUncheckedUpdateWithoutQuestionsInput = {
@@ -50676,6 +52385,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     attempts?: TestAttemptUncheckedUpdateManyWithoutTestNestedInput
+    images?: TestImageUncheckedUpdateManyWithoutTestNestedInput
   }
 
   export type TestAttemptAnswerUpsertWithWhereUniqueWithoutTestQuestionInput = {
@@ -50704,6 +52414,88 @@ export namespace Prisma {
     isCorrect?: BoolFilter<"TestAttemptAnswer"> | boolean
     marksAwarded?: FloatFilter<"TestAttemptAnswer"> | number
     answeredAt?: DateTimeFilter<"TestAttemptAnswer"> | Date | string
+  }
+
+  export type TestCreateWithoutImagesInput = {
+    name: string
+    type?: $Enums.TestType
+    totalQuestions: number
+    durationMinutes: number
+    marksCorrect?: number
+    marksIncorrect?: number
+    isPublished?: boolean
+    isLocked?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    course: CourseCreateNestedOneWithoutTestsInput
+    questions?: TestQuestionCreateNestedManyWithoutTestInput
+    attempts?: TestAttemptCreateNestedManyWithoutTestInput
+  }
+
+  export type TestUncheckedCreateWithoutImagesInput = {
+    id?: number
+    courseId: number
+    name: string
+    type?: $Enums.TestType
+    totalQuestions: number
+    durationMinutes: number
+    marksCorrect?: number
+    marksIncorrect?: number
+    isPublished?: boolean
+    isLocked?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    questions?: TestQuestionUncheckedCreateNestedManyWithoutTestInput
+    attempts?: TestAttemptUncheckedCreateNestedManyWithoutTestInput
+  }
+
+  export type TestCreateOrConnectWithoutImagesInput = {
+    where: TestWhereUniqueInput
+    create: XOR<TestCreateWithoutImagesInput, TestUncheckedCreateWithoutImagesInput>
+  }
+
+  export type TestUpsertWithoutImagesInput = {
+    update: XOR<TestUpdateWithoutImagesInput, TestUncheckedUpdateWithoutImagesInput>
+    create: XOR<TestCreateWithoutImagesInput, TestUncheckedCreateWithoutImagesInput>
+    where?: TestWhereInput
+  }
+
+  export type TestUpdateToOneWithWhereWithoutImagesInput = {
+    where?: TestWhereInput
+    data: XOR<TestUpdateWithoutImagesInput, TestUncheckedUpdateWithoutImagesInput>
+  }
+
+  export type TestUpdateWithoutImagesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
+    totalQuestions?: IntFieldUpdateOperationsInput | number
+    durationMinutes?: IntFieldUpdateOperationsInput | number
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    isPublished?: BoolFieldUpdateOperationsInput | boolean
+    isLocked?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    course?: CourseUpdateOneRequiredWithoutTestsNestedInput
+    questions?: TestQuestionUpdateManyWithoutTestNestedInput
+    attempts?: TestAttemptUpdateManyWithoutTestNestedInput
+  }
+
+  export type TestUncheckedUpdateWithoutImagesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
+    totalQuestions?: IntFieldUpdateOperationsInput | number
+    durationMinutes?: IntFieldUpdateOperationsInput | number
+    marksCorrect?: FloatFieldUpdateOperationsInput | number
+    marksIncorrect?: FloatFieldUpdateOperationsInput | number
+    isPublished?: BoolFieldUpdateOperationsInput | boolean
+    isLocked?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    questions?: TestQuestionUncheckedUpdateManyWithoutTestNestedInput
+    attempts?: TestAttemptUncheckedUpdateManyWithoutTestNestedInput
   }
 
   export type UserCreateWithoutTestAttemptsInput = {
@@ -50765,6 +52557,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutTestsInput
     questions?: TestQuestionCreateNestedManyWithoutTestInput
+    images?: TestImageCreateNestedManyWithoutTestInput
   }
 
   export type TestUncheckedCreateWithoutAttemptsInput = {
@@ -50781,6 +52574,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     questions?: TestQuestionUncheckedCreateNestedManyWithoutTestInput
+    images?: TestImageUncheckedCreateNestedManyWithoutTestInput
   }
 
   export type TestCreateOrConnectWithoutAttemptsInput = {
@@ -50890,6 +52684,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutTestsNestedInput
     questions?: TestQuestionUpdateManyWithoutTestNestedInput
+    images?: TestImageUpdateManyWithoutTestNestedInput
   }
 
   export type TestUncheckedUpdateWithoutAttemptsInput = {
@@ -50906,6 +52701,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: TestQuestionUncheckedUpdateManyWithoutTestNestedInput
+    images?: TestImageUncheckedUpdateManyWithoutTestNestedInput
   }
 
   export type TestAttemptAnswerUpsertWithWhereUniqueWithoutAttemptInput = {
@@ -50948,12 +52744,16 @@ export namespace Prisma {
 
   export type TestQuestionCreateWithoutAnswersInput = {
     questionOrder: number
-    questionText: string
-    questionImage?: string | null
-    optionA: string
-    optionB: string
-    optionC: string
-    optionD: string
+    questionText?: string | null
+    questionImageUrl?: string | null
+    optionA?: string | null
+    optionAImageUrl?: string | null
+    optionB?: string | null
+    optionBImageUrl?: string | null
+    optionC?: string | null
+    optionCImageUrl?: string | null
+    optionD?: string | null
+    optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     subject?: string | null
@@ -50965,12 +52765,16 @@ export namespace Prisma {
     id?: number
     testId: number
     questionOrder: number
-    questionText: string
-    questionImage?: string | null
-    optionA: string
-    optionB: string
-    optionC: string
-    optionD: string
+    questionText?: string | null
+    questionImageUrl?: string | null
+    optionA?: string | null
+    optionAImageUrl?: string | null
+    optionB?: string | null
+    optionBImageUrl?: string | null
+    optionC?: string | null
+    optionCImageUrl?: string | null
+    optionD?: string | null
+    optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     subject?: string | null
@@ -51023,12 +52827,16 @@ export namespace Prisma {
 
   export type TestQuestionUpdateWithoutAnswersInput = {
     questionOrder?: IntFieldUpdateOperationsInput | number
-    questionText?: StringFieldUpdateOperationsInput | string
-    questionImage?: NullableStringFieldUpdateOperationsInput | string | null
-    optionA?: StringFieldUpdateOperationsInput | string
-    optionB?: StringFieldUpdateOperationsInput | string
-    optionC?: StringFieldUpdateOperationsInput | string
-    optionD?: StringFieldUpdateOperationsInput | string
+    questionText?: NullableStringFieldUpdateOperationsInput | string | null
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionA?: NullableStringFieldUpdateOperationsInput | string | null
+    optionAImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionB?: NullableStringFieldUpdateOperationsInput | string | null
+    optionBImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionC?: NullableStringFieldUpdateOperationsInput | string | null
+    optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionD?: NullableStringFieldUpdateOperationsInput | string | null
+    optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51040,12 +52848,16 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     testId?: IntFieldUpdateOperationsInput | number
     questionOrder?: IntFieldUpdateOperationsInput | number
-    questionText?: StringFieldUpdateOperationsInput | string
-    questionImage?: NullableStringFieldUpdateOperationsInput | string | null
-    optionA?: StringFieldUpdateOperationsInput | string
-    optionB?: StringFieldUpdateOperationsInput | string
-    optionC?: StringFieldUpdateOperationsInput | string
-    optionD?: StringFieldUpdateOperationsInput | string
+    questionText?: NullableStringFieldUpdateOperationsInput | string | null
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionA?: NullableStringFieldUpdateOperationsInput | string | null
+    optionAImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionB?: NullableStringFieldUpdateOperationsInput | string | null
+    optionBImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionC?: NullableStringFieldUpdateOperationsInput | string | null
+    optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionD?: NullableStringFieldUpdateOperationsInput | string | null
+    optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51946,6 +53758,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: TestQuestionUpdateManyWithoutTestNestedInput
     attempts?: TestAttemptUpdateManyWithoutTestNestedInput
+    images?: TestImageUpdateManyWithoutTestNestedInput
   }
 
   export type TestUncheckedUpdateWithoutCourseInput = {
@@ -51962,6 +53775,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     questions?: TestQuestionUncheckedUpdateManyWithoutTestNestedInput
     attempts?: TestAttemptUncheckedUpdateManyWithoutTestNestedInput
+    images?: TestImageUncheckedUpdateManyWithoutTestNestedInput
   }
 
   export type TestUncheckedUpdateManyWithoutCourseInput = {
@@ -52491,12 +54305,16 @@ export namespace Prisma {
   export type TestQuestionCreateManyTestInput = {
     id?: number
     questionOrder: number
-    questionText: string
-    questionImage?: string | null
-    optionA: string
-    optionB: string
-    optionC: string
-    optionD: string
+    questionText?: string | null
+    questionImageUrl?: string | null
+    optionA?: string | null
+    optionAImageUrl?: string | null
+    optionB?: string | null
+    optionBImageUrl?: string | null
+    optionC?: string | null
+    optionCImageUrl?: string | null
+    optionD?: string | null
+    optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     subject?: string | null
@@ -52511,14 +54329,27 @@ export namespace Prisma {
     score?: number | null
   }
 
+  export type TestImageCreateManyTestInput = {
+    id?: number
+    url: string
+    publicId: string
+    originalFilename: string
+    bytes: number
+    createdAt?: Date | string
+  }
+
   export type TestQuestionUpdateWithoutTestInput = {
     questionOrder?: IntFieldUpdateOperationsInput | number
-    questionText?: StringFieldUpdateOperationsInput | string
-    questionImage?: NullableStringFieldUpdateOperationsInput | string | null
-    optionA?: StringFieldUpdateOperationsInput | string
-    optionB?: StringFieldUpdateOperationsInput | string
-    optionC?: StringFieldUpdateOperationsInput | string
-    optionD?: StringFieldUpdateOperationsInput | string
+    questionText?: NullableStringFieldUpdateOperationsInput | string | null
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionA?: NullableStringFieldUpdateOperationsInput | string | null
+    optionAImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionB?: NullableStringFieldUpdateOperationsInput | string | null
+    optionBImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionC?: NullableStringFieldUpdateOperationsInput | string | null
+    optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionD?: NullableStringFieldUpdateOperationsInput | string | null
+    optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52529,12 +54360,16 @@ export namespace Prisma {
   export type TestQuestionUncheckedUpdateWithoutTestInput = {
     id?: IntFieldUpdateOperationsInput | number
     questionOrder?: IntFieldUpdateOperationsInput | number
-    questionText?: StringFieldUpdateOperationsInput | string
-    questionImage?: NullableStringFieldUpdateOperationsInput | string | null
-    optionA?: StringFieldUpdateOperationsInput | string
-    optionB?: StringFieldUpdateOperationsInput | string
-    optionC?: StringFieldUpdateOperationsInput | string
-    optionD?: StringFieldUpdateOperationsInput | string
+    questionText?: NullableStringFieldUpdateOperationsInput | string | null
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionA?: NullableStringFieldUpdateOperationsInput | string | null
+    optionAImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionB?: NullableStringFieldUpdateOperationsInput | string | null
+    optionBImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionC?: NullableStringFieldUpdateOperationsInput | string | null
+    optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionD?: NullableStringFieldUpdateOperationsInput | string | null
+    optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52545,12 +54380,16 @@ export namespace Prisma {
   export type TestQuestionUncheckedUpdateManyWithoutTestInput = {
     id?: IntFieldUpdateOperationsInput | number
     questionOrder?: IntFieldUpdateOperationsInput | number
-    questionText?: StringFieldUpdateOperationsInput | string
-    questionImage?: NullableStringFieldUpdateOperationsInput | string | null
-    optionA?: StringFieldUpdateOperationsInput | string
-    optionB?: StringFieldUpdateOperationsInput | string
-    optionC?: StringFieldUpdateOperationsInput | string
-    optionD?: StringFieldUpdateOperationsInput | string
+    questionText?: NullableStringFieldUpdateOperationsInput | string | null
+    questionImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionA?: NullableStringFieldUpdateOperationsInput | string | null
+    optionAImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionB?: NullableStringFieldUpdateOperationsInput | string | null
+    optionBImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionC?: NullableStringFieldUpdateOperationsInput | string | null
+    optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionD?: NullableStringFieldUpdateOperationsInput | string | null
+    optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52580,6 +54419,32 @@ export namespace Prisma {
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     score?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type TestImageUpdateWithoutTestInput = {
+    url?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
+    originalFilename?: StringFieldUpdateOperationsInput | string
+    bytes?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestImageUncheckedUpdateWithoutTestInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
+    originalFilename?: StringFieldUpdateOperationsInput | string
+    bytes?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TestImageUncheckedUpdateManyWithoutTestInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    publicId?: StringFieldUpdateOperationsInput | string
+    originalFilename?: StringFieldUpdateOperationsInput | string
+    bytes?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TestAttemptAnswerCreateManyTestQuestionInput = {

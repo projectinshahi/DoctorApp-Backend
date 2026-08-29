@@ -6,9 +6,11 @@ const { validateRows } = require('./test.controller');
 const TEST = { id: 1, totalQuestions: 2 };
 const HEAD = 'question_order,question_text,option_a,option_b,option_c,option_d,correct_option,explanation,subject,topic';
 
-function run(csv) {
+const KNOWN = new Set(['https://cdn.test/a.jpg', 'https://cdn.test/b.jpg']);
+
+function run(csv, known) {
   const { header, rows } = parseCsv(csv);
-  return validateRows(header, rows, TEST);
+  return validateRows(header, rows, TEST, known);
 }
 
 // A clean file produces no blocking errors and rows ready to insert.
@@ -60,5 +62,50 @@ assert.deepStrictEqual(noOrder.questions.map((q) => q.questionOrder), [1, 2]);
 // A comma inside a quoted stem must survive to the stored question.
 const comma = run(`${HEAD}\n1,"A 60-year-old man, previously well",A,B,C,D,A,,,\n`);
 assert.strictEqual(comma.questions[0].questionText, 'A 60-year-old man, previously well');
+
+// ── images ─────────────────────────────────────────────────────────────────
+const IHEAD = 'question_order,question_text,question_image_url,option_a,option_a_image_url,option_b,option_c,option_d,correct_option';
+
+// An image-only question is valid: an ECG or a slide is often the whole stem.
+const imgOnly = run(`${IHEAD}\n1,,https://cdn.test/a.jpg,A,,B,C,D,A\n`, KNOWN);
+assert.deepStrictEqual(imgOnly.errors.filter((e) => e.severity !== 'warning'), []);
+assert.strictEqual(imgOnly.questions[0].questionText, null);
+assert.strictEqual(imgOnly.questions[0].questionImageUrl, 'https://cdn.test/a.jpg');
+
+// An image-only OPTION is valid too — "which slide shows..." has picture answers.
+const optImg = run(`${IHEAD}\n1,Which slide?,,,https://cdn.test/b.jpg,B,C,D,A\n`, KNOWN);
+assert.deepStrictEqual(optImg.errors.filter((e) => e.severity !== 'warning'), []);
+assert.strictEqual(optImg.questions[0].optionA, null);
+assert.strictEqual(optImg.questions[0].optionAImageUrl, 'https://cdn.test/b.jpg');
+
+// Neither text nor image is the actual error case.
+const empty = run(`${IHEAD}\n1,,,A,,B,C,D,A\n`, KNOWN);
+assert(empty.errors.some((e) => e.field === 'question_text' && e.message.includes('text or an image')));
+
+const emptyOpt = run(`${IHEAD}\n1,Q,,,,B,C,D,A\n`, KNOWN);
+assert(emptyOpt.errors.some((e) => e.field === 'option_a' && e.message.includes('text or an image')));
+
+// The rule that stops a broken image reaching a student: a URL that was never
+// uploaded for THIS test is rejected at import, not months later on screen.
+const foreign = run(`${IHEAD}\n1,Q,https://evil.example/x.jpg,A,,B,C,D,A\n`, KNOWN);
+assert(foreign.errors.some((e) => e.field === 'question_image_url' && e.message.includes('not one of')));
+
+// A typo in a known URL is caught the same way.
+const typo = run(`${IHEAD}\n1,Q,https://cdn.test/a.jpeg,A,,B,C,D,A\n`, KNOWN);
+assert(typo.errors.some((e) => e.field === 'question_image_url'));
+
+// A rejected URL must not be stored — otherwise a blocked row would still
+// leave a dead link behind if the import were ever forced through.
+assert.strictEqual(foreign.questions[0].questionImageUrl, null);
+
+// With no known-set supplied (nothing uploaded), URLs are not cross-checked but
+// text-or-image still applies.
+const noSet = run(`${IHEAD}\n1,Q,https://anything/x.jpg,A,,B,C,D,A\n`, null);
+assert.deepStrictEqual(noSet.errors.filter((e) => e.severity !== 'warning'), []);
+
+// Two image-only questions both have empty text; that must not trip the
+// duplicate-text warning.
+const twoImg = run(`${IHEAD}\n1,,https://cdn.test/a.jpg,A,,B,C,D,A\n2,,https://cdn.test/b.jpg,A,,B,C,D,B\n`, KNOWN);
+assert.deepStrictEqual(twoImg.errors, [], 'empty text must not count as duplicate text');
 
 console.log('test.test.js: all assertions passed');

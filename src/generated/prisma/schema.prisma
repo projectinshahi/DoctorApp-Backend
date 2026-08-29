@@ -526,6 +526,7 @@ model Test {
   course    Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
   questions TestQuestion[]
   attempts  TestAttempt[]
+  images    TestImage[]
 
   @@index([courseId, type, isPublished])
   @@map("tests")
@@ -534,20 +535,27 @@ model Test {
 // One question on one paper. Four fixed options rather than a rows table: an
 // exam paper is always A-D, and the flat shape is what the CSV import produces.
 model TestQuestion {
-  id            Int     @id @default(autoincrement())
-  testId        Int
-  questionOrder Int
-  questionText  String
-  questionImage String?
-  optionA       String
-  optionB       String
-  optionC       String
-  optionD       String
-  correctOption String
-  explanation   String?
+  id               Int     @id @default(autoincrement())
+  testId           Int
+  questionOrder    Int
+  // Text and image are both nullable because either can carry the question: an
+  // ECG or a histology slide is often the whole stem. The API enforces that at
+  // least one is present — the database cannot express "one of these two".
+  questionText     String?
+  questionImageUrl String?
+  optionA          String?
+  optionAImageUrl  String?
+  optionB          String?
+  optionBImageUrl  String?
+  optionC          String?
+  optionCImageUrl  String?
+  optionD          String?
+  optionDImageUrl  String?
+  correctOption    String
+  explanation      String?
   // Free text, for analytics only. Not a link to the question bank's taxonomy.
-  subject       String?
-  topic         String?
+  subject          String?
+  topic            String?
 
   test    Test                @relation(fields: [testId], references: [id], onDelete: Cascade)
   answers TestAttemptAnswer[]
@@ -555,6 +563,28 @@ model TestQuestion {
   @@unique([testId, questionOrder])
   @@index([testId])
   @@map("test_questions")
+}
+
+// Images uploaded for one paper, recorded so the CSV import can check that
+// every URL it references was actually uploaded here.
+//
+// Without this table a typo'd or external URL imports cleanly and only fails
+// months later, in front of a student, as a broken image.
+model TestImage {
+  id               Int      @id @default(autoincrement())
+  testId           Int
+  url              String   @unique
+  // Cloudinary's handle for the file. Needed to actually delete the asset,
+  // not just forget the row.
+  publicId         String
+  originalFilename String
+  bytes            Int
+  createdAt        DateTime @default(now())
+
+  test Test @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  @@index([testId])
+  @@map("test_images")
 }
 
 model TestAttempt {

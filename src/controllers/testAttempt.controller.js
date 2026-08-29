@@ -13,8 +13,11 @@ const VALID_OPTIONS = ['A', 'B', 'C', 'D'];
 
 /** Questions as a student may see them: no answer, no explanation. */
 const STUDENT_QUESTION_SELECT = {
-  id: true, questionOrder: true, questionText: true, questionImage: true,
-  optionA: true, optionB: true, optionC: true, optionD: true,
+  id: true, questionOrder: true, questionText: true, questionImageUrl: true,
+  optionA: true, optionAImageUrl: true,
+  optionB: true, optionBImageUrl: true,
+  optionC: true, optionCImageUrl: true,
+  optionD: true, optionDImageUrl: true,
 };
 
 function deadlineOf(attempt, test) {
@@ -329,8 +332,11 @@ async function buildResult(attemptId, attempt, test) {
       testQuestionId: q.id,
       questionOrder: q.questionOrder,
       questionText: q.questionText,
-      questionImage: q.questionImage,
-      optionA: q.optionA, optionB: q.optionB, optionC: q.optionC, optionD: q.optionD,
+      questionImageUrl: q.questionImageUrl,
+      optionA: q.optionA, optionAImageUrl: q.optionAImageUrl,
+      optionB: q.optionB, optionBImageUrl: q.optionBImageUrl,
+      optionC: q.optionC, optionCImageUrl: q.optionCImageUrl,
+      optionD: q.optionD, optionDImageUrl: q.optionDImageUrl,
       selectedOption: answer ? answer.selectedOption : null,
       correctOption: q.correctOption,
       // Absence of a row is what "skipped" means, so it is neither correct nor

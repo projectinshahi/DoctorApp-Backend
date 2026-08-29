@@ -10,12 +10,15 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
 const { parseCsv, toObject } = require('../utils/csv');
+const cloudinary = require('../config/cloudinary');
 
 const VALID_OPTIONS = ['A', 'B', 'C', 'D'];
 const TEST_TYPES = ['GRAND_TEST'];
-const REQUIRED_COLUMNS = [
-  'question_text', 'option_a', 'option_b', 'option_c', 'option_d', 'correct_option',
-];
+// Only correct_option is unconditionally required now. Every other field can
+// be satisfied by text OR an image, which the row validator checks as a pair.
+const REQUIRED_COLUMNS = ['correct_option'];
+
+const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
 
 /** Admin view of a test, with its question count. */
 const TEST_SELECT = {
@@ -128,8 +131,12 @@ async function listTests(req, res) {
  *
  * Returns every problem at once rather than stopping at the first: an admin
  * fixing a 200-row file one error per upload would be here all day.
+ *
+ * `knownImageUrls` is the set uploaded for THIS test. Any other URL is
+ * rejected: a typo or a link to another test's image imports cleanly and then
+ * fails months later, in front of a student, as a broken image.
  */
-function validateRows(header, rows, test) {
+function validateRows(header, rows, test, knownImageUrls = null) {
   const errors = [];
   const questions = [];
   const seenOrder = new Map();
@@ -162,12 +169,33 @@ function validateRows(header, rows, test) {
       seenOrder.set(order, row.line);
     }
 
-    if (r.question_text === '') at('question_text', 'Question text is empty');
-
-    for (const letter of VALID_OPTIONS) {
-      if (r[`option_${letter.toLowerCase()}`] === '') {
-        at(`option_${letter.toLowerCase()}`, `Option ${letter} is empty`);
+    // An image URL is only usable if it was uploaded for this test.
+    const checkUrl = (field, url) => {
+      if (url === '') return '';
+      if (knownImageUrls && !knownImageUrls.has(url)) {
+        at(field, `Image URL is not one of this test's uploaded images: ${url}`);
+        return '';
       }
+      return url;
+    };
+
+    const questionImageUrl = checkUrl('question_image_url', r.question_image_url ?? '');
+
+    // Text or image — either carries the question. Requiring text would rule
+    // out an ECG or a slide, which is often the entire stem.
+    if (r.question_text === '' && questionImageUrl === '') {
+      at('question_text', 'Question needs text or an image');
+    }
+
+    const optionValues = {};
+    for (const letter of VALID_OPTIONS) {
+      const lower = letter.toLowerCase();
+      const text = r[`option_${lower}`] ?? '';
+      const imageUrl = checkUrl(`option_${lower}_image_url`, r[`option_${lower}_image_url`] ?? '');
+      if (text === '' && imageUrl === '') {
+        at(`option_${lower}`, `Option ${letter} needs text or an image`);
+      }
+      optionValues[letter] = { text, imageUrl };
     }
 
     const correct = r.correct_option.toUpperCase();
@@ -177,7 +205,7 @@ function validateRows(header, rows, test) {
 
     // A repeated stem is usually a copy-paste slip, but a paper can legitimately
     // reuse wording, so this is a warning carried alongside the row, not a block.
-    const key = r.question_text.toLowerCase();
+    const key = (r.question_text ?? '').toLowerCase();
     if (key !== '' && seenText.has(key)) {
       errors.push({
         row: row.line, field: 'question_text', severity: 'warning',
@@ -190,12 +218,16 @@ function validateRows(header, rows, test) {
     questions.push({
       testId: test.id,
       questionOrder: order,
-      questionText: r.question_text,
-      questionImage: r.question_image || null,
-      optionA: r.option_a,
-      optionB: r.option_b,
-      optionC: r.option_c,
-      optionD: r.option_d,
+      questionText: r.question_text || null,
+      questionImageUrl: questionImageUrl || null,
+      optionA: optionValues.A.text || null,
+      optionAImageUrl: optionValues.A.imageUrl || null,
+      optionB: optionValues.B.text || null,
+      optionBImageUrl: optionValues.B.imageUrl || null,
+      optionC: optionValues.C.text || null,
+      optionCImageUrl: optionValues.C.imageUrl || null,
+      optionD: optionValues.D.text || null,
+      optionDImageUrl: optionValues.D.imageUrl || null,
       correctOption: correct,
       explanation: r.explanation || null,
       subject: r.subject || null,
@@ -250,7 +282,10 @@ async function uploadTestQuestions(req, res) {
       return res.status(400).json({ error: { message: 'The file has a header but no rows' } });
     }
 
-    const { errors, questions } = validateRows(header, rows, test);
+    const knownImageUrls = new Set(
+      (await prisma.testImage.findMany({ where: { testId }, select: { url: true } })).map((i) => i.url)
+    );
+    const { errors, questions } = validateRows(header, rows, test, knownImageUrls);
     const blocking = errors.filter((e) => e.severity !== 'warning');
 
     // The count check is separate from row validation so the admin is told both
@@ -389,9 +424,187 @@ async function previewTest(req, res) {
   }
 }
 
+
+// ─────────────────────────── images ───────────────────────────
+
+function uploadBuffer(buffer, options) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(options, (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+    stream.end(buffer);
+  });
+}
+
+// POST /api/admin/tests/:testId/images     (multipart, field "images", many)
+//
+// Images go up BEFORE the CSV, because a CSV can carry a URL but not binary
+// data. The response returns originalFilename alongside each URL so the admin
+// can match them back to their spreadsheet rows.
+async function uploadTestImages(req, res) {
+  try {
+    const testId = Number(req.params.testId);
+    if (!Number.isInteger(testId)) {
+      return res.status(400).json({ error: { message: 'Invalid test id' } });
+    }
+
+    const test = await prisma.test.findUnique({
+      where: { id: testId }, select: { id: true, isLocked: true },
+    });
+    if (!test) return res.status(404).json({ error: { message: 'Test not found' } });
+
+    // Images are part of the paper, so they freeze with it.
+    if (test.isLocked) {
+      return res.status(409).json({
+        error: { message: 'This test is locked — students have already attempted it. Its images can no longer be changed.' },
+      });
+    }
+
+    const files = req.files ?? [];
+    if (files.length === 0) {
+      return res.status(400).json({ error: { message: 'Attach one or more images in the "images" field' } });
+    }
+
+    const uploaded = [];
+    const errors = [];
+
+    // Sequential, not Promise.all: a folder of 200 images would otherwise open
+    // 200 concurrent uploads and get throttled or time the request out.
+    for (const file of files) {
+      try {
+        if (file.size > MAX_IMAGE_BYTES) {
+          errors.push({ filename: file.originalname, message: `Larger than 2MB (${Math.round(file.size / 1024)}KB)` });
+          continue;
+        }
+
+        const result = await uploadBuffer(file.buffer, {
+          folder: `tests/${testId}`,
+          resource_type: 'image',
+        });
+
+        // Cloudinary's secure_url is stable and unsigned, so a review screen
+        // opened months later still renders. Access is controlled by the test
+        // endpoints, not by making the image URL itself secret.
+        const row = await prisma.testImage.upsert({
+          where: { url: result.secure_url },
+          create: {
+            testId,
+            url: result.secure_url,
+            publicId: result.public_id,
+            originalFilename: file.originalname,
+            bytes: result.bytes ?? file.size,
+          },
+          update: {},
+        });
+
+        uploaded.push({ imageId: row.id, originalFilename: file.originalname, url: row.url });
+      } catch (err) {
+        console.error('image upload failed:', file.originalname, err);
+        errors.push({ filename: file.originalname, message: 'Upload failed, try again' });
+      }
+    }
+
+    return res.status(uploaded.length > 0 ? 200 : 400).json({ uploaded, errors });
+  } catch (error) {
+    console.error('uploadTestImages error:', error);
+    return res.status(500).json({ error: { message: 'Failed to upload images' } });
+  }
+}
+
+
+// GET /api/admin/tests/:testId/images
+// The list an admin matches against their CSV.
+async function listTestImages(req, res) {
+  try {
+    const testId = Number(req.params.testId);
+    if (!Number.isInteger(testId)) {
+      return res.status(400).json({ error: { message: 'Invalid test id' } });
+    }
+
+    const images = await prisma.testImage.findMany({
+      where: { testId },
+      orderBy: { createdAt: 'asc' },
+      select: { id: true, url: true, originalFilename: true, bytes: true, createdAt: true },
+    });
+
+    return res.status(200).json({ count: images.length, images });
+  } catch (error) {
+    console.error('listTestImages error:', error);
+    return res.status(500).json({ error: { message: 'Failed to load images' } });
+  }
+}
+
+
+/** Every question row on this test that points at a given URL. */
+function questionsUsingUrl(testId, url) {
+  return prisma.testQuestion.findMany({
+    where: {
+      testId,
+      OR: [
+        { questionImageUrl: url }, { optionAImageUrl: url }, { optionBImageUrl: url },
+        { optionCImageUrl: url }, { optionDImageUrl: url },
+      ],
+    },
+    select: { questionOrder: true },
+    orderBy: { questionOrder: 'asc' },
+  });
+}
+
+
+// DELETE /api/admin/tests/:testId/images/:imageId
+async function deleteTestImage(req, res) {
+  try {
+    const testId = Number(req.params.testId);
+    const imageId = Number(req.params.imageId);
+    if (!Number.isInteger(testId) || !Number.isInteger(imageId)) {
+      return res.status(400).json({ error: { message: 'Invalid id' } });
+    }
+
+    const image = await prisma.testImage.findUnique({
+      where: { id: imageId }, include: { test: { select: { isLocked: true } } },
+    });
+    if (!image || image.testId !== testId) {
+      return res.status(404).json({ error: { message: 'Image not found' } });
+    }
+    if (image.test.isLocked) {
+      return res.status(409).json({
+        error: { message: 'This test is locked — students have already attempted it. Its images can no longer be changed.' },
+      });
+    }
+
+    // Deleting an image a question points at would leave a broken picture on
+    // the paper with nothing to say why, so name the questions instead.
+    const used = await questionsUsingUrl(testId, image.url);
+    if (used.length > 0) {
+      const orders = used.map((q) => q.questionOrder).join(', ');
+      return res.status(409).json({
+        error: { message: `Used in question ${orders} — remove it from the question first.` },
+        usedInQuestions: used.map((q) => q.questionOrder),
+      });
+    }
+
+    // The row goes either way. A Cloudinary failure leaves one orphaned file,
+    // which costs storage; keeping the row would keep a dead URL passing the
+    // CSV cross-check, which costs a broken image in an exam.
+    try {
+      await cloudinary.uploader.destroy(image.publicId);
+    } catch (err) {
+      console.error('cloudinary destroy failed for', image.publicId, err);
+    }
+    await prisma.testImage.delete({ where: { id: imageId } });
+
+    return res.status(200).json({ message: 'Image deleted', imageId });
+  } catch (error) {
+    console.error('deleteTestImage error:', error);
+    return res.status(500).json({ error: { message: 'Failed to delete the image' } });
+  }
+}
+
 module.exports = {
   createTest, listTests, uploadTestQuestions,
   clearTestQuestions, publishTest, previewTest,
+  uploadTestImages, listTestImages, deleteTestImage,
   // Exported for test.test.js — pure, no DB.
   validateRows,
 };

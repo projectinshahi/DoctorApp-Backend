@@ -373,15 +373,29 @@ exports.Prisma.TestQuestionScalarFieldEnum = {
   testId: 'testId',
   questionOrder: 'questionOrder',
   questionText: 'questionText',
-  questionImage: 'questionImage',
+  questionImageUrl: 'questionImageUrl',
   optionA: 'optionA',
+  optionAImageUrl: 'optionAImageUrl',
   optionB: 'optionB',
+  optionBImageUrl: 'optionBImageUrl',
   optionC: 'optionC',
+  optionCImageUrl: 'optionCImageUrl',
   optionD: 'optionD',
+  optionDImageUrl: 'optionDImageUrl',
   correctOption: 'correctOption',
   explanation: 'explanation',
   subject: 'subject',
   topic: 'topic'
+};
+
+exports.Prisma.TestImageScalarFieldEnum = {
+  id: 'id',
+  testId: 'testId',
+  url: 'url',
+  publicId: 'publicId',
+  originalFilename: 'originalFilename',
+  bytes: 'bytes',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.TestAttemptScalarFieldEnum = {
@@ -474,6 +488,7 @@ exports.Prisma.ModelName = {
   LessonProgress: 'LessonProgress',
   Test: 'Test',
   TestQuestion: 'TestQuestion',
+  TestImage: 'TestImage',
   TestAttempt: 'TestAttempt',
   TestAttemptAnswer: 'TestAttemptAnswer'
 };
