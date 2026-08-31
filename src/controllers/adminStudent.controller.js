@@ -2,7 +2,9 @@ const { PrismaClient } = require('../generated/prisma');
 const { PrismaPg } = require('@prisma/adapter-pg');
 
 const { revokeActiveSessions } = require('../services/session.service');
-const { isLessonUnlocked } = require('./selected-course.controller');
+const { isLessonUnlocked, lessonDone } = require('./selected-course.controller');
+const { percent } = require('./home.controller');
+const { attemptStatusByLesson } = require('./quizAttempt.controller');
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -258,13 +260,47 @@ async function getStudentById(req, res) {
         })
       : [];
 
-    const shapedChapters = chapters.map((ch) => ({
-      ...ch,
-      lessonCount: ch.lessons.length,
-      publishedCount: ch.lessons.filter((l) => l.status === 'published').length,
-      lessons: ch.lessons.map((l) => {
+    // ── this student's actual progress through that tree ──
+    const allLessons = chapters.flatMap((ch) => ch.lessons);
+    const lessonIds = allLessons.map((l) => l.id);
+    const quizLessonIds = allLessons.filter((l) => l.type === 'quiz').map((l) => l.id);
+
+    const [progressRows, attemptByLesson, attempts, savedQuestions, savedLessons, testAttempts] =
+      await Promise.all([
+        prisma.lessonProgress.findMany({
+          where: { userId: studentId, lessonId: { in: lessonIds } },
+          select: { lessonId: true, completed: true, lastPositionSeconds: true, updatedAt: true },
+        }),
+        attemptStatusByLesson(studentId, quizLessonIds),
+        prisma.quizAttempt.findMany({
+          where: { userId: studentId, answers: { some: {} } },
+          orderBy: { startedAt: 'desc' },
+          select: {
+            id: true, lessonId: true, questionIds: true, startedAt: true, completedAt: true,
+            quiz: { select: { id: true, title: true } },
+            answers: { select: { questionId: true, isCorrect: true, marksAwarded: true } },
+          },
+        }),
+        prisma.savedQuestion.count({ where: { userId: studentId } }),
+        prisma.savedLesson.count({ where: { userId: studentId, lesson: { status: 'published' } } }),
+        prisma.testAttempt.findMany({
+          where: { userId: studentId },
+          orderBy: { startedAt: 'desc' },
+          select: {
+            id: true, startedAt: true, submittedAt: true, score: true,
+            test: { select: { id: true, name: true, totalQuestions: true, marksCorrect: true } },
+          },
+        }),
+      ]);
+
+    const progressByLesson = new Map(progressRows.map((row) => [row.lessonId, row]));
+
+    const shapedChapters = chapters.map((ch) => {
+      const lessons = ch.lessons.map((l) => {
         const { lessonPlans = [], ...rest } = l;
         const plans = lessonPlans.map((lp) => lp.plan);
+        const prog = progressByLesson.get(l.id);
+        const attempt = l.type === 'quiz' ? attemptByLesson.get(l.id) ?? null : null;
         return {
           ...rest,
           plans,
@@ -273,8 +309,137 @@ async function getStudentById(req, res) {
           // however their subscription looks.
           visibleToStudent: l.status === 'published' && isLessonUnlocked(l, paidPlanIds),
           unlockedByPlan: isLessonUnlocked(l, paidPlanIds),
+          completed: lessonDone(l, prog, attempt),
+          lastPositionSeconds: prog?.lastPositionSeconds ?? 0,
+          lastActivityAt: prog?.updatedAt ?? attempt?.startedAt ?? null,
+          attempt,
         };
-      }),
+      });
+
+      // Only published lessons count. A draft is not work the student has
+      // failed to do — it is work nobody can see yet, and including it would
+      // make every chapter look permanently unfinished.
+      const published = lessons.filter((l) => l.status === 'published');
+      const done = published.filter((l) => l.completed).length;
+
+      return {
+        ...ch,
+        lessons,
+        lessonCount: ch.lessons.length,
+        publishedCount: published.length,
+        progress: {
+          total: published.length,
+          completed: done,
+          remaining: published.length - done,
+          percent: percent(done, published.length),
+        },
+      };
+    });
+
+    // Count off the shaped lessons, which already carry `completed`. Only
+    // published ones: a draft is not work the student failed to do.
+    const published = shapedChapters
+      .flatMap((ch) => ch.lessons)
+      .filter((l) => l.status === 'published');
+
+    const doneIn = (list) => list.filter((l) => l.completed).length;
+
+    const videos = published.filter((l) => l.type === 'video');
+    // 'text' is the note type; 'note' is not a LessonType and matches nothing.
+    const notes = published.filter((l) => l.type === 'text');
+    const quizzes = published.filter((l) => l.type === 'quiz');
+
+    const videosInProgress = videos
+      .filter((l) => !l.completed && l.lastPositionSeconds > 0).length;
+
+    // Distinct questions, not answer rows: retaking the same quiz must not
+    // inflate how much of the bank this student has actually seen.
+    const answeredQuestionIds = new Set();
+    const correctQuestionIds = new Set();
+    for (const attempt of attempts) {
+      for (const answer of attempt.answers) {
+        answeredQuestionIds.add(answer.questionId);
+        if (answer.isCorrect) correctQuestionIds.add(answer.questionId);
+      }
+    }
+
+    const lessonsDone = doneIn(published);
+    const quizzesDone = doneIn(quizzes);
+    const submittedTests = testAttempts.filter((a) => a.submittedAt);
+
+    const lastActivityAt = [
+      ...progressRows.map((r) => r.updatedAt),
+      ...attempts.map((a) => a.completedAt ?? a.startedAt),
+      ...testAttempts.map((a) => a.submittedAt ?? a.startedAt),
+    ].filter(Boolean).sort((a, b) => b - a)[0] ?? null;
+
+    const studentProgress = {
+      lessons: {
+        total: published.length,
+        completed: lessonsDone,
+        remaining: published.length - lessonsDone,
+        percent: percent(lessonsDone, published.length),
+      },
+      videos: {
+        total: videos.length,
+        completed: doneIn(videos),
+        inProgress: videosInProgress,
+        percent: percent(doneIn(videos), videos.length),
+      },
+      notes: {
+        total: notes.length,
+        completed: doneIn(notes),
+        percent: percent(doneIn(notes), notes.length),
+      },
+      quizzes: {
+        total: quizzes.length,
+        attempted: quizzes.filter((l) => attemptByLesson.has(l.id)).length,
+        completed: quizzesDone,
+        remaining: quizzes.length - quizzesDone,
+        percent: percent(quizzesDone, quizzes.length),
+      },
+      qbank: {
+        attempted: answeredQuestionIds.size,
+        correct: correctQuestionIds.size,
+        wrong: answeredQuestionIds.size - correctQuestionIds.size,
+        // Out of what they answered. Dividing by the bank would make accuracy
+        // fall every time an admin adds a question.
+        accuracy: percent(correctQuestionIds.size, answeredQuestionIds.size),
+      },
+      tests: {
+        attempted: testAttempts.length,
+        submitted: submittedTests.length,
+        bestScore: submittedTests.length
+          ? Math.max(...submittedTests.map((a) => a.score ?? 0))
+          : null,
+      },
+      bookmarks: { questions: savedQuestions, lessons: savedLessons },
+      lastActivityAt,
+    };
+
+    // Newest first, capped: the detail screen wants a recent history, not an
+    // unbounded log that grows with every retake.
+    const recentQuizAttempts = attempts.slice(0, 20).map((a) => ({
+      attemptId: a.id,
+      lessonId: a.lessonId,
+      quiz: a.quiz,
+      startedAt: a.startedAt,
+      completedAt: a.completedAt,
+      completed: Boolean(a.completedAt),
+      totalQuestions: a.questionIds.length,
+      answeredCount: a.answers.length,
+      correctCount: a.answers.filter((x) => x.isCorrect).length,
+      score: a.answers.reduce((sum, x) => sum + x.marksAwarded, 0),
+    }));
+
+    const recentTestAttempts = testAttempts.slice(0, 20).map((a) => ({
+      attemptId: a.id,
+      test: a.test,
+      startedAt: a.startedAt,
+      submittedAt: a.submittedAt,
+      submitted: Boolean(a.submittedAt),
+      score: a.score,
+      totalMarks: a.test.totalQuestions * a.test.marksCorrect,
     }));
 
     return res.status(200).json({
@@ -291,6 +456,9 @@ async function getStudentById(req, res) {
       selectedCourseType: user.selectedCourseType,
       subscriptions,
       hasActiveSubscription: paidPlanIds.size > 0,
+      progress: studentProgress,
+      recentQuizAttempts,
+      recentTestAttempts,
       chapters: shapedChapters,
     });
   } catch (error) {
