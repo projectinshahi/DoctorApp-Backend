@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" width="800" height="300" role="img" aria-label="ECG rhythm strip, lead II">
+  <defs>
+    <pattern id="sm" width="8" height="8" patternUnits="userSpaceOnUse">
+      <path d="M8 0H0V8" fill="none" stroke="#f3c9c9" stroke-width="0.6"/>
+    </pattern>
+    <pattern id="lg" width="40" height="40" patternUnits="userSpaceOnUse">
+      <rect width="40" height="40" fill="url(#sm)"/>
+      <path d="M40 0H0V40" fill="none" stroke="#e08d8d" stroke-width="1.3"/>
+    </pattern>
+  </defs>
+
+  <rect width="800" height="300" fill="#fff8f8"/>
+  <rect width="800" height="300" fill="url(#lg)"/>
+
+  <!-- Calibration pulse: 10 mm/mV, then three sinus beats. -->
+  <path fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"
+        d="M10 190 L30 190 L30 110 L50 110 L50 190 L80 190
+           q12 -8 24 0 l14 0 l8 12 l10 -80 l10 96 l10 -28 l16 0 q14 -18 28 0 l40 0
+           q12 -8 24 0 l14 0 l8 12 l10 -80 l10 96 l10 -28 l16 0 q14 -18 28 0 l40 0
+           q12 -8 24 0 l14 0 l8 12 l10 -80 l10 96 l10 -28 l16 0 q14 -18 28 0 l150 0"/>
+
+  <g font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" fill="#7a2020">
+    <text x="12" y="30" font-size="17" font-weight="600">Lead II — rhythm strip</text>
+    <text x="12" y="52" font-size="13">25 mm/s · 10 mm/mV</text>
+    <text x="12" y="288" font-size="12" fill="#9a5555">1 large square = 0.20 s</text>
+  </g>
+</svg>
