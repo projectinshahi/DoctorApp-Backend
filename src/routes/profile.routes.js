@@ -7,7 +7,7 @@ const {
 } = require('../controllers/quizAttempt.controller');
 const {
   saveQuestion, unsaveQuestion, listSavedQuestions,
-  saveLesson, unsaveLesson, listSavedLessons,
+  saveLesson, unsaveLesson, listSavedLessons, listSaved,
 } = require('../controllers/saved.controller');
 const { getHome, saveProgress } = require('../controllers/home.controller');
 const {
@@ -42,6 +42,8 @@ router.get('/quiz-attempts', authenticateStudent, listInProgress);
 router.get('/quiz-attempts/:attemptId', authenticateStudent, getAttempt);
 
 // Bookmarks, synced to the account instead of the device.
+// One call for the whole screen: chip counts plus both lists.
+router.get('/saved', authenticateStudent, listSaved);
 router.post('/saved-questions', authenticateStudent, saveQuestion);
 router.get('/saved-questions', authenticateStudent, listSavedQuestions);
 router.delete('/saved-questions/:questionId', authenticateStudent, unsaveQuestion);

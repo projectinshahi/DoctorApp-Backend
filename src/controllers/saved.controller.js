@@ -12,6 +12,10 @@ const prisma = new PrismaClient({ adapter });
 // Lazily required: selected-course.controller does not import this file, but
 // keeping the shape identical between the tree and the bookmark list matters
 // more than the import style.
+// The lesson enum. 'text' is what a note lesson is, which has already caught
+// one filter out — 'note' matches nothing.
+const LESSON_TYPES = ['video', 'text', 'quiz'];
+
 const isLessonUnlocked = (...args) => require('./selected-course.controller').isLessonUnlocked(...args);
 const lessonDone = (...args) => require('./selected-course.controller').lessonDone(...args);
 const attemptStatusByLesson = (...args) => require('./quizAttempt.controller').attemptStatusByLesson(...args);
@@ -144,20 +148,24 @@ async function unsaveQuestion(req, res) {
 
 // GET /api/users/me/saved-questions
 // `count` is top level so the QBank card can read it without the list.
-async function listSavedQuestions(req, res) {
-  try {
-    const rows = await prisma.savedQuestion.findMany({
-      where: { userId: req.user.userId },
+async function fetchSavedQuestions(userId) {
+  const rows = await prisma.savedQuestion.findMany({
+      where: { userId },
       orderBy: { savedAt: 'desc' },
       select: { savedAt: true, question: { select: SAVED_QUESTION_SELECT } },
     });
 
-    const earned = await earnedQuestionIds(req.user.userId, rows.map((r) => r.question.id));
+  const earned = await earnedQuestionIds(userId, rows.map((r) => r.question.id));
+  return rows.map((row) => shapeSavedQuestion(row, earned));
+}
 
-    return res.status(200).json({
-      count: rows.length,
-      questions: rows.map((row) => shapeSavedQuestion(row, earned)),
-    });
+
+// GET /api/users/me/saved-questions
+// `count` is top level so the QBank card can read it without the list.
+async function listSavedQuestions(req, res) {
+  try {
+    const questions = await fetchSavedQuestions(req.user.userId);
+    return res.status(200).json({ count: questions.length, questions });
   } catch (error) {
     console.error('listSavedQuestions error:', error);
     return res.status(500).json({ error: { message: 'Failed to load saved questions' } });
@@ -222,12 +230,9 @@ async function unsaveLesson(req, res) {
 //
 // Unpublished lessons are dropped: a bookmark must not resurrect content an
 // admin has taken down. `count` reflects what is actually returned.
-async function listSavedLessons(req, res) {
-  try {
-    const userId = req.user.userId;
-
+async function fetchSavedLessons(userId, type = null) {
     const rows = await prisma.savedLesson.findMany({
-      where: { userId, lesson: { status: 'published' } },
+      where: { userId, lesson: { status: 'published', ...(type ? { type } : {}) } },
       orderBy: { savedAt: 'desc' },
       select: {
         savedAt: true,
@@ -245,7 +250,7 @@ async function listSavedLessons(req, res) {
       },
     });
 
-    if (rows.length === 0) return res.status(200).json({ count: 0, lessons: [] });
+  if (rows.length === 0) return [];
 
     const lessonIds = rows.map((r) => r.lesson.id);
     const quizLessonIds = rows.filter((r) => r.lesson.type === 'quiz').map((r) => r.lesson.id);
@@ -268,9 +273,7 @@ async function listSavedLessons(req, res) {
     const paidPlanIds = new Set(activeSubs.map((sub) => sub.planId));
     const progressByLesson = new Map(progressRows.map((p) => [p.lessonId, p]));
 
-    return res.status(200).json({
-      count: rows.length,
-      lessons: rows.map((row) => {
+  return rows.map((row) => {
         const { lessonPlans = [], ...lesson } = row.lesson;
         const plans = lessonPlans.map((lp) => lp.plan);
         const unlocked = isLessonUnlocked(row.lesson, paidPlanIds);
@@ -293,11 +296,88 @@ async function listSavedLessons(req, res) {
         return unlocked
           ? { ...base, locked: false }
           : { ...base, videoUrl: null, noteUrl: null, locked: true };
-      }),
-    });
+  });
+}
+
+
+/** `type` narrows to one lesson kind; anything else is rejected, not ignored. */
+function readLessonType(raw) {
+  if (raw === undefined || raw === '' || raw === 'all') return { value: null };
+  if (!LESSON_TYPES.includes(raw)) {
+    return { error: `type must be one of: ${LESSON_TYPES.join(', ')}, all` };
+  }
+  return { value: raw };
+}
+
+
+// GET /api/users/me/saved-lessons?type=video|text|quiz
+async function listSavedLessons(req, res) {
+  try {
+    const type = readLessonType(req.query.type);
+    if (type.error) return res.status(400).json({ error: { message: type.error } });
+
+    const lessons = await fetchSavedLessons(req.user.userId, type.value);
+    return res.status(200).json({ count: lessons.length, lessons });
   } catch (error) {
     console.error('listSavedLessons error:', error);
     return res.status(500).json({ error: { message: 'Failed to load saved lessons' } });
+  }
+}
+
+
+// GET /api/users/me/saved?type=all|video|text|quiz|question
+//
+// One call for the whole bookmarks screen: the chip counts and both lists.
+//
+// The counts have to come from the full set, not from the filtered list, or
+// every chip would read the size of whatever tab is open. So the lists are
+// always fetched in full and the filter is applied after — bookmark sets are
+// tens of rows, and a second round of queries per chip would cost more than
+// the rows do.
+//
+// Two lists rather than one merged array on purpose: a saved question renders
+// its options and an answer-key gate, a saved lesson renders a thumbnail and a
+// resume point. Interleaving them would hand the client a union type to unpick
+// on every row.
+async function listSaved(req, res) {
+  try {
+    const userId = req.user.userId;
+    const raw = req.query.type ?? 'all';
+
+    if (!['all', 'question', ...LESSON_TYPES].includes(raw)) {
+      return res.status(400).json({
+        error: { message: `type must be one of: all, question, ${LESSON_TYPES.join(', ')}` },
+      });
+    }
+
+    const [questions, lessons] = await Promise.all([
+      fetchSavedQuestions(userId),
+      fetchSavedLessons(userId),
+    ]);
+
+    const counts = {
+      all: questions.length + lessons.length,
+      question: questions.length,
+      video: lessons.filter((l) => l.type === 'video').length,
+      text: lessons.filter((l) => l.type === 'text').length,
+      quiz: lessons.filter((l) => l.type === 'quiz').length,
+      lesson: lessons.length,
+    };
+
+    const wantQuestions = raw === 'all' || raw === 'question';
+    const wantLessons = raw === 'all' || LESSON_TYPES.includes(raw);
+
+    return res.status(200).json({
+      type: raw,
+      counts,
+      questions: wantQuestions ? questions : [],
+      lessons: wantLessons
+        ? (raw === 'all' ? lessons : lessons.filter((l) => l.type === raw))
+        : [],
+    });
+  } catch (error) {
+    console.error('listSaved error:', error);
+    return res.status(500).json({ error: { message: 'Failed to load bookmarks' } });
   }
 }
 
@@ -308,6 +388,8 @@ module.exports = {
   saveLesson,
   unsaveLesson,
   listSavedLessons,
+  listSaved,
   // Exported for saved.test.js — pure, no DB.
   shapeSavedQuestion,
+  readLessonType,
 };

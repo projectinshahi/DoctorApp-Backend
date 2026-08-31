@@ -47,4 +47,26 @@ assert.deepStrictEqual(shown.options.map((o) => o.isCorrect), [true, false]);
 // A different question being earned must not unlock this one.
 assert.strictEqual(shapeSavedQuestion(row, new Set([99])).revealed, false);
 
+// ── the type filter ─────────────────────────────────────────────────────────
+const { readLessonType } = require('./saved.controller');
+
+// Absent, empty and "all" all mean no filter — the three ways a client says
+// "everything", and rejecting any of them would break the default tab.
+assert.strictEqual(readLessonType(undefined).value, null);
+assert.strictEqual(readLessonType('').value, null);
+assert.strictEqual(readLessonType('all').value, null);
+
+assert.strictEqual(readLessonType('video').value, 'video');
+assert.strictEqual(readLessonType('quiz').value, 'quiz');
+
+// 'text' is the note type. 'note' is the plausible-looking value that matches
+// nothing, and it has already zeroed one card in this codebase — so it must be
+// a 400, never a silently empty list.
+assert.strictEqual(readLessonType('text').value, 'text');
+assert(readLessonType('note').error, "'note' is not a lesson type and must be rejected");
+
+assert(readLessonType('video ').error, 'untrimmed input must not pass');
+assert(readLessonType('VIDEO').error, 'the enum is lowercase');
+assert(readLessonType('anything').error);
+
 console.log('saved.test.js: all assertions passed');
