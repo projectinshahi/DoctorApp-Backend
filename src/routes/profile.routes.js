@@ -12,7 +12,7 @@ const {
 const { getHome, saveProgress } = require('../controllers/home.controller');
 const {
   listTests: listStudentTests, startTestAttempt, answerTestQuestion,
-  clearTestAnswer, submitTestAttempt, getTestResult,
+  clearTestAnswer, submitTestAttempt, getTestResult, getTestLeaderboard,
 } = require('../controllers/testAttempt.controller');
 const authenticateStudent = require('../middleware/authenticateStudent');
 
@@ -60,5 +60,6 @@ router.patch('/test-attempts/:attemptId/answers/:testQuestionId', authenticateSt
 router.delete('/test-attempts/:attemptId/answers/:testQuestionId', authenticateStudent, clearTestAnswer);
 router.post('/test-attempts/:attemptId/submit', authenticateStudent, submitTestAttempt);
 router.get('/test-attempts/:attemptId/result', authenticateStudent, getTestResult);
+router.get('/tests/:testId/leaderboard', authenticateStudent, getTestLeaderboard);
 
 module.exports = router;

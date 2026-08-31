@@ -24,6 +24,12 @@ function deadlineOf(attempt, test) {
   return new Date(attempt.startedAt.getTime() + test.durationMinutes * 60_000);
 }
 
+/** Seconds between starting and submitting. Null while still in progress. */
+function timeTaken(attempt) {
+  if (!attempt.submittedAt) return null;
+  return Math.max(0, Math.round((attempt.submittedAt - attempt.startedAt) / 1000));
+}
+
 function secondsRemaining(attempt, test) {
   return Math.max(0, Math.round((deadlineOf(attempt, test) - Date.now()) / 1000));
 }
@@ -355,6 +361,10 @@ async function buildResult(attemptId, attempt, test) {
     test: { id: test.id, name: test.name, type: test.type, durationMinutes: test.durationMinutes },
     startedAt: attempt.startedAt,
     submittedAt: attempt.submittedAt,
+    // How long they actually took, which is what a leaderboard ranks on after
+    // score. Derived rather than stored — startedAt and submittedAt already
+    // say it, and a stored copy could disagree with them.
+    timeTakenSeconds: timeTaken(attempt),
     totalQuestions: questions.length,
     totalMarks: questions.length * test.marksCorrect,
     score: attempt.score ?? 0,
@@ -388,7 +398,134 @@ async function getTestResult(req, res) {
   }
 }
 
+
+/**
+ * Ranks submitted attempts: highest score, then fastest, then whoever finished
+ * first.
+ *
+ * Speed only breaks a tie — it never beats a better score, which is how a real
+ * exam works and the opposite of rewarding someone for rushing.
+ *
+ * Competition ranking, so two students on the same score and time both take
+ * rank 3 and the next takes rank 5. Sharing a rank but printing 3 and 4 would
+ * tell one of them they were beaten by someone they tied.
+ */
+function rankAttempts(rows) {
+  const sorted = [...rows].sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    if (a.timeTakenSeconds !== b.timeTakenSeconds) return a.timeTakenSeconds - b.timeTakenSeconds;
+    return a.submittedAt - b.submittedAt;
+  });
+
+  let rank = 0;
+  let previous = null;
+  return sorted.map((row, index) => {
+    const tied = previous
+      && previous.score === row.score
+      && previous.timeTakenSeconds === row.timeTakenSeconds;
+    if (!tied) rank = index + 1;
+    previous = row;
+    return { ...row, rank };
+  });
+}
+
+
+// GET /api/users/me/tests/:testId/leaderboard?limit=50
+async function getTestLeaderboard(req, res) {
+  try {
+    const testId = Number(req.params.testId);
+    if (!Number.isInteger(testId)) {
+      return res.status(400).json({ error: { message: 'Invalid test id' } });
+    }
+
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 50, 1), 200);
+
+    const test = await prisma.test.findUnique({ where: { id: testId } });
+    if (!test || !test.isPublished) {
+      return res.status(404).json({ error: { message: 'Test not found' } });
+    }
+
+    const attempts = await prisma.testAttempt.findMany({
+      where: { testId, submittedAt: { not: null } },
+      select: {
+        id: true, userId: true, score: true, startedAt: true, submittedAt: true,
+        user: { select: { id: true, name: true, avatarUrl: true } },
+      },
+    });
+
+    if (attempts.length === 0) {
+      return res.status(200).json({
+        test: { id: test.id, name: test.name, totalQuestions: test.totalQuestions,
+                totalMarks: test.totalQuestions * test.marksCorrect },
+        totalParticipants: 0, entries: [], me: null,
+      });
+    }
+
+    // Two grouped queries instead of loading every answer row. A 200-question
+    // paper with 500 students is 100k answers; the leaderboard only needs a
+    // correct-count per attempt.
+    const [correctRows, answeredRows] = await Promise.all([
+      prisma.testAttemptAnswer.groupBy({
+        by: ['attemptId'],
+        where: { attemptId: { in: attempts.map((a) => a.id) }, isCorrect: true },
+        _count: { testQuestionId: true },
+      }),
+      prisma.testAttemptAnswer.groupBy({
+        by: ['attemptId'],
+        where: { attemptId: { in: attempts.map((a) => a.id) } },
+        _count: { testQuestionId: true },
+      }),
+    ]);
+    const correctBy = new Map(correctRows.map((r) => [r.attemptId, r._count.testQuestionId]));
+    const answeredBy = new Map(answeredRows.map((r) => [r.attemptId, r._count.testQuestionId]));
+
+    // One row per student: their best attempt, not every retake. A leaderboard
+    // where one person holds the top five places is not a ranking.
+    const bestByUser = new Map();
+    for (const a of attempts) {
+      const row = {
+        attemptId: a.id,
+        userId: a.userId,
+        name: a.user.name,
+        avatarUrl: a.user.avatarUrl,
+        score: a.score ?? 0,
+        correctCount: correctBy.get(a.id) ?? 0,
+        wrongCount: (answeredBy.get(a.id) ?? 0) - (correctBy.get(a.id) ?? 0),
+        skippedCount: test.totalQuestions - (answeredBy.get(a.id) ?? 0),
+        timeTakenSeconds: timeTaken(a) ?? 0,
+        submittedAt: a.submittedAt,
+      };
+      const held = bestByUser.get(a.userId);
+      const better = !held
+        || row.score > held.score
+        || (row.score === held.score && row.timeTakenSeconds < held.timeTakenSeconds);
+      if (better) bestByUser.set(a.userId, row);
+    }
+
+    const ranked = rankAttempts([...bestByUser.values()]);
+    const mine = ranked.find((r) => r.userId === req.user.userId) ?? null;
+
+    return res.status(200).json({
+      test: {
+        id: test.id, name: test.name, type: test.type,
+        totalQuestions: test.totalQuestions,
+        totalMarks: test.totalQuestions * test.marksCorrect,
+      },
+      totalParticipants: ranked.length,
+      // The student's own row is returned separately as well as in the list.
+      // Ranked 87th, they would otherwise never see themselves in a top 50.
+      me: mine,
+      entries: ranked.slice(0, limit),
+    });
+  } catch (error) {
+    console.error('getTestLeaderboard error:', error);
+    return res.status(500).json({ error: { message: 'Failed to load the leaderboard' } });
+  }
+}
+
 module.exports = {
   listTests, startTestAttempt, answerTestQuestion,
-  clearTestAnswer, submitTestAttempt, getTestResult,
+  clearTestAnswer, submitTestAttempt, getTestResult, getTestLeaderboard,
+  // Exported for testAttempt.test.js — pure, no DB.
+  rankAttempts,
 };

@@ -601,10 +601,189 @@ async function deleteTestImage(req, res) {
   }
 }
 
+
+// ─────────────────────────── results ───────────────────────────
+
+// GET /api/admin/tests/:testId/attempts?page=1&limit=50
+//
+// Who sat the paper and how they did. The admin twin of the student
+// leaderboard, but every attempt rather than each student's best — an admin
+// investigating a score needs to see the retakes, not a tidied summary.
+async function listTestAttempts(req, res) {
+  try {
+    const testId = Number(req.params.testId);
+    if (!Number.isInteger(testId)) {
+      return res.status(400).json({ error: { message: 'Invalid test id' } });
+    }
+
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 50, 1), 100);
+
+    const test = await prisma.test.findUnique({ where: { id: testId }, select: TEST_SELECT });
+    if (!test) return res.status(404).json({ error: { message: 'Test not found' } });
+
+    const where = { testId };
+    if (req.query.status === 'submitted') where.submittedAt = { not: null };
+    if (req.query.status === 'in_progress') where.submittedAt = null;
+
+    const [attempts, total] = await Promise.all([
+      prisma.testAttempt.findMany({
+        where,
+        orderBy: [{ score: 'desc' }, { submittedAt: 'asc' }],
+        skip: (page - 1) * limit,
+        take: limit,
+        select: {
+          id: true, userId: true, score: true, startedAt: true, submittedAt: true,
+          user: { select: { id: true, name: true, email: true, avatarUrl: true } },
+        },
+      }),
+      prisma.testAttempt.count({ where }),
+    ]);
+
+    const attemptIds = attempts.map((a) => a.id);
+    const [correctRows, answeredRows] = attemptIds.length === 0 ? [[], []] : await Promise.all([
+      prisma.testAttemptAnswer.groupBy({
+        by: ['attemptId'],
+        where: { attemptId: { in: attemptIds }, isCorrect: true },
+        _count: { testQuestionId: true },
+      }),
+      prisma.testAttemptAnswer.groupBy({
+        by: ['attemptId'],
+        where: { attemptId: { in: attemptIds } },
+        _count: { testQuestionId: true },
+      }),
+    ]);
+    const correctBy = new Map(correctRows.map((r) => [r.attemptId, r._count.testQuestionId]));
+    const answeredBy = new Map(answeredRows.map((r) => [r.attemptId, r._count.testQuestionId]));
+
+    return res.status(200).json({
+      test: shapeTest(test),
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
+      attempts: attempts.map((a) => {
+        const answered = answeredBy.get(a.id) ?? 0;
+        const correct = correctBy.get(a.id) ?? 0;
+        return {
+          attemptId: a.id,
+          student: a.user,
+          submitted: Boolean(a.submittedAt),
+          startedAt: a.startedAt,
+          submittedAt: a.submittedAt,
+          timeTakenSeconds: a.submittedAt
+            ? Math.max(0, Math.round((a.submittedAt - a.startedAt) / 1000))
+            : null,
+          score: a.score,
+          totalMarks: test.totalQuestions * test.marksCorrect,
+          answeredCount: answered,
+          correctCount: correct,
+          wrongCount: answered - correct,
+          skippedCount: test.totalQuestions - answered,
+        };
+      }),
+    });
+  } catch (error) {
+    console.error('listTestAttempts error:', error);
+    return res.status(500).json({ error: { message: 'Failed to load attempts' } });
+  }
+}
+
+
+// GET /api/admin/tests/:testId/analytics
+//
+// Which questions the cohort actually got wrong. A paper where everyone missed
+// question 14 usually means question 14 is broken, not that 300 people are —
+// so the per-question breakdown is the point of this endpoint.
+async function getTestAnalytics(req, res) {
+  try {
+    const testId = Number(req.params.testId);
+    if (!Number.isInteger(testId)) {
+      return res.status(400).json({ error: { message: 'Invalid test id' } });
+    }
+
+    const test = await prisma.test.findUnique({ where: { id: testId }, select: TEST_SELECT });
+    if (!test) return res.status(404).json({ error: { message: 'Test not found' } });
+
+    const submitted = await prisma.testAttempt.findMany({
+      where: { testId, submittedAt: { not: null } },
+      select: { id: true, score: true, startedAt: true, submittedAt: true },
+    });
+
+    const questions = await prisma.testQuestion.findMany({
+      where: { testId },
+      orderBy: { questionOrder: 'asc' },
+      select: { id: true, questionOrder: true, questionText: true, correctOption: true, subject: true, topic: true },
+    });
+
+    const attemptIds = submitted.map((a) => a.id);
+    const answers = attemptIds.length === 0 ? [] : await prisma.testAttemptAnswer.groupBy({
+      by: ['testQuestionId', 'selectedOption'],
+      where: { attemptId: { in: attemptIds } },
+      _count: { attemptId: true },
+    });
+
+    const byQuestion = new Map();
+    for (const row of answers) {
+      if (!byQuestion.has(row.testQuestionId)) byQuestion.set(row.testQuestionId, {});
+      byQuestion.get(row.testQuestionId)[row.selectedOption] = row._count.attemptId;
+    }
+
+    const participants = submitted.length;
+    const scores = submitted.map((a) => a.score ?? 0).sort((a, b) => a - b);
+    const times = submitted
+      .map((a) => Math.max(0, Math.round((a.submittedAt - a.startedAt) / 1000)))
+      .sort((a, b) => a - b);
+    const median = (list) => (list.length === 0 ? null
+      : list.length % 2 ? list[(list.length - 1) / 2]
+      : (list[list.length / 2 - 1] + list[list.length / 2]) / 2);
+
+    return res.status(200).json({
+      test: shapeTest(test),
+      participants,
+      // Median, not mean: one abandoned attempt scoring -40 drags an average
+      // somewhere no actual student sat.
+      scoreSummary: participants === 0 ? null : {
+        highest: scores[scores.length - 1],
+        lowest: scores[0],
+        median: median(scores),
+        totalMarks: test.totalQuestions * test.marksCorrect,
+      },
+      timeSummary: participants === 0 ? null : {
+        fastestSeconds: times[0],
+        slowestSeconds: times[times.length - 1],
+        medianSeconds: median(times),
+        durationSeconds: test.durationMinutes * 60,
+      },
+      questions: questions.map((q) => {
+        const counts = byQuestion.get(q.id) ?? {};
+        const answered = ['A', 'B', 'C', 'D'].reduce((sum, k) => sum + (counts[k] ?? 0), 0);
+        const correct = counts[q.correctOption] ?? 0;
+        return {
+          testQuestionId: q.id,
+          questionOrder: q.questionOrder,
+          questionText: q.questionText,
+          correctOption: q.correctOption,
+          subject: q.subject,
+          topic: q.topic,
+          answeredCount: answered,
+          correctCount: correct,
+          skippedCount: participants - answered,
+          // Out of everyone who sat the paper, so a question nobody dared
+          // answer reads as hard rather than as a perfect score.
+          correctPercent: participants === 0 ? 0 : Math.round((correct / participants) * 100),
+          optionCounts: { A: counts.A ?? 0, B: counts.B ?? 0, C: counts.C ?? 0, D: counts.D ?? 0 },
+        };
+      }),
+    });
+  } catch (error) {
+    console.error('getTestAnalytics error:', error);
+    return res.status(500).json({ error: { message: 'Failed to load analytics' } });
+  }
+}
+
 module.exports = {
   createTest, listTests, uploadTestQuestions,
   clearTestQuestions, publishTest, previewTest,
   uploadTestImages, listTestImages, deleteTestImage,
+  listTestAttempts, getTestAnalytics,
   // Exported for test.test.js — pure, no DB.
   validateRows,
 };

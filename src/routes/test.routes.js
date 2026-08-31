@@ -6,6 +6,7 @@ const {
   createTest, listTests, uploadTestQuestions,
   clearTestQuestions, publishTest, previewTest,
   uploadTestImages, listTestImages, deleteTestImage,
+  listTestAttempts, getTestAnalytics,
 } = require('../controllers/test.controller');
 const authenticateAdmin = require('../middleware/authenticateAdmin');
 
@@ -45,6 +46,10 @@ const imageUpload = multer({
 
 router.post('/tests/:testId/images', authenticateAdmin, imageUpload.array('images', 200), uploadTestImages);
 router.get('/tests/:testId/images', authenticateAdmin, listTestImages);
+
+// Results: who sat it, and which questions the cohort actually got wrong.
+router.get('/tests/:testId/attempts', authenticateAdmin, listTestAttempts);
+router.get('/tests/:testId/analytics', authenticateAdmin, getTestAnalytics);
 router.delete('/tests/:testId/images/:imageId', authenticateAdmin, deleteTestImage);
 
 // Multer rejections (wrong type, too large) are user errors, not 500s.
