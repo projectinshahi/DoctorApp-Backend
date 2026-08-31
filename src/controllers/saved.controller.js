@@ -9,6 +9,13 @@ const { PrismaPg } = require('@prisma/adapter-pg');
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
+// Lazily required: selected-course.controller does not import this file, but
+// keeping the shape identical between the tree and the bookmark list matters
+// more than the import style.
+const isLessonUnlocked = (...args) => require('./selected-course.controller').isLessonUnlocked(...args);
+const lessonDone = (...args) => require('./selected-course.controller').lessonDone(...args);
+const attemptStatusByLesson = (...args) => require('./quizAttempt.controller').attemptStatusByLesson(...args);
+
 /**
  * Which of these questions has the student already answered in a *completed*
  * attempt?
@@ -208,28 +215,85 @@ async function unsaveLesson(req, res) {
 
 
 // GET /api/users/me/saved-lessons
+//
+// Carries the same progress and lock state as the course tree. A bookmark list
+// that only had titles would need a second call per row to draw a tick or a
+// paywall, which is the N+1 the tree endpoint already exists to avoid.
+//
 // Unpublished lessons are dropped: a bookmark must not resurrect content an
 // admin has taken down. `count` reflects what is actually returned.
 async function listSavedLessons(req, res) {
   try {
+    const userId = req.user.userId;
+
     const rows = await prisma.savedLesson.findMany({
-      where: { userId: req.user.userId, lesson: { status: 'published' } },
+      where: { userId, lesson: { status: 'published' } },
       orderBy: { savedAt: 'desc' },
       select: {
         savedAt: true,
         lesson: {
           select: {
             id: true, title: true, description: true, type: true,
+            videoUrl: true, noteUrl: true, noteFileType: true,
             thumbnailUrl: true, accessType: true, isFreePreview: true, quizId: true,
             chapter: { select: { id: true, title: true } },
+            lessonPlans: {
+              select: { plan: { select: { id: true, title: true, price: true, durationDays: true } } },
+            },
           },
         },
       },
     });
 
+    if (rows.length === 0) return res.status(200).json({ count: 0, lessons: [] });
+
+    const lessonIds = rows.map((r) => r.lesson.id);
+    const quizLessonIds = rows.filter((r) => r.lesson.type === 'quiz').map((r) => r.lesson.id);
+
+    const [user, progressRows, attemptByLesson] = await Promise.all([
+      prisma.user.findUnique({ where: { id: userId }, select: { selectedCourseId: true } }),
+      prisma.lessonProgress.findMany({
+        where: { userId, lessonId: { in: lessonIds } },
+        select: { lessonId: true, completed: true, lastPositionSeconds: true },
+      }),
+      attemptStatusByLesson(userId, quizLessonIds),
+    ]);
+
+    const activeSubs = user?.selectedCourseId
+      ? await prisma.subscription.findMany({
+          where: { userId, courseId: user.selectedCourseId, isActive: true, endDate: { gte: new Date() } },
+          select: { planId: true },
+        })
+      : [];
+    const paidPlanIds = new Set(activeSubs.map((sub) => sub.planId));
+    const progressByLesson = new Map(progressRows.map((p) => [p.lessonId, p]));
+
     return res.status(200).json({
       count: rows.length,
-      lessons: rows.map((row) => ({ ...row.lesson, savedAt: row.savedAt })),
+      lessons: rows.map((row) => {
+        const { lessonPlans = [], ...lesson } = row.lesson;
+        const plans = lessonPlans.map((lp) => lp.plan);
+        const unlocked = isLessonUnlocked(row.lesson, paidPlanIds);
+        const progress = progressByLesson.get(lesson.id);
+        const attempt = lesson.type === 'quiz' ? attemptByLesson.get(lesson.id) ?? null : null;
+
+        const base = {
+          ...lesson,
+          savedAt: row.savedAt,
+          plans,
+          planIds: plans.map((plan) => plan.id),
+          attempt,
+          completed: lessonDone(row.lesson, progress, attempt),
+          lastPositionSeconds: progress?.lastPositionSeconds ?? 0,
+          // Every row here is bookmarked by definition. Stated anyway so one
+          // lesson model can be reused from the tree without a null check.
+          isSaved: true,
+        };
+
+        return unlocked
+          ? { ...base, locked: false }
+          : { ...base, videoUrl: null, noteUrl: null, locked: true };
+      }),
     });
   } catch (error) {
     console.error('listSavedLessons error:', error);

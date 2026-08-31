@@ -129,14 +129,21 @@ async function getSelectedCourseContent(req, res) {
       ch.lessons.filter((l) => l.type === 'quiz').map((l) => l.id));
     const allLessonIds = chapters.flatMap((ch) => ch.lessons.map((l) => l.id));
 
-    const [attemptByLesson, progressRows] = await Promise.all([
+    const [attemptByLesson, progressRows, savedRows] = await Promise.all([
       attemptStatusByLesson(userId, quizLessonIds),
       prisma.lessonProgress.findMany({
         where: { userId, lessonId: { in: allLessonIds } },
         select: { lessonId: true, completed: true, lastPositionSeconds: true },
       }),
+      // One query for the whole tree. Without it a bookmark icon per row would
+      // have to search the saved list, which the tree screen does not load.
+      prisma.savedLesson.findMany({
+        where: { userId, lessonId: { in: allLessonIds } },
+        select: { lessonId: true },
+      }),
     ]);
     const progressByLesson = new Map(progressRows.map((p) => [p.lessonId, p]));
+    const savedLessonIds = new Set(savedRows.map((r) => r.lessonId));
 
     const shaped = chapters.map((ch) => {
       const lessons = ch.lessons.map((l) => {
@@ -155,6 +162,7 @@ async function getSelectedCourseContent(req, res) {
           completed: lessonDone(l, p, attempt),
           // Survives the lock strip: the resume point is not the media.
           lastPositionSeconds: p?.lastPositionSeconds ?? 0,
+          isSaved: savedLessonIds.has(l.id),
         };
         return unlocked
           ? { ...base, locked: false }
@@ -266,10 +274,16 @@ async function getStudentLesson(req, res) {
     // The player seeks to this on open. The tree carries it too, but this is
     // the call made when a lesson is opened from a deep link or a bookmark,
     // where no tree was loaded — without it those routes always restart at 0.
-    const progress = await prisma.lessonProgress.findUnique({
-      where: { userId_lessonId: { userId, lessonId } },
-      select: { completed: true, lastPositionSeconds: true, updatedAt: true },
-    });
+    const [progress, saved] = await Promise.all([
+      prisma.lessonProgress.findUnique({
+        where: { userId_lessonId: { userId, lessonId } },
+        select: { completed: true, lastPositionSeconds: true, updatedAt: true },
+      }),
+      prisma.savedLesson.findUnique({
+        where: { userId_lessonId: { userId, lessonId } },
+        select: { savedAt: true },
+      }),
+    ]);
 
     const base = {
       ...rest,
@@ -279,6 +293,10 @@ async function getStudentLesson(req, res) {
       // student who later subscribes should not have lost their place.
       completed: progress?.completed ?? false,
       lastPositionSeconds: progress?.lastPositionSeconds ?? 0,
+      // So the bookmark button renders its own state without fetching the
+      // whole saved list and searching it.
+      isSaved: Boolean(saved),
+      savedAt: saved?.savedAt ?? null,
     };
 
     return res.status(200).json({
