@@ -9,6 +9,18 @@ const { resolveQuizQuestions, fetchEligibleQuestions } = require('./quiz.control
 // gates, and a top-level require here would resolve to a half-built module.
 const attemptStatusByLesson = (...args) =>
   require('./quizAttempt.controller').attemptStatusByLesson(...args);
+// Same lazy dance: home.controller requires this file for isLessonUnlocked.
+// Reused rather than re-derived so a chapter bar and a home card can never
+// disagree about what 99% means.
+const percent = (...args) => require('./home.controller').percent(...args);
+
+// Done comes from two places. A quiz lesson has no lesson_progress row — it is
+// finished when its latest attempt is submitted. Everything else is finished
+// when the student said so. Collapsed into one flag here so the app draws a
+// checkmark without branching on type.
+function lessonDone(lesson, progress, attempt) {
+  return lesson.type === 'quiz' ? Boolean(attempt?.completed) : Boolean(progress?.completed);
+}
 
 // Free lessons and free previews are always open. A premium lesson tied to
 // plans needs *one of* them; one with no plans accepts any active subscription
@@ -115,28 +127,59 @@ async function getSelectedCourseContent(req, res) {
     // used to ask per quiz, which is a query per pill on the page.
     const quizLessonIds = chapters.flatMap((ch) =>
       ch.lessons.filter((l) => l.type === 'quiz').map((l) => l.id));
-    const attemptByLesson = await attemptStatusByLesson(userId, quizLessonIds);
+    const allLessonIds = chapters.flatMap((ch) => ch.lessons.map((l) => l.id));
 
-    const shaped = chapters.map((ch) => ({
-      ...ch,
-      lessons: ch.lessons.map((l) => {
+    const [attemptByLesson, progressRows] = await Promise.all([
+      attemptStatusByLesson(userId, quizLessonIds),
+      prisma.lessonProgress.findMany({
+        where: { userId, lessonId: { in: allLessonIds } },
+        select: { lessonId: true, completed: true, lastPositionSeconds: true },
+      }),
+    ]);
+    const progressByLesson = new Map(progressRows.map((p) => [p.lessonId, p]));
+
+    const shaped = chapters.map((ch) => {
+      const lessons = ch.lessons.map((l) => {
         const unlocked = isLessonUnlocked(l, paidPlanIds);
         const { lessonPlans = [], ...rest } = l;
         const plans = lessonPlans.map((lp) => lp.plan);
         // null, not omitted: the app can tell "no attempt yet" from "not a
         // quiz" without checking type twice.
         const attempt = l.type === 'quiz' ? attemptByLesson.get(l.id) ?? null : null;
-        const base = { ...rest, plans, planIds: plans.map((p) => p.id), attempt };
+        const p = progressByLesson.get(l.id);
+        const base = {
+          ...rest,
+          plans,
+          planIds: plans.map((x) => x.id),
+          attempt,
+          completed: lessonDone(l, p, attempt),
+          // Survives the lock strip: the resume point is not the media.
+          lastPositionSeconds: p?.lastPositionSeconds ?? 0,
+        };
         return unlocked
           ? { ...base, locked: false }
           : { ...base, videoUrl: null, noteUrl: null, content: null, quiz: null, locked: true };
-      }),
-    }));
+      });
+
+      // Locked lessons stay in the denominator. A free student seeing 2/10 is
+      // the truth about the chapter; hiding them would show 2/2 = done.
+      const completed = lessons.filter((l) => l.completed).length;
+      return {
+        ...ch,
+        lessons,
+        progress: { total: lessons.length, completed, percent: percent(completed, lessons.length) },
+      };
+    });
+
+    // Course total is the chapter numbers added up, not a second query.
+    const courseTotal = shaped.reduce((n, ch) => n + ch.progress.total, 0);
+    const courseDone = shaped.reduce((n, ch) => n + ch.progress.completed, 0);
 
     return res.status(200).json({
       course: user.selectedCourse,
       courseType,
       hasPaid,
+      progress: { total: courseTotal, completed: courseDone, percent: percent(courseDone, courseTotal) },
       chapters: shaped,
     });
   } catch (err) {
@@ -220,13 +263,29 @@ async function getStudentLesson(req, res) {
     const { status, lessonPlans = [], ...rest } = lesson;
     const requiredPlans = lessonPlans.map((lp) => lp.plan);
 
+    // The player seeks to this on open. The tree carries it too, but this is
+    // the call made when a lesson is opened from a deep link or a bookmark,
+    // where no tree was loaded — without it those routes always restart at 0.
+    const progress = await prisma.lessonProgress.findUnique({
+      where: { userId_lessonId: { userId, lessonId } },
+      select: { completed: true, lastPositionSeconds: true, updatedAt: true },
+    });
+
+    const base = {
+      ...rest,
+      plans: requiredPlans,
+      planIds: requiredPlans.map((p) => p.id),
+      // Outside the lock strip below: a resume point is not media, and a
+      // student who later subscribes should not have lost their place.
+      completed: progress?.completed ?? false,
+      lastPositionSeconds: progress?.lastPositionSeconds ?? 0,
+    };
+
     return res.status(200).json({
       lesson: unlocked
-        ? { ...rest, plans: requiredPlans, planIds: requiredPlans.map((p) => p.id), locked: false }
+        ? { ...base, locked: false }
         : {
-            ...rest,
-            plans: requiredPlans,
-            planIds: requiredPlans.map((p) => p.id),
+            ...base,
             videoUrl: null,
             noteUrl: null,
             content: null,
@@ -452,6 +511,7 @@ async function submitStudentQuiz(req, res) {
 }
 
 module.exports = {
+  lessonDone,
   getSelectedCourseContent,
   getStudentLesson,
   getStudentQuizQuestions,

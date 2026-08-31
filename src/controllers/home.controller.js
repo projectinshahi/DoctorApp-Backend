@@ -101,7 +101,9 @@ async function getHome(req, res) {
     const hasPaid = user.selectedCourse.accessType !== 'premium' || paidPlanIds.size > 0;
 
     const videoLessons = lessons.filter((l) => l.type === 'video');
-    const noteLessons = lessons.filter((l) => l.type === 'note');
+    // 'text' is the enum value; note lessons are text lessons carrying a
+    // noteUrl. Filtering on 'note' matched nothing and zeroed the card.
+    const noteLessons = lessons.filter((l) => l.type === 'text');
     const quizLessons = lessons.filter((l) => l.type === 'quiz');
     const lessonIds = lessons.map((l) => l.id);
     const quizLessonIds = quizLessons.map((l) => l.id);

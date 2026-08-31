@@ -42,3 +42,25 @@ assert(!isLessonUnlocked(rawPlan5, bought9));
 assert(!isLessonUnlocked({ accessType: 'premium', isFreePreview: false, planIds: [] }, none));
 
 console.log('lesson lock rules OK');
+
+// --- Progress rollup -------------------------------------------------------
+const { lessonDone } = require('./selected-course.controller');
+
+const video = { type: 'video' };
+const quiz = { type: 'quiz' };
+
+// A normal lesson is done only when the student marked it so. A resume point
+// on its own is "started", never "finished".
+assert(!lessonDone(video, undefined, null), 'no row is not done');
+assert(!lessonDone(video, { completed: false, lastPositionSeconds: 900 }, null), 'watched != done');
+assert(lessonDone(video, { completed: true }, null));
+
+// A quiz lesson has no lesson_progress row at all — a submitted attempt is the
+// only thing that finishes it, so an open attempt must not count.
+assert(!lessonDone(quiz, undefined, null), 'unattempted quiz is not done');
+assert(!lessonDone(quiz, undefined, { completed: false }), 'open attempt is not done');
+assert(lessonDone(quiz, undefined, { completed: true }));
+// A stray progress row on a quiz must not fake a pass without an attempt.
+assert(!lessonDone(quiz, { completed: true }, null), 'quiz needs an attempt, not a flag');
+
+console.log('progress rollup OK');
