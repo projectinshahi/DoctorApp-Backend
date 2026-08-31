@@ -356,6 +356,7 @@ exports.Prisma.LessonProgressScalarFieldEnum = {
 exports.Prisma.TestScalarFieldEnum = {
   id: 'id',
   courseId: 'courseId',
+  courseTypeId: 'courseTypeId',
   name: 'name',
   type: 'type',
   totalQuestions: 'totalQuestions',

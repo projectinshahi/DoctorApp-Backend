@@ -80,11 +80,25 @@ async function listTests(req, res) {
       return res.status(400).json({ error: { message: 'Invalid course id' } });
     }
 
+    // A paper scoped to one exam is only for students sitting that exam. A
+    // paper with no courseTypeId belongs to the whole course, so it stays
+    // visible to everyone in it.
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.userId },
+      select: { selectedCourseTypeId: true },
+    });
+
     const tests = await prisma.test.findMany({
-      where: { courseId, isPublished: true },
+      where: {
+        courseId,
+        isPublished: true,
+        ...(user?.selectedCourseTypeId
+          ? { OR: [{ courseTypeId: null }, { courseTypeId: user.selectedCourseTypeId }] }
+          : {}),
+      },
       orderBy: { createdAt: 'desc' },
       select: {
-        id: true, name: true, type: true, totalQuestions: true,
+        id: true, name: true, type: true, courseTypeId: true, totalQuestions: true,
         durationMinutes: true, marksCorrect: true, marksIncorrect: true,
         attempts: {
           where: { userId: req.user.userId },

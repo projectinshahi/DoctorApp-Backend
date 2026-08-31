@@ -22,7 +22,9 @@ const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
 
 /** Admin view of a test, with its question count. */
 const TEST_SELECT = {
-  id: true, courseId: true, name: true, type: true,
+  id: true, courseId: true, courseTypeId: true, name: true, type: true,
+  course: { select: { id: true, title: true } },
+  courseType: { select: { id: true, title: true } },
   totalQuestions: true, durationMinutes: true,
   marksCorrect: true, marksIncorrect: true,
   isPublished: true, isLocked: true, createdAt: true, updatedAt: true,
@@ -52,7 +54,7 @@ async function createTest(req, res) {
     const course = await prisma.course.findUnique({ where: { id: courseId }, select: { id: true } });
     if (!course) return res.status(404).json({ error: { message: 'Course not found' } });
 
-    const { name, type, totalQuestions, durationMinutes, marksCorrect, marksIncorrect } = req.body ?? {};
+    const { name, type, courseTypeId, totalQuestions, durationMinutes, marksCorrect, marksIncorrect } = req.body ?? {};
 
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return res.status(400).json({ error: { message: 'name is required' } });
@@ -72,9 +74,29 @@ async function createTest(req, res) {
       return res.status(400).json({ error: { message: 'marksIncorrect must be zero or negative (e.g. -0.25)' } });
     }
 
+    // A course type from a different course would silently hide the paper from
+    // everyone: the student query matches on both, so it would never appear.
+    let typeId = null;
+    if (courseTypeId !== undefined && courseTypeId !== null) {
+      typeId = Number(courseTypeId);
+      if (!Number.isInteger(typeId)) {
+        return res.status(400).json({ error: { message: 'courseTypeId must be an integer' } });
+      }
+      const courseType = await prisma.courseType.findUnique({
+        where: { id: typeId }, select: { id: true, courseId: true },
+      });
+      if (!courseType) {
+        return res.status(404).json({ error: { message: 'Course type not found' } });
+      }
+      if (courseType.courseId !== courseId) {
+        return res.status(400).json({ error: { message: 'That course type belongs to a different course' } });
+      }
+    }
+
     const test = await prisma.test.create({
       data: {
         courseId,
+        courseTypeId: typeId,
         name: name.trim(),
         type: type ?? 'GRAND_TEST',
         totalQuestions: Number(totalQuestions),
@@ -104,6 +126,14 @@ async function listTests(req, res) {
       }
       where.courseId = courseId;
     }
+    if (req.query.courseTypeId !== undefined) {
+      const courseTypeId = Number(req.query.courseTypeId);
+      if (!Number.isInteger(courseTypeId)) {
+        return res.status(400).json({ error: { message: 'courseTypeId must be an integer' } });
+      }
+      where.courseTypeId = courseTypeId;
+    }
+
     if (req.query.type !== undefined) {
       if (!TEST_TYPES.includes(req.query.type)) {
         return res.status(400).json({ error: { message: `type must be one of: ${TEST_TYPES.join(', ')}` } });
@@ -779,11 +809,67 @@ async function getTestAnalytics(req, res) {
   }
 }
 
+
+// DELETE /api/admin/tests/:testId
+//
+// Questions, images and attempts all cascade, which is exactly why an attempted
+// paper cannot be deleted: it would erase results students have already sat
+// for, and there is nothing to restore them from.
+async function deleteTest(req, res) {
+  try {
+    const testId = Number(req.params.testId);
+    if (!Number.isInteger(testId)) {
+      return res.status(400).json({ error: { message: 'Invalid test id' } });
+    }
+
+    const test = await prisma.test.findUnique({
+      where: { id: testId },
+      select: {
+        id: true, name: true, isLocked: true,
+        _count: { select: { attempts: true, questions: true } },
+        images: { select: { id: true, publicId: true } },
+      },
+    });
+    if (!test) return res.status(404).json({ error: { message: 'Test not found' } });
+
+    if (test._count.attempts > 0) {
+      return res.status(409).json({
+        error: {
+          message: `Cannot delete: ${test._count.attempts} student attempt(s) exist. Unpublish it instead — deleting would erase their results.`,
+        },
+        attemptCount: test._count.attempts,
+      });
+    }
+
+    // Cloudinary first. Dropping the rows before the files would leave assets
+    // nobody can find, let alone delete.
+    for (const image of test.images) {
+      try {
+        await cloudinary.uploader.destroy(image.publicId);
+      } catch (err) {
+        console.error('cloudinary destroy failed for', image.publicId, err);
+      }
+    }
+
+    await prisma.test.delete({ where: { id: testId } });
+
+    return res.status(200).json({
+      message: `Deleted "${test.name}" with ${test._count.questions} question(s) and ${test.images.length} image(s).`,
+      testId,
+      deletedQuestions: test._count.questions,
+      deletedImages: test.images.length,
+    });
+  } catch (error) {
+    console.error('deleteTest error:', error);
+    return res.status(500).json({ error: { message: 'Failed to delete the test' } });
+  }
+}
+
 module.exports = {
   createTest, listTests, uploadTestQuestions,
   clearTestQuestions, publishTest, previewTest,
   uploadTestImages, listTestImages, deleteTestImage,
-  listTestAttempts, getTestAnalytics,
+  listTestAttempts, getTestAnalytics, deleteTest,
   // Exported for test.test.js — pure, no DB.
   validateRows,
 };

@@ -162,6 +162,7 @@ model CourseType {
   course     Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
   chapters   Chapter[]
   selectedBy User[]
+  tests      Test[]
 
   @@index([courseId])
   @@map("course_types")
@@ -508,6 +509,10 @@ model LessonProgress {
 model Test {
   id              Int      @id @default(autoincrement())
   courseId        Int
+  // Which exam under that course this paper belongs to. Null means it applies
+  // to the whole course. Chapters already scope this way, and without it a DHA
+  // student is served MOHAP papers.
+  courseTypeId    Int?
   name            String
   type            TestType @default(GRAND_TEST)
   // Declared up front and checked against the CSV at import, so a paper that
@@ -523,12 +528,13 @@ model Test {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  course    Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  questions TestQuestion[]
-  attempts  TestAttempt[]
-  images    TestImage[]
+  course     Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseType CourseType?    @relation(fields: [courseTypeId], references: [id], onDelete: Cascade)
+  questions  TestQuestion[]
+  attempts   TestAttempt[]
+  images     TestImage[]
 
-  @@index([courseId, type, isPublished])
+  @@index([courseId, courseTypeId, type, isPublished])
   @@map("tests")
 }
 
