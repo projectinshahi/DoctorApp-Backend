@@ -199,12 +199,26 @@ function validateRows(header, rows, test, knownImageUrls = null) {
       seenOrder.set(order, row.line);
     }
 
-    // An image URL is only usable if it was uploaded for this test.
+    // Image columns are optional and independent: a paper can mix text-only
+    // questions with image ones, and a question can have a picture while its
+    // options do not.
+    //
+    // A URL from outside this test's uploads is a WARNING, not a block. It is
+    // usually a typo, but it is also how an admin references an existing CDN
+    // asset, and refusing the whole file for it made a legitimate import
+    // impossible. The row still imports; the warning is what makes a typo
+    // findable before a student meets a broken image.
     const checkUrl = (field, url) => {
       if (url === '') return '';
-      if (knownImageUrls && !knownImageUrls.has(url)) {
-        at(field, `Image URL is not one of this test's uploaded images: ${url}`);
+      if (!/^https?:\/\/\S+$/i.test(url)) {
+        at(field, `Not a valid URL: ${url}`);
         return '';
+      }
+      if (knownImageUrls && !knownImageUrls.has(url)) {
+        errors.push({
+          row: row.line, field, severity: 'warning',
+          message: `Not one of this test's uploaded images — check it loads: ${url}`,
+        });
       }
       return url;
     };

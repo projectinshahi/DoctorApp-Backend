@@ -85,18 +85,26 @@ assert(empty.errors.some((e) => e.field === 'question_text' && e.message.include
 const emptyOpt = run(`${IHEAD}\n1,Q,,,,B,C,D,A\n`, KNOWN);
 assert(emptyOpt.errors.some((e) => e.field === 'option_a' && e.message.includes('text or an image')));
 
-// The rule that stops a broken image reaching a student: a URL that was never
-// uploaded for THIS test is rejected at import, not months later on screen.
-const foreign = run(`${IHEAD}\n1,Q,https://evil.example/x.jpg,A,,B,C,D,A\n`, KNOWN);
-assert(foreign.errors.some((e) => e.field === 'question_image_url' && e.message.includes('not one of')));
+// A URL from outside this test's uploads WARNS but still imports. Blocking it
+// made referencing an existing CDN asset impossible, and made every template
+// with placeholder URLs unusable.
+const foreign = run(`${IHEAD}\n1,Q,https://cdn.other/x.jpg,A,,B,C,D,A\n`, KNOWN);
+assert.deepStrictEqual(foreign.errors.filter((e) => e.severity !== 'warning'), [],
+  'an unknown URL must not block the import');
+assert(foreign.errors.some((e) => e.severity === 'warning' && e.field === 'question_image_url'));
+assert.strictEqual(foreign.questions[0].questionImageUrl, 'https://cdn.other/x.jpg',
+  'the URL is kept — the admin was warned, not overruled');
 
-// A typo in a known URL is caught the same way.
+// A typo in a known URL still warns, which is what makes it findable.
 const typo = run(`${IHEAD}\n1,Q,https://cdn.test/a.jpeg,A,,B,C,D,A\n`, KNOWN);
-assert(typo.errors.some((e) => e.field === 'question_image_url'));
+assert(typo.errors.some((e) => e.severity === 'warning' && e.field === 'question_image_url'));
 
-// A rejected URL must not be stored — otherwise a blocked row would still
-// leave a dead link behind if the import were ever forced through.
-assert.strictEqual(foreign.questions[0].questionImageUrl, null);
+// Something that is not a URL at all IS a blocking error — it can never load,
+// so importing it only defers the failure to a student.
+const notUrl = run(`${IHEAD}\n1,Q,q3_xray.jpg,A,,B,C,D,A\n`, KNOWN);
+assert(notUrl.errors.some((e) => e.severity !== 'warning' && e.field === 'question_image_url'),
+  'a bare filename must be rejected');
+assert.strictEqual(notUrl.questions[0].questionImageUrl, null);
 
 // With no known-set supplied (nothing uploaded), URLs are not cross-checked but
 // text-or-image still applies.
