@@ -5,6 +5,7 @@ const { revokeActiveSessions } = require('../services/session.service');
 const { isLessonUnlocked, lessonDone } = require('./selected-course.controller');
 const { percent } = require('./home.controller');
 const { attemptStatusByLesson } = require('./quizAttempt.controller');
+const { buildLeaderboard } = require('./testAttempt.controller');
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -409,6 +410,7 @@ async function getStudentById(req, res) {
       tests: {
         attempted: testAttempts.length,
         submitted: submittedTests.length,
+        inProgress: testAttempts.length - submittedTests.length,
         bestScore: submittedTests.length
           ? Math.max(...submittedTests.map((a) => a.score ?? 0))
           : null,
@@ -432,14 +434,49 @@ async function getStudentById(req, res) {
       score: a.answers.reduce((sum, x) => sum + x.marksAwarded, 0),
     }));
 
+    // Where this student placed in each paper they sat, from the same code the
+    // student leaderboard uses — an admin answering "why am I 4th?" has to be
+    // quoting the number the student was actually shown.
+    //
+    // ponytail: one leaderboard build per distinct paper, bounded by the 20
+    // recent attempts below. Cache it if a student ever sits enough tests to
+    // make that felt.
+    const satTests = new Map();
+    for (const a of testAttempts.slice(0, 20)) {
+      if (a.submittedAt) satTests.set(a.test.id, a.test);
+    }
+    const boards = await Promise.all(
+      [...satTests.values()].map(async (t) => [t.id, await buildLeaderboard(t)]),
+    );
+    const standingByTest = new Map(boards.map(([testId, ranked]) => {
+      const mine = ranked.find((r) => r.userId === studentId);
+      return [testId, mine ? {
+        rank: mine.rank,
+        totalParticipants: ranked.length,
+        bestScore: mine.score,
+        correctCount: mine.correctCount,
+        wrongCount: mine.wrongCount,
+        skippedCount: mine.skippedCount,
+        timeTakenSeconds: mine.timeTakenSeconds,
+        attemptCount: mine.attemptCount,
+      } : null];
+    }));
+
     const recentTestAttempts = testAttempts.slice(0, 20).map((a) => ({
       attemptId: a.id,
       test: a.test,
       startedAt: a.startedAt,
       submittedAt: a.submittedAt,
       submitted: Boolean(a.submittedAt),
+      timeTakenSeconds: a.submittedAt
+        ? Math.max(0, Math.round((a.submittedAt - a.startedAt) / 1000))
+        : null,
       score: a.score,
       totalMarks: a.test.totalQuestions * a.test.marksCorrect,
+      // The student's standing in this paper. Identical across their submitted
+      // retakes, because a leaderboard ranks students, not attempts — and null
+      // while an attempt is still running, which has no result to rank yet.
+      leaderboard: a.submittedAt ? (standingByTest.get(a.test.id) ?? null) : null,
     }));
 
     return res.status(200).json({

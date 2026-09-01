@@ -444,6 +444,87 @@ function rankAttempts(rows) {
 }
 
 
+/**
+ * One ranked row per student — their best attempt, not every retake.
+ *
+ * Shared by the student leaderboard and the admin one. The two differ only in
+ * what they may show: `includeEmail` is opt-in so a student board can never
+ * leak the cohort's email addresses by inheriting an admin field.
+ */
+async function buildLeaderboard(test, { includeEmail = false } = {}) {
+  const attempts = await prisma.testAttempt.findMany({
+    where: { testId: test.id, submittedAt: { not: null } },
+    select: {
+      id: true, userId: true, score: true, startedAt: true, submittedAt: true,
+      user: { select: { id: true, name: true, email: true, avatarUrl: true } },
+    },
+  });
+  if (attempts.length === 0) return [];
+
+  // Two grouped queries instead of loading every answer row. A 200-question
+  // paper with 500 students is 100k answers; the leaderboard only needs a
+  // correct-count per attempt.
+  const attemptIds = attempts.map((a) => a.id);
+  const [correctRows, answeredRows] = await Promise.all([
+    prisma.testAttemptAnswer.groupBy({
+      by: ['attemptId'],
+      where: { attemptId: { in: attemptIds }, isCorrect: true },
+      _count: { testQuestionId: true },
+    }),
+    prisma.testAttemptAnswer.groupBy({
+      by: ['attemptId'],
+      where: { attemptId: { in: attemptIds } },
+      _count: { testQuestionId: true },
+    }),
+  ]);
+  const correctBy = new Map(correctRows.map((r) => [r.attemptId, r._count.testQuestionId]));
+  const answeredBy = new Map(answeredRows.map((r) => [r.attemptId, r._count.testQuestionId]));
+
+  const rows = attempts.map((a) => {
+    const answered = answeredBy.get(a.id) ?? 0;
+    const correct = correctBy.get(a.id) ?? 0;
+    const row = {
+      attemptId: a.id,
+      userId: a.userId,
+      name: a.user.name,
+      avatarUrl: a.user.avatarUrl,
+      score: a.score ?? 0,
+      correctCount: correct,
+      wrongCount: answered - correct,
+      skippedCount: test.totalQuestions - answered,
+      timeTakenSeconds: timeTaken(a) ?? 0,
+      submittedAt: a.submittedAt,
+    };
+    if (includeEmail) row.email = a.user.email;
+    return row;
+  });
+
+  return rankAttempts(pickBestAttempts(rows));
+}
+
+
+/**
+ * Collapses many attempts to one row per student: their best.
+ *
+ * A leaderboard where one person holds the top five places is not a ranking.
+ * The kept row carries `attemptCount` — the student's total retakes, not the
+ * count of the row that won — because an admin comparing a rank-1 first
+ * attempt against a rank-1 sixth attempt is reading two different results.
+ */
+function pickBestAttempts(rows) {
+  const bestByUser = new Map();
+  for (const row of rows) {
+    const held = bestByUser.get(row.userId);
+    const better = !held
+      || row.score > held.score
+      || (row.score === held.score && row.timeTakenSeconds < held.timeTakenSeconds);
+    const attemptCount = (held?.attemptCount ?? 0) + 1;
+    bestByUser.set(row.userId, { ...(better ? row : held), attemptCount });
+  }
+  return [...bestByUser.values()];
+}
+
+
 // GET /api/users/me/tests/:testId/leaderboard?limit=50
 async function getTestLeaderboard(req, res) {
   try {
@@ -459,64 +540,7 @@ async function getTestLeaderboard(req, res) {
       return res.status(404).json({ error: { message: 'Test not found' } });
     }
 
-    const attempts = await prisma.testAttempt.findMany({
-      where: { testId, submittedAt: { not: null } },
-      select: {
-        id: true, userId: true, score: true, startedAt: true, submittedAt: true,
-        user: { select: { id: true, name: true, avatarUrl: true } },
-      },
-    });
-
-    if (attempts.length === 0) {
-      return res.status(200).json({
-        test: { id: test.id, name: test.name, totalQuestions: test.totalQuestions,
-                totalMarks: test.totalQuestions * test.marksCorrect },
-        totalParticipants: 0, entries: [], me: null,
-      });
-    }
-
-    // Two grouped queries instead of loading every answer row. A 200-question
-    // paper with 500 students is 100k answers; the leaderboard only needs a
-    // correct-count per attempt.
-    const [correctRows, answeredRows] = await Promise.all([
-      prisma.testAttemptAnswer.groupBy({
-        by: ['attemptId'],
-        where: { attemptId: { in: attempts.map((a) => a.id) }, isCorrect: true },
-        _count: { testQuestionId: true },
-      }),
-      prisma.testAttemptAnswer.groupBy({
-        by: ['attemptId'],
-        where: { attemptId: { in: attempts.map((a) => a.id) } },
-        _count: { testQuestionId: true },
-      }),
-    ]);
-    const correctBy = new Map(correctRows.map((r) => [r.attemptId, r._count.testQuestionId]));
-    const answeredBy = new Map(answeredRows.map((r) => [r.attemptId, r._count.testQuestionId]));
-
-    // One row per student: their best attempt, not every retake. A leaderboard
-    // where one person holds the top five places is not a ranking.
-    const bestByUser = new Map();
-    for (const a of attempts) {
-      const row = {
-        attemptId: a.id,
-        userId: a.userId,
-        name: a.user.name,
-        avatarUrl: a.user.avatarUrl,
-        score: a.score ?? 0,
-        correctCount: correctBy.get(a.id) ?? 0,
-        wrongCount: (answeredBy.get(a.id) ?? 0) - (correctBy.get(a.id) ?? 0),
-        skippedCount: test.totalQuestions - (answeredBy.get(a.id) ?? 0),
-        timeTakenSeconds: timeTaken(a) ?? 0,
-        submittedAt: a.submittedAt,
-      };
-      const held = bestByUser.get(a.userId);
-      const better = !held
-        || row.score > held.score
-        || (row.score === held.score && row.timeTakenSeconds < held.timeTakenSeconds);
-      if (better) bestByUser.set(a.userId, row);
-    }
-
-    const ranked = rankAttempts([...bestByUser.values()]);
+    const ranked = await buildLeaderboard(test);
     const mine = ranked.find((r) => r.userId === req.user.userId) ?? null;
 
     return res.status(200).json({
@@ -540,6 +564,8 @@ async function getTestLeaderboard(req, res) {
 module.exports = {
   listTests, startTestAttempt, answerTestQuestion,
   clearTestAnswer, submitTestAttempt, getTestResult, getTestLeaderboard,
+  // Shared with the admin leaderboard and the admin student detail screen.
+  buildLeaderboard, timeTaken,
   // Exported for testAttempt.test.js — pure, no DB.
-  rankAttempts,
+  rankAttempts, pickBestAttempts,
 };

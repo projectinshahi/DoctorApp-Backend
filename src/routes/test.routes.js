@@ -7,6 +7,7 @@ const {
   clearTestQuestions, publishTest, previewTest,
   uploadTestImages, listTestImages, deleteTestImage,
   listTestAttempts, getTestAnalytics, deleteTest,
+  updateTest, getTestLeaderboard, listInProgressAttempts,
 } = require('../controllers/test.controller');
 const authenticateAdmin = require('../middleware/authenticateAdmin');
 
@@ -22,11 +23,16 @@ const csvUpload = multer({
   },
 });
 
+// Live invigilation: who is sitting an exam right now, across every test.
+// Declared before /tests/:testId so it is not swallowed by that parameter.
+router.get('/test-attempts/in-progress', authenticateAdmin, listInProgressAttempts);
+
 router.get('/tests', authenticateAdmin, listTests);
 router.post('/courses/:courseId/tests', authenticateAdmin, createTest);
 router.get('/tests/:testId/preview', authenticateAdmin, previewTest);
 router.post('/tests/:testId/questions/upload', authenticateAdmin, csvUpload.single('file'), uploadTestQuestions);
 router.delete('/tests/:testId/questions', authenticateAdmin, clearTestQuestions);
+router.patch('/tests/:testId', authenticateAdmin, updateTest);
 router.post('/tests/:testId/publish', authenticateAdmin, publishTest);
 router.delete('/tests/:testId', authenticateAdmin, deleteTest);
 
@@ -59,6 +65,7 @@ router.get('/tests/:testId/images', authenticateAdmin, listTestImages);
 // Results: who sat it, and which questions the cohort actually got wrong.
 router.get('/tests/:testId/attempts', authenticateAdmin, listTestAttempts);
 router.get('/tests/:testId/analytics', authenticateAdmin, getTestAnalytics);
+router.get('/tests/:testId/leaderboard', authenticateAdmin, getTestLeaderboard);
 router.delete('/tests/:testId/images/:imageId', authenticateAdmin, deleteTestImage);
 
 // Multer rejections (wrong type, too large) are user errors, not 500s.

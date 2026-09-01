@@ -879,11 +879,276 @@ async function deleteTest(req, res) {
   }
 }
 
+// PATCH /api/admin/tests/:testId
+//
+// One rule, so it is explainable in the UI: once a single student has started
+// the paper, only the name may change.
+//
+// Everything else is baked into results that already exist. marksCorrect is
+// stored per answer at answer time, so editing it would leave one attempt
+// scored two different ways. durationMinutes is the deadline of an attempt
+// running right now. totalQuestions is what the score is out of. courseTypeId
+// decides who can see it — moving it would hide the paper from the very
+// students who sat it.
+const EDITABLE_WHEN_UNTOUCHED = [
+  'type', 'courseTypeId', 'totalQuestions', 'durationMinutes',
+  'marksCorrect', 'marksIncorrect',
+];
+
+async function updateTest(req, res) {
+  try {
+    const testId = Number(req.params.testId);
+    if (!Number.isInteger(testId)) {
+      return res.status(400).json({ error: { message: 'Invalid test id' } });
+    }
+
+    const test = await prisma.test.findUnique({ where: { id: testId }, select: TEST_SELECT });
+    if (!test) return res.status(404).json({ error: { message: 'Test not found' } });
+
+    const body = req.body ?? {};
+    const data = {};
+
+    if (body.name !== undefined) {
+      if (typeof body.name !== 'string' || body.name.trim().length === 0) {
+        return res.status(400).json({ error: { message: 'name cannot be empty' } });
+      }
+      data.name = body.name.trim();
+    }
+
+    const touched = EDITABLE_WHEN_UNTOUCHED.filter((f) => body[f] !== undefined);
+    if (touched.length > 0 && test._count.attempts > 0) {
+      return res.status(409).json({
+        error: {
+          message: `${test._count.attempts} student(s) have already started this test, so only the name can be changed. Create a new test instead — editing this one would rewrite their results.`,
+        },
+        attemptCount: test._count.attempts,
+        lockedFields: touched,
+      });
+    }
+
+    if (body.type !== undefined) {
+      if (!TEST_TYPES.includes(body.type)) {
+        return res.status(400).json({ error: { message: `type must be one of: ${TEST_TYPES.join(', ')}` } });
+      }
+      data.type = body.type;
+    }
+
+    if (body.totalQuestions !== undefined) {
+      const total = Number(body.totalQuestions);
+      if (!Number.isInteger(total) || total < 1) {
+        return res.status(400).json({ error: { message: 'totalQuestions must be a positive integer' } });
+      }
+      // Lowering it below what is already imported would leave rows the paper
+      // does not admit to having, and publish would then never pass.
+      if (total < test._count.questions) {
+        return res.status(409).json({
+          error: { message: `This test already holds ${test._count.questions} questions. Clear them first to shrink it to ${total}.` },
+          questionCount: test._count.questions,
+        });
+      }
+      data.totalQuestions = total;
+    }
+
+    if (body.durationMinutes !== undefined) {
+      const minutes = Number(body.durationMinutes);
+      if (!Number.isInteger(minutes) || minutes < 1) {
+        return res.status(400).json({ error: { message: 'durationMinutes must be a positive integer' } });
+      }
+      data.durationMinutes = minutes;
+    }
+
+    if (body.marksCorrect !== undefined) {
+      const marks = Number(body.marksCorrect);
+      if (!Number.isFinite(marks) || marks <= 0) {
+        return res.status(400).json({ error: { message: 'marksCorrect must be greater than zero' } });
+      }
+      data.marksCorrect = marks;
+    }
+
+    if (body.marksIncorrect !== undefined) {
+      const marks = Number(body.marksIncorrect);
+      if (!Number.isFinite(marks) || marks > 0) {
+        return res.status(400).json({ error: { message: 'marksIncorrect must be zero or negative (e.g. -0.25)' } });
+      }
+      data.marksIncorrect = marks;
+    }
+
+    if (body.courseTypeId !== undefined) {
+      if (body.courseTypeId === null) {
+        data.courseTypeId = null;
+      } else {
+        const typeId = Number(body.courseTypeId);
+        if (!Number.isInteger(typeId)) {
+          return res.status(400).json({ error: { message: 'courseTypeId must be an integer or null' } });
+        }
+        const courseType = await prisma.courseType.findUnique({
+          where: { id: typeId }, select: { id: true, courseId: true },
+        });
+        if (!courseType) return res.status(404).json({ error: { message: 'Course type not found' } });
+        if (courseType.courseId !== test.courseId) {
+          return res.status(400).json({ error: { message: 'That course type belongs to a different course' } });
+        }
+        data.courseTypeId = typeId;
+      }
+    }
+
+    if (Object.keys(data).length === 0) {
+      return res.status(400).json({ error: { message: 'Nothing to update' } });
+    }
+
+    // Shrinking or re-scoping a live paper mid-flight is the same problem as
+    // editing its questions, so it drops back to draft and has to be reviewed
+    // and published again.
+    const changesThePaper = ['totalQuestions', 'durationMinutes', 'marksCorrect', 'marksIncorrect', 'courseTypeId']
+      .some((f) => data[f] !== undefined);
+    if (test.isPublished && changesThePaper) data.isPublished = false;
+
+    const updated = await prisma.test.update({
+      where: { id: testId }, data, select: TEST_SELECT,
+    });
+
+    return res.status(200).json({
+      test: shapeTest(updated),
+      unpublished: data.isPublished === false,
+    });
+  } catch (error) {
+    console.error('updateTest error:', error);
+    return res.status(500).json({ error: { message: 'Failed to update the test' } });
+  }
+}
+
+
+// GET /api/admin/tests/:testId/leaderboard?limit=100
+//
+// The same ranking the students see, from the same code — an admin explaining
+// a rank to a parent needs the number the student was shown, not a second
+// ordering that happens to agree most of the time.
+//
+// Two differences: unpublished papers are visible, and rows carry the email.
+async function getTestLeaderboard(req, res) {
+  try {
+    const testId = Number(req.params.testId);
+    if (!Number.isInteger(testId)) {
+      return res.status(400).json({ error: { message: 'Invalid test id' } });
+    }
+
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 100, 1), 500);
+
+    const test = await prisma.test.findUnique({ where: { id: testId }, select: TEST_SELECT });
+    if (!test) return res.status(404).json({ error: { message: 'Test not found' } });
+
+    const { buildLeaderboard } = require('./testAttempt.controller');
+    const ranked = await buildLeaderboard(test, { includeEmail: true });
+
+    const scores = ranked.map((r) => r.score);
+    const sorted = [...scores].sort((a, b) => a - b);
+
+    return res.status(200).json({
+      test: shapeTest(test),
+      totalMarks: test.totalQuestions * test.marksCorrect,
+      totalParticipants: ranked.length,
+      stats: ranked.length === 0 ? null : {
+        highest: sorted[sorted.length - 1],
+        lowest: sorted[0],
+        average: Number((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2)),
+        // Median, not just the mean: one abandoned zero drags an average down
+        // far enough to misread a cohort that mostly did fine.
+        median: sorted.length % 2
+          ? sorted[(sorted.length - 1) / 2]
+          : Number(((sorted[sorted.length / 2 - 1] + sorted[sorted.length / 2]) / 2).toFixed(2)),
+        fastestSeconds: Math.min(...ranked.map((r) => r.timeTakenSeconds)),
+      },
+      entries: ranked.slice(0, limit),
+    });
+  } catch (error) {
+    console.error('admin getTestLeaderboard error:', error);
+    return res.status(500).json({ error: { message: 'Failed to load the leaderboard' } });
+  }
+}
+
+
+// GET /api/admin/test-attempts/in-progress?courseId=&testId=&page=1&limit=50
+//
+// Who is sitting an exam right now.
+//
+// An expired attempt is only closed when someone next touches it, so this list
+// separates the two: `live` is a student actually writing, `expired` is one who
+// walked away and whose paper will submit itself on their next request. Showing
+// both as "in progress" would report a room full of candidates who left hours
+// ago.
+async function listInProgressAttempts(req, res) {
+  try {
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 50, 1), 100);
+
+    const where = { submittedAt: null };
+    if (req.query.testId !== undefined) {
+      const testId = Number(req.query.testId);
+      if (!Number.isInteger(testId)) {
+        return res.status(400).json({ error: { message: 'testId must be an integer' } });
+      }
+      where.testId = testId;
+    }
+    if (req.query.courseId !== undefined) {
+      const courseId = Number(req.query.courseId);
+      if (!Number.isInteger(courseId)) {
+        return res.status(400).json({ error: { message: 'courseId must be an integer' } });
+      }
+      where.test = { courseId };
+    }
+
+    const [attempts, total] = await Promise.all([
+      prisma.testAttempt.findMany({
+        where,
+        orderBy: { startedAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+        select: {
+          id: true, startedAt: true,
+          user: { select: { id: true, name: true, email: true, avatarUrl: true } },
+          test: { select: { id: true, name: true, totalQuestions: true, durationMinutes: true } },
+          _count: { select: { answers: true } },
+        },
+      }),
+      prisma.testAttempt.count({ where }),
+    ]);
+
+    const now = Date.now();
+    const rows = attempts.map((a) => {
+      const deadline = new Date(a.startedAt.getTime() + a.test.durationMinutes * 60_000);
+      const remaining = Math.max(0, Math.round((deadline - now) / 1000));
+      return {
+        attemptId: a.id,
+        student: a.user,
+        test: a.test,
+        startedAt: a.startedAt,
+        deadlineAt: deadline,
+        secondsRemaining: remaining,
+        expired: remaining === 0,
+        answeredCount: a._count.answers,
+        remainingCount: a.test.totalQuestions - a._count.answers,
+      };
+    });
+
+    return res.status(200).json({
+      pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
+      liveCount: rows.filter((r) => !r.expired).length,
+      expiredCount: rows.filter((r) => r.expired).length,
+      attempts: rows,
+    });
+  } catch (error) {
+    console.error('listInProgressAttempts error:', error);
+    return res.status(500).json({ error: { message: 'Failed to load in-progress attempts' } });
+  }
+}
+
+
 module.exports = {
-  createTest, listTests, uploadTestQuestions,
+  createTest, updateTest, listTests, uploadTestQuestions,
   clearTestQuestions, publishTest, previewTest,
   uploadTestImages, listTestImages, deleteTestImage,
   listTestAttempts, getTestAnalytics, deleteTest,
+  getTestLeaderboard, listInProgressAttempts,
   // Exported for test.test.js — pure, no DB.
   validateRows,
 };

@@ -1,6 +1,6 @@
 // Leaderboard ranking. Run: node src/controllers/testAttempt.test.js
 const assert = require('assert');
-const { rankAttempts } = require('./testAttempt.controller');
+const { rankAttempts, pickBestAttempts } = require('./testAttempt.controller');
 
 const at = (n) => new Date(2026, 0, 1, 0, 0, n);
 const row = (userId, score, timeTakenSeconds, submittedAt = at(0)) =>
@@ -53,5 +53,39 @@ assert.deepStrictEqual(rankAttempts([]), []);
 const input = [row(1, 10, 60), row(2, 90, 60)];
 rankAttempts(input);
 assert.strictEqual(input[0].userId, 1, 'rankAttempts must not mutate its argument');
+
+
+// ── pickBestAttempts: one row per student, their best ──
+
+// A retake that scored worse must not displace the better attempt, and must
+// not add a second row for the same student.
+const retakes = pickBestAttempts([
+  { userId: 1, attemptId: 10, score: 90, timeTakenSeconds: 300 },
+  { userId: 1, attemptId: 11, score: 40, timeTakenSeconds: 60 },
+  { userId: 2, attemptId: 12, score: 50, timeTakenSeconds: 100 },
+]);
+assert.strictEqual(retakes.length, 2, 'one row per student');
+const first = retakes.find((r) => r.userId === 1);
+assert.strictEqual(first.attemptId, 10, 'kept the higher score, not the faster one');
+assert.strictEqual(first.attemptCount, 2, 'attemptCount counts every retake, not the kept row');
+assert.strictEqual(retakes.find((r) => r.userId === 2).attemptCount, 1);
+
+// Equal scores: the faster attempt wins, and the count still totals both.
+const tiedScores = pickBestAttempts([
+  { userId: 1, attemptId: 20, score: 50, timeTakenSeconds: 300 },
+  { userId: 1, attemptId: 21, score: 50, timeTakenSeconds: 90 },
+]);
+assert.strictEqual(tiedScores[0].attemptId, 21, 'same score, faster attempt kept');
+assert.strictEqual(tiedScores[0].attemptCount, 2);
+
+// A better attempt arriving last must still replace the held one.
+const improving = pickBestAttempts([
+  { userId: 1, attemptId: 30, score: 10, timeTakenSeconds: 60 },
+  { userId: 1, attemptId: 31, score: 99, timeTakenSeconds: 600 },
+]);
+assert.strictEqual(improving[0].attemptId, 31);
+assert.strictEqual(improving[0].attemptCount, 2);
+
+assert.deepStrictEqual(pickBestAttempts([]), []);
 
 console.log('testAttempt.test.js: all assertions passed');
