@@ -227,12 +227,28 @@ function sectionsOf(questions) {
  * Returns every problem at once rather than stopping at the first: an admin
  * fixing a 200-row file one error per upload would be here all day.
  *
- * `knownImageUrls` is the set uploaded for THIS test. Any other URL is
- * rejected: a typo or a link to another test's image imports cleanly and then
- * fails months later, in front of a student, as a broken image.
+ * `images` is what was uploaded for THIS test, as `{ url, originalFilename }`.
+ * It does two jobs: it resolves a bare filename to its Cloudinary URL, and it
+ * flags a URL from outside this test — a typo or a link to another test's
+ * image imports cleanly and then fails months later, in front of a student, as
+ * a broken image.
  */
-function validateRows(header, rows, test, knownImageUrls = null) {
+function validateRows(header, rows, test, images = null) {
   const errors = [];
+
+  // Filenames are matched case-insensitively: a folder of q1.svg typed into a
+  // spreadsheet as Q1.SVG is the same file to everyone except a computer.
+  const byFilename = new Map();
+  const ambiguous = new Set();
+  if (images) {
+    for (const image of images) {
+      const key = (image.originalFilename ?? '').toLowerCase();
+      if (key === '') continue;
+      if (byFilename.has(key)) ambiguous.add(key);
+      byFilename.set(key, image.url);
+    }
+  }
+  const knownImageUrls = images ? new Set(images.map((i) => i.url)) : null;
   const questions = [];
   const seenOrder = new Map();
   const seenText = new Map();
@@ -273,29 +289,52 @@ function validateRows(header, rows, test, knownImageUrls = null) {
     // asset, and refusing the whole file for it made a legitimate import
     // impossible. The row still imports; the warning is what makes a typo
     // findable before a student meets a broken image.
-    const checkUrl = (field, url) => {
-      if (url === '') return '';
-      if (!/^https?:\/\/\S+$/i.test(url)) {
-        at(field, `Not a valid URL: ${url}`);
+    // A cell may hold either a full URL or the name of a file uploaded to this
+    // test. The filename is what an admin actually has: they upload a folder of
+    // q1.svg..q200.svg, and pasting 200 Cloudinary URLs into a spreadsheet by
+    // hand is the step that produces the typos this function exists to catch.
+    const resolveImage = (field, value) => {
+      if (value === '') return '';
+
+      if (/^https?:\/\/\S+$/i.test(value)) {
+        if (knownImageUrls && !knownImageUrls.has(value)) {
+          errors.push({
+            row: row.line, field, severity: 'warning',
+            message: `Not one of this test's uploaded images — check it loads: ${value}`,
+          });
+        }
+        return value;
+      }
+
+      const key = value.toLowerCase();
+      if (ambiguous.has(key)) {
+        at(field, `Two uploaded images are both named "${value}" — rename one and upload it again, or use its full URL`);
         return '';
       }
-      if (knownImageUrls && !knownImageUrls.has(url)) {
-        errors.push({
-          row: row.line, field, severity: 'warning',
-          message: `Not one of this test's uploaded images — check it loads: ${url}`,
-        });
-      }
-      return url;
+      const resolved = byFilename.get(key);
+      if (resolved) return resolved;
+
+      // Neither a URL nor a file on this test. Blocking, because it can never
+      // load: importing it only defers the failure to a student.
+      at(field, byFilename.size === 0
+        ? `No images have been uploaded to this test yet, so "${value}" cannot be resolved. Upload the images first.`
+        : `"${value}" is not a URL and no image with that name was uploaded to this test`);
+      return '';
     };
 
-    const questionImageUrl = checkUrl('question_image_url', r.question_image_url ?? '');
+    // `_filename` is an accepted alias for `_url`, because a column of file
+    // names is what a spreadsheet naturally holds. Either column, either kind
+    // of value.
+    const imageCell = (base) => r[`${base}_url`] || r[`${base}_filename`] || '';
+
+    const questionImageUrl = resolveImage('question_image_url', imageCell('question_image'));
 
     const optionValues = {};
     for (const letter of VALID_OPTIONS) {
       const lower = letter.toLowerCase();
       optionValues[letter] = {
         text: r[`option_${lower}`] ?? '',
-        imageUrl: checkUrl(`option_${lower}_image_url`, r[`option_${lower}_image_url`] ?? ''),
+        imageUrl: resolveImage(`option_${lower}_image_url`, imageCell(`option_${lower}_image`)),
       };
     }
 
@@ -398,10 +437,10 @@ async function uploadTestQuestions(req, res) {
       return res.status(400).json({ error: { message: 'The file has a header but no rows' } });
     }
 
-    const knownImageUrls = new Set(
-      (await prisma.testImage.findMany({ where: { testId }, select: { url: true } })).map((i) => i.url)
-    );
-    const { errors, questions } = validateRows(header, rows, test, knownImageUrls);
+    const images = await prisma.testImage.findMany({
+      where: { testId }, select: { url: true, originalFilename: true },
+    });
+    const { errors, questions } = validateRows(header, rows, test, images);
     const blocking = errors.filter((e) => e.severity !== 'warning');
 
     // The count check is separate from row validation so the admin is told both

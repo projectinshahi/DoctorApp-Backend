@@ -104,6 +104,31 @@ Columns — only `correct_option` is required:
 `option_a`…`option_d` · `option_a_image_url`…`option_d_image_url` ·
 `correct_option` · `explanation` · `subject` · `topic`
 
+### Images: paste a URL, or just the file name
+
+An image cell takes **either** a full Cloudinary URL **or** the name of a file
+uploaded to this test:
+
+```csv
+question_order,question_text,question_image_filename,option_a,...
+1,What pattern is shown?,sample_q1.svg,Pattern A,...
+2,Identify the trend.,SAMPLE_Q2.SVG,Rising,...
+```
+
+The name wins in practice. An admin uploads a folder of `q1.svg`…`q200.svg`;
+pasting 200 Cloudinary URLs into a spreadsheet by hand is the step that
+produces the typos this validation exists to catch.
+
+- `question_image_filename` is an accepted alias for `question_image_url`, and
+  the same for every `option_*_image_*`. Either header, either kind of value.
+- Matching is **case-insensitive** — `Q1.SVG` finds `q1.svg`.
+- A name that matches nothing uploaded is a **blocking** error:
+  `"sample_q9.svg" is not a URL and no image with that name was uploaded to this test`
+- Nothing uploaded at all says so instead, rather than "not a valid URL",
+  which would send an admin hunting for a typo that is not there.
+- Two uploads sharing a name **block** rather than guess — picking one silently
+  would put the wrong picture on a question.
+
 Template: [test-questions-template.csv](test-questions-template.csv)
 
 ### Three rules the upload UI must reflect

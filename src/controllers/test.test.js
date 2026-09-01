@@ -6,7 +6,10 @@ const { validateRows, questionProblems, sectionsOf } = require('./test.controlle
 const TEST = { id: 1, totalQuestions: 2 };
 const HEAD = 'question_order,question_text,option_a,option_b,option_c,option_d,correct_option,explanation,subject,topic';
 
-const KNOWN = new Set(['https://cdn.test/a.jpg', 'https://cdn.test/b.jpg']);
+const KNOWN = [
+  { url: 'https://cdn.test/a.jpg', originalFilename: 'a.jpg' },
+  { url: 'https://cdn.test/b.jpg', originalFilename: 'b.jpg' },
+];
 
 function run(csv, known) {
   const { header, rows } = parseCsv(csv);
@@ -99,12 +102,52 @@ assert.strictEqual(foreign.questions[0].questionImageUrl, 'https://cdn.other/x.j
 const typo = run(`${IHEAD}\n1,Q,https://cdn.test/a.jpeg,A,,B,C,D,A\n`, KNOWN);
 assert(typo.errors.some((e) => e.severity === 'warning' && e.field === 'question_image_url'));
 
-// Something that is not a URL at all IS a blocking error — it can never load,
-// so importing it only defers the failure to a student.
+// A filename that matches nothing uploaded IS a blocking error — it can never
+// load, so importing it only defers the failure to a student.
 const notUrl = run(`${IHEAD}\n1,Q,q3_xray.jpg,A,,B,C,D,A\n`, KNOWN);
 assert(notUrl.errors.some((e) => e.severity !== 'warning' && e.field === 'question_image_url'),
-  'a bare filename must be rejected');
+  'an unknown filename must be rejected');
 assert.strictEqual(notUrl.questions[0].questionImageUrl, null);
+
+// ── filenames resolve to the uploaded URL ─────────────────────────────────
+// Pasting 200 Cloudinary URLs into a spreadsheet by hand is the step that
+// produces typos, so the name of an uploaded file is accepted instead.
+const byName = run(`${IHEAD}\n1,Q,a.jpg,A,,B,C,D,A\n`, KNOWN);
+assert.deepStrictEqual(byName.errors, [], 'a known filename must not warn or block');
+assert.strictEqual(byName.questions[0].questionImageUrl, 'https://cdn.test/a.jpg');
+
+// Case must not matter: a folder of a.jpg typed as A.JPG is the same file to
+// everyone except a computer.
+const upper = run(`${IHEAD}\n1,Q,A.JPG,A,,B,C,D,A\n`, KNOWN);
+assert.deepStrictEqual(upper.errors, []);
+assert.strictEqual(upper.questions[0].questionImageUrl, 'https://cdn.test/a.jpg');
+
+// Options resolve by filename too.
+const optName = run(`${IHEAD}\n1,Q,,,b.jpg,B,C,D,A\n`, KNOWN);
+assert.deepStrictEqual(optName.errors.filter((e) => e.severity !== 'warning'), []);
+assert.strictEqual(optName.questions[0].optionAImageUrl, 'https://cdn.test/b.jpg');
+
+// A _filename column is an alias for a _url column — a spreadsheet naturally
+// holds file names, and that header is what an admin writes.
+const FHEAD = 'question_order,question_text,question_image_filename,option_a,option_b,option_c,option_d,correct_option';
+const aliased = run(`${FHEAD}\n1,Q,a.jpg,A,B,C,D,A\n`, KNOWN);
+assert.deepStrictEqual(aliased.errors, [], 'question_image_filename must be read');
+assert.strictEqual(aliased.questions[0].questionImageUrl, 'https://cdn.test/a.jpg');
+
+// Two uploads sharing a name cannot be resolved — picking one silently would
+// put the wrong picture on a question.
+const DUPES = [
+  { url: 'https://cdn.test/one.jpg', originalFilename: 'ecg.svg' },
+  { url: 'https://cdn.test/two.jpg', originalFilename: 'ECG.svg' },
+];
+const dupName = run(`${IHEAD}\n1,Q,ecg.svg,A,,B,C,D,A\n`, DUPES);
+assert(dupName.errors.some((e) => e.field === 'question_image_url' && e.message.includes('both named')),
+  'an ambiguous filename must block rather than guess');
+
+// With nothing uploaded, the message has to say so — "not a valid URL" would
+// send an admin hunting for a typo that is not there.
+const nothingUp = run(`${IHEAD}\n1,Q,a.jpg,A,,B,C,D,A\n`, []);
+assert(nothingUp.errors.some((e) => e.message.includes('No images have been uploaded')));
 
 // With no known-set supplied (nothing uploaded), URLs are not cross-checked but
 // text-or-image still applies.

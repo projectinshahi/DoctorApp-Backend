@@ -160,6 +160,27 @@ imports exactly as before.
 
 ---
 
+## 4b. Image cells accept a file name
+
+An image cell now takes a full URL **or** the name of a file uploaded to this
+test, and `question_image_filename` works as an alias for
+`question_image_url` (same for every `option_*_image_*`).
+
+```csv
+question_order,question_text,question_image_filename,option_a,...
+1,What pattern is shown?,sample_q1.svg,Pattern A,...
+```
+
+Matching is case-insensitive. An unknown name blocks with a message naming it;
+two uploads sharing a name block rather than guess.
+
+In the upload screen, say this on the help text — an admin with a folder of
+`q1.svg`…`q200.svg` should never be pasting Cloudinary URLs by hand. Show the
+uploaded file names next to the image list so they can be copied into the
+sheet.
+
+---
+
 ## 5. Live attempts page
 
 ```
