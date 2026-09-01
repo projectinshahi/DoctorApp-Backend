@@ -358,6 +358,7 @@ exports.Prisma.TestScalarFieldEnum = {
   courseId: 'courseId',
   courseTypeId: 'courseTypeId',
   name: 'name',
+  instructions: 'instructions',
   type: 'type',
   totalQuestions: 'totalQuestions',
   durationMinutes: 'durationMinutes',
@@ -385,6 +386,7 @@ exports.Prisma.TestQuestionScalarFieldEnum = {
   optionDImageUrl: 'optionDImageUrl',
   correctOption: 'correctOption',
   explanation: 'explanation',
+  section: 'section',
   subject: 'subject',
   topic: 'topic'
 };

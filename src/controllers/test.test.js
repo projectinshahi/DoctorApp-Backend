@@ -1,7 +1,7 @@
 // CSV import validation. Run: node src/controllers/test.test.js
 const assert = require('assert');
 const { parseCsv } = require('../utils/csv');
-const { validateRows } = require('./test.controller');
+const { validateRows, questionProblems, sectionsOf } = require('./test.controller');
 
 const TEST = { id: 1, totalQuestions: 2 };
 const HEAD = 'question_order,question_text,option_a,option_b,option_c,option_d,correct_option,explanation,subject,topic';
@@ -115,5 +115,66 @@ assert.deepStrictEqual(noSet.errors.filter((e) => e.severity !== 'warning'), [])
 // duplicate-text warning.
 const twoImg = run(`${IHEAD}\n1,,https://cdn.test/a.jpg,A,,B,C,D,A\n2,,https://cdn.test/b.jpg,A,,B,C,D,B\n`, KNOWN);
 assert.deepStrictEqual(twoImg.errors, [], 'empty text must not count as duplicate text');
+
+
+// ── sections are read off the questions ──
+
+const paper = [
+  { questionOrder: 1, section: 'Part A' },
+  { questionOrder: 2, section: 'Part A' },
+  { questionOrder: 3, section: 'Part B' },
+  { questionOrder: 4, section: null },
+];
+const derived = sectionsOf(paper);
+assert.deepStrictEqual(derived.sections.map((x) => x.name), ['Part A', 'Part B'],
+  'sections come back in the order they appear in the paper');
+assert.strictEqual(derived.sections[0].questionCount, 2);
+assert.deepStrictEqual([derived.sections[0].firstOrder, derived.sections[0].lastOrder], [1, 2]);
+assert.strictEqual(derived.sections[0].contiguous, true);
+assert.strictEqual(derived.unsectionedCount, 1, 'a question with no section is counted, not dropped');
+
+// A paper with no sections at all is not half-sectioned — it simply has none.
+const plain = sectionsOf([{ questionOrder: 1, section: null }, { questionOrder: 2, section: null }]);
+assert.deepStrictEqual(plain.sections, []);
+assert.strictEqual(plain.unsectionedCount, 2);
+
+// A section interrupted and resumed stays one section, and lastOrder follows.
+const split = sectionsOf([
+  { questionOrder: 1, section: 'A' },
+  { questionOrder: 2, section: 'B' },
+  { questionOrder: 3, section: 'A' },
+]);
+assert.strictEqual(split.sections.length, 2);
+assert.strictEqual(split.sections.find((x) => x.name === 'A').questionCount, 2);
+assert.strictEqual(split.sections.find((x) => x.name === 'A').lastOrder, 3);
+assert.strictEqual(split.sections.find((x) => x.name === 'A').contiguous, false,
+  'A runs 1 and 3 with B between them — the paper jumps back to a finished part');
+assert.strictEqual(split.sections.find((x) => x.name === 'B').contiguous, true);
+
+assert.deepStrictEqual(sectionsOf([]), { sections: [], unsectionedCount: 0 });
+
+
+// ── the editor and the importer must agree ──
+
+const full = {
+  questionText: 'Q', questionImageUrl: null,
+  optionA: 'a', optionAImageUrl: null, optionB: 'b', optionBImageUrl: null,
+  optionC: 'c', optionCImageUrl: null, optionD: 'd', optionDImageUrl: null,
+  correctOption: 'A',
+};
+assert.deepStrictEqual(questionProblems(full, 'A'), []);
+
+// Image-only is valid on both doors — this is the rule that must not drift.
+assert.deepStrictEqual(
+  questionProblems({ ...full, questionText: null, questionImageUrl: 'https://x/y.svg' }, 'A'), [],
+  'an image-only stem is as valid in the editor as it is in the CSV');
+assert.deepStrictEqual(
+  questionProblems({ ...full, optionA: null, optionAImageUrl: 'https://x/y.png' }, 'A'), []);
+
+// Neither text nor image is the one thing an option may not be.
+assert.strictEqual(questionProblems({ ...full, optionA: null }, 'A')[0].field, 'option_a');
+assert.strictEqual(questionProblems({ ...full, questionText: null }, 'A')[0].field, 'question_text');
+assert.strictEqual(questionProblems({ ...full, correctOption: 'E' }, 'E')[0].field, 'correct_option');
+assert.strictEqual(questionProblems({ ...full, correctOption: null }, '')[0].field, 'correct_option');
 
 console.log('test.test.js: all assertions passed');

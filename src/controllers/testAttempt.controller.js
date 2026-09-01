@@ -18,6 +18,7 @@ const STUDENT_QUESTION_SELECT = {
   optionB: true, optionBImageUrl: true,
   optionC: true, optionCImageUrl: true,
   optionD: true, optionDImageUrl: true,
+  section: true,
 };
 
 function deadlineOf(attempt, test) {
@@ -72,6 +73,43 @@ async function finalise(attemptId, testId, submittedAt) {
 }
 
 
+/** What a student is told about the paper itself, before and during it. */
+function testSummary(test) {
+  return {
+    id: test.id, name: test.name, type: test.type,
+    totalQuestions: test.totalQuestions, durationMinutes: test.durationMinutes,
+    marksCorrect: test.marksCorrect, marksIncorrect: test.marksIncorrect,
+    // The rules the admin wrote. Null on a paper that has none.
+    instructions: test.instructions ?? null,
+  };
+}
+
+
+/**
+ * The parts of the paper, in the order they appear.
+ *
+ * Derived from the questions rather than stored, so a section is exactly the
+ * questions that claim it. `questions` must already be in questionOrder.
+ */
+function sectionsOf(questions) {
+  const byName = new Map();
+  for (const q of questions) {
+    if (!q.section) continue;
+    const held = byName.get(q.section);
+    if (held) {
+      held.questionCount += 1;
+      held.lastOrder = q.questionOrder;
+    } else {
+      byName.set(q.section, {
+        name: q.section, questionCount: 1,
+        firstOrder: q.questionOrder, lastOrder: q.questionOrder,
+      });
+    }
+  }
+  return [...byName.values()];
+}
+
+
 // GET /api/users/me/courses/:courseId/tests
 async function listTests(req, res) {
   try {
@@ -100,6 +138,7 @@ async function listTests(req, res) {
       select: {
         id: true, name: true, type: true, courseTypeId: true, totalQuestions: true,
         durationMinutes: true, marksCorrect: true, marksIncorrect: true,
+        instructions: true,
         attempts: {
           where: { userId: req.user.userId },
           orderBy: { startedAt: 'desc' },
@@ -169,12 +208,11 @@ async function startTestAttempt(req, res) {
       return res.status(200).json({
         attemptId: open.id,
         resumed: true,
-        test: { id: test.id, name: test.name, type: test.type,
-                totalQuestions: test.totalQuestions, durationMinutes: test.durationMinutes,
-                marksCorrect: test.marksCorrect, marksIncorrect: test.marksIncorrect },
+        test: testSummary(test),
         startedAt: open.startedAt,
         secondsRemaining: secondsRemaining(open, test),
         answered: open.answers.map((a) => ({ testQuestionId: a.testQuestionId, selectedOption: a.selectedOption })),
+        sections: sectionsOf(questions),
         questions,
       });
     }
@@ -193,12 +231,11 @@ async function startTestAttempt(req, res) {
     return res.status(201).json({
       attemptId: attempt.id,
       resumed: false,
-      test: { id: test.id, name: test.name, type: test.type,
-              totalQuestions: test.totalQuestions, durationMinutes: test.durationMinutes,
-              marksCorrect: test.marksCorrect, marksIncorrect: test.marksIncorrect },
+      test: testSummary(test),
       startedAt: attempt.startedAt,
       secondsRemaining: test.durationMinutes * 60,
       answered: [],
+      sections: sectionsOf(questions),
       questions,
     });
   } catch (error) {

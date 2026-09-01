@@ -514,6 +514,9 @@ model Test {
   // student is served MOHAP papers.
   courseTypeId    Int?
   name            String
+  // Shown to the student before they start, and to the admin who wrote them.
+  // Free text: rules, marking, calculator policy — whatever this paper needs.
+  instructions    String?
   type            TestType @default(GRAND_TEST)
   // Declared up front and checked against the CSV at import, so a paper that
   // says 200 questions cannot quietly serve 198.
@@ -559,6 +562,11 @@ model TestQuestion {
   optionDImageUrl  String?
   correctOption    String
   explanation      String?
+  // Which part of the paper this question belongs to — "Part A", "Anatomy".
+  // A plain label rather than a table: sections are read off the questions in
+  // questionOrder, so a section exists exactly when it has questions in it and
+  // there is nothing to keep in step. Null means the paper has no parts.
+  section          String?
   // Free text, for analytics only. Not a link to the question bank's taxonomy.
   subject          String?
   topic            String?

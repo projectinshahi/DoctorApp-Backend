@@ -8,6 +8,7 @@ const {
   uploadTestImages, listTestImages, deleteTestImage,
   listTestAttempts, getTestAnalytics, deleteTest,
   updateTest, getTestLeaderboard, listInProgressAttempts,
+  createTestQuestion, updateTestQuestion, deleteTestQuestion,
 } = require('../controllers/test.controller');
 const authenticateAdmin = require('../middleware/authenticateAdmin');
 
@@ -32,6 +33,11 @@ router.post('/courses/:courseId/tests', authenticateAdmin, createTest);
 router.get('/tests/:testId/preview', authenticateAdmin, previewTest);
 router.post('/tests/:testId/questions/upload', authenticateAdmin, csvUpload.single('file'), uploadTestQuestions);
 router.delete('/tests/:testId/questions', authenticateAdmin, clearTestQuestions);
+
+// One question at a time, for fixing a paper without re-uploading the CSV.
+router.post('/tests/:testId/questions', authenticateAdmin, createTestQuestion);
+router.patch('/tests/:testId/questions/:questionId', authenticateAdmin, updateTestQuestion);
+router.delete('/tests/:testId/questions/:questionId', authenticateAdmin, deleteTestQuestion);
 router.patch('/tests/:testId', authenticateAdmin, updateTest);
 router.post('/tests/:testId/publish', authenticateAdmin, publishTest);
 router.delete('/tests/:testId', authenticateAdmin, deleteTest);

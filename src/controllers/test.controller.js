@@ -23,6 +23,7 @@ const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
 /** Admin view of a test, with its question count. */
 const TEST_SELECT = {
   id: true, courseId: true, courseTypeId: true, name: true, type: true,
+  instructions: true,
   course: { select: { id: true, title: true } },
   courseType: { select: { id: true, title: true } },
   totalQuestions: true, durationMinutes: true,
@@ -54,7 +55,7 @@ async function createTest(req, res) {
     const course = await prisma.course.findUnique({ where: { id: courseId }, select: { id: true } });
     if (!course) return res.status(404).json({ error: { message: 'Course not found' } });
 
-    const { name, type, courseTypeId, totalQuestions, durationMinutes, marksCorrect, marksIncorrect } = req.body ?? {};
+    const { name, type, courseTypeId, totalQuestions, durationMinutes, marksCorrect, marksIncorrect, instructions } = req.body ?? {};
 
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return res.status(400).json({ error: { message: 'name is required' } });
@@ -103,6 +104,8 @@ async function createTest(req, res) {
         durationMinutes: Number(durationMinutes),
         marksCorrect: marksCorrect === undefined ? 1 : Number(marksCorrect),
         marksIncorrect: marksIncorrect === undefined ? 0 : Number(marksIncorrect),
+        instructions: typeof instructions === 'string' && instructions.trim() !== ''
+          ? instructions.trim() : null,
       },
       select: TEST_SELECT,
     });
@@ -153,6 +156,68 @@ async function listTests(req, res) {
     console.error('listTests error:', error);
     return res.status(500).json({ error: { message: 'Failed to load tests' } });
   }
+}
+
+
+/**
+ * The rules every question must satisfy, whichever door it came in through —
+ * a CSV row or the question editor. One function so the two cannot drift: the
+ * importer allows an image-only stem, and an editor that quietly did not would
+ * be unable to edit the very questions the importer accepted.
+ */
+function questionProblems(q, rawCorrect) {
+  const problems = [];
+  if (!q.questionText && !q.questionImageUrl) {
+    problems.push({ field: 'question_text', message: 'Question needs text or an image' });
+  }
+  for (const letter of VALID_OPTIONS) {
+    if (!q[`option${letter}`] && !q[`option${letter}ImageUrl`]) {
+      problems.push({ field: `option_${letter.toLowerCase()}`, message: `Option ${letter} needs text or an image` });
+    }
+  }
+  if (!VALID_OPTIONS.includes(q.correctOption)) {
+    problems.push({ field: 'correct_option', message: `"${rawCorrect ?? ''}" must be one of A, B, C, D` });
+  }
+  return problems;
+}
+
+
+/**
+ * The paper's parts, read off its questions.
+ *
+ * A section exists exactly when questions carry its label, which is why there
+ * is no sections table: nothing can fall out of step, and there is no such
+ * thing as an empty part left behind by a deleted question.
+ *
+ * `questions` must already be in questionOrder — the order sections appear in
+ * the paper is the order they are returned.
+ */
+function sectionsOf(questions) {
+  const byName = new Map();
+  let unsectioned = 0;
+  for (const q of questions) {
+    if (!q.section) { unsectioned += 1; continue; }
+    const held = byName.get(q.section);
+    if (held) {
+      held.questionCount += 1;
+      held.lastOrder = q.questionOrder;
+    } else {
+      byName.set(q.section, {
+        name: q.section, questionCount: 1,
+        firstOrder: q.questionOrder, lastOrder: q.questionOrder,
+      });
+    }
+  }
+  // A part whose questions are not consecutive means the paper runs Part A,
+  // Part B, Part A again — almost always a reorder that went wrong, and
+  // invisible in a list of questions. Cheap to spot here, painful to find on
+  // exam day.
+  const sections = [...byName.values()].map((x) => ({
+    ...x,
+    contiguous: x.questionCount === x.lastOrder - x.firstOrder + 1,
+  }));
+
+  return { sections, unsectionedCount: unsectioned };
 }
 
 
@@ -225,26 +290,30 @@ function validateRows(header, rows, test, knownImageUrls = null) {
 
     const questionImageUrl = checkUrl('question_image_url', r.question_image_url ?? '');
 
-    // Text or image — either carries the question. Requiring text would rule
-    // out an ECG or a slide, which is often the entire stem.
-    if (r.question_text === '' && questionImageUrl === '') {
-      at('question_text', 'Question needs text or an image');
-    }
-
     const optionValues = {};
     for (const letter of VALID_OPTIONS) {
       const lower = letter.toLowerCase();
-      const text = r[`option_${lower}`] ?? '';
-      const imageUrl = checkUrl(`option_${lower}_image_url`, r[`option_${lower}_image_url`] ?? '');
-      if (text === '' && imageUrl === '') {
-        at(`option_${lower}`, `Option ${letter} needs text or an image`);
-      }
-      optionValues[letter] = { text, imageUrl };
+      optionValues[letter] = {
+        text: r[`option_${lower}`] ?? '',
+        imageUrl: checkUrl(`option_${lower}_image_url`, r[`option_${lower}_image_url`] ?? ''),
+      };
     }
 
-    const correct = r.correct_option.toUpperCase();
-    if (!VALID_OPTIONS.includes(correct)) {
-      at('correct_option', `"${r.correct_option}" must be one of A, B, C, D`);
+    const correct = (r.correct_option ?? '').toUpperCase();
+
+    // Text-or-image and the correct-option letter are checked by the same code
+    // the question editor uses, so a row the importer accepts is always a row
+    // the editor will let you edit.
+    for (const problem of questionProblems({
+      questionText: r.question_text || null,
+      questionImageUrl: questionImageUrl || null,
+      optionA: optionValues.A.text || null, optionAImageUrl: optionValues.A.imageUrl || null,
+      optionB: optionValues.B.text || null, optionBImageUrl: optionValues.B.imageUrl || null,
+      optionC: optionValues.C.text || null, optionCImageUrl: optionValues.C.imageUrl || null,
+      optionD: optionValues.D.text || null, optionDImageUrl: optionValues.D.imageUrl || null,
+      correctOption: correct,
+    }, r.correct_option)) {
+      at(problem.field, problem.message);
     }
 
     // A repeated stem is usually a copy-paste slip, but a paper can legitimately
@@ -276,6 +345,9 @@ function validateRows(header, rows, test, knownImageUrls = null) {
       explanation: r.explanation || null,
       subject: r.subject || null,
       topic: r.topic || null,
+      // Optional. A paper with no section column is simply a paper with no
+      // parts, which is what most of them are.
+      section: r.section || null,
     });
   });
 
@@ -461,7 +533,17 @@ async function previewTest(req, res) {
       where: { testId }, orderBy: { questionOrder: 'asc' },
     });
 
-    return res.status(200).json({ test: shapeTest(test), questions });
+    const { sections, unsectionedCount } = sectionsOf(questions);
+
+    return res.status(200).json({
+      test: shapeTest(test),
+      sections,
+      // Above zero alongside a non-empty `sections` means the paper is half
+      // labelled — worth saying, because those questions render outside every
+      // part and an admin who split the paper did not mean to leave them there.
+      unsectionedCount,
+      questions,
+    });
   } catch (error) {
     console.error('previewTest error:', error);
     return res.status(500).json({ error: { message: 'Failed to load the test' } });
@@ -942,6 +1024,19 @@ async function updateTest(req, res) {
       data.name = body.name.trim();
     }
 
+    // Instructions sit with the name, not with the scoring fields. They change
+    // nothing that has already been marked, and a typo in the rules of a live
+    // paper should be fixable without building a second one.
+    if (body.instructions !== undefined) {
+      if (body.instructions === null || (typeof body.instructions === 'string' && body.instructions.trim() === '')) {
+        data.instructions = null;
+      } else if (typeof body.instructions !== 'string') {
+        return res.status(400).json({ error: { message: 'instructions must be text' } });
+      } else {
+        data.instructions = body.instructions.trim();
+      }
+    }
+
     const touched = EDITABLE_WHEN_UNTOUCHED.filter((f) => body[f] !== undefined);
     if (touched.length > 0 && test._count.attempts > 0) {
       return res.status(409).json({
@@ -1170,12 +1265,239 @@ async function listInProgressAttempts(req, res) {
 }
 
 
+// ── One question at a time ──────────────────────────────────────────────────
+//
+// The CSV builds the paper; these fix it. A typo in question 87 of a
+// 200-question import should not mean re-uploading the file, which is what
+// clearing and re-importing actually costs once images are attached.
+
+const QUESTION_TEXT_FIELDS = [
+  'questionText', 'questionImageUrl',
+  'optionA', 'optionAImageUrl', 'optionB', 'optionBImageUrl',
+  'optionC', 'optionCImageUrl', 'optionD', 'optionDImageUrl',
+  'explanation', 'subject', 'topic', 'section',
+];
+
+/** Merges a request body onto an existing question (or onto blanks, for a new one). */
+function readQuestionBody(body, existing = {}) {
+  const q = {};
+  for (const field of QUESTION_TEXT_FIELDS) {
+    const value = body[field] !== undefined ? body[field] : existing[field];
+    if (value === undefined || value === null) { q[field] = null; continue; }
+    if (typeof value !== 'string') return { error: `${field} must be text` };
+    q[field] = value.trim() === '' ? null : value.trim();
+  }
+  const correct = body.correctOption !== undefined ? body.correctOption : existing.correctOption;
+  q.correctOption = typeof correct === 'string' ? correct.toUpperCase() : correct;
+
+  for (const field of ['questionImageUrl', 'optionAImageUrl', 'optionBImageUrl', 'optionCImageUrl', 'optionDImageUrl']) {
+    if (q[field] && !/^https?:\/\/\S+$/i.test(q[field])) {
+      return { error: `${field} is not a valid URL: ${q[field]}` };
+    }
+  }
+  return { question: q };
+}
+
+/** The test, if it exists and its questions can still be changed. */
+async function editableTest(testId, res) {
+  const test = await prisma.test.findUnique({
+    where: { id: testId },
+    select: { id: true, name: true, isLocked: true, totalQuestions: true },
+  });
+  if (!test) {
+    res.status(404).json({ error: { message: 'Test not found' } });
+    return null;
+  }
+  // The same freeze that stops a CSV re-import. Editing a question after
+  // someone has answered it would rewrite a score that has already been shown.
+  if (test.isLocked) {
+    res.status(409).json({
+      error: { message: 'This test is locked — students have already sat it. Its questions can no longer be changed.' },
+    });
+    return null;
+  }
+  return test;
+}
+
+
+/**
+ * Shifts a run of questionOrder values by one, without tripping the
+ * [testId, questionOrder] unique index.
+ *
+ * A plain `SET question_order = question_order + 1` fails: Postgres checks the
+ * index row by row, so moving 2 to 3 collides with the 3 that is still there.
+ * Negating first parks the whole run somewhere nothing else lives, and the
+ * second statement brings it back to the value it should have.
+ */
+async function shiftOrders(tx, testId, where, delta) {
+  await tx.$executeRawUnsafe(
+    `UPDATE test_questions SET "questionOrder" = -"questionOrder" WHERE "testId" = $1 AND "questionOrder" ${where}`,
+    testId,
+  );
+  await tx.$executeRawUnsafe(
+    `UPDATE test_questions SET "questionOrder" = -"questionOrder" + $2 WHERE "testId" = $1 AND "questionOrder" < 0`,
+    testId, delta,
+  );
+}
+
+
+// POST /api/admin/tests/:testId/questions
+async function createTestQuestion(req, res) {
+  try {
+    const testId = Number(req.params.testId);
+    if (!Number.isInteger(testId)) {
+      return res.status(400).json({ error: { message: 'Invalid test id' } });
+    }
+    const test = await editableTest(testId, res);
+    if (!test) return;
+
+    const { question, error } = readQuestionBody(req.body ?? {});
+    if (error) return res.status(400).json({ error: { message: error } });
+
+    const problems = questionProblems(question, req.body?.correctOption);
+    if (problems.length > 0) {
+      return res.status(400).json({ error: { message: problems[0].message }, problems });
+    }
+
+    const last = await prisma.testQuestion.findFirst({
+      where: { testId }, orderBy: { questionOrder: 'desc' }, select: { questionOrder: true },
+    });
+    const lastOrder = last?.questionOrder ?? 0;
+
+    let order = lastOrder + 1;
+    if (req.body?.questionOrder !== undefined) {
+      order = Number(req.body.questionOrder);
+      if (!Number.isInteger(order) || order < 1 || order > lastOrder + 1) {
+        return res.status(400).json({
+          error: { message: `questionOrder must be between 1 and ${lastOrder + 1}` },
+        });
+      }
+    }
+
+    // Inserting in the middle pushes everything after it down, so an admin
+    // adding a missed question does not have to renumber the rest by hand.
+    const created = await prisma.$transaction(async (tx) => {
+      if (order <= lastOrder) await shiftOrders(tx, testId, `>= ${order}`, 1);
+      return tx.testQuestion.create({ data: { ...question, testId, questionOrder: order } });
+    });
+
+    const count = await prisma.testQuestion.count({ where: { testId } });
+    return res.status(201).json({
+      question: created,
+      questionCount: count,
+      readyToPublish: count === test.totalQuestions,
+    });
+  } catch (error) {
+    console.error('createTestQuestion error:', error);
+    return res.status(500).json({ error: { message: 'Failed to add the question' } });
+  }
+}
+
+
+// PATCH /api/admin/tests/:testId/questions/:questionId
+async function updateTestQuestion(req, res) {
+  try {
+    const testId = Number(req.params.testId);
+    const questionId = Number(req.params.questionId);
+    if (!Number.isInteger(testId) || !Number.isInteger(questionId)) {
+      return res.status(400).json({ error: { message: 'Invalid id' } });
+    }
+    const test = await editableTest(testId, res);
+    if (!test) return;
+
+    const existing = await prisma.testQuestion.findUnique({ where: { id: questionId } });
+    if (!existing || existing.testId !== testId) {
+      return res.status(404).json({ error: { message: 'Question not found on this test' } });
+    }
+
+    const { question, error } = readQuestionBody(req.body ?? {}, existing);
+    if (error) return res.status(400).json({ error: { message: error } });
+
+    const problems = questionProblems(question, req.body?.correctOption ?? existing.correctOption);
+    if (problems.length > 0) {
+      return res.status(400).json({ error: { message: problems[0].message }, problems });
+    }
+
+    let order = existing.questionOrder;
+    if (req.body?.questionOrder !== undefined) {
+      order = Number(req.body.questionOrder);
+      if (!Number.isInteger(order) || order < 1) {
+        return res.status(400).json({ error: { message: 'questionOrder must be a positive integer' } });
+      }
+    }
+
+    const updated = await prisma.$transaction(async (tx) => {
+      if (order !== existing.questionOrder) {
+        // Move-up / move-down in the editor. The question already at that
+        // position takes this one's place rather than the write failing on the
+        // unique constraint, which is what an admin dragging a row means.
+        const occupant = await tx.testQuestion.findFirst({ where: { testId, questionOrder: order } });
+        if (occupant) {
+          await tx.testQuestion.update({ where: { id: occupant.id }, data: { questionOrder: -1 } });
+          await tx.testQuestion.update({ where: { id: questionId }, data: { questionOrder: order } });
+          await tx.testQuestion.update({ where: { id: occupant.id }, data: { questionOrder: existing.questionOrder } });
+        }
+      }
+      return tx.testQuestion.update({
+        where: { id: questionId }, data: { ...question, questionOrder: order },
+      });
+    });
+
+    return res.status(200).json({ question: updated, swapped: order !== existing.questionOrder });
+  } catch (error) {
+    console.error('updateTestQuestion error:', error);
+    return res.status(500).json({ error: { message: 'Failed to update the question' } });
+  }
+}
+
+
+// DELETE /api/admin/tests/:testId/questions/:questionId
+async function deleteTestQuestion(req, res) {
+  try {
+    const testId = Number(req.params.testId);
+    const questionId = Number(req.params.questionId);
+    if (!Number.isInteger(testId) || !Number.isInteger(questionId)) {
+      return res.status(400).json({ error: { message: 'Invalid id' } });
+    }
+    const test = await editableTest(testId, res);
+    if (!test) return;
+
+    const existing = await prisma.testQuestion.findUnique({ where: { id: questionId } });
+    if (!existing || existing.testId !== testId) {
+      return res.status(404).json({ error: { message: 'Question not found on this test' } });
+    }
+
+    // Closing the gap keeps the paper numbered 1..n. Postgres checks the
+    // unique constraint once the statement finishes, so shifting the whole
+    // tail down by one in a single update is safe here.
+    await prisma.$transaction(async (tx) => {
+      await tx.testQuestion.delete({ where: { id: questionId } });
+      await shiftOrders(tx, testId, `> ${existing.questionOrder}`, -1);
+    });
+
+    const count = await prisma.testQuestion.count({ where: { testId } });
+    return res.status(200).json({
+      message: `Deleted question ${existing.questionOrder}. The rest have been renumbered.`,
+      questionId,
+      questionCount: count,
+      // Below what the test declares, so publish will refuse until it is fixed.
+      readyToPublish: count === test.totalQuestions,
+      expectedQuestions: test.totalQuestions,
+    });
+  } catch (error) {
+    console.error('deleteTestQuestion error:', error);
+    return res.status(500).json({ error: { message: 'Failed to delete the question' } });
+  }
+}
+
+
 module.exports = {
   createTest, updateTest, listTests, uploadTestQuestions,
   clearTestQuestions, publishTest, previewTest,
   uploadTestImages, listTestImages, deleteTestImage,
   listTestAttempts, getTestAnalytics, deleteTest,
   getTestLeaderboard, listInProgressAttempts,
+  createTestQuestion, updateTestQuestion, deleteTestQuestion,
   // Exported for test.test.js — pure, no DB.
-  validateRows,
+  validateRows, questionProblems, sectionsOf,
 };

@@ -31538,6 +31538,7 @@ export namespace Prisma {
     courseId: number | null
     courseTypeId: number | null
     name: string | null
+    instructions: string | null
     type: $Enums.TestType | null
     totalQuestions: number | null
     durationMinutes: number | null
@@ -31554,6 +31555,7 @@ export namespace Prisma {
     courseId: number | null
     courseTypeId: number | null
     name: string | null
+    instructions: string | null
     type: $Enums.TestType | null
     totalQuestions: number | null
     durationMinutes: number | null
@@ -31570,6 +31572,7 @@ export namespace Prisma {
     courseId: number
     courseTypeId: number
     name: number
+    instructions: number
     type: number
     totalQuestions: number
     durationMinutes: number
@@ -31608,6 +31611,7 @@ export namespace Prisma {
     courseId?: true
     courseTypeId?: true
     name?: true
+    instructions?: true
     type?: true
     totalQuestions?: true
     durationMinutes?: true
@@ -31624,6 +31628,7 @@ export namespace Prisma {
     courseId?: true
     courseTypeId?: true
     name?: true
+    instructions?: true
     type?: true
     totalQuestions?: true
     durationMinutes?: true
@@ -31640,6 +31645,7 @@ export namespace Prisma {
     courseId?: true
     courseTypeId?: true
     name?: true
+    instructions?: true
     type?: true
     totalQuestions?: true
     durationMinutes?: true
@@ -31743,6 +31749,7 @@ export namespace Prisma {
     courseId: number
     courseTypeId: number | null
     name: string
+    instructions: string | null
     type: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -31778,6 +31785,7 @@ export namespace Prisma {
     courseId?: boolean
     courseTypeId?: boolean
     name?: boolean
+    instructions?: boolean
     type?: boolean
     totalQuestions?: boolean
     durationMinutes?: boolean
@@ -31800,6 +31808,7 @@ export namespace Prisma {
     courseId?: boolean
     courseTypeId?: boolean
     name?: boolean
+    instructions?: boolean
     type?: boolean
     totalQuestions?: boolean
     durationMinutes?: boolean
@@ -31818,6 +31827,7 @@ export namespace Prisma {
     courseId?: boolean
     courseTypeId?: boolean
     name?: boolean
+    instructions?: boolean
     type?: boolean
     totalQuestions?: boolean
     durationMinutes?: boolean
@@ -31836,6 +31846,7 @@ export namespace Prisma {
     courseId?: boolean
     courseTypeId?: boolean
     name?: boolean
+    instructions?: boolean
     type?: boolean
     totalQuestions?: boolean
     durationMinutes?: boolean
@@ -31847,7 +31858,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type TestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "courseTypeId" | "name" | "type" | "totalQuestions" | "durationMinutes" | "marksCorrect" | "marksIncorrect" | "isPublished" | "isLocked" | "createdAt" | "updatedAt", ExtArgs["result"]["test"]>
+  export type TestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "courseTypeId" | "name" | "instructions" | "type" | "totalQuestions" | "durationMinutes" | "marksCorrect" | "marksIncorrect" | "isPublished" | "isLocked" | "createdAt" | "updatedAt", ExtArgs["result"]["test"]>
   export type TestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     courseType?: boolean | Test$courseTypeArgs<ExtArgs>
@@ -31879,6 +31890,7 @@ export namespace Prisma {
       courseId: number
       courseTypeId: number | null
       name: string
+      instructions: string | null
       type: $Enums.TestType
       totalQuestions: number
       durationMinutes: number
@@ -32320,6 +32332,7 @@ export namespace Prisma {
     readonly courseId: FieldRef<"Test", 'Int'>
     readonly courseTypeId: FieldRef<"Test", 'Int'>
     readonly name: FieldRef<"Test", 'String'>
+    readonly instructions: FieldRef<"Test", 'String'>
     readonly type: FieldRef<"Test", 'TestType'>
     readonly totalQuestions: FieldRef<"Test", 'Int'>
     readonly durationMinutes: FieldRef<"Test", 'Int'>
@@ -32879,6 +32892,7 @@ export namespace Prisma {
     optionDImageUrl: string | null
     correctOption: string | null
     explanation: string | null
+    section: string | null
     subject: string | null
     topic: string | null
   }
@@ -32899,6 +32913,7 @@ export namespace Prisma {
     optionDImageUrl: string | null
     correctOption: string | null
     explanation: string | null
+    section: string | null
     subject: string | null
     topic: string | null
   }
@@ -32919,6 +32934,7 @@ export namespace Prisma {
     optionDImageUrl: number
     correctOption: number
     explanation: number
+    section: number
     subject: number
     topic: number
     _all: number
@@ -32953,6 +32969,7 @@ export namespace Prisma {
     optionDImageUrl?: true
     correctOption?: true
     explanation?: true
+    section?: true
     subject?: true
     topic?: true
   }
@@ -32973,6 +32990,7 @@ export namespace Prisma {
     optionDImageUrl?: true
     correctOption?: true
     explanation?: true
+    section?: true
     subject?: true
     topic?: true
   }
@@ -32993,6 +33011,7 @@ export namespace Prisma {
     optionDImageUrl?: true
     correctOption?: true
     explanation?: true
+    section?: true
     subject?: true
     topic?: true
     _all?: true
@@ -33100,6 +33119,7 @@ export namespace Prisma {
     optionDImageUrl: string | null
     correctOption: string
     explanation: string | null
+    section: string | null
     subject: string | null
     topic: string | null
     _count: TestQuestionCountAggregateOutputType | null
@@ -33139,6 +33159,7 @@ export namespace Prisma {
     optionDImageUrl?: boolean
     correctOption?: boolean
     explanation?: boolean
+    section?: boolean
     subject?: boolean
     topic?: boolean
     test?: boolean | TestDefaultArgs<ExtArgs>
@@ -33162,6 +33183,7 @@ export namespace Prisma {
     optionDImageUrl?: boolean
     correctOption?: boolean
     explanation?: boolean
+    section?: boolean
     subject?: boolean
     topic?: boolean
     test?: boolean | TestDefaultArgs<ExtArgs>
@@ -33183,6 +33205,7 @@ export namespace Prisma {
     optionDImageUrl?: boolean
     correctOption?: boolean
     explanation?: boolean
+    section?: boolean
     subject?: boolean
     topic?: boolean
     test?: boolean | TestDefaultArgs<ExtArgs>
@@ -33204,11 +33227,12 @@ export namespace Prisma {
     optionDImageUrl?: boolean
     correctOption?: boolean
     explanation?: boolean
+    section?: boolean
     subject?: boolean
     topic?: boolean
   }
 
-  export type TestQuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "testId" | "questionOrder" | "questionText" | "questionImageUrl" | "optionA" | "optionAImageUrl" | "optionB" | "optionBImageUrl" | "optionC" | "optionCImageUrl" | "optionD" | "optionDImageUrl" | "correctOption" | "explanation" | "subject" | "topic", ExtArgs["result"]["testQuestion"]>
+  export type TestQuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "testId" | "questionOrder" | "questionText" | "questionImageUrl" | "optionA" | "optionAImageUrl" | "optionB" | "optionBImageUrl" | "optionC" | "optionCImageUrl" | "optionD" | "optionDImageUrl" | "correctOption" | "explanation" | "section" | "subject" | "topic", ExtArgs["result"]["testQuestion"]>
   export type TestQuestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     test?: boolean | TestDefaultArgs<ExtArgs>
     answers?: boolean | TestQuestion$answersArgs<ExtArgs>
@@ -33243,6 +33267,7 @@ export namespace Prisma {
       optionDImageUrl: string | null
       correctOption: string
       explanation: string | null
+      section: string | null
       subject: string | null
       topic: string | null
     }, ExtArgs["result"]["testQuestion"]>
@@ -33685,6 +33710,7 @@ export namespace Prisma {
     readonly optionDImageUrl: FieldRef<"TestQuestion", 'String'>
     readonly correctOption: FieldRef<"TestQuestion", 'String'>
     readonly explanation: FieldRef<"TestQuestion", 'String'>
+    readonly section: FieldRef<"TestQuestion", 'String'>
     readonly subject: FieldRef<"TestQuestion", 'String'>
     readonly topic: FieldRef<"TestQuestion", 'String'>
   }
@@ -37868,6 +37894,7 @@ export namespace Prisma {
     courseId: 'courseId',
     courseTypeId: 'courseTypeId',
     name: 'name',
+    instructions: 'instructions',
     type: 'type',
     totalQuestions: 'totalQuestions',
     durationMinutes: 'durationMinutes',
@@ -37898,6 +37925,7 @@ export namespace Prisma {
     optionDImageUrl: 'optionDImageUrl',
     correctOption: 'correctOption',
     explanation: 'explanation',
+    section: 'section',
     subject: 'subject',
     topic: 'topic'
   };
@@ -39843,6 +39871,7 @@ export namespace Prisma {
     courseId?: IntFilter<"Test"> | number
     courseTypeId?: IntNullableFilter<"Test"> | number | null
     name?: StringFilter<"Test"> | string
+    instructions?: StringNullableFilter<"Test"> | string | null
     type?: EnumTestTypeFilter<"Test"> | $Enums.TestType
     totalQuestions?: IntFilter<"Test"> | number
     durationMinutes?: IntFilter<"Test"> | number
@@ -39864,6 +39893,7 @@ export namespace Prisma {
     courseId?: SortOrder
     courseTypeId?: SortOrderInput | SortOrder
     name?: SortOrder
+    instructions?: SortOrderInput | SortOrder
     type?: SortOrder
     totalQuestions?: SortOrder
     durationMinutes?: SortOrder
@@ -39888,6 +39918,7 @@ export namespace Prisma {
     courseId?: IntFilter<"Test"> | number
     courseTypeId?: IntNullableFilter<"Test"> | number | null
     name?: StringFilter<"Test"> | string
+    instructions?: StringNullableFilter<"Test"> | string | null
     type?: EnumTestTypeFilter<"Test"> | $Enums.TestType
     totalQuestions?: IntFilter<"Test"> | number
     durationMinutes?: IntFilter<"Test"> | number
@@ -39909,6 +39940,7 @@ export namespace Prisma {
     courseId?: SortOrder
     courseTypeId?: SortOrderInput | SortOrder
     name?: SortOrder
+    instructions?: SortOrderInput | SortOrder
     type?: SortOrder
     totalQuestions?: SortOrder
     durationMinutes?: SortOrder
@@ -39933,6 +39965,7 @@ export namespace Prisma {
     courseId?: IntWithAggregatesFilter<"Test"> | number
     courseTypeId?: IntNullableWithAggregatesFilter<"Test"> | number | null
     name?: StringWithAggregatesFilter<"Test"> | string
+    instructions?: StringNullableWithAggregatesFilter<"Test"> | string | null
     type?: EnumTestTypeWithAggregatesFilter<"Test"> | $Enums.TestType
     totalQuestions?: IntWithAggregatesFilter<"Test"> | number
     durationMinutes?: IntWithAggregatesFilter<"Test"> | number
@@ -39963,6 +39996,7 @@ export namespace Prisma {
     optionDImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
     correctOption?: StringFilter<"TestQuestion"> | string
     explanation?: StringNullableFilter<"TestQuestion"> | string | null
+    section?: StringNullableFilter<"TestQuestion"> | string | null
     subject?: StringNullableFilter<"TestQuestion"> | string | null
     topic?: StringNullableFilter<"TestQuestion"> | string | null
     test?: XOR<TestScalarRelationFilter, TestWhereInput>
@@ -39985,6 +40019,7 @@ export namespace Prisma {
     optionDImageUrl?: SortOrderInput | SortOrder
     correctOption?: SortOrder
     explanation?: SortOrderInput | SortOrder
+    section?: SortOrderInput | SortOrder
     subject?: SortOrderInput | SortOrder
     topic?: SortOrderInput | SortOrder
     test?: TestOrderByWithRelationInput
@@ -40011,6 +40046,7 @@ export namespace Prisma {
     optionDImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
     correctOption?: StringFilter<"TestQuestion"> | string
     explanation?: StringNullableFilter<"TestQuestion"> | string | null
+    section?: StringNullableFilter<"TestQuestion"> | string | null
     subject?: StringNullableFilter<"TestQuestion"> | string | null
     topic?: StringNullableFilter<"TestQuestion"> | string | null
     test?: XOR<TestScalarRelationFilter, TestWhereInput>
@@ -40033,6 +40069,7 @@ export namespace Prisma {
     optionDImageUrl?: SortOrderInput | SortOrder
     correctOption?: SortOrder
     explanation?: SortOrderInput | SortOrder
+    section?: SortOrderInput | SortOrder
     subject?: SortOrderInput | SortOrder
     topic?: SortOrderInput | SortOrder
     _count?: TestQuestionCountOrderByAggregateInput
@@ -40061,6 +40098,7 @@ export namespace Prisma {
     optionDImageUrl?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
     correctOption?: StringWithAggregatesFilter<"TestQuestion"> | string
     explanation?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+    section?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
     subject?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
     topic?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
   }
@@ -41975,6 +42013,7 @@ export namespace Prisma {
 
   export type TestCreateInput = {
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -41996,6 +42035,7 @@ export namespace Prisma {
     courseId: number
     courseTypeId?: number | null
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -42012,6 +42052,7 @@ export namespace Prisma {
 
   export type TestUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -42033,6 +42074,7 @@ export namespace Prisma {
     courseId?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -42052,6 +42094,7 @@ export namespace Prisma {
     courseId: number
     courseTypeId?: number | null
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -42065,6 +42108,7 @@ export namespace Prisma {
 
   export type TestUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -42081,6 +42125,7 @@ export namespace Prisma {
     courseId?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -42106,6 +42151,7 @@ export namespace Prisma {
     optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
+    section?: string | null
     subject?: string | null
     topic?: string | null
     test: TestCreateNestedOneWithoutQuestionsInput
@@ -42128,6 +42174,7 @@ export namespace Prisma {
     optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
+    section?: string | null
     subject?: string | null
     topic?: string | null
     answers?: TestAttemptAnswerUncheckedCreateNestedManyWithoutTestQuestionInput
@@ -42147,6 +42194,7 @@ export namespace Prisma {
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    section?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     topic?: NullableStringFieldUpdateOperationsInput | string | null
     test?: TestUpdateOneRequiredWithoutQuestionsNestedInput
@@ -42169,6 +42217,7 @@ export namespace Prisma {
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    section?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     topic?: NullableStringFieldUpdateOperationsInput | string | null
     answers?: TestAttemptAnswerUncheckedUpdateManyWithoutTestQuestionNestedInput
@@ -42190,6 +42239,7 @@ export namespace Prisma {
     optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
+    section?: string | null
     subject?: string | null
     topic?: string | null
   }
@@ -42208,6 +42258,7 @@ export namespace Prisma {
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    section?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     topic?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -42228,6 +42279,7 @@ export namespace Prisma {
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    section?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     topic?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -44084,6 +44136,7 @@ export namespace Prisma {
     courseId?: SortOrder
     courseTypeId?: SortOrder
     name?: SortOrder
+    instructions?: SortOrder
     type?: SortOrder
     totalQuestions?: SortOrder
     durationMinutes?: SortOrder
@@ -44110,6 +44163,7 @@ export namespace Prisma {
     courseId?: SortOrder
     courseTypeId?: SortOrder
     name?: SortOrder
+    instructions?: SortOrder
     type?: SortOrder
     totalQuestions?: SortOrder
     durationMinutes?: SortOrder
@@ -44126,6 +44180,7 @@ export namespace Prisma {
     courseId?: SortOrder
     courseTypeId?: SortOrder
     name?: SortOrder
+    instructions?: SortOrder
     type?: SortOrder
     totalQuestions?: SortOrder
     durationMinutes?: SortOrder
@@ -44193,6 +44248,7 @@ export namespace Prisma {
     optionDImageUrl?: SortOrder
     correctOption?: SortOrder
     explanation?: SortOrder
+    section?: SortOrder
     subject?: SortOrder
     topic?: SortOrder
   }
@@ -44219,6 +44275,7 @@ export namespace Prisma {
     optionDImageUrl?: SortOrder
     correctOption?: SortOrder
     explanation?: SortOrder
+    section?: SortOrder
     subject?: SortOrder
     topic?: SortOrder
   }
@@ -44239,6 +44296,7 @@ export namespace Prisma {
     optionDImageUrl?: SortOrder
     correctOption?: SortOrder
     explanation?: SortOrder
+    section?: SortOrder
     subject?: SortOrder
     topic?: SortOrder
   }
@@ -48664,6 +48722,7 @@ export namespace Prisma {
 
   export type TestCreateWithoutCourseInput = {
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -48683,6 +48742,7 @@ export namespace Prisma {
     id?: number
     courseTypeId?: number | null
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -48932,6 +48992,7 @@ export namespace Prisma {
     courseId?: IntFilter<"Test"> | number
     courseTypeId?: IntNullableFilter<"Test"> | number | null
     name?: StringFilter<"Test"> | string
+    instructions?: StringNullableFilter<"Test"> | string | null
     type?: EnumTestTypeFilter<"Test"> | $Enums.TestType
     totalQuestions?: IntFilter<"Test"> | number
     durationMinutes?: IntFilter<"Test"> | number
@@ -49071,6 +49132,7 @@ export namespace Prisma {
 
   export type TestCreateWithoutCourseTypeInput = {
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -49090,6 +49152,7 @@ export namespace Prisma {
     id?: number
     courseId: number
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -52327,6 +52390,7 @@ export namespace Prisma {
     optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
+    section?: string | null
     subject?: string | null
     topic?: string | null
     answers?: TestAttemptAnswerCreateNestedManyWithoutTestQuestionInput
@@ -52347,6 +52411,7 @@ export namespace Prisma {
     optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
+    section?: string | null
     subject?: string | null
     topic?: string | null
     answers?: TestAttemptAnswerUncheckedCreateNestedManyWithoutTestQuestionInput
@@ -52541,6 +52606,7 @@ export namespace Prisma {
     optionDImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
     correctOption?: StringFilter<"TestQuestion"> | string
     explanation?: StringNullableFilter<"TestQuestion"> | string | null
+    section?: StringNullableFilter<"TestQuestion"> | string | null
     subject?: StringNullableFilter<"TestQuestion"> | string | null
     topic?: StringNullableFilter<"TestQuestion"> | string | null
   }
@@ -52592,6 +52658,7 @@ export namespace Prisma {
 
   export type TestCreateWithoutQuestionsInput = {
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -52612,6 +52679,7 @@ export namespace Prisma {
     courseId: number
     courseTypeId?: number | null
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -52669,6 +52737,7 @@ export namespace Prisma {
 
   export type TestUpdateWithoutQuestionsInput = {
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -52689,6 +52758,7 @@ export namespace Prisma {
     courseId?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -52732,6 +52802,7 @@ export namespace Prisma {
 
   export type TestCreateWithoutImagesInput = {
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -52752,6 +52823,7 @@ export namespace Prisma {
     courseId: number
     courseTypeId?: number | null
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -52783,6 +52855,7 @@ export namespace Prisma {
 
   export type TestUpdateWithoutImagesInput = {
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -52803,6 +52876,7 @@ export namespace Prisma {
     courseId?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -52864,6 +52938,7 @@ export namespace Prisma {
 
   export type TestCreateWithoutAttemptsInput = {
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -52884,6 +52959,7 @@ export namespace Prisma {
     courseId: number
     courseTypeId?: number | null
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -52993,6 +53069,7 @@ export namespace Prisma {
 
   export type TestUpdateWithoutAttemptsInput = {
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -53013,6 +53090,7 @@ export namespace Prisma {
     courseId?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -53078,6 +53156,7 @@ export namespace Prisma {
     optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
+    section?: string | null
     subject?: string | null
     topic?: string | null
     test: TestCreateNestedOneWithoutQuestionsInput
@@ -53099,6 +53178,7 @@ export namespace Prisma {
     optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
+    section?: string | null
     subject?: string | null
     topic?: string | null
   }
@@ -53161,6 +53241,7 @@ export namespace Prisma {
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    section?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     topic?: NullableStringFieldUpdateOperationsInput | string | null
     test?: TestUpdateOneRequiredWithoutQuestionsNestedInput
@@ -53182,6 +53263,7 @@ export namespace Prisma {
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    section?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     topic?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -53841,6 +53923,7 @@ export namespace Prisma {
     id?: number
     courseTypeId?: number | null
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -54072,6 +54155,7 @@ export namespace Prisma {
 
   export type TestUpdateWithoutCourseInput = {
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -54091,6 +54175,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -54109,6 +54194,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -54147,6 +54233,7 @@ export namespace Prisma {
     id?: number
     courseId: number
     name: string
+    instructions?: string | null
     type?: $Enums.TestType
     totalQuestions: number
     durationMinutes: number
@@ -54243,6 +54330,7 @@ export namespace Prisma {
 
   export type TestUpdateWithoutCourseTypeInput = {
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -54262,6 +54350,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     courseId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -54280,6 +54369,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     courseId?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    instructions?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumTestTypeFieldUpdateOperationsInput | $Enums.TestType
     totalQuestions?: IntFieldUpdateOperationsInput | number
     durationMinutes?: IntFieldUpdateOperationsInput | number
@@ -54710,6 +54800,7 @@ export namespace Prisma {
     optionDImageUrl?: string | null
     correctOption: string
     explanation?: string | null
+    section?: string | null
     subject?: string | null
     topic?: string | null
   }
@@ -54745,6 +54836,7 @@ export namespace Prisma {
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    section?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     topic?: NullableStringFieldUpdateOperationsInput | string | null
     answers?: TestAttemptAnswerUpdateManyWithoutTestQuestionNestedInput
@@ -54765,6 +54857,7 @@ export namespace Prisma {
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    section?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     topic?: NullableStringFieldUpdateOperationsInput | string | null
     answers?: TestAttemptAnswerUncheckedUpdateManyWithoutTestQuestionNestedInput
@@ -54785,6 +54878,7 @@ export namespace Prisma {
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
+    section?: NullableStringFieldUpdateOperationsInput | string | null
     subject?: NullableStringFieldUpdateOperationsInput | string | null
     topic?: NullableStringFieldUpdateOperationsInput | string | null
   }
