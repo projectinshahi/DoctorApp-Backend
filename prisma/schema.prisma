@@ -31,6 +31,8 @@ model User {
   savedLessons   SavedLesson[]
   lessonProgress LessonProgress[]
   testAttempts   TestAttempt[]
+  comments       LessonComment[]
+  commentReports CommentReport[]
 
   selectedCourseId     Int?
   selectedCourseTypeId Int?
@@ -213,6 +215,10 @@ model Lesson {
   // A quiz-type lesson points at a Quiz instead of stuffing a ref into
   // `content`. Unique: a quiz is served by at most one lesson.
   quizId            Int?         @unique
+  // Per-lesson kill switch for the comment thread. Existing comments stay and
+  // stay visible; only posting stops. Turning a discussion off should not
+  // erase the discussion.
+  commentsEnabled   Boolean      @default(true)
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
 
@@ -224,6 +230,7 @@ model Lesson {
   lessonPlans LessonPlan[]
   savedBy     SavedLesson[]
   progress    LessonProgress[]
+  comments    LessonComment[]
 
   @@index([chapterId, displayOrder])
   @@map("lessons")
@@ -635,4 +642,65 @@ model TestAttemptAnswer {
   @@id([attemptId, testQuestionId])
   @@index([testQuestionId])
   @@map("test_attempt_answers")
+}
+
+
+/// published or hidden. There is deliberately no `reported` value: a report is
+/// something that happened TO a comment, not a state it is in, and the rule is
+/// that a reported comment stays visible until a moderator acts. Folding the
+/// two together would hide it the moment anyone complained, which is exactly
+/// the censorship-by-one-click this design has to avoid.
+enum CommentStatus {
+  published
+  hidden
+}
+
+model LessonComment {
+  id       Int    @id @default(autoincrement())
+  lessonId Int
+  userId   Int
+  // Null for a top-level comment. One level only: a reply to a reply is
+  // re-parented onto the thread root, enforced in the controller because the
+  // database cannot express "at most one level deep".
+  parentId Int?
+  body     String
+  status   CommentStatus @default(published)
+  // Set on the author's own edit, so the UI can show "edited" without
+  // comparing timestamps that also move when a moderator acts.
+  editedAt  DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  lesson  Lesson          @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent  LessonComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies LessonComment[] @relation("CommentReplies")
+  reports CommentReport[]
+
+  // Newest first per lesson, which is how the thread is read.
+  @@index([lessonId, status, createdAt])
+  @@index([parentId])
+  @@index([userId])
+  @@map("lesson_comments")
+}
+
+model CommentReport {
+  id        Int       @id @default(autoincrement())
+  commentId Int
+  userId    Int
+  reason    String?
+  // Null until a moderator decides the comment is fine after all. Hiding or
+  // deleting resolves it implicitly; without this the queue would never empty,
+  // because "looked at it, it is fine" has no other way to be recorded.
+  resolvedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  comment LessonComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // One report per student per comment. Ten taps from one angry student is not
+  // ten reports, and letting it be would let one person dominate the queue.
+  @@unique([commentId, userId])
+  @@index([commentId, resolvedAt])
+  @@map("comment_reports")
 }

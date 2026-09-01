@@ -230,6 +230,7 @@ exports.Prisma.LessonScalarFieldEnum = {
   accessType: 'accessType',
   status: 'status',
   quizId: 'quizId',
+  commentsEnabled: 'commentsEnabled',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -419,6 +420,27 @@ exports.Prisma.TestAttemptAnswerScalarFieldEnum = {
   answeredAt: 'answeredAt'
 };
 
+exports.Prisma.LessonCommentScalarFieldEnum = {
+  id: 'id',
+  lessonId: 'lessonId',
+  userId: 'userId',
+  parentId: 'parentId',
+  body: 'body',
+  status: 'status',
+  editedAt: 'editedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CommentReportScalarFieldEnum = {
+  id: 'id',
+  commentId: 'commentId',
+  userId: 'userId',
+  reason: 'reason',
+  resolvedAt: 'resolvedAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -465,6 +487,11 @@ exports.TestType = exports.$Enums.TestType = {
   GRAND_TEST: 'GRAND_TEST'
 };
 
+exports.CommentStatus = exports.$Enums.CommentStatus = {
+  published: 'published',
+  hidden: 'hidden'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Admin: 'Admin',
@@ -493,7 +520,9 @@ exports.Prisma.ModelName = {
   TestQuestion: 'TestQuestion',
   TestImage: 'TestImage',
   TestAttempt: 'TestAttempt',
-  TestAttemptAnswer: 'TestAttemptAnswer'
+  TestAttemptAnswer: 'TestAttemptAnswer',
+  LessonComment: 'LessonComment',
+  CommentReport: 'CommentReport'
 };
 
 /**

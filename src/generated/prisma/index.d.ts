@@ -153,6 +153,16 @@ export type TestAttempt = $Result.DefaultSelection<Prisma.$TestAttemptPayload>
  * 
  */
 export type TestAttemptAnswer = $Result.DefaultSelection<Prisma.$TestAttemptAnswerPayload>
+/**
+ * Model LessonComment
+ * 
+ */
+export type LessonComment = $Result.DefaultSelection<Prisma.$LessonCommentPayload>
+/**
+ * Model CommentReport
+ * 
+ */
+export type CommentReport = $Result.DefaultSelection<Prisma.$CommentReportPayload>
 
 /**
  * Enums
@@ -207,6 +217,14 @@ export const QuestionStatus: {
 
 export type QuestionStatus = (typeof QuestionStatus)[keyof typeof QuestionStatus]
 
+
+export const CommentStatus: {
+  published: 'published',
+  hidden: 'hidden'
+};
+
+export type CommentStatus = (typeof CommentStatus)[keyof typeof CommentStatus]
+
 }
 
 export type TestType = $Enums.TestType
@@ -232,6 +250,10 @@ export const Difficulty: typeof $Enums.Difficulty
 export type QuestionStatus = $Enums.QuestionStatus
 
 export const QuestionStatus: typeof $Enums.QuestionStatus
+
+export type CommentStatus = $Enums.CommentStatus
+
+export const CommentStatus: typeof $Enums.CommentStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -633,6 +655,26 @@ export class PrismaClient<
     * ```
     */
   get testAttemptAnswer(): Prisma.TestAttemptAnswerDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.lessonComment`: Exposes CRUD operations for the **LessonComment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LessonComments
+    * const lessonComments = await prisma.lessonComment.findMany()
+    * ```
+    */
+  get lessonComment(): Prisma.LessonCommentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.commentReport`: Exposes CRUD operations for the **CommentReport** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CommentReports
+    * const commentReports = await prisma.commentReport.findMany()
+    * ```
+    */
+  get commentReport(): Prisma.CommentReportDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1107,7 +1149,9 @@ export namespace Prisma {
     TestQuestion: 'TestQuestion',
     TestImage: 'TestImage',
     TestAttempt: 'TestAttempt',
-    TestAttemptAnswer: 'TestAttemptAnswer'
+    TestAttemptAnswer: 'TestAttemptAnswer',
+    LessonComment: 'LessonComment',
+    CommentReport: 'CommentReport'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1123,7 +1167,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "quizQuestion" | "tag" | "questionTag" | "quizAttempt" | "attemptAnswer" | "savedQuestion" | "savedLesson" | "lessonProgress" | "test" | "testQuestion" | "testImage" | "testAttempt" | "testAttemptAnswer"
+      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "quizQuestion" | "tag" | "questionTag" | "quizAttempt" | "attemptAnswer" | "savedQuestion" | "savedLesson" | "lessonProgress" | "test" | "testQuestion" | "testImage" | "testAttempt" | "testAttemptAnswer" | "lessonComment" | "commentReport"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3199,6 +3243,154 @@ export namespace Prisma {
           }
         }
       }
+      LessonComment: {
+        payload: Prisma.$LessonCommentPayload<ExtArgs>
+        fields: Prisma.LessonCommentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LessonCommentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonCommentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LessonCommentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonCommentPayload>
+          }
+          findFirst: {
+            args: Prisma.LessonCommentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonCommentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LessonCommentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonCommentPayload>
+          }
+          findMany: {
+            args: Prisma.LessonCommentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonCommentPayload>[]
+          }
+          create: {
+            args: Prisma.LessonCommentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonCommentPayload>
+          }
+          createMany: {
+            args: Prisma.LessonCommentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LessonCommentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonCommentPayload>[]
+          }
+          delete: {
+            args: Prisma.LessonCommentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonCommentPayload>
+          }
+          update: {
+            args: Prisma.LessonCommentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonCommentPayload>
+          }
+          deleteMany: {
+            args: Prisma.LessonCommentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LessonCommentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LessonCommentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonCommentPayload>[]
+          }
+          upsert: {
+            args: Prisma.LessonCommentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonCommentPayload>
+          }
+          aggregate: {
+            args: Prisma.LessonCommentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLessonComment>
+          }
+          groupBy: {
+            args: Prisma.LessonCommentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LessonCommentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LessonCommentCountArgs<ExtArgs>
+            result: $Utils.Optional<LessonCommentCountAggregateOutputType> | number
+          }
+        }
+      }
+      CommentReport: {
+        payload: Prisma.$CommentReportPayload<ExtArgs>
+        fields: Prisma.CommentReportFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CommentReportFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentReportPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CommentReportFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentReportPayload>
+          }
+          findFirst: {
+            args: Prisma.CommentReportFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentReportPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CommentReportFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentReportPayload>
+          }
+          findMany: {
+            args: Prisma.CommentReportFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentReportPayload>[]
+          }
+          create: {
+            args: Prisma.CommentReportCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentReportPayload>
+          }
+          createMany: {
+            args: Prisma.CommentReportCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CommentReportCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentReportPayload>[]
+          }
+          delete: {
+            args: Prisma.CommentReportDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentReportPayload>
+          }
+          update: {
+            args: Prisma.CommentReportUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentReportPayload>
+          }
+          deleteMany: {
+            args: Prisma.CommentReportDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CommentReportUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CommentReportUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentReportPayload>[]
+          }
+          upsert: {
+            args: Prisma.CommentReportUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CommentReportPayload>
+          }
+          aggregate: {
+            args: Prisma.CommentReportAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCommentReport>
+          }
+          groupBy: {
+            args: Prisma.CommentReportGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CommentReportGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CommentReportCountArgs<ExtArgs>
+            result: $Utils.Optional<CommentReportCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3350,6 +3542,8 @@ export namespace Prisma {
     testImage?: TestImageOmit
     testAttempt?: TestAttemptOmit
     testAttemptAnswer?: TestAttemptAnswerOmit
+    lessonComment?: LessonCommentOmit
+    commentReport?: CommentReportOmit
   }
 
   /* Types for Logging */
@@ -3437,6 +3631,8 @@ export namespace Prisma {
     savedLessons: number
     lessonProgress: number
     testAttempts: number
+    comments: number
+    commentReports: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3447,6 +3643,8 @@ export namespace Prisma {
     savedLessons?: boolean | UserCountOutputTypeCountSavedLessonsArgs
     lessonProgress?: boolean | UserCountOutputTypeCountLessonProgressArgs
     testAttempts?: boolean | UserCountOutputTypeCountTestAttemptsArgs
+    comments?: boolean | UserCountOutputTypeCountCommentsArgs
+    commentReports?: boolean | UserCountOutputTypeCountCommentReportsArgs
   }
 
   // Custom InputTypes
@@ -3507,6 +3705,20 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountTestAttemptsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TestAttemptWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LessonCommentWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCommentReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommentReportWhereInput
   }
 
 
@@ -3812,12 +4024,14 @@ export namespace Prisma {
     lessonPlans: number
     savedBy: number
     progress: number
+    comments: number
   }
 
   export type LessonCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lessonPlans?: boolean | LessonCountOutputTypeCountLessonPlansArgs
     savedBy?: boolean | LessonCountOutputTypeCountSavedByArgs
     progress?: boolean | LessonCountOutputTypeCountProgressArgs
+    comments?: boolean | LessonCountOutputTypeCountCommentsArgs
   }
 
   // Custom InputTypes
@@ -3850,6 +4064,13 @@ export namespace Prisma {
    */
   export type LessonCountOutputTypeCountProgressArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: LessonProgressWhereInput
+  }
+
+  /**
+   * LessonCountOutputType without action
+   */
+  export type LessonCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LessonCommentWhereInput
   }
 
 
@@ -4165,6 +4386,46 @@ export namespace Prisma {
 
 
   /**
+   * Count Type LessonCommentCountOutputType
+   */
+
+  export type LessonCommentCountOutputType = {
+    replies: number
+    reports: number
+  }
+
+  export type LessonCommentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    replies?: boolean | LessonCommentCountOutputTypeCountRepliesArgs
+    reports?: boolean | LessonCommentCountOutputTypeCountReportsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * LessonCommentCountOutputType without action
+   */
+  export type LessonCommentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonCommentCountOutputType
+     */
+    select?: LessonCommentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * LessonCommentCountOutputType without action
+   */
+  export type LessonCommentCountOutputTypeCountRepliesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LessonCommentWhereInput
+  }
+
+  /**
+   * LessonCommentCountOutputType without action
+   */
+  export type LessonCommentCountOutputTypeCountReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommentReportWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -4437,6 +4698,8 @@ export namespace Prisma {
     savedLessons?: boolean | User$savedLessonsArgs<ExtArgs>
     lessonProgress?: boolean | User$lessonProgressArgs<ExtArgs>
     testAttempts?: boolean | User$testAttemptsArgs<ExtArgs>
+    comments?: boolean | User$commentsArgs<ExtArgs>
+    commentReports?: boolean | User$commentReportsArgs<ExtArgs>
     selectedCourse?: boolean | User$selectedCourseArgs<ExtArgs>
     selectedCourseType?: boolean | User$selectedCourseTypeArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -4500,6 +4763,8 @@ export namespace Prisma {
     savedLessons?: boolean | User$savedLessonsArgs<ExtArgs>
     lessonProgress?: boolean | User$lessonProgressArgs<ExtArgs>
     testAttempts?: boolean | User$testAttemptsArgs<ExtArgs>
+    comments?: boolean | User$commentsArgs<ExtArgs>
+    commentReports?: boolean | User$commentReportsArgs<ExtArgs>
     selectedCourse?: boolean | User$selectedCourseArgs<ExtArgs>
     selectedCourseType?: boolean | User$selectedCourseTypeArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -4523,6 +4788,8 @@ export namespace Prisma {
       savedLessons: Prisma.$SavedLessonPayload<ExtArgs>[]
       lessonProgress: Prisma.$LessonProgressPayload<ExtArgs>[]
       testAttempts: Prisma.$TestAttemptPayload<ExtArgs>[]
+      comments: Prisma.$LessonCommentPayload<ExtArgs>[]
+      commentReports: Prisma.$CommentReportPayload<ExtArgs>[]
       selectedCourse: Prisma.$CoursePayload<ExtArgs> | null
       selectedCourseType: Prisma.$CourseTypePayload<ExtArgs> | null
     }
@@ -4940,6 +5207,8 @@ export namespace Prisma {
     savedLessons<T extends User$savedLessonsArgs<ExtArgs> = {}>(args?: Subset<T, User$savedLessonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     lessonProgress<T extends User$lessonProgressArgs<ExtArgs> = {}>(args?: Subset<T, User$lessonProgressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     testAttempts<T extends User$testAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$testAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    comments<T extends User$commentsArgs<ExtArgs> = {}>(args?: Subset<T, User$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    commentReports<T extends User$commentReportsArgs<ExtArgs> = {}>(args?: Subset<T, User$commentReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     selectedCourse<T extends User$selectedCourseArgs<ExtArgs> = {}>(args?: Subset<T, User$selectedCourseArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     selectedCourseType<T extends User$selectedCourseTypeArgs<ExtArgs> = {}>(args?: Subset<T, User$selectedCourseTypeArgs<ExtArgs>>): Prisma__CourseTypeClient<$Result.GetResult<Prisma.$CourseTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -5549,6 +5818,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TestAttemptScalarFieldEnum | TestAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * User.comments
+   */
+  export type User$commentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+    where?: LessonCommentWhereInput
+    orderBy?: LessonCommentOrderByWithRelationInput | LessonCommentOrderByWithRelationInput[]
+    cursor?: LessonCommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LessonCommentScalarFieldEnum | LessonCommentScalarFieldEnum[]
+  }
+
+  /**
+   * User.commentReports
+   */
+  export type User$commentReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentReport
+     */
+    select?: CommentReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommentReport
+     */
+    omit?: CommentReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentReportInclude<ExtArgs> | null
+    where?: CommentReportWhereInput
+    orderBy?: CommentReportOrderByWithRelationInput | CommentReportOrderByWithRelationInput[]
+    cursor?: CommentReportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CommentReportScalarFieldEnum | CommentReportScalarFieldEnum[]
   }
 
   /**
@@ -14181,6 +14498,7 @@ export namespace Prisma {
     accessType: $Enums.AccessType | null
     status: $Enums.CourseStatus | null
     quizId: number | null
+    commentsEnabled: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -14204,6 +14522,7 @@ export namespace Prisma {
     accessType: $Enums.AccessType | null
     status: $Enums.CourseStatus | null
     quizId: number | null
+    commentsEnabled: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -14227,6 +14546,7 @@ export namespace Prisma {
     accessType: number
     status: number
     quizId: number
+    commentsEnabled: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -14266,6 +14586,7 @@ export namespace Prisma {
     accessType?: true
     status?: true
     quizId?: true
+    commentsEnabled?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -14289,6 +14610,7 @@ export namespace Prisma {
     accessType?: true
     status?: true
     quizId?: true
+    commentsEnabled?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -14312,6 +14634,7 @@ export namespace Prisma {
     accessType?: true
     status?: true
     quizId?: true
+    commentsEnabled?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -14422,6 +14745,7 @@ export namespace Prisma {
     accessType: $Enums.AccessType
     status: $Enums.CourseStatus
     quizId: number | null
+    commentsEnabled: boolean
     createdAt: Date
     updatedAt: Date
     _count: LessonCountAggregateOutputType | null
@@ -14464,6 +14788,7 @@ export namespace Prisma {
     accessType?: boolean
     status?: boolean
     quizId?: boolean
+    commentsEnabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
@@ -14471,6 +14796,7 @@ export namespace Prisma {
     lessonPlans?: boolean | Lesson$lessonPlansArgs<ExtArgs>
     savedBy?: boolean | Lesson$savedByArgs<ExtArgs>
     progress?: boolean | Lesson$progressArgs<ExtArgs>
+    comments?: boolean | Lesson$commentsArgs<ExtArgs>
     _count?: boolean | LessonCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lesson"]>
 
@@ -14493,6 +14819,7 @@ export namespace Prisma {
     accessType?: boolean
     status?: boolean
     quizId?: boolean
+    commentsEnabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
@@ -14518,6 +14845,7 @@ export namespace Prisma {
     accessType?: boolean
     status?: boolean
     quizId?: boolean
+    commentsEnabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
@@ -14543,17 +14871,19 @@ export namespace Prisma {
     accessType?: boolean
     status?: boolean
     quizId?: boolean
+    commentsEnabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chapterId" | "title" | "description" | "type" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "thumbnailPublicId" | "noteUrl" | "notePublicId" | "noteFileType" | "content" | "displayOrder" | "isFreePreview" | "accessType" | "status" | "quizId" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
+  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chapterId" | "title" | "description" | "type" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "thumbnailPublicId" | "noteUrl" | "notePublicId" | "noteFileType" | "content" | "displayOrder" | "isFreePreview" | "accessType" | "status" | "quizId" | "commentsEnabled" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
   export type LessonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
     quiz?: boolean | Lesson$quizArgs<ExtArgs>
     lessonPlans?: boolean | Lesson$lessonPlansArgs<ExtArgs>
     savedBy?: boolean | Lesson$savedByArgs<ExtArgs>
     progress?: boolean | Lesson$progressArgs<ExtArgs>
+    comments?: boolean | Lesson$commentsArgs<ExtArgs>
     _count?: boolean | LessonCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LessonIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14573,6 +14903,7 @@ export namespace Prisma {
       lessonPlans: Prisma.$LessonPlanPayload<ExtArgs>[]
       savedBy: Prisma.$SavedLessonPayload<ExtArgs>[]
       progress: Prisma.$LessonProgressPayload<ExtArgs>[]
+      comments: Prisma.$LessonCommentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -14593,6 +14924,7 @@ export namespace Prisma {
       accessType: $Enums.AccessType
       status: $Enums.CourseStatus
       quizId: number | null
+      commentsEnabled: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["lesson"]>
@@ -14994,6 +15326,7 @@ export namespace Prisma {
     lessonPlans<T extends Lesson$lessonPlansArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$lessonPlansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     savedBy<T extends Lesson$savedByArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$savedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     progress<T extends Lesson$progressArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$progressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    comments<T extends Lesson$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15041,6 +15374,7 @@ export namespace Prisma {
     readonly accessType: FieldRef<"Lesson", 'AccessType'>
     readonly status: FieldRef<"Lesson", 'CourseStatus'>
     readonly quizId: FieldRef<"Lesson", 'Int'>
+    readonly commentsEnabled: FieldRef<"Lesson", 'Boolean'>
     readonly createdAt: FieldRef<"Lesson", 'DateTime'>
     readonly updatedAt: FieldRef<"Lesson", 'DateTime'>
   }
@@ -15532,6 +15866,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: LessonProgressScalarFieldEnum | LessonProgressScalarFieldEnum[]
+  }
+
+  /**
+   * Lesson.comments
+   */
+  export type Lesson$commentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+    where?: LessonCommentWhereInput
+    orderBy?: LessonCommentOrderByWithRelationInput | LessonCommentOrderByWithRelationInput[]
+    cursor?: LessonCommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LessonCommentScalarFieldEnum | LessonCommentScalarFieldEnum[]
   }
 
   /**
@@ -37574,6 +37932,2386 @@ export namespace Prisma {
 
 
   /**
+   * Model LessonComment
+   */
+
+  export type AggregateLessonComment = {
+    _count: LessonCommentCountAggregateOutputType | null
+    _avg: LessonCommentAvgAggregateOutputType | null
+    _sum: LessonCommentSumAggregateOutputType | null
+    _min: LessonCommentMinAggregateOutputType | null
+    _max: LessonCommentMaxAggregateOutputType | null
+  }
+
+  export type LessonCommentAvgAggregateOutputType = {
+    id: number | null
+    lessonId: number | null
+    userId: number | null
+    parentId: number | null
+  }
+
+  export type LessonCommentSumAggregateOutputType = {
+    id: number | null
+    lessonId: number | null
+    userId: number | null
+    parentId: number | null
+  }
+
+  export type LessonCommentMinAggregateOutputType = {
+    id: number | null
+    lessonId: number | null
+    userId: number | null
+    parentId: number | null
+    body: string | null
+    status: $Enums.CommentStatus | null
+    editedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type LessonCommentMaxAggregateOutputType = {
+    id: number | null
+    lessonId: number | null
+    userId: number | null
+    parentId: number | null
+    body: string | null
+    status: $Enums.CommentStatus | null
+    editedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type LessonCommentCountAggregateOutputType = {
+    id: number
+    lessonId: number
+    userId: number
+    parentId: number
+    body: number
+    status: number
+    editedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type LessonCommentAvgAggregateInputType = {
+    id?: true
+    lessonId?: true
+    userId?: true
+    parentId?: true
+  }
+
+  export type LessonCommentSumAggregateInputType = {
+    id?: true
+    lessonId?: true
+    userId?: true
+    parentId?: true
+  }
+
+  export type LessonCommentMinAggregateInputType = {
+    id?: true
+    lessonId?: true
+    userId?: true
+    parentId?: true
+    body?: true
+    status?: true
+    editedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type LessonCommentMaxAggregateInputType = {
+    id?: true
+    lessonId?: true
+    userId?: true
+    parentId?: true
+    body?: true
+    status?: true
+    editedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type LessonCommentCountAggregateInputType = {
+    id?: true
+    lessonId?: true
+    userId?: true
+    parentId?: true
+    body?: true
+    status?: true
+    editedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type LessonCommentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LessonComment to aggregate.
+     */
+    where?: LessonCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LessonComments to fetch.
+     */
+    orderBy?: LessonCommentOrderByWithRelationInput | LessonCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LessonCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LessonComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LessonComments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LessonComments
+    **/
+    _count?: true | LessonCommentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LessonCommentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LessonCommentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LessonCommentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LessonCommentMaxAggregateInputType
+  }
+
+  export type GetLessonCommentAggregateType<T extends LessonCommentAggregateArgs> = {
+        [P in keyof T & keyof AggregateLessonComment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLessonComment[P]>
+      : GetScalarType<T[P], AggregateLessonComment[P]>
+  }
+
+
+
+
+  export type LessonCommentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LessonCommentWhereInput
+    orderBy?: LessonCommentOrderByWithAggregationInput | LessonCommentOrderByWithAggregationInput[]
+    by: LessonCommentScalarFieldEnum[] | LessonCommentScalarFieldEnum
+    having?: LessonCommentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LessonCommentCountAggregateInputType | true
+    _avg?: LessonCommentAvgAggregateInputType
+    _sum?: LessonCommentSumAggregateInputType
+    _min?: LessonCommentMinAggregateInputType
+    _max?: LessonCommentMaxAggregateInputType
+  }
+
+  export type LessonCommentGroupByOutputType = {
+    id: number
+    lessonId: number
+    userId: number
+    parentId: number | null
+    body: string
+    status: $Enums.CommentStatus
+    editedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: LessonCommentCountAggregateOutputType | null
+    _avg: LessonCommentAvgAggregateOutputType | null
+    _sum: LessonCommentSumAggregateOutputType | null
+    _min: LessonCommentMinAggregateOutputType | null
+    _max: LessonCommentMaxAggregateOutputType | null
+  }
+
+  type GetLessonCommentGroupByPayload<T extends LessonCommentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LessonCommentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LessonCommentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LessonCommentGroupByOutputType[P]>
+            : GetScalarType<T[P], LessonCommentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LessonCommentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    lessonId?: boolean
+    userId?: boolean
+    parentId?: boolean
+    body?: boolean
+    status?: boolean
+    editedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    parent?: boolean | LessonComment$parentArgs<ExtArgs>
+    replies?: boolean | LessonComment$repliesArgs<ExtArgs>
+    reports?: boolean | LessonComment$reportsArgs<ExtArgs>
+    _count?: boolean | LessonCommentCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lessonComment"]>
+
+  export type LessonCommentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    lessonId?: boolean
+    userId?: boolean
+    parentId?: boolean
+    body?: boolean
+    status?: boolean
+    editedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    parent?: boolean | LessonComment$parentArgs<ExtArgs>
+  }, ExtArgs["result"]["lessonComment"]>
+
+  export type LessonCommentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    lessonId?: boolean
+    userId?: boolean
+    parentId?: boolean
+    body?: boolean
+    status?: boolean
+    editedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    parent?: boolean | LessonComment$parentArgs<ExtArgs>
+  }, ExtArgs["result"]["lessonComment"]>
+
+  export type LessonCommentSelectScalar = {
+    id?: boolean
+    lessonId?: boolean
+    userId?: boolean
+    parentId?: boolean
+    body?: boolean
+    status?: boolean
+    editedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type LessonCommentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "lessonId" | "userId" | "parentId" | "body" | "status" | "editedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["lessonComment"]>
+  export type LessonCommentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    parent?: boolean | LessonComment$parentArgs<ExtArgs>
+    replies?: boolean | LessonComment$repliesArgs<ExtArgs>
+    reports?: boolean | LessonComment$reportsArgs<ExtArgs>
+    _count?: boolean | LessonCommentCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type LessonCommentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    parent?: boolean | LessonComment$parentArgs<ExtArgs>
+  }
+  export type LessonCommentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    parent?: boolean | LessonComment$parentArgs<ExtArgs>
+  }
+
+  export type $LessonCommentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LessonComment"
+    objects: {
+      lesson: Prisma.$LessonPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+      parent: Prisma.$LessonCommentPayload<ExtArgs> | null
+      replies: Prisma.$LessonCommentPayload<ExtArgs>[]
+      reports: Prisma.$CommentReportPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      lessonId: number
+      userId: number
+      parentId: number | null
+      body: string
+      status: $Enums.CommentStatus
+      editedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["lessonComment"]>
+    composites: {}
+  }
+
+  type LessonCommentGetPayload<S extends boolean | null | undefined | LessonCommentDefaultArgs> = $Result.GetResult<Prisma.$LessonCommentPayload, S>
+
+  type LessonCommentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LessonCommentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LessonCommentCountAggregateInputType | true
+    }
+
+  export interface LessonCommentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LessonComment'], meta: { name: 'LessonComment' } }
+    /**
+     * Find zero or one LessonComment that matches the filter.
+     * @param {LessonCommentFindUniqueArgs} args - Arguments to find a LessonComment
+     * @example
+     * // Get one LessonComment
+     * const lessonComment = await prisma.lessonComment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LessonCommentFindUniqueArgs>(args: SelectSubset<T, LessonCommentFindUniqueArgs<ExtArgs>>): Prisma__LessonCommentClient<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LessonComment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LessonCommentFindUniqueOrThrowArgs} args - Arguments to find a LessonComment
+     * @example
+     * // Get one LessonComment
+     * const lessonComment = await prisma.lessonComment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LessonCommentFindUniqueOrThrowArgs>(args: SelectSubset<T, LessonCommentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LessonCommentClient<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LessonComment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonCommentFindFirstArgs} args - Arguments to find a LessonComment
+     * @example
+     * // Get one LessonComment
+     * const lessonComment = await prisma.lessonComment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LessonCommentFindFirstArgs>(args?: SelectSubset<T, LessonCommentFindFirstArgs<ExtArgs>>): Prisma__LessonCommentClient<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LessonComment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonCommentFindFirstOrThrowArgs} args - Arguments to find a LessonComment
+     * @example
+     * // Get one LessonComment
+     * const lessonComment = await prisma.lessonComment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LessonCommentFindFirstOrThrowArgs>(args?: SelectSubset<T, LessonCommentFindFirstOrThrowArgs<ExtArgs>>): Prisma__LessonCommentClient<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LessonComments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonCommentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LessonComments
+     * const lessonComments = await prisma.lessonComment.findMany()
+     * 
+     * // Get first 10 LessonComments
+     * const lessonComments = await prisma.lessonComment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const lessonCommentWithIdOnly = await prisma.lessonComment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LessonCommentFindManyArgs>(args?: SelectSubset<T, LessonCommentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LessonComment.
+     * @param {LessonCommentCreateArgs} args - Arguments to create a LessonComment.
+     * @example
+     * // Create one LessonComment
+     * const LessonComment = await prisma.lessonComment.create({
+     *   data: {
+     *     // ... data to create a LessonComment
+     *   }
+     * })
+     * 
+     */
+    create<T extends LessonCommentCreateArgs>(args: SelectSubset<T, LessonCommentCreateArgs<ExtArgs>>): Prisma__LessonCommentClient<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LessonComments.
+     * @param {LessonCommentCreateManyArgs} args - Arguments to create many LessonComments.
+     * @example
+     * // Create many LessonComments
+     * const lessonComment = await prisma.lessonComment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LessonCommentCreateManyArgs>(args?: SelectSubset<T, LessonCommentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LessonComments and returns the data saved in the database.
+     * @param {LessonCommentCreateManyAndReturnArgs} args - Arguments to create many LessonComments.
+     * @example
+     * // Create many LessonComments
+     * const lessonComment = await prisma.lessonComment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LessonComments and only return the `id`
+     * const lessonCommentWithIdOnly = await prisma.lessonComment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LessonCommentCreateManyAndReturnArgs>(args?: SelectSubset<T, LessonCommentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LessonComment.
+     * @param {LessonCommentDeleteArgs} args - Arguments to delete one LessonComment.
+     * @example
+     * // Delete one LessonComment
+     * const LessonComment = await prisma.lessonComment.delete({
+     *   where: {
+     *     // ... filter to delete one LessonComment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LessonCommentDeleteArgs>(args: SelectSubset<T, LessonCommentDeleteArgs<ExtArgs>>): Prisma__LessonCommentClient<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LessonComment.
+     * @param {LessonCommentUpdateArgs} args - Arguments to update one LessonComment.
+     * @example
+     * // Update one LessonComment
+     * const lessonComment = await prisma.lessonComment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LessonCommentUpdateArgs>(args: SelectSubset<T, LessonCommentUpdateArgs<ExtArgs>>): Prisma__LessonCommentClient<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LessonComments.
+     * @param {LessonCommentDeleteManyArgs} args - Arguments to filter LessonComments to delete.
+     * @example
+     * // Delete a few LessonComments
+     * const { count } = await prisma.lessonComment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LessonCommentDeleteManyArgs>(args?: SelectSubset<T, LessonCommentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LessonComments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonCommentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LessonComments
+     * const lessonComment = await prisma.lessonComment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LessonCommentUpdateManyArgs>(args: SelectSubset<T, LessonCommentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LessonComments and returns the data updated in the database.
+     * @param {LessonCommentUpdateManyAndReturnArgs} args - Arguments to update many LessonComments.
+     * @example
+     * // Update many LessonComments
+     * const lessonComment = await prisma.lessonComment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LessonComments and only return the `id`
+     * const lessonCommentWithIdOnly = await prisma.lessonComment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LessonCommentUpdateManyAndReturnArgs>(args: SelectSubset<T, LessonCommentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LessonComment.
+     * @param {LessonCommentUpsertArgs} args - Arguments to update or create a LessonComment.
+     * @example
+     * // Update or create a LessonComment
+     * const lessonComment = await prisma.lessonComment.upsert({
+     *   create: {
+     *     // ... data to create a LessonComment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LessonComment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LessonCommentUpsertArgs>(args: SelectSubset<T, LessonCommentUpsertArgs<ExtArgs>>): Prisma__LessonCommentClient<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LessonComments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonCommentCountArgs} args - Arguments to filter LessonComments to count.
+     * @example
+     * // Count the number of LessonComments
+     * const count = await prisma.lessonComment.count({
+     *   where: {
+     *     // ... the filter for the LessonComments we want to count
+     *   }
+     * })
+    **/
+    count<T extends LessonCommentCountArgs>(
+      args?: Subset<T, LessonCommentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LessonCommentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LessonComment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonCommentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LessonCommentAggregateArgs>(args: Subset<T, LessonCommentAggregateArgs>): Prisma.PrismaPromise<GetLessonCommentAggregateType<T>>
+
+    /**
+     * Group by LessonComment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonCommentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LessonCommentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LessonCommentGroupByArgs['orderBy'] }
+        : { orderBy?: LessonCommentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LessonCommentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLessonCommentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LessonComment model
+   */
+  readonly fields: LessonCommentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LessonComment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LessonCommentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    lesson<T extends LessonDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LessonDefaultArgs<ExtArgs>>): Prisma__LessonClient<$Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    parent<T extends LessonComment$parentArgs<ExtArgs> = {}>(args?: Subset<T, LessonComment$parentArgs<ExtArgs>>): Prisma__LessonCommentClient<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    replies<T extends LessonComment$repliesArgs<ExtArgs> = {}>(args?: Subset<T, LessonComment$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    reports<T extends LessonComment$reportsArgs<ExtArgs> = {}>(args?: Subset<T, LessonComment$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LessonComment model
+   */
+  interface LessonCommentFieldRefs {
+    readonly id: FieldRef<"LessonComment", 'Int'>
+    readonly lessonId: FieldRef<"LessonComment", 'Int'>
+    readonly userId: FieldRef<"LessonComment", 'Int'>
+    readonly parentId: FieldRef<"LessonComment", 'Int'>
+    readonly body: FieldRef<"LessonComment", 'String'>
+    readonly status: FieldRef<"LessonComment", 'CommentStatus'>
+    readonly editedAt: FieldRef<"LessonComment", 'DateTime'>
+    readonly createdAt: FieldRef<"LessonComment", 'DateTime'>
+    readonly updatedAt: FieldRef<"LessonComment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LessonComment findUnique
+   */
+  export type LessonCommentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonComment to fetch.
+     */
+    where: LessonCommentWhereUniqueInput
+  }
+
+  /**
+   * LessonComment findUniqueOrThrow
+   */
+  export type LessonCommentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonComment to fetch.
+     */
+    where: LessonCommentWhereUniqueInput
+  }
+
+  /**
+   * LessonComment findFirst
+   */
+  export type LessonCommentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonComment to fetch.
+     */
+    where?: LessonCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LessonComments to fetch.
+     */
+    orderBy?: LessonCommentOrderByWithRelationInput | LessonCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LessonComments.
+     */
+    cursor?: LessonCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LessonComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LessonComments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LessonComments.
+     */
+    distinct?: LessonCommentScalarFieldEnum | LessonCommentScalarFieldEnum[]
+  }
+
+  /**
+   * LessonComment findFirstOrThrow
+   */
+  export type LessonCommentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonComment to fetch.
+     */
+    where?: LessonCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LessonComments to fetch.
+     */
+    orderBy?: LessonCommentOrderByWithRelationInput | LessonCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LessonComments.
+     */
+    cursor?: LessonCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LessonComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LessonComments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LessonComments.
+     */
+    distinct?: LessonCommentScalarFieldEnum | LessonCommentScalarFieldEnum[]
+  }
+
+  /**
+   * LessonComment findMany
+   */
+  export type LessonCommentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonComments to fetch.
+     */
+    where?: LessonCommentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LessonComments to fetch.
+     */
+    orderBy?: LessonCommentOrderByWithRelationInput | LessonCommentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LessonComments.
+     */
+    cursor?: LessonCommentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LessonComments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LessonComments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LessonComments.
+     */
+    distinct?: LessonCommentScalarFieldEnum | LessonCommentScalarFieldEnum[]
+  }
+
+  /**
+   * LessonComment create
+   */
+  export type LessonCommentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LessonComment.
+     */
+    data: XOR<LessonCommentCreateInput, LessonCommentUncheckedCreateInput>
+  }
+
+  /**
+   * LessonComment createMany
+   */
+  export type LessonCommentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LessonComments.
+     */
+    data: LessonCommentCreateManyInput | LessonCommentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LessonComment createManyAndReturn
+   */
+  export type LessonCommentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * The data used to create many LessonComments.
+     */
+    data: LessonCommentCreateManyInput | LessonCommentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LessonComment update
+   */
+  export type LessonCommentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LessonComment.
+     */
+    data: XOR<LessonCommentUpdateInput, LessonCommentUncheckedUpdateInput>
+    /**
+     * Choose, which LessonComment to update.
+     */
+    where: LessonCommentWhereUniqueInput
+  }
+
+  /**
+   * LessonComment updateMany
+   */
+  export type LessonCommentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LessonComments.
+     */
+    data: XOR<LessonCommentUpdateManyMutationInput, LessonCommentUncheckedUpdateManyInput>
+    /**
+     * Filter which LessonComments to update
+     */
+    where?: LessonCommentWhereInput
+    /**
+     * Limit how many LessonComments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LessonComment updateManyAndReturn
+   */
+  export type LessonCommentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * The data used to update LessonComments.
+     */
+    data: XOR<LessonCommentUpdateManyMutationInput, LessonCommentUncheckedUpdateManyInput>
+    /**
+     * Filter which LessonComments to update
+     */
+    where?: LessonCommentWhereInput
+    /**
+     * Limit how many LessonComments to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LessonComment upsert
+   */
+  export type LessonCommentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LessonComment to update in case it exists.
+     */
+    where: LessonCommentWhereUniqueInput
+    /**
+     * In case the LessonComment found by the `where` argument doesn't exist, create a new LessonComment with this data.
+     */
+    create: XOR<LessonCommentCreateInput, LessonCommentUncheckedCreateInput>
+    /**
+     * In case the LessonComment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LessonCommentUpdateInput, LessonCommentUncheckedUpdateInput>
+  }
+
+  /**
+   * LessonComment delete
+   */
+  export type LessonCommentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+    /**
+     * Filter which LessonComment to delete.
+     */
+    where: LessonCommentWhereUniqueInput
+  }
+
+  /**
+   * LessonComment deleteMany
+   */
+  export type LessonCommentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LessonComments to delete
+     */
+    where?: LessonCommentWhereInput
+    /**
+     * Limit how many LessonComments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LessonComment.parent
+   */
+  export type LessonComment$parentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+    where?: LessonCommentWhereInput
+  }
+
+  /**
+   * LessonComment.replies
+   */
+  export type LessonComment$repliesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+    where?: LessonCommentWhereInput
+    orderBy?: LessonCommentOrderByWithRelationInput | LessonCommentOrderByWithRelationInput[]
+    cursor?: LessonCommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LessonCommentScalarFieldEnum | LessonCommentScalarFieldEnum[]
+  }
+
+  /**
+   * LessonComment.reports
+   */
+  export type LessonComment$reportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentReport
+     */
+    select?: CommentReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommentReport
+     */
+    omit?: CommentReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentReportInclude<ExtArgs> | null
+    where?: CommentReportWhereInput
+    orderBy?: CommentReportOrderByWithRelationInput | CommentReportOrderByWithRelationInput[]
+    cursor?: CommentReportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CommentReportScalarFieldEnum | CommentReportScalarFieldEnum[]
+  }
+
+  /**
+   * LessonComment without action
+   */
+  export type LessonCommentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CommentReport
+   */
+
+  export type AggregateCommentReport = {
+    _count: CommentReportCountAggregateOutputType | null
+    _avg: CommentReportAvgAggregateOutputType | null
+    _sum: CommentReportSumAggregateOutputType | null
+    _min: CommentReportMinAggregateOutputType | null
+    _max: CommentReportMaxAggregateOutputType | null
+  }
+
+  export type CommentReportAvgAggregateOutputType = {
+    id: number | null
+    commentId: number | null
+    userId: number | null
+  }
+
+  export type CommentReportSumAggregateOutputType = {
+    id: number | null
+    commentId: number | null
+    userId: number | null
+  }
+
+  export type CommentReportMinAggregateOutputType = {
+    id: number | null
+    commentId: number | null
+    userId: number | null
+    reason: string | null
+    resolvedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type CommentReportMaxAggregateOutputType = {
+    id: number | null
+    commentId: number | null
+    userId: number | null
+    reason: string | null
+    resolvedAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type CommentReportCountAggregateOutputType = {
+    id: number
+    commentId: number
+    userId: number
+    reason: number
+    resolvedAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type CommentReportAvgAggregateInputType = {
+    id?: true
+    commentId?: true
+    userId?: true
+  }
+
+  export type CommentReportSumAggregateInputType = {
+    id?: true
+    commentId?: true
+    userId?: true
+  }
+
+  export type CommentReportMinAggregateInputType = {
+    id?: true
+    commentId?: true
+    userId?: true
+    reason?: true
+    resolvedAt?: true
+    createdAt?: true
+  }
+
+  export type CommentReportMaxAggregateInputType = {
+    id?: true
+    commentId?: true
+    userId?: true
+    reason?: true
+    resolvedAt?: true
+    createdAt?: true
+  }
+
+  export type CommentReportCountAggregateInputType = {
+    id?: true
+    commentId?: true
+    userId?: true
+    reason?: true
+    resolvedAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type CommentReportAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CommentReport to aggregate.
+     */
+    where?: CommentReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommentReports to fetch.
+     */
+    orderBy?: CommentReportOrderByWithRelationInput | CommentReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CommentReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommentReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommentReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CommentReports
+    **/
+    _count?: true | CommentReportCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CommentReportAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CommentReportSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CommentReportMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CommentReportMaxAggregateInputType
+  }
+
+  export type GetCommentReportAggregateType<T extends CommentReportAggregateArgs> = {
+        [P in keyof T & keyof AggregateCommentReport]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCommentReport[P]>
+      : GetScalarType<T[P], AggregateCommentReport[P]>
+  }
+
+
+
+
+  export type CommentReportGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CommentReportWhereInput
+    orderBy?: CommentReportOrderByWithAggregationInput | CommentReportOrderByWithAggregationInput[]
+    by: CommentReportScalarFieldEnum[] | CommentReportScalarFieldEnum
+    having?: CommentReportScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CommentReportCountAggregateInputType | true
+    _avg?: CommentReportAvgAggregateInputType
+    _sum?: CommentReportSumAggregateInputType
+    _min?: CommentReportMinAggregateInputType
+    _max?: CommentReportMaxAggregateInputType
+  }
+
+  export type CommentReportGroupByOutputType = {
+    id: number
+    commentId: number
+    userId: number
+    reason: string | null
+    resolvedAt: Date | null
+    createdAt: Date
+    _count: CommentReportCountAggregateOutputType | null
+    _avg: CommentReportAvgAggregateOutputType | null
+    _sum: CommentReportSumAggregateOutputType | null
+    _min: CommentReportMinAggregateOutputType | null
+    _max: CommentReportMaxAggregateOutputType | null
+  }
+
+  type GetCommentReportGroupByPayload<T extends CommentReportGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CommentReportGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CommentReportGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CommentReportGroupByOutputType[P]>
+            : GetScalarType<T[P], CommentReportGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CommentReportSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    commentId?: boolean
+    userId?: boolean
+    reason?: boolean
+    resolvedAt?: boolean
+    createdAt?: boolean
+    comment?: boolean | LessonCommentDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["commentReport"]>
+
+  export type CommentReportSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    commentId?: boolean
+    userId?: boolean
+    reason?: boolean
+    resolvedAt?: boolean
+    createdAt?: boolean
+    comment?: boolean | LessonCommentDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["commentReport"]>
+
+  export type CommentReportSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    commentId?: boolean
+    userId?: boolean
+    reason?: boolean
+    resolvedAt?: boolean
+    createdAt?: boolean
+    comment?: boolean | LessonCommentDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["commentReport"]>
+
+  export type CommentReportSelectScalar = {
+    id?: boolean
+    commentId?: boolean
+    userId?: boolean
+    reason?: boolean
+    resolvedAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type CommentReportOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "commentId" | "userId" | "reason" | "resolvedAt" | "createdAt", ExtArgs["result"]["commentReport"]>
+  export type CommentReportInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    comment?: boolean | LessonCommentDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type CommentReportIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    comment?: boolean | LessonCommentDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type CommentReportIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    comment?: boolean | LessonCommentDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $CommentReportPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CommentReport"
+    objects: {
+      comment: Prisma.$LessonCommentPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      commentId: number
+      userId: number
+      reason: string | null
+      resolvedAt: Date | null
+      createdAt: Date
+    }, ExtArgs["result"]["commentReport"]>
+    composites: {}
+  }
+
+  type CommentReportGetPayload<S extends boolean | null | undefined | CommentReportDefaultArgs> = $Result.GetResult<Prisma.$CommentReportPayload, S>
+
+  type CommentReportCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CommentReportFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CommentReportCountAggregateInputType | true
+    }
+
+  export interface CommentReportDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CommentReport'], meta: { name: 'CommentReport' } }
+    /**
+     * Find zero or one CommentReport that matches the filter.
+     * @param {CommentReportFindUniqueArgs} args - Arguments to find a CommentReport
+     * @example
+     * // Get one CommentReport
+     * const commentReport = await prisma.commentReport.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CommentReportFindUniqueArgs>(args: SelectSubset<T, CommentReportFindUniqueArgs<ExtArgs>>): Prisma__CommentReportClient<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CommentReport that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CommentReportFindUniqueOrThrowArgs} args - Arguments to find a CommentReport
+     * @example
+     * // Get one CommentReport
+     * const commentReport = await prisma.commentReport.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CommentReportFindUniqueOrThrowArgs>(args: SelectSubset<T, CommentReportFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CommentReportClient<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CommentReport that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentReportFindFirstArgs} args - Arguments to find a CommentReport
+     * @example
+     * // Get one CommentReport
+     * const commentReport = await prisma.commentReport.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CommentReportFindFirstArgs>(args?: SelectSubset<T, CommentReportFindFirstArgs<ExtArgs>>): Prisma__CommentReportClient<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CommentReport that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentReportFindFirstOrThrowArgs} args - Arguments to find a CommentReport
+     * @example
+     * // Get one CommentReport
+     * const commentReport = await prisma.commentReport.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CommentReportFindFirstOrThrowArgs>(args?: SelectSubset<T, CommentReportFindFirstOrThrowArgs<ExtArgs>>): Prisma__CommentReportClient<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CommentReports that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentReportFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CommentReports
+     * const commentReports = await prisma.commentReport.findMany()
+     * 
+     * // Get first 10 CommentReports
+     * const commentReports = await prisma.commentReport.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const commentReportWithIdOnly = await prisma.commentReport.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CommentReportFindManyArgs>(args?: SelectSubset<T, CommentReportFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CommentReport.
+     * @param {CommentReportCreateArgs} args - Arguments to create a CommentReport.
+     * @example
+     * // Create one CommentReport
+     * const CommentReport = await prisma.commentReport.create({
+     *   data: {
+     *     // ... data to create a CommentReport
+     *   }
+     * })
+     * 
+     */
+    create<T extends CommentReportCreateArgs>(args: SelectSubset<T, CommentReportCreateArgs<ExtArgs>>): Prisma__CommentReportClient<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CommentReports.
+     * @param {CommentReportCreateManyArgs} args - Arguments to create many CommentReports.
+     * @example
+     * // Create many CommentReports
+     * const commentReport = await prisma.commentReport.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CommentReportCreateManyArgs>(args?: SelectSubset<T, CommentReportCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CommentReports and returns the data saved in the database.
+     * @param {CommentReportCreateManyAndReturnArgs} args - Arguments to create many CommentReports.
+     * @example
+     * // Create many CommentReports
+     * const commentReport = await prisma.commentReport.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CommentReports and only return the `id`
+     * const commentReportWithIdOnly = await prisma.commentReport.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CommentReportCreateManyAndReturnArgs>(args?: SelectSubset<T, CommentReportCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CommentReport.
+     * @param {CommentReportDeleteArgs} args - Arguments to delete one CommentReport.
+     * @example
+     * // Delete one CommentReport
+     * const CommentReport = await prisma.commentReport.delete({
+     *   where: {
+     *     // ... filter to delete one CommentReport
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CommentReportDeleteArgs>(args: SelectSubset<T, CommentReportDeleteArgs<ExtArgs>>): Prisma__CommentReportClient<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CommentReport.
+     * @param {CommentReportUpdateArgs} args - Arguments to update one CommentReport.
+     * @example
+     * // Update one CommentReport
+     * const commentReport = await prisma.commentReport.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CommentReportUpdateArgs>(args: SelectSubset<T, CommentReportUpdateArgs<ExtArgs>>): Prisma__CommentReportClient<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CommentReports.
+     * @param {CommentReportDeleteManyArgs} args - Arguments to filter CommentReports to delete.
+     * @example
+     * // Delete a few CommentReports
+     * const { count } = await prisma.commentReport.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CommentReportDeleteManyArgs>(args?: SelectSubset<T, CommentReportDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CommentReports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentReportUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CommentReports
+     * const commentReport = await prisma.commentReport.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CommentReportUpdateManyArgs>(args: SelectSubset<T, CommentReportUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CommentReports and returns the data updated in the database.
+     * @param {CommentReportUpdateManyAndReturnArgs} args - Arguments to update many CommentReports.
+     * @example
+     * // Update many CommentReports
+     * const commentReport = await prisma.commentReport.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CommentReports and only return the `id`
+     * const commentReportWithIdOnly = await prisma.commentReport.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CommentReportUpdateManyAndReturnArgs>(args: SelectSubset<T, CommentReportUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CommentReport.
+     * @param {CommentReportUpsertArgs} args - Arguments to update or create a CommentReport.
+     * @example
+     * // Update or create a CommentReport
+     * const commentReport = await prisma.commentReport.upsert({
+     *   create: {
+     *     // ... data to create a CommentReport
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CommentReport we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CommentReportUpsertArgs>(args: SelectSubset<T, CommentReportUpsertArgs<ExtArgs>>): Prisma__CommentReportClient<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CommentReports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentReportCountArgs} args - Arguments to filter CommentReports to count.
+     * @example
+     * // Count the number of CommentReports
+     * const count = await prisma.commentReport.count({
+     *   where: {
+     *     // ... the filter for the CommentReports we want to count
+     *   }
+     * })
+    **/
+    count<T extends CommentReportCountArgs>(
+      args?: Subset<T, CommentReportCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CommentReportCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CommentReport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentReportAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CommentReportAggregateArgs>(args: Subset<T, CommentReportAggregateArgs>): Prisma.PrismaPromise<GetCommentReportAggregateType<T>>
+
+    /**
+     * Group by CommentReport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CommentReportGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CommentReportGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CommentReportGroupByArgs['orderBy'] }
+        : { orderBy?: CommentReportGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CommentReportGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCommentReportGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CommentReport model
+   */
+  readonly fields: CommentReportFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CommentReport.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CommentReportClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    comment<T extends LessonCommentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LessonCommentDefaultArgs<ExtArgs>>): Prisma__LessonCommentClient<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CommentReport model
+   */
+  interface CommentReportFieldRefs {
+    readonly id: FieldRef<"CommentReport", 'Int'>
+    readonly commentId: FieldRef<"CommentReport", 'Int'>
+    readonly userId: FieldRef<"CommentReport", 'Int'>
+    readonly reason: FieldRef<"CommentReport", 'String'>
+    readonly resolvedAt: FieldRef<"CommentReport", 'DateTime'>
+    readonly createdAt: FieldRef<"CommentReport", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CommentReport findUnique
+   */
+  export type CommentReportFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentReport
+     */
+    select?: CommentReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommentReport
+     */
+    omit?: CommentReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CommentReport to fetch.
+     */
+    where: CommentReportWhereUniqueInput
+  }
+
+  /**
+   * CommentReport findUniqueOrThrow
+   */
+  export type CommentReportFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentReport
+     */
+    select?: CommentReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommentReport
+     */
+    omit?: CommentReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CommentReport to fetch.
+     */
+    where: CommentReportWhereUniqueInput
+  }
+
+  /**
+   * CommentReport findFirst
+   */
+  export type CommentReportFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentReport
+     */
+    select?: CommentReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommentReport
+     */
+    omit?: CommentReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CommentReport to fetch.
+     */
+    where?: CommentReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommentReports to fetch.
+     */
+    orderBy?: CommentReportOrderByWithRelationInput | CommentReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CommentReports.
+     */
+    cursor?: CommentReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommentReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommentReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CommentReports.
+     */
+    distinct?: CommentReportScalarFieldEnum | CommentReportScalarFieldEnum[]
+  }
+
+  /**
+   * CommentReport findFirstOrThrow
+   */
+  export type CommentReportFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentReport
+     */
+    select?: CommentReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommentReport
+     */
+    omit?: CommentReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CommentReport to fetch.
+     */
+    where?: CommentReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommentReports to fetch.
+     */
+    orderBy?: CommentReportOrderByWithRelationInput | CommentReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CommentReports.
+     */
+    cursor?: CommentReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommentReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommentReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CommentReports.
+     */
+    distinct?: CommentReportScalarFieldEnum | CommentReportScalarFieldEnum[]
+  }
+
+  /**
+   * CommentReport findMany
+   */
+  export type CommentReportFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentReport
+     */
+    select?: CommentReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommentReport
+     */
+    omit?: CommentReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentReportInclude<ExtArgs> | null
+    /**
+     * Filter, which CommentReports to fetch.
+     */
+    where?: CommentReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CommentReports to fetch.
+     */
+    orderBy?: CommentReportOrderByWithRelationInput | CommentReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CommentReports.
+     */
+    cursor?: CommentReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CommentReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CommentReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CommentReports.
+     */
+    distinct?: CommentReportScalarFieldEnum | CommentReportScalarFieldEnum[]
+  }
+
+  /**
+   * CommentReport create
+   */
+  export type CommentReportCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentReport
+     */
+    select?: CommentReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommentReport
+     */
+    omit?: CommentReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentReportInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CommentReport.
+     */
+    data: XOR<CommentReportCreateInput, CommentReportUncheckedCreateInput>
+  }
+
+  /**
+   * CommentReport createMany
+   */
+  export type CommentReportCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CommentReports.
+     */
+    data: CommentReportCreateManyInput | CommentReportCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CommentReport createManyAndReturn
+   */
+  export type CommentReportCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentReport
+     */
+    select?: CommentReportSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommentReport
+     */
+    omit?: CommentReportOmit<ExtArgs> | null
+    /**
+     * The data used to create many CommentReports.
+     */
+    data: CommentReportCreateManyInput | CommentReportCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentReportIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CommentReport update
+   */
+  export type CommentReportUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentReport
+     */
+    select?: CommentReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommentReport
+     */
+    omit?: CommentReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentReportInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CommentReport.
+     */
+    data: XOR<CommentReportUpdateInput, CommentReportUncheckedUpdateInput>
+    /**
+     * Choose, which CommentReport to update.
+     */
+    where: CommentReportWhereUniqueInput
+  }
+
+  /**
+   * CommentReport updateMany
+   */
+  export type CommentReportUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CommentReports.
+     */
+    data: XOR<CommentReportUpdateManyMutationInput, CommentReportUncheckedUpdateManyInput>
+    /**
+     * Filter which CommentReports to update
+     */
+    where?: CommentReportWhereInput
+    /**
+     * Limit how many CommentReports to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CommentReport updateManyAndReturn
+   */
+  export type CommentReportUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentReport
+     */
+    select?: CommentReportSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommentReport
+     */
+    omit?: CommentReportOmit<ExtArgs> | null
+    /**
+     * The data used to update CommentReports.
+     */
+    data: XOR<CommentReportUpdateManyMutationInput, CommentReportUncheckedUpdateManyInput>
+    /**
+     * Filter which CommentReports to update
+     */
+    where?: CommentReportWhereInput
+    /**
+     * Limit how many CommentReports to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentReportIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CommentReport upsert
+   */
+  export type CommentReportUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentReport
+     */
+    select?: CommentReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommentReport
+     */
+    omit?: CommentReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentReportInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CommentReport to update in case it exists.
+     */
+    where: CommentReportWhereUniqueInput
+    /**
+     * In case the CommentReport found by the `where` argument doesn't exist, create a new CommentReport with this data.
+     */
+    create: XOR<CommentReportCreateInput, CommentReportUncheckedCreateInput>
+    /**
+     * In case the CommentReport was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CommentReportUpdateInput, CommentReportUncheckedUpdateInput>
+  }
+
+  /**
+   * CommentReport delete
+   */
+  export type CommentReportDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentReport
+     */
+    select?: CommentReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommentReport
+     */
+    omit?: CommentReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentReportInclude<ExtArgs> | null
+    /**
+     * Filter which CommentReport to delete.
+     */
+    where: CommentReportWhereUniqueInput
+  }
+
+  /**
+   * CommentReport deleteMany
+   */
+  export type CommentReportDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CommentReports to delete
+     */
+    where?: CommentReportWhereInput
+    /**
+     * Limit how many CommentReports to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CommentReport without action
+   */
+  export type CommentReportDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CommentReport
+     */
+    select?: CommentReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CommentReport
+     */
+    omit?: CommentReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CommentReportInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -37721,6 +40459,7 @@ export namespace Prisma {
     accessType: 'accessType',
     status: 'status',
     quizId: 'quizId',
+    commentsEnabled: 'commentsEnabled',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -37970,6 +40709,33 @@ export namespace Prisma {
   export type TestAttemptAnswerScalarFieldEnum = (typeof TestAttemptAnswerScalarFieldEnum)[keyof typeof TestAttemptAnswerScalarFieldEnum]
 
 
+  export const LessonCommentScalarFieldEnum: {
+    id: 'id',
+    lessonId: 'lessonId',
+    userId: 'userId',
+    parentId: 'parentId',
+    body: 'body',
+    status: 'status',
+    editedAt: 'editedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type LessonCommentScalarFieldEnum = (typeof LessonCommentScalarFieldEnum)[keyof typeof LessonCommentScalarFieldEnum]
+
+
+  export const CommentReportScalarFieldEnum: {
+    id: 'id',
+    commentId: 'commentId',
+    userId: 'userId',
+    reason: 'reason',
+    resolvedAt: 'resolvedAt',
+    createdAt: 'createdAt'
+  };
+
+  export type CommentReportScalarFieldEnum = (typeof CommentReportScalarFieldEnum)[keyof typeof CommentReportScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -38144,6 +40910,20 @@ export namespace Prisma {
    */
   export type ListEnumTestTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TestType[]'>
     
+
+
+  /**
+   * Reference to a field of type 'CommentStatus'
+   */
+  export type EnumCommentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommentStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'CommentStatus[]'
+   */
+  export type ListEnumCommentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CommentStatus[]'>
+    
   /**
    * Deep Input Types
    */
@@ -38172,6 +40952,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonListRelationFilter
     lessonProgress?: LessonProgressListRelationFilter
     testAttempts?: TestAttemptListRelationFilter
+    comments?: LessonCommentListRelationFilter
+    commentReports?: CommentReportListRelationFilter
     selectedCourse?: XOR<CourseNullableScalarRelationFilter, CourseWhereInput> | null
     selectedCourseType?: XOR<CourseTypeNullableScalarRelationFilter, CourseTypeWhereInput> | null
   }
@@ -38196,6 +40978,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonOrderByRelationAggregateInput
     lessonProgress?: LessonProgressOrderByRelationAggregateInput
     testAttempts?: TestAttemptOrderByRelationAggregateInput
+    comments?: LessonCommentOrderByRelationAggregateInput
+    commentReports?: CommentReportOrderByRelationAggregateInput
     selectedCourse?: CourseOrderByWithRelationInput
     selectedCourseType?: CourseTypeOrderByWithRelationInput
   }
@@ -38223,6 +41007,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonListRelationFilter
     lessonProgress?: LessonProgressListRelationFilter
     testAttempts?: TestAttemptListRelationFilter
+    comments?: LessonCommentListRelationFilter
+    commentReports?: CommentReportListRelationFilter
     selectedCourse?: XOR<CourseNullableScalarRelationFilter, CourseWhereInput> | null
     selectedCourseType?: XOR<CourseTypeNullableScalarRelationFilter, CourseTypeWhereInput> | null
   }, "id" | "email">
@@ -38838,6 +41624,7 @@ export namespace Prisma {
     accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
     status?: EnumCourseStatusFilter<"Lesson"> | $Enums.CourseStatus
     quizId?: IntNullableFilter<"Lesson"> | number | null
+    commentsEnabled?: BoolFilter<"Lesson"> | boolean
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
     chapter?: XOR<ChapterScalarRelationFilter, ChapterWhereInput>
@@ -38845,6 +41632,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanListRelationFilter
     savedBy?: SavedLessonListRelationFilter
     progress?: LessonProgressListRelationFilter
+    comments?: LessonCommentListRelationFilter
   }
 
   export type LessonOrderByWithRelationInput = {
@@ -38866,6 +41654,7 @@ export namespace Prisma {
     accessType?: SortOrder
     status?: SortOrder
     quizId?: SortOrderInput | SortOrder
+    commentsEnabled?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     chapter?: ChapterOrderByWithRelationInput
@@ -38873,6 +41662,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanOrderByRelationAggregateInput
     savedBy?: SavedLessonOrderByRelationAggregateInput
     progress?: LessonProgressOrderByRelationAggregateInput
+    comments?: LessonCommentOrderByRelationAggregateInput
   }
 
   export type LessonWhereUniqueInput = Prisma.AtLeast<{
@@ -38897,6 +41687,7 @@ export namespace Prisma {
     isFreePreview?: BoolFilter<"Lesson"> | boolean
     accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
     status?: EnumCourseStatusFilter<"Lesson"> | $Enums.CourseStatus
+    commentsEnabled?: BoolFilter<"Lesson"> | boolean
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
     chapter?: XOR<ChapterScalarRelationFilter, ChapterWhereInput>
@@ -38904,6 +41695,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanListRelationFilter
     savedBy?: SavedLessonListRelationFilter
     progress?: LessonProgressListRelationFilter
+    comments?: LessonCommentListRelationFilter
   }, "id" | "quizId">
 
   export type LessonOrderByWithAggregationInput = {
@@ -38925,6 +41717,7 @@ export namespace Prisma {
     accessType?: SortOrder
     status?: SortOrder
     quizId?: SortOrderInput | SortOrder
+    commentsEnabled?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: LessonCountOrderByAggregateInput
@@ -38956,6 +41749,7 @@ export namespace Prisma {
     accessType?: EnumAccessTypeWithAggregatesFilter<"Lesson"> | $Enums.AccessType
     status?: EnumCourseStatusWithAggregatesFilter<"Lesson"> | $Enums.CourseStatus
     quizId?: IntNullableWithAggregatesFilter<"Lesson"> | number | null
+    commentsEnabled?: BoolWithAggregatesFilter<"Lesson"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
   }
@@ -40304,6 +43098,161 @@ export namespace Prisma {
     answeredAt?: DateTimeWithAggregatesFilter<"TestAttemptAnswer"> | Date | string
   }
 
+  export type LessonCommentWhereInput = {
+    AND?: LessonCommentWhereInput | LessonCommentWhereInput[]
+    OR?: LessonCommentWhereInput[]
+    NOT?: LessonCommentWhereInput | LessonCommentWhereInput[]
+    id?: IntFilter<"LessonComment"> | number
+    lessonId?: IntFilter<"LessonComment"> | number
+    userId?: IntFilter<"LessonComment"> | number
+    parentId?: IntNullableFilter<"LessonComment"> | number | null
+    body?: StringFilter<"LessonComment"> | string
+    status?: EnumCommentStatusFilter<"LessonComment"> | $Enums.CommentStatus
+    editedAt?: DateTimeNullableFilter<"LessonComment"> | Date | string | null
+    createdAt?: DateTimeFilter<"LessonComment"> | Date | string
+    updatedAt?: DateTimeFilter<"LessonComment"> | Date | string
+    lesson?: XOR<LessonScalarRelationFilter, LessonWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    parent?: XOR<LessonCommentNullableScalarRelationFilter, LessonCommentWhereInput> | null
+    replies?: LessonCommentListRelationFilter
+    reports?: CommentReportListRelationFilter
+  }
+
+  export type LessonCommentOrderByWithRelationInput = {
+    id?: SortOrder
+    lessonId?: SortOrder
+    userId?: SortOrder
+    parentId?: SortOrderInput | SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    editedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lesson?: LessonOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+    parent?: LessonCommentOrderByWithRelationInput
+    replies?: LessonCommentOrderByRelationAggregateInput
+    reports?: CommentReportOrderByRelationAggregateInput
+  }
+
+  export type LessonCommentWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: LessonCommentWhereInput | LessonCommentWhereInput[]
+    OR?: LessonCommentWhereInput[]
+    NOT?: LessonCommentWhereInput | LessonCommentWhereInput[]
+    lessonId?: IntFilter<"LessonComment"> | number
+    userId?: IntFilter<"LessonComment"> | number
+    parentId?: IntNullableFilter<"LessonComment"> | number | null
+    body?: StringFilter<"LessonComment"> | string
+    status?: EnumCommentStatusFilter<"LessonComment"> | $Enums.CommentStatus
+    editedAt?: DateTimeNullableFilter<"LessonComment"> | Date | string | null
+    createdAt?: DateTimeFilter<"LessonComment"> | Date | string
+    updatedAt?: DateTimeFilter<"LessonComment"> | Date | string
+    lesson?: XOR<LessonScalarRelationFilter, LessonWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    parent?: XOR<LessonCommentNullableScalarRelationFilter, LessonCommentWhereInput> | null
+    replies?: LessonCommentListRelationFilter
+    reports?: CommentReportListRelationFilter
+  }, "id">
+
+  export type LessonCommentOrderByWithAggregationInput = {
+    id?: SortOrder
+    lessonId?: SortOrder
+    userId?: SortOrder
+    parentId?: SortOrderInput | SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    editedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: LessonCommentCountOrderByAggregateInput
+    _avg?: LessonCommentAvgOrderByAggregateInput
+    _max?: LessonCommentMaxOrderByAggregateInput
+    _min?: LessonCommentMinOrderByAggregateInput
+    _sum?: LessonCommentSumOrderByAggregateInput
+  }
+
+  export type LessonCommentScalarWhereWithAggregatesInput = {
+    AND?: LessonCommentScalarWhereWithAggregatesInput | LessonCommentScalarWhereWithAggregatesInput[]
+    OR?: LessonCommentScalarWhereWithAggregatesInput[]
+    NOT?: LessonCommentScalarWhereWithAggregatesInput | LessonCommentScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"LessonComment"> | number
+    lessonId?: IntWithAggregatesFilter<"LessonComment"> | number
+    userId?: IntWithAggregatesFilter<"LessonComment"> | number
+    parentId?: IntNullableWithAggregatesFilter<"LessonComment"> | number | null
+    body?: StringWithAggregatesFilter<"LessonComment"> | string
+    status?: EnumCommentStatusWithAggregatesFilter<"LessonComment"> | $Enums.CommentStatus
+    editedAt?: DateTimeNullableWithAggregatesFilter<"LessonComment"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"LessonComment"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"LessonComment"> | Date | string
+  }
+
+  export type CommentReportWhereInput = {
+    AND?: CommentReportWhereInput | CommentReportWhereInput[]
+    OR?: CommentReportWhereInput[]
+    NOT?: CommentReportWhereInput | CommentReportWhereInput[]
+    id?: IntFilter<"CommentReport"> | number
+    commentId?: IntFilter<"CommentReport"> | number
+    userId?: IntFilter<"CommentReport"> | number
+    reason?: StringNullableFilter<"CommentReport"> | string | null
+    resolvedAt?: DateTimeNullableFilter<"CommentReport"> | Date | string | null
+    createdAt?: DateTimeFilter<"CommentReport"> | Date | string
+    comment?: XOR<LessonCommentScalarRelationFilter, LessonCommentWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type CommentReportOrderByWithRelationInput = {
+    id?: SortOrder
+    commentId?: SortOrder
+    userId?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    resolvedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    comment?: LessonCommentOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type CommentReportWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    commentId_userId?: CommentReportCommentIdUserIdCompoundUniqueInput
+    AND?: CommentReportWhereInput | CommentReportWhereInput[]
+    OR?: CommentReportWhereInput[]
+    NOT?: CommentReportWhereInput | CommentReportWhereInput[]
+    commentId?: IntFilter<"CommentReport"> | number
+    userId?: IntFilter<"CommentReport"> | number
+    reason?: StringNullableFilter<"CommentReport"> | string | null
+    resolvedAt?: DateTimeNullableFilter<"CommentReport"> | Date | string | null
+    createdAt?: DateTimeFilter<"CommentReport"> | Date | string
+    comment?: XOR<LessonCommentScalarRelationFilter, LessonCommentWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "commentId_userId">
+
+  export type CommentReportOrderByWithAggregationInput = {
+    id?: SortOrder
+    commentId?: SortOrder
+    userId?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    resolvedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: CommentReportCountOrderByAggregateInput
+    _avg?: CommentReportAvgOrderByAggregateInput
+    _max?: CommentReportMaxOrderByAggregateInput
+    _min?: CommentReportMinOrderByAggregateInput
+    _sum?: CommentReportSumOrderByAggregateInput
+  }
+
+  export type CommentReportScalarWhereWithAggregatesInput = {
+    AND?: CommentReportScalarWhereWithAggregatesInput | CommentReportScalarWhereWithAggregatesInput[]
+    OR?: CommentReportScalarWhereWithAggregatesInput[]
+    NOT?: CommentReportScalarWhereWithAggregatesInput | CommentReportScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"CommentReport"> | number
+    commentId?: IntWithAggregatesFilter<"CommentReport"> | number
+    userId?: IntWithAggregatesFilter<"CommentReport"> | number
+    reason?: StringNullableWithAggregatesFilter<"CommentReport"> | string | null
+    resolvedAt?: DateTimeNullableWithAggregatesFilter<"CommentReport"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CommentReport"> | Date | string
+  }
+
   export type UserCreateInput = {
     email: string
     password?: string | null
@@ -40321,6 +43270,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    comments?: LessonCommentCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -40345,6 +43296,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -40364,6 +43317,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -40388,6 +43343,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -41025,6 +43982,7 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
+    commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
@@ -41032,6 +43990,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateInput = {
@@ -41053,11 +44012,13 @@ export namespace Prisma {
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
     quizId?: number | null
+    commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUpdateInput = {
@@ -41076,6 +44037,7 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
@@ -41083,6 +44045,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateInput = {
@@ -41104,11 +44067,13 @@ export namespace Prisma {
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonCreateManyInput = {
@@ -41130,6 +44095,7 @@ export namespace Prisma {
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
     quizId?: number | null
+    commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -41150,6 +44116,7 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -41173,6 +44140,7 @@ export namespace Prisma {
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -42473,6 +45441,150 @@ export namespace Prisma {
     answeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type LessonCommentCreateInput = {
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lesson: LessonCreateNestedOneWithoutCommentsInput
+    user: UserCreateNestedOneWithoutCommentsInput
+    parent?: LessonCommentCreateNestedOneWithoutRepliesInput
+    replies?: LessonCommentCreateNestedManyWithoutParentInput
+    reports?: CommentReportCreateNestedManyWithoutCommentInput
+  }
+
+  export type LessonCommentUncheckedCreateInput = {
+    id?: number
+    lessonId: number
+    userId: number
+    parentId?: number | null
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: LessonCommentUncheckedCreateNestedManyWithoutParentInput
+    reports?: CommentReportUncheckedCreateNestedManyWithoutCommentInput
+  }
+
+  export type LessonCommentUpdateInput = {
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lesson?: LessonUpdateOneRequiredWithoutCommentsNestedInput
+    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
+    parent?: LessonCommentUpdateOneWithoutRepliesNestedInput
+    replies?: LessonCommentUpdateManyWithoutParentNestedInput
+    reports?: CommentReportUpdateManyWithoutCommentNestedInput
+  }
+
+  export type LessonCommentUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    parentId?: NullableIntFieldUpdateOperationsInput | number | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: LessonCommentUncheckedUpdateManyWithoutParentNestedInput
+    reports?: CommentReportUncheckedUpdateManyWithoutCommentNestedInput
+  }
+
+  export type LessonCommentCreateManyInput = {
+    id?: number
+    lessonId: number
+    userId: number
+    parentId?: number | null
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LessonCommentUpdateManyMutationInput = {
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonCommentUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    parentId?: NullableIntFieldUpdateOperationsInput | number | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommentReportCreateInput = {
+    reason?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    comment: LessonCommentCreateNestedOneWithoutReportsInput
+    user: UserCreateNestedOneWithoutCommentReportsInput
+  }
+
+  export type CommentReportUncheckedCreateInput = {
+    id?: number
+    commentId: number
+    userId: number
+    reason?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type CommentReportUpdateInput = {
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    comment?: LessonCommentUpdateOneRequiredWithoutReportsNestedInput
+    user?: UserUpdateOneRequiredWithoutCommentReportsNestedInput
+  }
+
+  export type CommentReportUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    commentId?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommentReportCreateManyInput = {
+    id?: number
+    commentId: number
+    userId: number
+    reason?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type CommentReportUpdateManyMutationInput = {
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommentReportUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    commentId?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -42578,6 +45690,18 @@ export namespace Prisma {
     none?: TestAttemptWhereInput
   }
 
+  export type LessonCommentListRelationFilter = {
+    every?: LessonCommentWhereInput
+    some?: LessonCommentWhereInput
+    none?: LessonCommentWhereInput
+  }
+
+  export type CommentReportListRelationFilter = {
+    every?: CommentReportWhereInput
+    some?: CommentReportWhereInput
+    none?: CommentReportWhereInput
+  }
+
   export type CourseNullableScalarRelationFilter = {
     is?: CourseWhereInput | null
     isNot?: CourseWhereInput | null
@@ -42618,6 +45742,14 @@ export namespace Prisma {
   }
 
   export type TestAttemptOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type LessonCommentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CommentReportOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -43319,6 +46451,7 @@ export namespace Prisma {
     accessType?: SortOrder
     status?: SortOrder
     quizId?: SortOrder
+    commentsEnabled?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -43349,6 +46482,7 @@ export namespace Prisma {
     accessType?: SortOrder
     status?: SortOrder
     quizId?: SortOrder
+    commentsEnabled?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -43372,6 +46506,7 @@ export namespace Prisma {
     accessType?: SortOrder
     status?: SortOrder
     quizId?: SortOrder
+    commentsEnabled?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -44471,6 +47606,127 @@ export namespace Prisma {
     marksAwarded?: SortOrder
   }
 
+  export type EnumCommentStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CommentStatus | EnumCommentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CommentStatus[] | ListEnumCommentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CommentStatus[] | ListEnumCommentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCommentStatusFilter<$PrismaModel> | $Enums.CommentStatus
+  }
+
+  export type LessonCommentNullableScalarRelationFilter = {
+    is?: LessonCommentWhereInput | null
+    isNot?: LessonCommentWhereInput | null
+  }
+
+  export type LessonCommentCountOrderByAggregateInput = {
+    id?: SortOrder
+    lessonId?: SortOrder
+    userId?: SortOrder
+    parentId?: SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    editedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LessonCommentAvgOrderByAggregateInput = {
+    id?: SortOrder
+    lessonId?: SortOrder
+    userId?: SortOrder
+    parentId?: SortOrder
+  }
+
+  export type LessonCommentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    lessonId?: SortOrder
+    userId?: SortOrder
+    parentId?: SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    editedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LessonCommentMinOrderByAggregateInput = {
+    id?: SortOrder
+    lessonId?: SortOrder
+    userId?: SortOrder
+    parentId?: SortOrder
+    body?: SortOrder
+    status?: SortOrder
+    editedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LessonCommentSumOrderByAggregateInput = {
+    id?: SortOrder
+    lessonId?: SortOrder
+    userId?: SortOrder
+    parentId?: SortOrder
+  }
+
+  export type EnumCommentStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CommentStatus | EnumCommentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CommentStatus[] | ListEnumCommentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CommentStatus[] | ListEnumCommentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCommentStatusWithAggregatesFilter<$PrismaModel> | $Enums.CommentStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCommentStatusFilter<$PrismaModel>
+    _max?: NestedEnumCommentStatusFilter<$PrismaModel>
+  }
+
+  export type LessonCommentScalarRelationFilter = {
+    is?: LessonCommentWhereInput
+    isNot?: LessonCommentWhereInput
+  }
+
+  export type CommentReportCommentIdUserIdCompoundUniqueInput = {
+    commentId: number
+    userId: number
+  }
+
+  export type CommentReportCountOrderByAggregateInput = {
+    id?: SortOrder
+    commentId?: SortOrder
+    userId?: SortOrder
+    reason?: SortOrder
+    resolvedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CommentReportAvgOrderByAggregateInput = {
+    id?: SortOrder
+    commentId?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type CommentReportMaxOrderByAggregateInput = {
+    id?: SortOrder
+    commentId?: SortOrder
+    userId?: SortOrder
+    reason?: SortOrder
+    resolvedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CommentReportMinOrderByAggregateInput = {
+    id?: SortOrder
+    commentId?: SortOrder
+    userId?: SortOrder
+    reason?: SortOrder
+    resolvedAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CommentReportSumOrderByAggregateInput = {
+    id?: SortOrder
+    commentId?: SortOrder
+    userId?: SortOrder
+  }
+
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -44518,6 +47774,20 @@ export namespace Prisma {
     connectOrCreate?: TestAttemptCreateOrConnectWithoutUserInput | TestAttemptCreateOrConnectWithoutUserInput[]
     createMany?: TestAttemptCreateManyUserInputEnvelope
     connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+  }
+
+  export type LessonCommentCreateNestedManyWithoutUserInput = {
+    create?: XOR<LessonCommentCreateWithoutUserInput, LessonCommentUncheckedCreateWithoutUserInput> | LessonCommentCreateWithoutUserInput[] | LessonCommentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutUserInput | LessonCommentCreateOrConnectWithoutUserInput[]
+    createMany?: LessonCommentCreateManyUserInputEnvelope
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+  }
+
+  export type CommentReportCreateNestedManyWithoutUserInput = {
+    create?: XOR<CommentReportCreateWithoutUserInput, CommentReportUncheckedCreateWithoutUserInput> | CommentReportCreateWithoutUserInput[] | CommentReportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CommentReportCreateOrConnectWithoutUserInput | CommentReportCreateOrConnectWithoutUserInput[]
+    createMany?: CommentReportCreateManyUserInputEnvelope
+    connect?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
   }
 
   export type CourseCreateNestedOneWithoutSelectedByInput = {
@@ -44579,6 +47849,20 @@ export namespace Prisma {
     connectOrCreate?: TestAttemptCreateOrConnectWithoutUserInput | TestAttemptCreateOrConnectWithoutUserInput[]
     createMany?: TestAttemptCreateManyUserInputEnvelope
     connect?: TestAttemptWhereUniqueInput | TestAttemptWhereUniqueInput[]
+  }
+
+  export type LessonCommentUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<LessonCommentCreateWithoutUserInput, LessonCommentUncheckedCreateWithoutUserInput> | LessonCommentCreateWithoutUserInput[] | LessonCommentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutUserInput | LessonCommentCreateOrConnectWithoutUserInput[]
+    createMany?: LessonCommentCreateManyUserInputEnvelope
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+  }
+
+  export type CommentReportUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<CommentReportCreateWithoutUserInput, CommentReportUncheckedCreateWithoutUserInput> | CommentReportCreateWithoutUserInput[] | CommentReportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CommentReportCreateOrConnectWithoutUserInput | CommentReportCreateOrConnectWithoutUserInput[]
+    createMany?: CommentReportCreateManyUserInputEnvelope
+    connect?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -44689,6 +47973,34 @@ export namespace Prisma {
     update?: TestAttemptUpdateWithWhereUniqueWithoutUserInput | TestAttemptUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: TestAttemptUpdateManyWithWhereWithoutUserInput | TestAttemptUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
+  }
+
+  export type LessonCommentUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LessonCommentCreateWithoutUserInput, LessonCommentUncheckedCreateWithoutUserInput> | LessonCommentCreateWithoutUserInput[] | LessonCommentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutUserInput | LessonCommentCreateOrConnectWithoutUserInput[]
+    upsert?: LessonCommentUpsertWithWhereUniqueWithoutUserInput | LessonCommentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LessonCommentCreateManyUserInputEnvelope
+    set?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    disconnect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    delete?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    update?: LessonCommentUpdateWithWhereUniqueWithoutUserInput | LessonCommentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LessonCommentUpdateManyWithWhereWithoutUserInput | LessonCommentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LessonCommentScalarWhereInput | LessonCommentScalarWhereInput[]
+  }
+
+  export type CommentReportUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CommentReportCreateWithoutUserInput, CommentReportUncheckedCreateWithoutUserInput> | CommentReportCreateWithoutUserInput[] | CommentReportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CommentReportCreateOrConnectWithoutUserInput | CommentReportCreateOrConnectWithoutUserInput[]
+    upsert?: CommentReportUpsertWithWhereUniqueWithoutUserInput | CommentReportUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CommentReportCreateManyUserInputEnvelope
+    set?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    disconnect?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    delete?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    connect?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    update?: CommentReportUpdateWithWhereUniqueWithoutUserInput | CommentReportUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CommentReportUpdateManyWithWhereWithoutUserInput | CommentReportUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CommentReportScalarWhereInput | CommentReportScalarWhereInput[]
   }
 
   export type CourseUpdateOneWithoutSelectedByNestedInput = {
@@ -44823,6 +48135,34 @@ export namespace Prisma {
     update?: TestAttemptUpdateWithWhereUniqueWithoutUserInput | TestAttemptUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: TestAttemptUpdateManyWithWhereWithoutUserInput | TestAttemptUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: TestAttemptScalarWhereInput | TestAttemptScalarWhereInput[]
+  }
+
+  export type LessonCommentUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LessonCommentCreateWithoutUserInput, LessonCommentUncheckedCreateWithoutUserInput> | LessonCommentCreateWithoutUserInput[] | LessonCommentUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutUserInput | LessonCommentCreateOrConnectWithoutUserInput[]
+    upsert?: LessonCommentUpsertWithWhereUniqueWithoutUserInput | LessonCommentUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LessonCommentCreateManyUserInputEnvelope
+    set?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    disconnect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    delete?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    update?: LessonCommentUpdateWithWhereUniqueWithoutUserInput | LessonCommentUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LessonCommentUpdateManyWithWhereWithoutUserInput | LessonCommentUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LessonCommentScalarWhereInput | LessonCommentScalarWhereInput[]
+  }
+
+  export type CommentReportUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<CommentReportCreateWithoutUserInput, CommentReportUncheckedCreateWithoutUserInput> | CommentReportCreateWithoutUserInput[] | CommentReportUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: CommentReportCreateOrConnectWithoutUserInput | CommentReportCreateOrConnectWithoutUserInput[]
+    upsert?: CommentReportUpsertWithWhereUniqueWithoutUserInput | CommentReportUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: CommentReportCreateManyUserInputEnvelope
+    set?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    disconnect?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    delete?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    connect?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    update?: CommentReportUpdateWithWhereUniqueWithoutUserInput | CommentReportUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: CommentReportUpdateManyWithWhereWithoutUserInput | CommentReportUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: CommentReportScalarWhereInput | CommentReportScalarWhereInput[]
   }
 
   export type CourseCreateNestedManyWithoutAdminInput = {
@@ -45712,6 +49052,13 @@ export namespace Prisma {
     connect?: LessonProgressWhereUniqueInput | LessonProgressWhereUniqueInput[]
   }
 
+  export type LessonCommentCreateNestedManyWithoutLessonInput = {
+    create?: XOR<LessonCommentCreateWithoutLessonInput, LessonCommentUncheckedCreateWithoutLessonInput> | LessonCommentCreateWithoutLessonInput[] | LessonCommentUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutLessonInput | LessonCommentCreateOrConnectWithoutLessonInput[]
+    createMany?: LessonCommentCreateManyLessonInputEnvelope
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+  }
+
   export type LessonPlanUncheckedCreateNestedManyWithoutLessonInput = {
     create?: XOR<LessonPlanCreateWithoutLessonInput, LessonPlanUncheckedCreateWithoutLessonInput> | LessonPlanCreateWithoutLessonInput[] | LessonPlanUncheckedCreateWithoutLessonInput[]
     connectOrCreate?: LessonPlanCreateOrConnectWithoutLessonInput | LessonPlanCreateOrConnectWithoutLessonInput[]
@@ -45731,6 +49078,13 @@ export namespace Prisma {
     connectOrCreate?: LessonProgressCreateOrConnectWithoutLessonInput | LessonProgressCreateOrConnectWithoutLessonInput[]
     createMany?: LessonProgressCreateManyLessonInputEnvelope
     connect?: LessonProgressWhereUniqueInput | LessonProgressWhereUniqueInput[]
+  }
+
+  export type LessonCommentUncheckedCreateNestedManyWithoutLessonInput = {
+    create?: XOR<LessonCommentCreateWithoutLessonInput, LessonCommentUncheckedCreateWithoutLessonInput> | LessonCommentCreateWithoutLessonInput[] | LessonCommentUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutLessonInput | LessonCommentCreateOrConnectWithoutLessonInput[]
+    createMany?: LessonCommentCreateManyLessonInputEnvelope
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
   }
 
   export type EnumLessonTypeFieldUpdateOperationsInput = {
@@ -45797,6 +49151,20 @@ export namespace Prisma {
     deleteMany?: LessonProgressScalarWhereInput | LessonProgressScalarWhereInput[]
   }
 
+  export type LessonCommentUpdateManyWithoutLessonNestedInput = {
+    create?: XOR<LessonCommentCreateWithoutLessonInput, LessonCommentUncheckedCreateWithoutLessonInput> | LessonCommentCreateWithoutLessonInput[] | LessonCommentUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutLessonInput | LessonCommentCreateOrConnectWithoutLessonInput[]
+    upsert?: LessonCommentUpsertWithWhereUniqueWithoutLessonInput | LessonCommentUpsertWithWhereUniqueWithoutLessonInput[]
+    createMany?: LessonCommentCreateManyLessonInputEnvelope
+    set?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    disconnect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    delete?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    update?: LessonCommentUpdateWithWhereUniqueWithoutLessonInput | LessonCommentUpdateWithWhereUniqueWithoutLessonInput[]
+    updateMany?: LessonCommentUpdateManyWithWhereWithoutLessonInput | LessonCommentUpdateManyWithWhereWithoutLessonInput[]
+    deleteMany?: LessonCommentScalarWhereInput | LessonCommentScalarWhereInput[]
+  }
+
   export type LessonPlanUncheckedUpdateManyWithoutLessonNestedInput = {
     create?: XOR<LessonPlanCreateWithoutLessonInput, LessonPlanUncheckedCreateWithoutLessonInput> | LessonPlanCreateWithoutLessonInput[] | LessonPlanUncheckedCreateWithoutLessonInput[]
     connectOrCreate?: LessonPlanCreateOrConnectWithoutLessonInput | LessonPlanCreateOrConnectWithoutLessonInput[]
@@ -45837,6 +49205,20 @@ export namespace Prisma {
     update?: LessonProgressUpdateWithWhereUniqueWithoutLessonInput | LessonProgressUpdateWithWhereUniqueWithoutLessonInput[]
     updateMany?: LessonProgressUpdateManyWithWhereWithoutLessonInput | LessonProgressUpdateManyWithWhereWithoutLessonInput[]
     deleteMany?: LessonProgressScalarWhereInput | LessonProgressScalarWhereInput[]
+  }
+
+  export type LessonCommentUncheckedUpdateManyWithoutLessonNestedInput = {
+    create?: XOR<LessonCommentCreateWithoutLessonInput, LessonCommentUncheckedCreateWithoutLessonInput> | LessonCommentCreateWithoutLessonInput[] | LessonCommentUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutLessonInput | LessonCommentCreateOrConnectWithoutLessonInput[]
+    upsert?: LessonCommentUpsertWithWhereUniqueWithoutLessonInput | LessonCommentUpsertWithWhereUniqueWithoutLessonInput[]
+    createMany?: LessonCommentCreateManyLessonInputEnvelope
+    set?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    disconnect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    delete?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    update?: LessonCommentUpdateWithWhereUniqueWithoutLessonInput | LessonCommentUpdateWithWhereUniqueWithoutLessonInput[]
+    updateMany?: LessonCommentUpdateManyWithWhereWithoutLessonInput | LessonCommentUpdateManyWithWhereWithoutLessonInput[]
+    deleteMany?: LessonCommentScalarWhereInput | LessonCommentScalarWhereInput[]
   }
 
   export type LessonCreateNestedOneWithoutLessonPlansInput = {
@@ -46988,6 +50370,166 @@ export namespace Prisma {
     update?: XOR<XOR<TestQuestionUpdateToOneWithWhereWithoutAnswersInput, TestQuestionUpdateWithoutAnswersInput>, TestQuestionUncheckedUpdateWithoutAnswersInput>
   }
 
+  export type LessonCreateNestedOneWithoutCommentsInput = {
+    create?: XOR<LessonCreateWithoutCommentsInput, LessonUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: LessonCreateOrConnectWithoutCommentsInput
+    connect?: LessonWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutCommentsInput = {
+    create?: XOR<UserCreateWithoutCommentsInput, UserUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCommentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type LessonCommentCreateNestedOneWithoutRepliesInput = {
+    create?: XOR<LessonCommentCreateWithoutRepliesInput, LessonCommentUncheckedCreateWithoutRepliesInput>
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutRepliesInput
+    connect?: LessonCommentWhereUniqueInput
+  }
+
+  export type LessonCommentCreateNestedManyWithoutParentInput = {
+    create?: XOR<LessonCommentCreateWithoutParentInput, LessonCommentUncheckedCreateWithoutParentInput> | LessonCommentCreateWithoutParentInput[] | LessonCommentUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutParentInput | LessonCommentCreateOrConnectWithoutParentInput[]
+    createMany?: LessonCommentCreateManyParentInputEnvelope
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+  }
+
+  export type CommentReportCreateNestedManyWithoutCommentInput = {
+    create?: XOR<CommentReportCreateWithoutCommentInput, CommentReportUncheckedCreateWithoutCommentInput> | CommentReportCreateWithoutCommentInput[] | CommentReportUncheckedCreateWithoutCommentInput[]
+    connectOrCreate?: CommentReportCreateOrConnectWithoutCommentInput | CommentReportCreateOrConnectWithoutCommentInput[]
+    createMany?: CommentReportCreateManyCommentInputEnvelope
+    connect?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+  }
+
+  export type LessonCommentUncheckedCreateNestedManyWithoutParentInput = {
+    create?: XOR<LessonCommentCreateWithoutParentInput, LessonCommentUncheckedCreateWithoutParentInput> | LessonCommentCreateWithoutParentInput[] | LessonCommentUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutParentInput | LessonCommentCreateOrConnectWithoutParentInput[]
+    createMany?: LessonCommentCreateManyParentInputEnvelope
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+  }
+
+  export type CommentReportUncheckedCreateNestedManyWithoutCommentInput = {
+    create?: XOR<CommentReportCreateWithoutCommentInput, CommentReportUncheckedCreateWithoutCommentInput> | CommentReportCreateWithoutCommentInput[] | CommentReportUncheckedCreateWithoutCommentInput[]
+    connectOrCreate?: CommentReportCreateOrConnectWithoutCommentInput | CommentReportCreateOrConnectWithoutCommentInput[]
+    createMany?: CommentReportCreateManyCommentInputEnvelope
+    connect?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+  }
+
+  export type EnumCommentStatusFieldUpdateOperationsInput = {
+    set?: $Enums.CommentStatus
+  }
+
+  export type LessonUpdateOneRequiredWithoutCommentsNestedInput = {
+    create?: XOR<LessonCreateWithoutCommentsInput, LessonUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: LessonCreateOrConnectWithoutCommentsInput
+    upsert?: LessonUpsertWithoutCommentsInput
+    connect?: LessonWhereUniqueInput
+    update?: XOR<XOR<LessonUpdateToOneWithWhereWithoutCommentsInput, LessonUpdateWithoutCommentsInput>, LessonUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutCommentsNestedInput = {
+    create?: XOR<UserCreateWithoutCommentsInput, UserUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCommentsInput
+    upsert?: UserUpsertWithoutCommentsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCommentsInput, UserUpdateWithoutCommentsInput>, UserUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type LessonCommentUpdateOneWithoutRepliesNestedInput = {
+    create?: XOR<LessonCommentCreateWithoutRepliesInput, LessonCommentUncheckedCreateWithoutRepliesInput>
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutRepliesInput
+    upsert?: LessonCommentUpsertWithoutRepliesInput
+    disconnect?: LessonCommentWhereInput | boolean
+    delete?: LessonCommentWhereInput | boolean
+    connect?: LessonCommentWhereUniqueInput
+    update?: XOR<XOR<LessonCommentUpdateToOneWithWhereWithoutRepliesInput, LessonCommentUpdateWithoutRepliesInput>, LessonCommentUncheckedUpdateWithoutRepliesInput>
+  }
+
+  export type LessonCommentUpdateManyWithoutParentNestedInput = {
+    create?: XOR<LessonCommentCreateWithoutParentInput, LessonCommentUncheckedCreateWithoutParentInput> | LessonCommentCreateWithoutParentInput[] | LessonCommentUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutParentInput | LessonCommentCreateOrConnectWithoutParentInput[]
+    upsert?: LessonCommentUpsertWithWhereUniqueWithoutParentInput | LessonCommentUpsertWithWhereUniqueWithoutParentInput[]
+    createMany?: LessonCommentCreateManyParentInputEnvelope
+    set?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    disconnect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    delete?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    update?: LessonCommentUpdateWithWhereUniqueWithoutParentInput | LessonCommentUpdateWithWhereUniqueWithoutParentInput[]
+    updateMany?: LessonCommentUpdateManyWithWhereWithoutParentInput | LessonCommentUpdateManyWithWhereWithoutParentInput[]
+    deleteMany?: LessonCommentScalarWhereInput | LessonCommentScalarWhereInput[]
+  }
+
+  export type CommentReportUpdateManyWithoutCommentNestedInput = {
+    create?: XOR<CommentReportCreateWithoutCommentInput, CommentReportUncheckedCreateWithoutCommentInput> | CommentReportCreateWithoutCommentInput[] | CommentReportUncheckedCreateWithoutCommentInput[]
+    connectOrCreate?: CommentReportCreateOrConnectWithoutCommentInput | CommentReportCreateOrConnectWithoutCommentInput[]
+    upsert?: CommentReportUpsertWithWhereUniqueWithoutCommentInput | CommentReportUpsertWithWhereUniqueWithoutCommentInput[]
+    createMany?: CommentReportCreateManyCommentInputEnvelope
+    set?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    disconnect?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    delete?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    connect?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    update?: CommentReportUpdateWithWhereUniqueWithoutCommentInput | CommentReportUpdateWithWhereUniqueWithoutCommentInput[]
+    updateMany?: CommentReportUpdateManyWithWhereWithoutCommentInput | CommentReportUpdateManyWithWhereWithoutCommentInput[]
+    deleteMany?: CommentReportScalarWhereInput | CommentReportScalarWhereInput[]
+  }
+
+  export type LessonCommentUncheckedUpdateManyWithoutParentNestedInput = {
+    create?: XOR<LessonCommentCreateWithoutParentInput, LessonCommentUncheckedCreateWithoutParentInput> | LessonCommentCreateWithoutParentInput[] | LessonCommentUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutParentInput | LessonCommentCreateOrConnectWithoutParentInput[]
+    upsert?: LessonCommentUpsertWithWhereUniqueWithoutParentInput | LessonCommentUpsertWithWhereUniqueWithoutParentInput[]
+    createMany?: LessonCommentCreateManyParentInputEnvelope
+    set?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    disconnect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    delete?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    update?: LessonCommentUpdateWithWhereUniqueWithoutParentInput | LessonCommentUpdateWithWhereUniqueWithoutParentInput[]
+    updateMany?: LessonCommentUpdateManyWithWhereWithoutParentInput | LessonCommentUpdateManyWithWhereWithoutParentInput[]
+    deleteMany?: LessonCommentScalarWhereInput | LessonCommentScalarWhereInput[]
+  }
+
+  export type CommentReportUncheckedUpdateManyWithoutCommentNestedInput = {
+    create?: XOR<CommentReportCreateWithoutCommentInput, CommentReportUncheckedCreateWithoutCommentInput> | CommentReportCreateWithoutCommentInput[] | CommentReportUncheckedCreateWithoutCommentInput[]
+    connectOrCreate?: CommentReportCreateOrConnectWithoutCommentInput | CommentReportCreateOrConnectWithoutCommentInput[]
+    upsert?: CommentReportUpsertWithWhereUniqueWithoutCommentInput | CommentReportUpsertWithWhereUniqueWithoutCommentInput[]
+    createMany?: CommentReportCreateManyCommentInputEnvelope
+    set?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    disconnect?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    delete?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    connect?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+    update?: CommentReportUpdateWithWhereUniqueWithoutCommentInput | CommentReportUpdateWithWhereUniqueWithoutCommentInput[]
+    updateMany?: CommentReportUpdateManyWithWhereWithoutCommentInput | CommentReportUpdateManyWithWhereWithoutCommentInput[]
+    deleteMany?: CommentReportScalarWhereInput | CommentReportScalarWhereInput[]
+  }
+
+  export type LessonCommentCreateNestedOneWithoutReportsInput = {
+    create?: XOR<LessonCommentCreateWithoutReportsInput, LessonCommentUncheckedCreateWithoutReportsInput>
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutReportsInput
+    connect?: LessonCommentWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutCommentReportsInput = {
+    create?: XOR<UserCreateWithoutCommentReportsInput, UserUncheckedCreateWithoutCommentReportsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCommentReportsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type LessonCommentUpdateOneRequiredWithoutReportsNestedInput = {
+    create?: XOR<LessonCommentCreateWithoutReportsInput, LessonCommentUncheckedCreateWithoutReportsInput>
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutReportsInput
+    upsert?: LessonCommentUpsertWithoutReportsInput
+    connect?: LessonCommentWhereUniqueInput
+    update?: XOR<XOR<LessonCommentUpdateToOneWithWhereWithoutReportsInput, LessonCommentUpdateWithoutReportsInput>, LessonCommentUncheckedUpdateWithoutReportsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutCommentReportsNestedInput = {
+    create?: XOR<UserCreateWithoutCommentReportsInput, UserUncheckedCreateWithoutCommentReportsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCommentReportsInput
+    upsert?: UserUpsertWithoutCommentReportsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCommentReportsInput, UserUpdateWithoutCommentReportsInput>, UserUncheckedUpdateWithoutCommentReportsInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -47323,6 +50865,23 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumCommentStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CommentStatus | EnumCommentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CommentStatus[] | ListEnumCommentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CommentStatus[] | ListEnumCommentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCommentStatusFilter<$PrismaModel> | $Enums.CommentStatus
+  }
+
+  export type NestedEnumCommentStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CommentStatus | EnumCommentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CommentStatus[] | ListEnumCommentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CommentStatus[] | ListEnumCommentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumCommentStatusWithAggregatesFilter<$PrismaModel> | $Enums.CommentStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCommentStatusFilter<$PrismaModel>
+    _max?: NestedEnumCommentStatusFilter<$PrismaModel>
+  }
+
   export type SessionCreateWithoutUserInput = {
     deviceId: string
     refreshToken: string
@@ -47494,6 +51053,66 @@ export namespace Prisma {
 
   export type TestAttemptCreateManyUserInputEnvelope = {
     data: TestAttemptCreateManyUserInput | TestAttemptCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LessonCommentCreateWithoutUserInput = {
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lesson: LessonCreateNestedOneWithoutCommentsInput
+    parent?: LessonCommentCreateNestedOneWithoutRepliesInput
+    replies?: LessonCommentCreateNestedManyWithoutParentInput
+    reports?: CommentReportCreateNestedManyWithoutCommentInput
+  }
+
+  export type LessonCommentUncheckedCreateWithoutUserInput = {
+    id?: number
+    lessonId: number
+    parentId?: number | null
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: LessonCommentUncheckedCreateNestedManyWithoutParentInput
+    reports?: CommentReportUncheckedCreateNestedManyWithoutCommentInput
+  }
+
+  export type LessonCommentCreateOrConnectWithoutUserInput = {
+    where: LessonCommentWhereUniqueInput
+    create: XOR<LessonCommentCreateWithoutUserInput, LessonCommentUncheckedCreateWithoutUserInput>
+  }
+
+  export type LessonCommentCreateManyUserInputEnvelope = {
+    data: LessonCommentCreateManyUserInput | LessonCommentCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CommentReportCreateWithoutUserInput = {
+    reason?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    comment: LessonCommentCreateNestedOneWithoutReportsInput
+  }
+
+  export type CommentReportUncheckedCreateWithoutUserInput = {
+    id?: number
+    commentId: number
+    reason?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type CommentReportCreateOrConnectWithoutUserInput = {
+    where: CommentReportWhereUniqueInput
+    create: XOR<CommentReportCreateWithoutUserInput, CommentReportUncheckedCreateWithoutUserInput>
+  }
+
+  export type CommentReportCreateManyUserInputEnvelope = {
+    data: CommentReportCreateManyUserInput | CommentReportCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -47765,6 +51384,65 @@ export namespace Prisma {
     startedAt?: DateTimeFilter<"TestAttempt"> | Date | string
     submittedAt?: DateTimeNullableFilter<"TestAttempt"> | Date | string | null
     score?: FloatNullableFilter<"TestAttempt"> | number | null
+  }
+
+  export type LessonCommentUpsertWithWhereUniqueWithoutUserInput = {
+    where: LessonCommentWhereUniqueInput
+    update: XOR<LessonCommentUpdateWithoutUserInput, LessonCommentUncheckedUpdateWithoutUserInput>
+    create: XOR<LessonCommentCreateWithoutUserInput, LessonCommentUncheckedCreateWithoutUserInput>
+  }
+
+  export type LessonCommentUpdateWithWhereUniqueWithoutUserInput = {
+    where: LessonCommentWhereUniqueInput
+    data: XOR<LessonCommentUpdateWithoutUserInput, LessonCommentUncheckedUpdateWithoutUserInput>
+  }
+
+  export type LessonCommentUpdateManyWithWhereWithoutUserInput = {
+    where: LessonCommentScalarWhereInput
+    data: XOR<LessonCommentUpdateManyMutationInput, LessonCommentUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type LessonCommentScalarWhereInput = {
+    AND?: LessonCommentScalarWhereInput | LessonCommentScalarWhereInput[]
+    OR?: LessonCommentScalarWhereInput[]
+    NOT?: LessonCommentScalarWhereInput | LessonCommentScalarWhereInput[]
+    id?: IntFilter<"LessonComment"> | number
+    lessonId?: IntFilter<"LessonComment"> | number
+    userId?: IntFilter<"LessonComment"> | number
+    parentId?: IntNullableFilter<"LessonComment"> | number | null
+    body?: StringFilter<"LessonComment"> | string
+    status?: EnumCommentStatusFilter<"LessonComment"> | $Enums.CommentStatus
+    editedAt?: DateTimeNullableFilter<"LessonComment"> | Date | string | null
+    createdAt?: DateTimeFilter<"LessonComment"> | Date | string
+    updatedAt?: DateTimeFilter<"LessonComment"> | Date | string
+  }
+
+  export type CommentReportUpsertWithWhereUniqueWithoutUserInput = {
+    where: CommentReportWhereUniqueInput
+    update: XOR<CommentReportUpdateWithoutUserInput, CommentReportUncheckedUpdateWithoutUserInput>
+    create: XOR<CommentReportCreateWithoutUserInput, CommentReportUncheckedCreateWithoutUserInput>
+  }
+
+  export type CommentReportUpdateWithWhereUniqueWithoutUserInput = {
+    where: CommentReportWhereUniqueInput
+    data: XOR<CommentReportUpdateWithoutUserInput, CommentReportUncheckedUpdateWithoutUserInput>
+  }
+
+  export type CommentReportUpdateManyWithWhereWithoutUserInput = {
+    where: CommentReportScalarWhereInput
+    data: XOR<CommentReportUpdateManyMutationInput, CommentReportUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type CommentReportScalarWhereInput = {
+    AND?: CommentReportScalarWhereInput | CommentReportScalarWhereInput[]
+    OR?: CommentReportScalarWhereInput[]
+    NOT?: CommentReportScalarWhereInput | CommentReportScalarWhereInput[]
+    id?: IntFilter<"CommentReport"> | number
+    commentId?: IntFilter<"CommentReport"> | number
+    userId?: IntFilter<"CommentReport"> | number
+    reason?: StringNullableFilter<"CommentReport"> | string | null
+    resolvedAt?: DateTimeNullableFilter<"CommentReport"> | Date | string | null
+    createdAt?: DateTimeFilter<"CommentReport"> | Date | string
   }
 
   export type CourseUpsertWithoutSelectedByInput = {
@@ -48403,6 +52081,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    comments?: LessonCommentCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -48426,6 +52106,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -48460,6 +52142,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -48483,6 +52167,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SubjectCreateWithoutCoursesInput = {
@@ -48622,6 +52308,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    comments?: LessonCommentCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportCreateNestedManyWithoutUserInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
 
@@ -48644,6 +52332,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSelectedCourseInput = {
@@ -49096,6 +52786,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    comments?: LessonCommentCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
   }
 
@@ -49118,6 +52810,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSelectedCourseTypeInput = {
@@ -49371,12 +53065,14 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
+    commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     quiz?: QuizCreateNestedOneWithoutLessonInput
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutChapterInput = {
@@ -49397,11 +53093,13 @@ export namespace Prisma {
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
     quizId?: number | null
+    commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutChapterInput = {
@@ -49542,6 +53240,7 @@ export namespace Prisma {
     accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
     status?: EnumCourseStatusFilter<"Lesson"> | $Enums.CourseStatus
     quizId?: IntNullableFilter<"Lesson"> | number | null
+    commentsEnabled?: BoolFilter<"Lesson"> | boolean
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
   }
@@ -49661,6 +53360,41 @@ export namespace Prisma {
 
   export type LessonProgressCreateManyLessonInputEnvelope = {
     data: LessonProgressCreateManyLessonInput | LessonProgressCreateManyLessonInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LessonCommentCreateWithoutLessonInput = {
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutCommentsInput
+    parent?: LessonCommentCreateNestedOneWithoutRepliesInput
+    replies?: LessonCommentCreateNestedManyWithoutParentInput
+    reports?: CommentReportCreateNestedManyWithoutCommentInput
+  }
+
+  export type LessonCommentUncheckedCreateWithoutLessonInput = {
+    id?: number
+    userId: number
+    parentId?: number | null
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: LessonCommentUncheckedCreateNestedManyWithoutParentInput
+    reports?: CommentReportUncheckedCreateNestedManyWithoutCommentInput
+  }
+
+  export type LessonCommentCreateOrConnectWithoutLessonInput = {
+    where: LessonCommentWhereUniqueInput
+    create: XOR<LessonCommentCreateWithoutLessonInput, LessonCommentUncheckedCreateWithoutLessonInput>
+  }
+
+  export type LessonCommentCreateManyLessonInputEnvelope = {
+    data: LessonCommentCreateManyLessonInput | LessonCommentCreateManyLessonInput[]
     skipDuplicates?: boolean
   }
 
@@ -49788,6 +53522,22 @@ export namespace Prisma {
     data: XOR<LessonProgressUpdateManyMutationInput, LessonProgressUncheckedUpdateManyWithoutLessonInput>
   }
 
+  export type LessonCommentUpsertWithWhereUniqueWithoutLessonInput = {
+    where: LessonCommentWhereUniqueInput
+    update: XOR<LessonCommentUpdateWithoutLessonInput, LessonCommentUncheckedUpdateWithoutLessonInput>
+    create: XOR<LessonCommentCreateWithoutLessonInput, LessonCommentUncheckedCreateWithoutLessonInput>
+  }
+
+  export type LessonCommentUpdateWithWhereUniqueWithoutLessonInput = {
+    where: LessonCommentWhereUniqueInput
+    data: XOR<LessonCommentUpdateWithoutLessonInput, LessonCommentUncheckedUpdateWithoutLessonInput>
+  }
+
+  export type LessonCommentUpdateManyWithWhereWithoutLessonInput = {
+    where: LessonCommentScalarWhereInput
+    data: XOR<LessonCommentUpdateManyMutationInput, LessonCommentUncheckedUpdateManyWithoutLessonInput>
+  }
+
   export type LessonCreateWithoutLessonPlansInput = {
     title: string
     description?: string | null
@@ -49804,12 +53554,14 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
+    commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
     quiz?: QuizCreateNestedOneWithoutLessonInput
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutLessonPlansInput = {
@@ -49831,10 +53583,12 @@ export namespace Prisma {
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
     quizId?: number | null
+    commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutLessonPlansInput = {
@@ -49899,12 +53653,14 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
     quiz?: QuizUpdateOneWithoutLessonNestedInput
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutLessonPlansInput = {
@@ -49926,10 +53682,12 @@ export namespace Prisma {
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type PlanUpsertWithoutLessonPlansInput = {
@@ -50161,6 +53919,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    comments?: LessonCommentCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -50184,6 +53944,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSubscriptionsInput = {
@@ -50294,6 +54056,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -50317,6 +54081,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CourseUpsertWithoutSubscriptionsInput = {
@@ -50859,12 +54625,14 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
+    commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutQuizInput = {
@@ -50885,11 +54653,13 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
+    commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutQuizInput = {
@@ -51039,12 +54809,14 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutQuizInput = {
@@ -51065,11 +54837,13 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type QuizQuestionUpsertWithWhereUniqueWithoutQuizInput = {
@@ -51430,6 +55204,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    comments?: LessonCommentCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -51453,6 +55229,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutQuizAttemptsInput = {
@@ -51545,6 +55323,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -51568,6 +55348,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type QuizUpsertWithoutAttemptsInput = {
@@ -51706,6 +55488,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    comments?: LessonCommentCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -51729,6 +55513,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSavedQuestionsInput = {
@@ -51803,6 +55589,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -51826,6 +55614,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type QuestionUpsertWithoutSavedByInput = {
@@ -51890,6 +55680,8 @@ export namespace Prisma {
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    comments?: LessonCommentCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -51913,6 +55705,8 @@ export namespace Prisma {
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSavedLessonsInput = {
@@ -51936,12 +55730,14 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
+    commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
     quiz?: QuizCreateNestedOneWithoutLessonInput
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutSavedByInput = {
@@ -51963,10 +55759,12 @@ export namespace Prisma {
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
     quizId?: number | null
+    commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutSavedByInput = {
@@ -52001,6 +55799,8 @@ export namespace Prisma {
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -52024,6 +55824,8 @@ export namespace Prisma {
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LessonUpsertWithoutSavedByInput = {
@@ -52053,12 +55855,14 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
     quiz?: QuizUpdateOneWithoutLessonNestedInput
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutSavedByInput = {
@@ -52080,10 +55884,12 @@ export namespace Prisma {
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type UserCreateWithoutLessonProgressInput = {
@@ -52102,6 +55908,8 @@ export namespace Prisma {
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    comments?: LessonCommentCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -52125,6 +55933,8 @@ export namespace Prisma {
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLessonProgressInput = {
@@ -52148,12 +55958,14 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
+    commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
     quiz?: QuizCreateNestedOneWithoutLessonInput
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutProgressInput = {
@@ -52175,10 +55987,12 @@ export namespace Prisma {
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
     quizId?: number | null
+    commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutProgressInput = {
@@ -52213,6 +56027,8 @@ export namespace Prisma {
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -52236,6 +56052,8 @@ export namespace Prisma {
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LessonUpsertWithoutProgressInput = {
@@ -52265,12 +56083,14 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
     quiz?: QuizUpdateOneWithoutLessonNestedInput
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutProgressInput = {
@@ -52292,10 +56112,12 @@ export namespace Prisma {
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type CourseCreateWithoutTestsInput = {
@@ -52906,6 +56728,8 @@ export namespace Prisma {
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
+    comments?: LessonCommentCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -52929,6 +56753,8 @@ export namespace Prisma {
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTestAttemptsInput = {
@@ -53031,6 +56857,8 @@ export namespace Prisma {
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -53054,6 +56882,8 @@ export namespace Prisma {
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TestUpsertWithoutAttemptsInput = {
@@ -53268,6 +57098,564 @@ export namespace Prisma {
     topic?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type LessonCreateWithoutCommentsInput = {
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    commentsEnabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    chapter: ChapterCreateNestedOneWithoutLessonsInput
+    quiz?: QuizCreateNestedOneWithoutLessonInput
+    lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
+    savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
+    progress?: LessonProgressCreateNestedManyWithoutLessonInput
+  }
+
+  export type LessonUncheckedCreateWithoutCommentsInput = {
+    id?: number
+    chapterId: number
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    quizId?: number | null
+    commentsEnabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
+    savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
+    progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
+  }
+
+  export type LessonCreateOrConnectWithoutCommentsInput = {
+    where: LessonWhereUniqueInput
+    create: XOR<LessonCreateWithoutCommentsInput, LessonUncheckedCreateWithoutCommentsInput>
+  }
+
+  export type UserCreateWithoutCommentsInput = {
+    email: string
+    password?: string | null
+    name?: string | null
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
+    quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
+    testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportCreateNestedManyWithoutUserInput
+    selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
+    selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
+  }
+
+  export type UserUncheckedCreateWithoutCommentsInput = {
+    id?: number
+    email: string
+    password?: string | null
+    name?: string | null
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    selectedCourseId?: number | null
+    selectedCourseTypeId?: number | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
+    quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
+    testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutCommentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCommentsInput, UserUncheckedCreateWithoutCommentsInput>
+  }
+
+  export type LessonCommentCreateWithoutRepliesInput = {
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lesson: LessonCreateNestedOneWithoutCommentsInput
+    user: UserCreateNestedOneWithoutCommentsInput
+    parent?: LessonCommentCreateNestedOneWithoutRepliesInput
+    reports?: CommentReportCreateNestedManyWithoutCommentInput
+  }
+
+  export type LessonCommentUncheckedCreateWithoutRepliesInput = {
+    id?: number
+    lessonId: number
+    userId: number
+    parentId?: number | null
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reports?: CommentReportUncheckedCreateNestedManyWithoutCommentInput
+  }
+
+  export type LessonCommentCreateOrConnectWithoutRepliesInput = {
+    where: LessonCommentWhereUniqueInput
+    create: XOR<LessonCommentCreateWithoutRepliesInput, LessonCommentUncheckedCreateWithoutRepliesInput>
+  }
+
+  export type LessonCommentCreateWithoutParentInput = {
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lesson: LessonCreateNestedOneWithoutCommentsInput
+    user: UserCreateNestedOneWithoutCommentsInput
+    replies?: LessonCommentCreateNestedManyWithoutParentInput
+    reports?: CommentReportCreateNestedManyWithoutCommentInput
+  }
+
+  export type LessonCommentUncheckedCreateWithoutParentInput = {
+    id?: number
+    lessonId: number
+    userId: number
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: LessonCommentUncheckedCreateNestedManyWithoutParentInput
+    reports?: CommentReportUncheckedCreateNestedManyWithoutCommentInput
+  }
+
+  export type LessonCommentCreateOrConnectWithoutParentInput = {
+    where: LessonCommentWhereUniqueInput
+    create: XOR<LessonCommentCreateWithoutParentInput, LessonCommentUncheckedCreateWithoutParentInput>
+  }
+
+  export type LessonCommentCreateManyParentInputEnvelope = {
+    data: LessonCommentCreateManyParentInput | LessonCommentCreateManyParentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CommentReportCreateWithoutCommentInput = {
+    reason?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutCommentReportsInput
+  }
+
+  export type CommentReportUncheckedCreateWithoutCommentInput = {
+    id?: number
+    userId: number
+    reason?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type CommentReportCreateOrConnectWithoutCommentInput = {
+    where: CommentReportWhereUniqueInput
+    create: XOR<CommentReportCreateWithoutCommentInput, CommentReportUncheckedCreateWithoutCommentInput>
+  }
+
+  export type CommentReportCreateManyCommentInputEnvelope = {
+    data: CommentReportCreateManyCommentInput | CommentReportCreateManyCommentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LessonUpsertWithoutCommentsInput = {
+    update: XOR<LessonUpdateWithoutCommentsInput, LessonUncheckedUpdateWithoutCommentsInput>
+    create: XOR<LessonCreateWithoutCommentsInput, LessonUncheckedCreateWithoutCommentsInput>
+    where?: LessonWhereInput
+  }
+
+  export type LessonUpdateToOneWithWhereWithoutCommentsInput = {
+    where?: LessonWhereInput
+    data: XOR<LessonUpdateWithoutCommentsInput, LessonUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type LessonUpdateWithoutCommentsInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
+    quiz?: QuizUpdateOneWithoutLessonNestedInput
+    lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
+    savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
+    progress?: LessonProgressUpdateManyWithoutLessonNestedInput
+  }
+
+  export type LessonUncheckedUpdateWithoutCommentsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    chapterId?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    quizId?: NullableIntFieldUpdateOperationsInput | number | null
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
+    savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
+    progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
+  }
+
+  export type UserUpsertWithoutCommentsInput = {
+    update: XOR<UserUpdateWithoutCommentsInput, UserUncheckedUpdateWithoutCommentsInput>
+    create: XOR<UserCreateWithoutCommentsInput, UserUncheckedCreateWithoutCommentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCommentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCommentsInput, UserUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type UserUpdateWithoutCommentsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
+    quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
+    testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUpdateManyWithoutUserNestedInput
+    selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
+    selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCommentsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
+    selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
+    testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type LessonCommentUpsertWithoutRepliesInput = {
+    update: XOR<LessonCommentUpdateWithoutRepliesInput, LessonCommentUncheckedUpdateWithoutRepliesInput>
+    create: XOR<LessonCommentCreateWithoutRepliesInput, LessonCommentUncheckedCreateWithoutRepliesInput>
+    where?: LessonCommentWhereInput
+  }
+
+  export type LessonCommentUpdateToOneWithWhereWithoutRepliesInput = {
+    where?: LessonCommentWhereInput
+    data: XOR<LessonCommentUpdateWithoutRepliesInput, LessonCommentUncheckedUpdateWithoutRepliesInput>
+  }
+
+  export type LessonCommentUpdateWithoutRepliesInput = {
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lesson?: LessonUpdateOneRequiredWithoutCommentsNestedInput
+    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
+    parent?: LessonCommentUpdateOneWithoutRepliesNestedInput
+    reports?: CommentReportUpdateManyWithoutCommentNestedInput
+  }
+
+  export type LessonCommentUncheckedUpdateWithoutRepliesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    parentId?: NullableIntFieldUpdateOperationsInput | number | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reports?: CommentReportUncheckedUpdateManyWithoutCommentNestedInput
+  }
+
+  export type LessonCommentUpsertWithWhereUniqueWithoutParentInput = {
+    where: LessonCommentWhereUniqueInput
+    update: XOR<LessonCommentUpdateWithoutParentInput, LessonCommentUncheckedUpdateWithoutParentInput>
+    create: XOR<LessonCommentCreateWithoutParentInput, LessonCommentUncheckedCreateWithoutParentInput>
+  }
+
+  export type LessonCommentUpdateWithWhereUniqueWithoutParentInput = {
+    where: LessonCommentWhereUniqueInput
+    data: XOR<LessonCommentUpdateWithoutParentInput, LessonCommentUncheckedUpdateWithoutParentInput>
+  }
+
+  export type LessonCommentUpdateManyWithWhereWithoutParentInput = {
+    where: LessonCommentScalarWhereInput
+    data: XOR<LessonCommentUpdateManyMutationInput, LessonCommentUncheckedUpdateManyWithoutParentInput>
+  }
+
+  export type CommentReportUpsertWithWhereUniqueWithoutCommentInput = {
+    where: CommentReportWhereUniqueInput
+    update: XOR<CommentReportUpdateWithoutCommentInput, CommentReportUncheckedUpdateWithoutCommentInput>
+    create: XOR<CommentReportCreateWithoutCommentInput, CommentReportUncheckedCreateWithoutCommentInput>
+  }
+
+  export type CommentReportUpdateWithWhereUniqueWithoutCommentInput = {
+    where: CommentReportWhereUniqueInput
+    data: XOR<CommentReportUpdateWithoutCommentInput, CommentReportUncheckedUpdateWithoutCommentInput>
+  }
+
+  export type CommentReportUpdateManyWithWhereWithoutCommentInput = {
+    where: CommentReportScalarWhereInput
+    data: XOR<CommentReportUpdateManyMutationInput, CommentReportUncheckedUpdateManyWithoutCommentInput>
+  }
+
+  export type LessonCommentCreateWithoutReportsInput = {
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lesson: LessonCreateNestedOneWithoutCommentsInput
+    user: UserCreateNestedOneWithoutCommentsInput
+    parent?: LessonCommentCreateNestedOneWithoutRepliesInput
+    replies?: LessonCommentCreateNestedManyWithoutParentInput
+  }
+
+  export type LessonCommentUncheckedCreateWithoutReportsInput = {
+    id?: number
+    lessonId: number
+    userId: number
+    parentId?: number | null
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: LessonCommentUncheckedCreateNestedManyWithoutParentInput
+  }
+
+  export type LessonCommentCreateOrConnectWithoutReportsInput = {
+    where: LessonCommentWhereUniqueInput
+    create: XOR<LessonCommentCreateWithoutReportsInput, LessonCommentUncheckedCreateWithoutReportsInput>
+  }
+
+  export type UserCreateWithoutCommentReportsInput = {
+    email: string
+    password?: string | null
+    name?: string | null
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
+    quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
+    testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    comments?: LessonCommentCreateNestedManyWithoutUserInput
+    selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
+    selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
+  }
+
+  export type UserUncheckedCreateWithoutCommentReportsInput = {
+    id?: number
+    email: string
+    password?: string | null
+    name?: string | null
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    selectedCourseId?: number | null
+    selectedCourseTypeId?: number | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
+    quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
+    testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutCommentReportsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCommentReportsInput, UserUncheckedCreateWithoutCommentReportsInput>
+  }
+
+  export type LessonCommentUpsertWithoutReportsInput = {
+    update: XOR<LessonCommentUpdateWithoutReportsInput, LessonCommentUncheckedUpdateWithoutReportsInput>
+    create: XOR<LessonCommentCreateWithoutReportsInput, LessonCommentUncheckedCreateWithoutReportsInput>
+    where?: LessonCommentWhereInput
+  }
+
+  export type LessonCommentUpdateToOneWithWhereWithoutReportsInput = {
+    where?: LessonCommentWhereInput
+    data: XOR<LessonCommentUpdateWithoutReportsInput, LessonCommentUncheckedUpdateWithoutReportsInput>
+  }
+
+  export type LessonCommentUpdateWithoutReportsInput = {
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lesson?: LessonUpdateOneRequiredWithoutCommentsNestedInput
+    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
+    parent?: LessonCommentUpdateOneWithoutRepliesNestedInput
+    replies?: LessonCommentUpdateManyWithoutParentNestedInput
+  }
+
+  export type LessonCommentUncheckedUpdateWithoutReportsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    parentId?: NullableIntFieldUpdateOperationsInput | number | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: LessonCommentUncheckedUpdateManyWithoutParentNestedInput
+  }
+
+  export type UserUpsertWithoutCommentReportsInput = {
+    update: XOR<UserUpdateWithoutCommentReportsInput, UserUncheckedUpdateWithoutCommentReportsInput>
+    create: XOR<UserCreateWithoutCommentReportsInput, UserUncheckedCreateWithoutCommentReportsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCommentReportsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCommentReportsInput, UserUncheckedUpdateWithoutCommentReportsInput>
+  }
+
+  export type UserUpdateWithoutCommentReportsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
+    quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
+    testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUpdateManyWithoutUserNestedInput
+    selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
+    selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCommentReportsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
+    selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
+    testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type SessionCreateManyUserInput = {
     id?: number
     deviceId: string
@@ -53318,6 +57706,25 @@ export namespace Prisma {
     startedAt?: Date | string
     submittedAt?: Date | string | null
     score?: number | null
+  }
+
+  export type LessonCommentCreateManyUserInput = {
+    id?: number
+    lessonId: number
+    parentId?: number | null
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CommentReportCreateManyUserInput = {
+    id?: number
+    commentId: number
+    reason?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -53474,6 +57881,65 @@ export namespace Prisma {
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     submittedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     score?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type LessonCommentUpdateWithoutUserInput = {
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lesson?: LessonUpdateOneRequiredWithoutCommentsNestedInput
+    parent?: LessonCommentUpdateOneWithoutRepliesNestedInput
+    replies?: LessonCommentUpdateManyWithoutParentNestedInput
+    reports?: CommentReportUpdateManyWithoutCommentNestedInput
+  }
+
+  export type LessonCommentUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    parentId?: NullableIntFieldUpdateOperationsInput | number | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: LessonCommentUncheckedUpdateManyWithoutParentNestedInput
+    reports?: CommentReportUncheckedUpdateManyWithoutCommentNestedInput
+  }
+
+  export type LessonCommentUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    parentId?: NullableIntFieldUpdateOperationsInput | number | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommentReportUpdateWithoutUserInput = {
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    comment?: LessonCommentUpdateOneRequiredWithoutReportsNestedInput
+  }
+
+  export type CommentReportUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    commentId?: IntFieldUpdateOperationsInput | number
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommentReportUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    commentId?: IntFieldUpdateOperationsInput | number
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CourseCreateManyAdminInput = {
@@ -54050,6 +58516,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUpdateManyWithoutUserNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
 
@@ -54072,6 +58540,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutSelectedCourseInput = {
@@ -54290,6 +58760,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
   }
 
@@ -54312,6 +58784,8 @@ export namespace Prisma {
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutSelectedCourseTypeInput = {
@@ -54399,6 +58873,7 @@ export namespace Prisma {
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
     quizId?: number | null
+    commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -54419,12 +58894,14 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quiz?: QuizUpdateOneWithoutLessonNestedInput
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutChapterInput = {
@@ -54445,11 +58922,13 @@ export namespace Prisma {
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateManyWithoutChapterInput = {
@@ -54470,6 +58949,7 @@ export namespace Prisma {
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -54487,6 +58967,17 @@ export namespace Prisma {
     userId: number
     completed?: boolean
     lastPositionSeconds?: number
+    updatedAt?: Date | string
+  }
+
+  export type LessonCommentCreateManyLessonInput = {
+    id?: number
+    userId: number
+    parentId?: number | null
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
     updatedAt?: Date | string
   }
 
@@ -54535,6 +59026,42 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     completed?: BoolFieldUpdateOperationsInput | boolean
     lastPositionSeconds?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonCommentUpdateWithoutLessonInput = {
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
+    parent?: LessonCommentUpdateOneWithoutRepliesNestedInput
+    replies?: LessonCommentUpdateManyWithoutParentNestedInput
+    reports?: CommentReportUpdateManyWithoutCommentNestedInput
+  }
+
+  export type LessonCommentUncheckedUpdateWithoutLessonInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    parentId?: NullableIntFieldUpdateOperationsInput | number | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: LessonCommentUncheckedUpdateManyWithoutParentNestedInput
+    reports?: CommentReportUncheckedUpdateManyWithoutCommentNestedInput
+  }
+
+  export type LessonCommentUncheckedUpdateManyWithoutLessonInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    parentId?: NullableIntFieldUpdateOperationsInput | number | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -54996,6 +59523,84 @@ export namespace Prisma {
     isCorrect?: BoolFieldUpdateOperationsInput | boolean
     marksAwarded?: FloatFieldUpdateOperationsInput | number
     answeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonCommentCreateManyParentInput = {
+    id?: number
+    lessonId: number
+    userId: number
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CommentReportCreateManyCommentInput = {
+    id?: number
+    userId: number
+    reason?: string | null
+    resolvedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type LessonCommentUpdateWithoutParentInput = {
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lesson?: LessonUpdateOneRequiredWithoutCommentsNestedInput
+    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
+    replies?: LessonCommentUpdateManyWithoutParentNestedInput
+    reports?: CommentReportUpdateManyWithoutCommentNestedInput
+  }
+
+  export type LessonCommentUncheckedUpdateWithoutParentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: LessonCommentUncheckedUpdateManyWithoutParentNestedInput
+    reports?: CommentReportUncheckedUpdateManyWithoutCommentNestedInput
+  }
+
+  export type LessonCommentUncheckedUpdateManyWithoutParentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommentReportUpdateWithoutCommentInput = {
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutCommentReportsNestedInput
+  }
+
+  export type CommentReportUncheckedUpdateWithoutCommentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CommentReportUncheckedUpdateManyWithoutCommentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

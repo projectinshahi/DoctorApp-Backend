@@ -11,6 +11,9 @@ const {
 } = require('../controllers/saved.controller');
 const { getHome, saveProgress } = require('../controllers/home.controller');
 const {
+  listComments, createComment, updateComment, deleteComment, reportComment,
+} = require('../controllers/comment.controller');
+const {
   listTests: listStudentTests, startTestAttempt, answerTestQuestion,
   clearTestAnswer, submitTestAttempt, getTestResult, getTestLeaderboard,
 } = require('../controllers/testAttempt.controller');
@@ -61,5 +64,12 @@ router.delete('/test-attempts/:attemptId/answers/:testQuestionId', authenticateS
 router.post('/test-attempts/:attemptId/submit', authenticateStudent, submitTestAttempt);
 router.get('/test-attempts/:attemptId/result', authenticateStudent, getTestResult);
 router.get('/tests/:testId/leaderboard', authenticateStudent, getTestLeaderboard);
+
+// Lesson comments. Only signed-in students, which authenticateStudent is.
+router.get('/lessons/:lessonId/comments', authenticateStudent, listComments);
+router.post('/lessons/:lessonId/comments', authenticateStudent, createComment);
+router.patch('/comments/:commentId', authenticateStudent, updateComment);
+router.delete('/comments/:commentId', authenticateStudent, deleteComment);
+router.post('/comments/:commentId/report', authenticateStudent, reportComment);
 
 module.exports = router;
