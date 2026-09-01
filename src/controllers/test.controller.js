@@ -846,14 +846,35 @@ async function deleteTest(req, res) {
     });
     if (!test) return res.status(404).json({ error: { message: 'Test not found' } });
 
-    if (test._count.attempts > 0) {
+    // Deleting a paper students have sat destroys their results, their ranks
+    // and their review sheets, and nothing brings those back. So it takes a
+    // second, explicit call rather than one click — and the refusal says how,
+    // instead of leaving an admin to guess whether it is possible at all.
+    const confirmed = req.query.deleteAttempts === 'true';
+
+    if (test._count.attempts > 0 && !confirmed) {
+      const submitted = await prisma.testAttempt.count({
+        where: { testId, submittedAt: { not: null } },
+      });
       return res.status(409).json({
         error: {
-          message: `Cannot delete: ${test._count.attempts} student attempt(s) exist. Unpublish it instead — deleting would erase their results.`,
+          message: `Cannot delete: ${test._count.attempts} student attempt(s) exist, ${submitted} of them completed. Unpublish it instead — deleting erases their results permanently.`,
         },
         attemptCount: test._count.attempts,
+        submittedCount: submitted,
+        // The panel turns this into a second, typed confirmation. It is not a
+        // formality: unpublishing is what an admin wants nine times out of ten,
+        // and this endpoint is the tenth.
+        canForce: true,
+        forceWith: `DELETE /api/admin/tests/${testId}?deleteAttempts=true`,
       });
     }
+
+    // Counted before the cascade removes them, so the response can say what was
+    // actually destroyed rather than what was asked for.
+    const answerCount = test._count.attempts === 0 ? 0 : await prisma.testAttemptAnswer.count({
+      where: { attempt: { testId } },
+    });
 
     // Cloudinary first. Dropping the rows before the files would leave assets
     // nobody can find, let alone delete.
@@ -867,11 +888,17 @@ async function deleteTest(req, res) {
 
     await prisma.test.delete({ where: { id: testId } });
 
+    const destroyed = test._count.attempts > 0
+      ? ` This also erased ${test._count.attempts} student attempt(s) and ${answerCount} answer(s).`
+      : '';
+
     return res.status(200).json({
-      message: `Deleted "${test.name}" with ${test._count.questions} question(s) and ${test.images.length} image(s).`,
+      message: `Deleted "${test.name}" with ${test._count.questions} question(s) and ${test.images.length} image(s).${destroyed}`,
       testId,
       deletedQuestions: test._count.questions,
       deletedImages: test.images.length,
+      deletedAttempts: test._count.attempts,
+      deletedAnswers: answerCount,
     });
   } catch (error) {
     console.error('deleteTest error:', error);

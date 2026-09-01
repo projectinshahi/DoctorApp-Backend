@@ -222,6 +222,43 @@ one attempt, `bestScore` is their best. That is the point of showing both.
 
 ---
 
+## 5. Deleting an exam students have already sat
+
+`DELETE /api/admin/tests/:testId` refuses, and the refusal tells you how:
+
+```json
+409
+{ "error": { "message": "Cannot delete: 3 student attempt(s) exist, 3 of them completed. Unpublish it instead — deleting erases their results permanently." },
+  "attemptCount": 3, "submittedCount": 3,
+  "canForce": true,
+  "forceWith": "DELETE /api/admin/tests/1?deleteAttempts=true" }
+```
+
+Repeat the call with that flag and it goes:
+
+```json
+200
+{ "message": "Deleted \"zz-temp\" with 1 question(s) and 0 image(s). This also erased 1 student attempt(s) and 1 answer(s).",
+  "deletedQuestions": 1, "deletedImages": 0,
+  "deletedAttempts": 1, "deletedAnswers": 1 }
+```
+
+**Nothing brings those results back** — scores, ranks and review sheets go
+with the paper, and there is no undo. So build the two steps as two steps:
+
+1. First call. On the 409, show a dialog quoting `attemptCount` and
+   `submittedCount`, and lead with **Unpublish** as the primary button — it
+   hides the paper from students and keeps every result. That is what an admin
+   wants nine times out of ten.
+2. Behind a secondary, destructive-styled button: make them type the test name
+   to enable it, then send `?deleteAttempts=true`.
+
+A test with **no** attempts deletes on the first call with no flag, as before.
+`deletedAttempts` and `deletedAnswers` come back either way — report them in
+the success toast so the admin sees what actually went.
+
+---
+
 ## What to build
 
 **Test form** — an Edit button on each test card opening the same form as
@@ -231,6 +268,9 @@ say why. Warn before saving a published test that it will go back to draft.
 **Test detail tabs** — Questions (preview) · Attempts · **Leaderboard** ·
 Analytics. The leaderboard tab is a ranked table with the `stats` strip above
 it: highest, average, median, fastest.
+
+**Delete flow** — the 409 dialog above. Unpublish primary, type-the-name
+delete secondary.
 
 **Live attempts page** — the in-progress table, auto-refreshing on a timer,
 split into Live and Abandoned by `expired`. Link each row to the student
@@ -249,3 +289,5 @@ showing score out of `totalMarks`, time taken, and `Rank n of m`.
   unsubmitted attempt.
 - Do not merge the Leaderboard and Attempts tabs — one hides retakes on
   purpose, the other exists to show them.
+- Never send `?deleteAttempts=true` from the first click. The flag exists so
+  that destroying results takes a deliberate second action.
