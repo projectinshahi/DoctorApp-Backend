@@ -6,6 +6,7 @@ const { getAdminProfile, updateAdminProfile, changeAdminPassword } = require('..
 const {
   listComments: listAllComments, setCommentStatus, dismissReports,
   deleteComment: deleteCommentAsAdmin, setLessonComments,
+  getCommentThread, replyToComment, editOwnReply,
 } = require('../controllers/adminComment.controller');
 const authenticateAdmin = require('../middleware/authenticateAdmin');
 
@@ -21,7 +22,10 @@ router.patch('/students/:id/status', authenticateAdmin, updateStudentStatus);
 
 // Comment moderation.
 router.get('/comments', authenticateAdmin, listAllComments);
+router.get('/comments/:commentId', authenticateAdmin, getCommentThread);
 router.patch('/comments/:commentId', authenticateAdmin, setCommentStatus);
+router.post('/comments/:commentId/reply', authenticateAdmin, replyToComment);
+router.patch('/comments/:commentId/body', authenticateAdmin, editOwnReply);
 router.post('/comments/:commentId/dismiss-reports', authenticateAdmin, dismissReports);
 router.delete('/comments/:commentId', authenticateAdmin, deleteCommentAsAdmin);
 router.patch('/lessons/:lessonId/comments', authenticateAdmin, setLessonComments);

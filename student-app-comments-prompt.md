@@ -34,12 +34,15 @@ POST   /api/users/me/comments/:commentId/report      { reason? }
     "id": 1, "parentId": null,
     "body": "Great explanation of the ECG axis — thanks!",
     "createdAt": "...", "editedAt": "...", "edited": true,
-    "author": { "id": 30, "name": "Keerthana Bineesh", "avatarUrl": null },
-    "isMine": true, "reportedByMe": false,
+    "author": { "id": 30, "name": "Keerthana Bineesh", "avatarUrl": null, "role": "student" },
+    "isInstructor": false, "isMine": true, "canReport": false, "reportedByMe": false,
     "replies": [
       { "id": 2, "body": "Agreed, the lead II part helped.",
-        "author": { "id": 31, "name": "Theertha bineesh14", "avatarUrl": null },
-        "isMine": false, "reportedByMe": false, "replies": [] } ] } ]
+        "author": { "id": 31, "name": "Theertha bineesh14", "role": "student" },
+        "isInstructor": false, "isMine": false, "canReport": true, "reportedByMe": false, "replies": [] },
+      { "id": 12, "body": "The axis is read off leads I and aVF.",
+        "author": { "id": 1, "name": "Super Admin", "avatarUrl": null, "role": "admin" },
+        "isInstructor": true, "isMine": false, "canReport": false, "reportedByMe": false, "replies": [] } ] } ]
 }
 ```
 
@@ -47,7 +50,12 @@ POST   /api/users/me/comments/:commentId/report      { reason? }
 conversation reads forwards even though the list of conversations reads
 backwards.
 
-**`isMine` and `reportedByMe` decide the buttons** — Edit/Delete on your own,
+**Instructor replies are marked.** `isInstructor: true` and
+`author.role === "admin"` mean the teaching side answered. Badge it —
+"Instructor" or your tutor branding — pin it visually, and never show Report or
+Edit on it. It is the reply the student opened the thread for.
+
+**`isMine`, `canReport` and `reportedByMe` decide the buttons** — Edit/Delete on your own,
 Report on everyone else's, never both, and "Reported" instead of "Report" once
 you have. Do not compare user ids yourself; the server already did it.
 
@@ -128,7 +136,10 @@ POST /api/users/me/comments/2/report   { "reason": "Off topic" }
 → { "message": "Reported. A moderator will review it.", "reported": true }
 ```
 
-`reason` is optional. **400** on your own comment.
+`reason` is optional. **400** on your own comment, and **400**
+`Instructor replies cannot be reported` on the teaching side's — the queue is
+for student-to-student trouble. Bind the button to **`canReport`** and both
+cases disappear.
 
 ### The comment stays visible
 
@@ -162,7 +173,9 @@ state when `commentsEnabled` is false.
 ## Constraints
 
 - Signed-in only. There is no public read; handle **401** by prompting sign-in.
-- Bind buttons to `isMine` / `reportedByMe`, never to your own id comparison.
+- Bind buttons to `isMine` / `canReport` / `reportedByMe`, never to your own
+  id comparison — student and admin ids come from different tables and overlap.
+- `isInstructor: true` gets a badge, and never a Report or Edit action.
 - Place replies using the **response's** `parentId`.
 - Never nest past one level; the server will not produce it.
 - Do not hide a comment locally when it is reported.

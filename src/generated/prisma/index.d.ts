@@ -3728,10 +3728,12 @@ export namespace Prisma {
 
   export type AdminCountOutputType = {
     courses: number
+    comments: number
   }
 
   export type AdminCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     courses?: boolean | AdminCountOutputTypeCountCoursesArgs
+    comments?: boolean | AdminCountOutputTypeCountCommentsArgs
   }
 
   // Custom InputTypes
@@ -3750,6 +3752,13 @@ export namespace Prisma {
    */
   export type AdminCountOutputTypeCountCoursesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CourseWhereInput
+  }
+
+  /**
+   * AdminCountOutputType without action
+   */
+  export type AdminCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LessonCommentWhereInput
   }
 
 
@@ -6148,6 +6157,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     courses?: boolean | Admin$coursesArgs<ExtArgs>
+    comments?: boolean | Admin$commentsArgs<ExtArgs>
     _count?: boolean | AdminCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["admin"]>
 
@@ -6187,6 +6197,7 @@ export namespace Prisma {
   export type AdminOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "role" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["admin"]>
   export type AdminInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     courses?: boolean | Admin$coursesArgs<ExtArgs>
+    comments?: boolean | Admin$commentsArgs<ExtArgs>
     _count?: boolean | AdminCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AdminIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -6196,6 +6207,7 @@ export namespace Prisma {
     name: "Admin"
     objects: {
       courses: Prisma.$CoursePayload<ExtArgs>[]
+      comments: Prisma.$LessonCommentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -6601,6 +6613,7 @@ export namespace Prisma {
   export interface Prisma__AdminClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     courses<T extends Admin$coursesArgs<ExtArgs> = {}>(args?: Subset<T, Admin$coursesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    comments<T extends Admin$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Admin$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7052,6 +7065,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CourseScalarFieldEnum | CourseScalarFieldEnum[]
+  }
+
+  /**
+   * Admin.comments
+   */
+  export type Admin$commentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonComment
+     */
+    select?: LessonCommentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonComment
+     */
+    omit?: LessonCommentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonCommentInclude<ExtArgs> | null
+    where?: LessonCommentWhereInput
+    orderBy?: LessonCommentOrderByWithRelationInput | LessonCommentOrderByWithRelationInput[]
+    cursor?: LessonCommentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LessonCommentScalarFieldEnum | LessonCommentScalarFieldEnum[]
   }
 
   /**
@@ -37947,6 +37984,7 @@ export namespace Prisma {
     id: number | null
     lessonId: number | null
     userId: number | null
+    adminId: number | null
     parentId: number | null
   }
 
@@ -37954,6 +37992,7 @@ export namespace Prisma {
     id: number | null
     lessonId: number | null
     userId: number | null
+    adminId: number | null
     parentId: number | null
   }
 
@@ -37961,6 +38000,7 @@ export namespace Prisma {
     id: number | null
     lessonId: number | null
     userId: number | null
+    adminId: number | null
     parentId: number | null
     body: string | null
     status: $Enums.CommentStatus | null
@@ -37973,6 +38013,7 @@ export namespace Prisma {
     id: number | null
     lessonId: number | null
     userId: number | null
+    adminId: number | null
     parentId: number | null
     body: string | null
     status: $Enums.CommentStatus | null
@@ -37985,6 +38026,7 @@ export namespace Prisma {
     id: number
     lessonId: number
     userId: number
+    adminId: number
     parentId: number
     body: number
     status: number
@@ -37999,6 +38041,7 @@ export namespace Prisma {
     id?: true
     lessonId?: true
     userId?: true
+    adminId?: true
     parentId?: true
   }
 
@@ -38006,6 +38049,7 @@ export namespace Prisma {
     id?: true
     lessonId?: true
     userId?: true
+    adminId?: true
     parentId?: true
   }
 
@@ -38013,6 +38057,7 @@ export namespace Prisma {
     id?: true
     lessonId?: true
     userId?: true
+    adminId?: true
     parentId?: true
     body?: true
     status?: true
@@ -38025,6 +38070,7 @@ export namespace Prisma {
     id?: true
     lessonId?: true
     userId?: true
+    adminId?: true
     parentId?: true
     body?: true
     status?: true
@@ -38037,6 +38083,7 @@ export namespace Prisma {
     id?: true
     lessonId?: true
     userId?: true
+    adminId?: true
     parentId?: true
     body?: true
     status?: true
@@ -38135,7 +38182,8 @@ export namespace Prisma {
   export type LessonCommentGroupByOutputType = {
     id: number
     lessonId: number
-    userId: number
+    userId: number | null
+    adminId: number | null
     parentId: number | null
     body: string
     status: $Enums.CommentStatus
@@ -38167,6 +38215,7 @@ export namespace Prisma {
     id?: boolean
     lessonId?: boolean
     userId?: boolean
+    adminId?: boolean
     parentId?: boolean
     body?: boolean
     status?: boolean
@@ -38174,7 +38223,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | LessonComment$userArgs<ExtArgs>
+    admin?: boolean | LessonComment$adminArgs<ExtArgs>
     parent?: boolean | LessonComment$parentArgs<ExtArgs>
     replies?: boolean | LessonComment$repliesArgs<ExtArgs>
     reports?: boolean | LessonComment$reportsArgs<ExtArgs>
@@ -38185,6 +38235,7 @@ export namespace Prisma {
     id?: boolean
     lessonId?: boolean
     userId?: boolean
+    adminId?: boolean
     parentId?: boolean
     body?: boolean
     status?: boolean
@@ -38192,7 +38243,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | LessonComment$userArgs<ExtArgs>
+    admin?: boolean | LessonComment$adminArgs<ExtArgs>
     parent?: boolean | LessonComment$parentArgs<ExtArgs>
   }, ExtArgs["result"]["lessonComment"]>
 
@@ -38200,6 +38252,7 @@ export namespace Prisma {
     id?: boolean
     lessonId?: boolean
     userId?: boolean
+    adminId?: boolean
     parentId?: boolean
     body?: boolean
     status?: boolean
@@ -38207,7 +38260,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | LessonComment$userArgs<ExtArgs>
+    admin?: boolean | LessonComment$adminArgs<ExtArgs>
     parent?: boolean | LessonComment$parentArgs<ExtArgs>
   }, ExtArgs["result"]["lessonComment"]>
 
@@ -38215,6 +38269,7 @@ export namespace Prisma {
     id?: boolean
     lessonId?: boolean
     userId?: boolean
+    adminId?: boolean
     parentId?: boolean
     body?: boolean
     status?: boolean
@@ -38223,10 +38278,11 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type LessonCommentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "lessonId" | "userId" | "parentId" | "body" | "status" | "editedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["lessonComment"]>
+  export type LessonCommentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "lessonId" | "userId" | "adminId" | "parentId" | "body" | "status" | "editedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["lessonComment"]>
   export type LessonCommentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | LessonComment$userArgs<ExtArgs>
+    admin?: boolean | LessonComment$adminArgs<ExtArgs>
     parent?: boolean | LessonComment$parentArgs<ExtArgs>
     replies?: boolean | LessonComment$repliesArgs<ExtArgs>
     reports?: boolean | LessonComment$reportsArgs<ExtArgs>
@@ -38234,12 +38290,14 @@ export namespace Prisma {
   }
   export type LessonCommentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | LessonComment$userArgs<ExtArgs>
+    admin?: boolean | LessonComment$adminArgs<ExtArgs>
     parent?: boolean | LessonComment$parentArgs<ExtArgs>
   }
   export type LessonCommentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
-    user?: boolean | UserDefaultArgs<ExtArgs>
+    user?: boolean | LessonComment$userArgs<ExtArgs>
+    admin?: boolean | LessonComment$adminArgs<ExtArgs>
     parent?: boolean | LessonComment$parentArgs<ExtArgs>
   }
 
@@ -38247,7 +38305,8 @@ export namespace Prisma {
     name: "LessonComment"
     objects: {
       lesson: Prisma.$LessonPayload<ExtArgs>
-      user: Prisma.$UserPayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs> | null
+      admin: Prisma.$AdminPayload<ExtArgs> | null
       parent: Prisma.$LessonCommentPayload<ExtArgs> | null
       replies: Prisma.$LessonCommentPayload<ExtArgs>[]
       reports: Prisma.$CommentReportPayload<ExtArgs>[]
@@ -38255,7 +38314,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       lessonId: number
-      userId: number
+      userId: number | null
+      adminId: number | null
       parentId: number | null
       body: string
       status: $Enums.CommentStatus
@@ -38657,7 +38717,8 @@ export namespace Prisma {
   export interface Prisma__LessonCommentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     lesson<T extends LessonDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LessonDefaultArgs<ExtArgs>>): Prisma__LessonClient<$Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends LessonComment$userArgs<ExtArgs> = {}>(args?: Subset<T, LessonComment$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    admin<T extends LessonComment$adminArgs<ExtArgs> = {}>(args?: Subset<T, LessonComment$adminArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     parent<T extends LessonComment$parentArgs<ExtArgs> = {}>(args?: Subset<T, LessonComment$parentArgs<ExtArgs>>): Prisma__LessonCommentClient<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     replies<T extends LessonComment$repliesArgs<ExtArgs> = {}>(args?: Subset<T, LessonComment$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reports<T extends LessonComment$reportsArgs<ExtArgs> = {}>(args?: Subset<T, LessonComment$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -38693,6 +38754,7 @@ export namespace Prisma {
     readonly id: FieldRef<"LessonComment", 'Int'>
     readonly lessonId: FieldRef<"LessonComment", 'Int'>
     readonly userId: FieldRef<"LessonComment", 'Int'>
+    readonly adminId: FieldRef<"LessonComment", 'Int'>
     readonly parentId: FieldRef<"LessonComment", 'Int'>
     readonly body: FieldRef<"LessonComment", 'String'>
     readonly status: FieldRef<"LessonComment", 'CommentStatus'>
@@ -39097,6 +39159,44 @@ export namespace Prisma {
      * Limit how many LessonComments to delete.
      */
     limit?: number
+  }
+
+  /**
+   * LessonComment.user
+   */
+  export type LessonComment$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * LessonComment.admin
+   */
+  export type LessonComment$adminArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Admin
+     */
+    select?: AdminSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Admin
+     */
+    omit?: AdminOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInclude<ExtArgs> | null
+    where?: AdminWhereInput
   }
 
   /**
@@ -40713,6 +40813,7 @@ export namespace Prisma {
     id: 'id',
     lessonId: 'lessonId',
     userId: 'userId',
+    adminId: 'adminId',
     parentId: 'parentId',
     body: 'body',
     status: 'status',
@@ -41064,6 +41165,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Admin"> | Date | string
     updatedAt?: DateTimeFilter<"Admin"> | Date | string
     courses?: CourseListRelationFilter
+    comments?: LessonCommentListRelationFilter
   }
 
   export type AdminOrderByWithRelationInput = {
@@ -41076,6 +41178,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     courses?: CourseOrderByRelationAggregateInput
+    comments?: LessonCommentOrderByRelationAggregateInput
   }
 
   export type AdminWhereUniqueInput = Prisma.AtLeast<{
@@ -41091,6 +41194,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Admin"> | Date | string
     updatedAt?: DateTimeFilter<"Admin"> | Date | string
     courses?: CourseListRelationFilter
+    comments?: LessonCommentListRelationFilter
   }, "id" | "email">
 
   export type AdminOrderByWithAggregationInput = {
@@ -43104,7 +43208,8 @@ export namespace Prisma {
     NOT?: LessonCommentWhereInput | LessonCommentWhereInput[]
     id?: IntFilter<"LessonComment"> | number
     lessonId?: IntFilter<"LessonComment"> | number
-    userId?: IntFilter<"LessonComment"> | number
+    userId?: IntNullableFilter<"LessonComment"> | number | null
+    adminId?: IntNullableFilter<"LessonComment"> | number | null
     parentId?: IntNullableFilter<"LessonComment"> | number | null
     body?: StringFilter<"LessonComment"> | string
     status?: EnumCommentStatusFilter<"LessonComment"> | $Enums.CommentStatus
@@ -43112,7 +43217,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"LessonComment"> | Date | string
     updatedAt?: DateTimeFilter<"LessonComment"> | Date | string
     lesson?: XOR<LessonScalarRelationFilter, LessonWhereInput>
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
     parent?: XOR<LessonCommentNullableScalarRelationFilter, LessonCommentWhereInput> | null
     replies?: LessonCommentListRelationFilter
     reports?: CommentReportListRelationFilter
@@ -43121,7 +43227,8 @@ export namespace Prisma {
   export type LessonCommentOrderByWithRelationInput = {
     id?: SortOrder
     lessonId?: SortOrder
-    userId?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    adminId?: SortOrderInput | SortOrder
     parentId?: SortOrderInput | SortOrder
     body?: SortOrder
     status?: SortOrder
@@ -43130,6 +43237,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     lesson?: LessonOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
+    admin?: AdminOrderByWithRelationInput
     parent?: LessonCommentOrderByWithRelationInput
     replies?: LessonCommentOrderByRelationAggregateInput
     reports?: CommentReportOrderByRelationAggregateInput
@@ -43141,7 +43249,8 @@ export namespace Prisma {
     OR?: LessonCommentWhereInput[]
     NOT?: LessonCommentWhereInput | LessonCommentWhereInput[]
     lessonId?: IntFilter<"LessonComment"> | number
-    userId?: IntFilter<"LessonComment"> | number
+    userId?: IntNullableFilter<"LessonComment"> | number | null
+    adminId?: IntNullableFilter<"LessonComment"> | number | null
     parentId?: IntNullableFilter<"LessonComment"> | number | null
     body?: StringFilter<"LessonComment"> | string
     status?: EnumCommentStatusFilter<"LessonComment"> | $Enums.CommentStatus
@@ -43149,7 +43258,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"LessonComment"> | Date | string
     updatedAt?: DateTimeFilter<"LessonComment"> | Date | string
     lesson?: XOR<LessonScalarRelationFilter, LessonWhereInput>
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
     parent?: XOR<LessonCommentNullableScalarRelationFilter, LessonCommentWhereInput> | null
     replies?: LessonCommentListRelationFilter
     reports?: CommentReportListRelationFilter
@@ -43158,7 +43268,8 @@ export namespace Prisma {
   export type LessonCommentOrderByWithAggregationInput = {
     id?: SortOrder
     lessonId?: SortOrder
-    userId?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    adminId?: SortOrderInput | SortOrder
     parentId?: SortOrderInput | SortOrder
     body?: SortOrder
     status?: SortOrder
@@ -43178,7 +43289,8 @@ export namespace Prisma {
     NOT?: LessonCommentScalarWhereWithAggregatesInput | LessonCommentScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"LessonComment"> | number
     lessonId?: IntWithAggregatesFilter<"LessonComment"> | number
-    userId?: IntWithAggregatesFilter<"LessonComment"> | number
+    userId?: IntNullableWithAggregatesFilter<"LessonComment"> | number | null
+    adminId?: IntNullableWithAggregatesFilter<"LessonComment"> | number | null
     parentId?: IntNullableWithAggregatesFilter<"LessonComment"> | number | null
     body?: StringWithAggregatesFilter<"LessonComment"> | string
     status?: EnumCommentStatusWithAggregatesFilter<"LessonComment"> | $Enums.CommentStatus
@@ -43398,6 +43510,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     courses?: CourseCreateNestedManyWithoutAdminInput
+    comments?: LessonCommentCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateInput = {
@@ -43410,6 +43523,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     courses?: CourseUncheckedCreateNestedManyWithoutAdminInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUpdateInput = {
@@ -43421,6 +43535,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     courses?: CourseUpdateManyWithoutAdminNestedInput
+    comments?: LessonCommentUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateInput = {
@@ -43433,6 +43548,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     courses?: CourseUncheckedUpdateManyWithoutAdminNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminCreateManyInput = {
@@ -45448,7 +45564,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lesson: LessonCreateNestedOneWithoutCommentsInput
-    user: UserCreateNestedOneWithoutCommentsInput
+    user?: UserCreateNestedOneWithoutCommentsInput
+    admin?: AdminCreateNestedOneWithoutCommentsInput
     parent?: LessonCommentCreateNestedOneWithoutRepliesInput
     replies?: LessonCommentCreateNestedManyWithoutParentInput
     reports?: CommentReportCreateNestedManyWithoutCommentInput
@@ -45457,7 +45574,8 @@ export namespace Prisma {
   export type LessonCommentUncheckedCreateInput = {
     id?: number
     lessonId: number
-    userId: number
+    userId?: number | null
+    adminId?: number | null
     parentId?: number | null
     body: string
     status?: $Enums.CommentStatus
@@ -45475,7 +45593,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lesson?: LessonUpdateOneRequiredWithoutCommentsNestedInput
-    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
+    user?: UserUpdateOneWithoutCommentsNestedInput
+    admin?: AdminUpdateOneWithoutCommentsNestedInput
     parent?: LessonCommentUpdateOneWithoutRepliesNestedInput
     replies?: LessonCommentUpdateManyWithoutParentNestedInput
     reports?: CommentReportUpdateManyWithoutCommentNestedInput
@@ -45484,7 +45603,8 @@ export namespace Prisma {
   export type LessonCommentUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     lessonId?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     body?: StringFieldUpdateOperationsInput | string
     status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
@@ -45498,7 +45618,8 @@ export namespace Prisma {
   export type LessonCommentCreateManyInput = {
     id?: number
     lessonId: number
-    userId: number
+    userId?: number | null
+    adminId?: number | null
     parentId?: number | null
     body: string
     status?: $Enums.CommentStatus
@@ -45518,7 +45639,8 @@ export namespace Prisma {
   export type LessonCommentUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     lessonId?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     body?: StringFieldUpdateOperationsInput | string
     status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
@@ -47613,6 +47735,11 @@ export namespace Prisma {
     not?: NestedEnumCommentStatusFilter<$PrismaModel> | $Enums.CommentStatus
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type LessonCommentNullableScalarRelationFilter = {
     is?: LessonCommentWhereInput | null
     isNot?: LessonCommentWhereInput | null
@@ -47622,6 +47749,7 @@ export namespace Prisma {
     id?: SortOrder
     lessonId?: SortOrder
     userId?: SortOrder
+    adminId?: SortOrder
     parentId?: SortOrder
     body?: SortOrder
     status?: SortOrder
@@ -47634,6 +47762,7 @@ export namespace Prisma {
     id?: SortOrder
     lessonId?: SortOrder
     userId?: SortOrder
+    adminId?: SortOrder
     parentId?: SortOrder
   }
 
@@ -47641,6 +47770,7 @@ export namespace Prisma {
     id?: SortOrder
     lessonId?: SortOrder
     userId?: SortOrder
+    adminId?: SortOrder
     parentId?: SortOrder
     body?: SortOrder
     status?: SortOrder
@@ -47653,6 +47783,7 @@ export namespace Prisma {
     id?: SortOrder
     lessonId?: SortOrder
     userId?: SortOrder
+    adminId?: SortOrder
     parentId?: SortOrder
     body?: SortOrder
     status?: SortOrder
@@ -47665,6 +47796,7 @@ export namespace Prisma {
     id?: SortOrder
     lessonId?: SortOrder
     userId?: SortOrder
+    adminId?: SortOrder
     parentId?: SortOrder
   }
 
@@ -48172,11 +48304,25 @@ export namespace Prisma {
     connect?: CourseWhereUniqueInput | CourseWhereUniqueInput[]
   }
 
+  export type LessonCommentCreateNestedManyWithoutAdminInput = {
+    create?: XOR<LessonCommentCreateWithoutAdminInput, LessonCommentUncheckedCreateWithoutAdminInput> | LessonCommentCreateWithoutAdminInput[] | LessonCommentUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutAdminInput | LessonCommentCreateOrConnectWithoutAdminInput[]
+    createMany?: LessonCommentCreateManyAdminInputEnvelope
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+  }
+
   export type CourseUncheckedCreateNestedManyWithoutAdminInput = {
     create?: XOR<CourseCreateWithoutAdminInput, CourseUncheckedCreateWithoutAdminInput> | CourseCreateWithoutAdminInput[] | CourseUncheckedCreateWithoutAdminInput[]
     connectOrCreate?: CourseCreateOrConnectWithoutAdminInput | CourseCreateOrConnectWithoutAdminInput[]
     createMany?: CourseCreateManyAdminInputEnvelope
     connect?: CourseWhereUniqueInput | CourseWhereUniqueInput[]
+  }
+
+  export type LessonCommentUncheckedCreateNestedManyWithoutAdminInput = {
+    create?: XOR<LessonCommentCreateWithoutAdminInput, LessonCommentUncheckedCreateWithoutAdminInput> | LessonCommentCreateWithoutAdminInput[] | LessonCommentUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutAdminInput | LessonCommentCreateOrConnectWithoutAdminInput[]
+    createMany?: LessonCommentCreateManyAdminInputEnvelope
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
   }
 
   export type CourseUpdateManyWithoutAdminNestedInput = {
@@ -48193,6 +48339,20 @@ export namespace Prisma {
     deleteMany?: CourseScalarWhereInput | CourseScalarWhereInput[]
   }
 
+  export type LessonCommentUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<LessonCommentCreateWithoutAdminInput, LessonCommentUncheckedCreateWithoutAdminInput> | LessonCommentCreateWithoutAdminInput[] | LessonCommentUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutAdminInput | LessonCommentCreateOrConnectWithoutAdminInput[]
+    upsert?: LessonCommentUpsertWithWhereUniqueWithoutAdminInput | LessonCommentUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: LessonCommentCreateManyAdminInputEnvelope
+    set?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    disconnect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    delete?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    update?: LessonCommentUpdateWithWhereUniqueWithoutAdminInput | LessonCommentUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: LessonCommentUpdateManyWithWhereWithoutAdminInput | LessonCommentUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: LessonCommentScalarWhereInput | LessonCommentScalarWhereInput[]
+  }
+
   export type CourseUncheckedUpdateManyWithoutAdminNestedInput = {
     create?: XOR<CourseCreateWithoutAdminInput, CourseUncheckedCreateWithoutAdminInput> | CourseCreateWithoutAdminInput[] | CourseUncheckedCreateWithoutAdminInput[]
     connectOrCreate?: CourseCreateOrConnectWithoutAdminInput | CourseCreateOrConnectWithoutAdminInput[]
@@ -48205,6 +48365,20 @@ export namespace Prisma {
     update?: CourseUpdateWithWhereUniqueWithoutAdminInput | CourseUpdateWithWhereUniqueWithoutAdminInput[]
     updateMany?: CourseUpdateManyWithWhereWithoutAdminInput | CourseUpdateManyWithWhereWithoutAdminInput[]
     deleteMany?: CourseScalarWhereInput | CourseScalarWhereInput[]
+  }
+
+  export type LessonCommentUncheckedUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<LessonCommentCreateWithoutAdminInput, LessonCommentUncheckedCreateWithoutAdminInput> | LessonCommentCreateWithoutAdminInput[] | LessonCommentUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: LessonCommentCreateOrConnectWithoutAdminInput | LessonCommentCreateOrConnectWithoutAdminInput[]
+    upsert?: LessonCommentUpsertWithWhereUniqueWithoutAdminInput | LessonCommentUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: LessonCommentCreateManyAdminInputEnvelope
+    set?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    disconnect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    delete?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+    update?: LessonCommentUpdateWithWhereUniqueWithoutAdminInput | LessonCommentUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: LessonCommentUpdateManyWithWhereWithoutAdminInput | LessonCommentUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: LessonCommentScalarWhereInput | LessonCommentScalarWhereInput[]
   }
 
   export type TopicCreateNestedManyWithoutSubjectInput = {
@@ -50382,6 +50556,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type AdminCreateNestedOneWithoutCommentsInput = {
+    create?: XOR<AdminCreateWithoutCommentsInput, AdminUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutCommentsInput
+    connect?: AdminWhereUniqueInput
+  }
+
   export type LessonCommentCreateNestedOneWithoutRepliesInput = {
     create?: XOR<LessonCommentCreateWithoutRepliesInput, LessonCommentUncheckedCreateWithoutRepliesInput>
     connectOrCreate?: LessonCommentCreateOrConnectWithoutRepliesInput
@@ -50428,12 +50608,24 @@ export namespace Prisma {
     update?: XOR<XOR<LessonUpdateToOneWithWhereWithoutCommentsInput, LessonUpdateWithoutCommentsInput>, LessonUncheckedUpdateWithoutCommentsInput>
   }
 
-  export type UserUpdateOneRequiredWithoutCommentsNestedInput = {
+  export type UserUpdateOneWithoutCommentsNestedInput = {
     create?: XOR<UserCreateWithoutCommentsInput, UserUncheckedCreateWithoutCommentsInput>
     connectOrCreate?: UserCreateOrConnectWithoutCommentsInput
     upsert?: UserUpsertWithoutCommentsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCommentsInput, UserUpdateWithoutCommentsInput>, UserUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type AdminUpdateOneWithoutCommentsNestedInput = {
+    create?: XOR<AdminCreateWithoutCommentsInput, AdminUncheckedCreateWithoutCommentsInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutCommentsInput
+    upsert?: AdminUpsertWithoutCommentsInput
+    disconnect?: AdminWhereInput | boolean
+    delete?: AdminWhereInput | boolean
+    connect?: AdminWhereUniqueInput
+    update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutCommentsInput, AdminUpdateWithoutCommentsInput>, AdminUncheckedUpdateWithoutCommentsInput>
   }
 
   export type LessonCommentUpdateOneWithoutRepliesNestedInput = {
@@ -51063,6 +51255,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lesson: LessonCreateNestedOneWithoutCommentsInput
+    admin?: AdminCreateNestedOneWithoutCommentsInput
     parent?: LessonCommentCreateNestedOneWithoutRepliesInput
     replies?: LessonCommentCreateNestedManyWithoutParentInput
     reports?: CommentReportCreateNestedManyWithoutCommentInput
@@ -51071,6 +51264,7 @@ export namespace Prisma {
   export type LessonCommentUncheckedCreateWithoutUserInput = {
     id?: number
     lessonId: number
+    adminId?: number | null
     parentId?: number | null
     body: string
     status?: $Enums.CommentStatus
@@ -51408,7 +51602,8 @@ export namespace Prisma {
     NOT?: LessonCommentScalarWhereInput | LessonCommentScalarWhereInput[]
     id?: IntFilter<"LessonComment"> | number
     lessonId?: IntFilter<"LessonComment"> | number
-    userId?: IntFilter<"LessonComment"> | number
+    userId?: IntNullableFilter<"LessonComment"> | number | null
+    adminId?: IntNullableFilter<"LessonComment"> | number | null
     parentId?: IntNullableFilter<"LessonComment"> | number | null
     body?: StringFilter<"LessonComment"> | string
     status?: EnumCommentStatusFilter<"LessonComment"> | $Enums.CommentStatus
@@ -51586,6 +51781,43 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type LessonCommentCreateWithoutAdminInput = {
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lesson: LessonCreateNestedOneWithoutCommentsInput
+    user?: UserCreateNestedOneWithoutCommentsInput
+    parent?: LessonCommentCreateNestedOneWithoutRepliesInput
+    replies?: LessonCommentCreateNestedManyWithoutParentInput
+    reports?: CommentReportCreateNestedManyWithoutCommentInput
+  }
+
+  export type LessonCommentUncheckedCreateWithoutAdminInput = {
+    id?: number
+    lessonId: number
+    userId?: number | null
+    parentId?: number | null
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: LessonCommentUncheckedCreateNestedManyWithoutParentInput
+    reports?: CommentReportUncheckedCreateNestedManyWithoutCommentInput
+  }
+
+  export type LessonCommentCreateOrConnectWithoutAdminInput = {
+    where: LessonCommentWhereUniqueInput
+    create: XOR<LessonCommentCreateWithoutAdminInput, LessonCommentUncheckedCreateWithoutAdminInput>
+  }
+
+  export type LessonCommentCreateManyAdminInputEnvelope = {
+    data: LessonCommentCreateManyAdminInput | LessonCommentCreateManyAdminInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CourseUpsertWithWhereUniqueWithoutAdminInput = {
     where: CourseWhereUniqueInput
     update: XOR<CourseUpdateWithoutAdminInput, CourseUncheckedUpdateWithoutAdminInput>
@@ -51618,6 +51850,22 @@ export namespace Prisma {
     createdBy?: IntNullableFilter<"Course"> | number | null
     createdAt?: DateTimeFilter<"Course"> | Date | string
     updatedAt?: DateTimeFilter<"Course"> | Date | string
+  }
+
+  export type LessonCommentUpsertWithWhereUniqueWithoutAdminInput = {
+    where: LessonCommentWhereUniqueInput
+    update: XOR<LessonCommentUpdateWithoutAdminInput, LessonCommentUncheckedUpdateWithoutAdminInput>
+    create: XOR<LessonCommentCreateWithoutAdminInput, LessonCommentUncheckedCreateWithoutAdminInput>
+  }
+
+  export type LessonCommentUpdateWithWhereUniqueWithoutAdminInput = {
+    where: LessonCommentWhereUniqueInput
+    data: XOR<LessonCommentUpdateWithoutAdminInput, LessonCommentUncheckedUpdateWithoutAdminInput>
+  }
+
+  export type LessonCommentUpdateManyWithWhereWithoutAdminInput = {
+    where: LessonCommentScalarWhereInput
+    data: XOR<LessonCommentUpdateManyMutationInput, LessonCommentUncheckedUpdateManyWithoutAdminInput>
   }
 
   export type TopicCreateWithoutSubjectInput = {
@@ -52207,6 +52455,7 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    comments?: LessonCommentCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateWithoutCoursesInput = {
@@ -52218,6 +52467,7 @@ export namespace Prisma {
     status?: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminCreateOrConnectWithoutCoursesInput = {
@@ -52504,6 +52754,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    comments?: LessonCommentUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutCoursesInput = {
@@ -52515,6 +52766,7 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    comments?: LessonCommentUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type ChapterUpsertWithWhereUniqueWithoutCourseInput = {
@@ -53369,7 +53621,8 @@ export namespace Prisma {
     editedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutCommentsInput
+    user?: UserCreateNestedOneWithoutCommentsInput
+    admin?: AdminCreateNestedOneWithoutCommentsInput
     parent?: LessonCommentCreateNestedOneWithoutRepliesInput
     replies?: LessonCommentCreateNestedManyWithoutParentInput
     reports?: CommentReportCreateNestedManyWithoutCommentInput
@@ -53377,7 +53630,8 @@ export namespace Prisma {
 
   export type LessonCommentUncheckedCreateWithoutLessonInput = {
     id?: number
-    userId: number
+    userId?: number | null
+    adminId?: number | null
     parentId?: number | null
     body: string
     status?: $Enums.CommentStatus
@@ -57206,6 +57460,34 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutCommentsInput, UserUncheckedCreateWithoutCommentsInput>
   }
 
+  export type AdminCreateWithoutCommentsInput = {
+    email: string
+    password: string
+    name?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    courses?: CourseCreateNestedManyWithoutAdminInput
+  }
+
+  export type AdminUncheckedCreateWithoutCommentsInput = {
+    id?: number
+    email: string
+    password: string
+    name?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    courses?: CourseUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AdminCreateOrConnectWithoutCommentsInput = {
+    where: AdminWhereUniqueInput
+    create: XOR<AdminCreateWithoutCommentsInput, AdminUncheckedCreateWithoutCommentsInput>
+  }
+
   export type LessonCommentCreateWithoutRepliesInput = {
     body: string
     status?: $Enums.CommentStatus
@@ -57213,7 +57495,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lesson: LessonCreateNestedOneWithoutCommentsInput
-    user: UserCreateNestedOneWithoutCommentsInput
+    user?: UserCreateNestedOneWithoutCommentsInput
+    admin?: AdminCreateNestedOneWithoutCommentsInput
     parent?: LessonCommentCreateNestedOneWithoutRepliesInput
     reports?: CommentReportCreateNestedManyWithoutCommentInput
   }
@@ -57221,7 +57504,8 @@ export namespace Prisma {
   export type LessonCommentUncheckedCreateWithoutRepliesInput = {
     id?: number
     lessonId: number
-    userId: number
+    userId?: number | null
+    adminId?: number | null
     parentId?: number | null
     body: string
     status?: $Enums.CommentStatus
@@ -57243,7 +57527,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lesson: LessonCreateNestedOneWithoutCommentsInput
-    user: UserCreateNestedOneWithoutCommentsInput
+    user?: UserCreateNestedOneWithoutCommentsInput
+    admin?: AdminCreateNestedOneWithoutCommentsInput
     replies?: LessonCommentCreateNestedManyWithoutParentInput
     reports?: CommentReportCreateNestedManyWithoutCommentInput
   }
@@ -57251,7 +57536,8 @@ export namespace Prisma {
   export type LessonCommentUncheckedCreateWithoutParentInput = {
     id?: number
     lessonId: number
-    userId: number
+    userId?: number | null
+    adminId?: number | null
     body: string
     status?: $Enums.CommentStatus
     editedAt?: Date | string | null
@@ -57416,6 +57702,40 @@ export namespace Prisma {
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type AdminUpsertWithoutCommentsInput = {
+    update: XOR<AdminUpdateWithoutCommentsInput, AdminUncheckedUpdateWithoutCommentsInput>
+    create: XOR<AdminCreateWithoutCommentsInput, AdminUncheckedCreateWithoutCommentsInput>
+    where?: AdminWhereInput
+  }
+
+  export type AdminUpdateToOneWithWhereWithoutCommentsInput = {
+    where?: AdminWhereInput
+    data: XOR<AdminUpdateWithoutCommentsInput, AdminUncheckedUpdateWithoutCommentsInput>
+  }
+
+  export type AdminUpdateWithoutCommentsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courses?: CourseUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AdminUncheckedUpdateWithoutCommentsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courses?: CourseUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
   export type LessonCommentUpsertWithoutRepliesInput = {
     update: XOR<LessonCommentUpdateWithoutRepliesInput, LessonCommentUncheckedUpdateWithoutRepliesInput>
     create: XOR<LessonCommentCreateWithoutRepliesInput, LessonCommentUncheckedCreateWithoutRepliesInput>
@@ -57434,7 +57754,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lesson?: LessonUpdateOneRequiredWithoutCommentsNestedInput
-    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
+    user?: UserUpdateOneWithoutCommentsNestedInput
+    admin?: AdminUpdateOneWithoutCommentsNestedInput
     parent?: LessonCommentUpdateOneWithoutRepliesNestedInput
     reports?: CommentReportUpdateManyWithoutCommentNestedInput
   }
@@ -57442,7 +57763,8 @@ export namespace Prisma {
   export type LessonCommentUncheckedUpdateWithoutRepliesInput = {
     id?: IntFieldUpdateOperationsInput | number
     lessonId?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     body?: StringFieldUpdateOperationsInput | string
     status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
@@ -57491,7 +57813,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lesson: LessonCreateNestedOneWithoutCommentsInput
-    user: UserCreateNestedOneWithoutCommentsInput
+    user?: UserCreateNestedOneWithoutCommentsInput
+    admin?: AdminCreateNestedOneWithoutCommentsInput
     parent?: LessonCommentCreateNestedOneWithoutRepliesInput
     replies?: LessonCommentCreateNestedManyWithoutParentInput
   }
@@ -57499,7 +57822,8 @@ export namespace Prisma {
   export type LessonCommentUncheckedCreateWithoutReportsInput = {
     id?: number
     lessonId: number
-    userId: number
+    userId?: number | null
+    adminId?: number | null
     parentId?: number | null
     body: string
     status?: $Enums.CommentStatus
@@ -57582,7 +57906,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lesson?: LessonUpdateOneRequiredWithoutCommentsNestedInput
-    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
+    user?: UserUpdateOneWithoutCommentsNestedInput
+    admin?: AdminUpdateOneWithoutCommentsNestedInput
     parent?: LessonCommentUpdateOneWithoutRepliesNestedInput
     replies?: LessonCommentUpdateManyWithoutParentNestedInput
   }
@@ -57590,7 +57915,8 @@ export namespace Prisma {
   export type LessonCommentUncheckedUpdateWithoutReportsInput = {
     id?: IntFieldUpdateOperationsInput | number
     lessonId?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     body?: StringFieldUpdateOperationsInput | string
     status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
@@ -57711,6 +58037,7 @@ export namespace Prisma {
   export type LessonCommentCreateManyUserInput = {
     id?: number
     lessonId: number
+    adminId?: number | null
     parentId?: number | null
     body: string
     status?: $Enums.CommentStatus
@@ -57890,6 +58217,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lesson?: LessonUpdateOneRequiredWithoutCommentsNestedInput
+    admin?: AdminUpdateOneWithoutCommentsNestedInput
     parent?: LessonCommentUpdateOneWithoutRepliesNestedInput
     replies?: LessonCommentUpdateManyWithoutParentNestedInput
     reports?: CommentReportUpdateManyWithoutCommentNestedInput
@@ -57898,6 +58226,7 @@ export namespace Prisma {
   export type LessonCommentUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     lessonId?: IntFieldUpdateOperationsInput | number
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     body?: StringFieldUpdateOperationsInput | string
     status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
@@ -57911,6 +58240,7 @@ export namespace Prisma {
   export type LessonCommentUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     lessonId?: IntFieldUpdateOperationsInput | number
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     body?: StringFieldUpdateOperationsInput | string
     status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
@@ -57952,6 +58282,18 @@ export namespace Prisma {
     status?: $Enums.CourseStatus
     accessType?: $Enums.AccessType
     displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LessonCommentCreateManyAdminInput = {
+    id?: number
+    lessonId: number
+    userId?: number | null
+    parentId?: number | null
+    body: string
+    status?: $Enums.CommentStatus
+    editedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -58007,6 +58349,45 @@ export namespace Prisma {
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonCommentUpdateWithoutAdminInput = {
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lesson?: LessonUpdateOneRequiredWithoutCommentsNestedInput
+    user?: UserUpdateOneWithoutCommentsNestedInput
+    parent?: LessonCommentUpdateOneWithoutRepliesNestedInput
+    replies?: LessonCommentUpdateManyWithoutParentNestedInput
+    reports?: CommentReportUpdateManyWithoutCommentNestedInput
+  }
+
+  export type LessonCommentUncheckedUpdateWithoutAdminInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    parentId?: NullableIntFieldUpdateOperationsInput | number | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: LessonCommentUncheckedUpdateManyWithoutParentNestedInput
+    reports?: CommentReportUncheckedUpdateManyWithoutCommentNestedInput
+  }
+
+  export type LessonCommentUncheckedUpdateManyWithoutAdminInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    parentId?: NullableIntFieldUpdateOperationsInput | number | null
+    body?: StringFieldUpdateOperationsInput | string
+    status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
+    editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -58972,7 +59353,8 @@ export namespace Prisma {
 
   export type LessonCommentCreateManyLessonInput = {
     id?: number
-    userId: number
+    userId?: number | null
+    adminId?: number | null
     parentId?: number | null
     body: string
     status?: $Enums.CommentStatus
@@ -59035,7 +59417,8 @@ export namespace Prisma {
     editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
+    user?: UserUpdateOneWithoutCommentsNestedInput
+    admin?: AdminUpdateOneWithoutCommentsNestedInput
     parent?: LessonCommentUpdateOneWithoutRepliesNestedInput
     replies?: LessonCommentUpdateManyWithoutParentNestedInput
     reports?: CommentReportUpdateManyWithoutCommentNestedInput
@@ -59043,7 +59426,8 @@ export namespace Prisma {
 
   export type LessonCommentUncheckedUpdateWithoutLessonInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     body?: StringFieldUpdateOperationsInput | string
     status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
@@ -59056,7 +59440,8 @@ export namespace Prisma {
 
   export type LessonCommentUncheckedUpdateManyWithoutLessonInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     body?: StringFieldUpdateOperationsInput | string
     status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
@@ -59528,7 +59913,8 @@ export namespace Prisma {
   export type LessonCommentCreateManyParentInput = {
     id?: number
     lessonId: number
-    userId: number
+    userId?: number | null
+    adminId?: number | null
     body: string
     status?: $Enums.CommentStatus
     editedAt?: Date | string | null
@@ -59551,7 +59937,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lesson?: LessonUpdateOneRequiredWithoutCommentsNestedInput
-    user?: UserUpdateOneRequiredWithoutCommentsNestedInput
+    user?: UserUpdateOneWithoutCommentsNestedInput
+    admin?: AdminUpdateOneWithoutCommentsNestedInput
     replies?: LessonCommentUpdateManyWithoutParentNestedInput
     reports?: CommentReportUpdateManyWithoutCommentNestedInput
   }
@@ -59559,7 +59946,8 @@ export namespace Prisma {
   export type LessonCommentUncheckedUpdateWithoutParentInput = {
     id?: IntFieldUpdateOperationsInput | number
     lessonId?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
     body?: StringFieldUpdateOperationsInput | string
     status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
     editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -59572,7 +59960,8 @@ export namespace Prisma {
   export type LessonCommentUncheckedUpdateManyWithoutParentInput = {
     id?: IntFieldUpdateOperationsInput | number
     lessonId?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
     body?: StringFieldUpdateOperationsInput | string
     status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
     editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

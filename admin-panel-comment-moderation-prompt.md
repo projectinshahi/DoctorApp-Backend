@@ -16,7 +16,10 @@ Captured against the live database on 2026-09-01.
 
 ```
 GET    /admin/comments?status=&lessonId=&courseId=&search=&page=&limit=
+GET    /admin/comments/:commentId                       ← one thread, whole
 PATCH  /admin/comments/:commentId               { "status": "hidden" | "published" }
+POST   /admin/comments/:commentId/reply         { "body" }
+PATCH  /admin/comments/:commentId/body          { "body" }   ← own replies only
 POST   /admin/comments/:commentId/dismiss-reports
 DELETE /admin/comments/:commentId
 PATCH  /admin/lessons/:lessonId/comments        { "enabled": true | false }
@@ -34,6 +37,8 @@ PATCH  /admin/lessons/:lessonId/comments        { "enabled": true | false }
     "id": 1, "parentId": null, "isReply": false, "replyCount": 2,
     "body": "Great explanation of the ECG axis — thanks!",
     "status": "published", "createdAt": "...", "editedAt": "...",
+    "author": { "id": 30, "name": "Keerthana Bineesh", "email": "...", "avatarUrl": null, "role": "student" },
+    "isInstructor": false,
     "user": { "id": 30, "name": "Keerthana Bineesh", "email": "...", "avatarUrl": null },
     "lesson": { "id": 37, "title": "Cardiology", "type": "video", "commentsEnabled": true,
                 "chapter": { "id": 17, "title": "Cardiology" },
@@ -73,6 +78,73 @@ to know which.
 `course` is resolved for you — a lesson reaches its course either through its
 chapter or through the chapter's course type, and both columns are in use.
 Do not walk that yourself.
+
+---
+
+## 1b. Open a thread — `GET /admin/comments/:commentId`
+
+The list is flat and paginated on purpose: a moderator scanning a queue does
+not want threads. But the moment they open a row to answer it, they need the
+conversation they are answering into.
+
+```json
+{ "focusCommentId": 12, "threadRootId": 11,
+  "lesson": { "id": 37, "title": "Cardiology", "commentsEnabled": true,
+              "course": { "id": 22, "title": "GP GULF LICENSING EXAM" }, "courseType": null },
+  "reportCount": 0, "openReportCount": 0, "needsReview": false, "reports": [],
+  "thread": {
+    "id": 11, "body": "I have a doubt can you please solve this",
+    "isInstructor": false,
+    "author": { "id": 30, "name": "Keerthana Bineesh", "role": "student" },
+    "replies": [
+      { "id": 12, "body": "The axis is read off leads I and aVF.",
+        "isInstructor": true, "edited": true,
+        "author": { "id": 1, "name": "Super Admin", "role": "admin" } } ] } }
+```
+
+**Pass any comment id — a reply included.** It returns the thread that comment
+belongs to, with `focusCommentId` telling you which row to scroll to and
+highlight. Opening a reply and getting a fragment would be useless.
+
+---
+
+## 1c. Reply as the instructor — `POST /admin/comments/:commentId/reply`
+
+```
+POST /admin/comments/11/reply   { "body": "ok i will explain it..." }
+```
+```json
+201 { "message": "Reply posted. Students see it under their comment.",
+      "parentId": 11,
+      "comment": { "id": 12, "isInstructor": true,
+                   "author": { "id": 1, "name": "Super Admin", "role": "admin" } } }
+```
+
+This is the whole reason a medical app has comments. *"I have a doubt, can you
+solve this"* is a question, not chatter, and a moderation screen that can only
+hide and delete has no way to answer it.
+
+- Replying to a **reply** joins the same thread — one level, same rule as the
+  student side. Place the result by the response's `parentId`, not the id you
+  posted to.
+- **409** on a hidden comment: a visible reply under something no student can
+  see reads as a reply to nothing. Restore it first.
+- The per-lesson comments-off switch does **not** block this. It stops students
+  starting new discussions; an instructor still needs to close off the
+  questions already asked.
+
+### Editing your own reply
+
+```
+PATCH /admin/comments/12/body   { "body": "..." }
+```
+
+**403 on a student's comment** — `This is a student's comment. You can hide or
+delete it, but not rewrite it.` Correcting someone's words into something they
+did not write is worse than any comment they could have left; the tools for a
+bad one are hide and delete.
+
+Show the edit action only when `isInstructor` is true on the row.
 
 ---
 
@@ -160,8 +232,13 @@ can offer the switch inline.
 time, an "edited" marker from `editedAt`, and `Reply to #N` when `isReply`.
 Reported rows show the reasons and who filed them from `reports`.
 
-**Row actions** — Hide / Restore, Dismiss reports (reported rows only), Delete
-behind a confirm.
+**Row actions** — **Reply**, Hide / Restore, Dismiss reports (reported rows
+only), Delete behind a confirm. Reply opens the thread
+(`GET /admin/comments/:id`) so the instructor answers with the conversation in
+front of them.
+
+**Instructor rows** — `isInstructor: true` marks the teaching side's own
+replies. Badge them, and show Edit only on those.
 
 **Lesson comment switch** — a toggle on the lesson edit screen, and inline on
 the moderation list.
@@ -177,3 +254,7 @@ me?", and any other default buries it.
 - Delete is permanent. Hide is the reversible one; make it primary.
 - Disabling comments does not remove them.
 - `user.name` and `avatarUrl` are nullable; `email` is present for admins only.
+- Every row now has `author` with a `role` of `student` or `admin`. `user` is
+  still populated for both, so an existing binding keeps working.
+- Place an instructor reply by the response's `parentId`.
+- Never offer Edit on a student's comment — the API refuses it with 403.

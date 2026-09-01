@@ -57,7 +57,8 @@ model Admin {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  courses Course[]
+  courses  Course[]
+  comments LessonComment[]
 
   @@map("admins")
 }
@@ -658,7 +659,12 @@ enum CommentStatus {
 model LessonComment {
   id       Int    @id @default(autoincrement())
   lessonId Int
-  userId   Int
+  // Exactly one of userId / adminId is set. A comment is written either by a
+  // student or by the teaching side, and they live in different tables — the
+  // database enforces the either-or with a CHECK constraint, since Prisma
+  // cannot express it.
+  userId   Int?
+  adminId  Int?
   // Null for a top-level comment. One level only: a reply to a reply is
   // re-parented onto the thread root, enforced in the controller because the
   // database cannot express "at most one level deep".
@@ -672,7 +678,8 @@ model LessonComment {
   updatedAt DateTime  @updatedAt
 
   lesson  Lesson          @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  admin   Admin?          @relation(fields: [adminId], references: [id], onDelete: Cascade)
   parent  LessonComment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
   replies LessonComment[] @relation("CommentReplies")
   reports CommentReport[]
@@ -681,6 +688,7 @@ model LessonComment {
   @@index([lessonId, status, createdAt])
   @@index([parentId])
   @@index([userId])
+  @@index([adminId])
   @@map("lesson_comments")
 }
 

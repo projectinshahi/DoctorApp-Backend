@@ -84,7 +84,9 @@ async function listComments(req, res) {
         select: {
           id: true, parentId: true, body: true, status: true,
           createdAt: true, editedAt: true,
+          userId: true, adminId: true,
           user: { select: { id: true, name: true, email: true, avatarUrl: true } },
+          admin: { select: { id: true, name: true, email: true } },
           lesson: {
             select: {
               id: true, title: true, type: true, commentsEnabled: true,
@@ -128,11 +130,18 @@ async function listComments(req, res) {
         reported: reportedCount,
       },
       pagination: { page, limit, total, totalPages: Math.ceil(total / limit) },
-      comments: comments.map(({ _count, reports, lesson, ...rest }) => {
+      comments: comments.map(({ _count, reports, lesson, admin, user, userId, adminId, ...rest }) => {
         const open = reports.filter((r) => r.resolvedAt === null);
         const { chapter, ...lessonRest } = lesson;
         return {
           ...rest,
+          // Whoever wrote it, in one shape. `user` is kept as well so an
+          // existing panel binding to it does not break.
+          author: adminId != null
+            ? { id: admin?.id ?? adminId, name: admin?.name ?? 'Instructor', email: admin?.email ?? null, avatarUrl: null, role: 'admin' }
+            : { ...user, role: 'student' },
+          isInstructor: adminId != null,
+          user: user ?? { id: admin?.id ?? adminId, name: admin?.name ?? 'Instructor', email: admin?.email ?? null, avatarUrl: null },
           isReply: rest.parentId !== null,
           replyCount: _count.replies,
           lesson: {
@@ -156,6 +165,229 @@ async function listComments(req, res) {
   } catch (error) {
     console.error('admin listComments error:', error);
     return res.status(500).json({ error: { message: 'Failed to load comments' } });
+  }
+}
+
+
+
+const MAX_BODY = 2000;
+
+const THREAD_SELECT = {
+  id: true, parentId: true, body: true, status: true,
+  createdAt: true, editedAt: true, userId: true, adminId: true,
+  user: { select: { id: true, name: true, email: true, avatarUrl: true } },
+  admin: { select: { id: true, name: true, email: true } },
+};
+
+function shapeThreadComment(c) {
+  const fromAdmin = c.adminId != null;
+  return {
+    id: c.id,
+    parentId: c.parentId,
+    body: c.body,
+    status: c.status,
+    createdAt: c.createdAt,
+    editedAt: c.editedAt,
+    edited: c.editedAt !== null,
+    isInstructor: fromAdmin,
+    author: fromAdmin
+      ? { id: c.admin?.id ?? c.adminId, name: c.admin?.name ?? 'Instructor', email: c.admin?.email ?? null, avatarUrl: null, role: 'admin' }
+      : { ...c.user, role: 'student' },
+    replies: [],
+  };
+}
+
+
+// GET /admin/comments/:commentId
+//
+// One thread, whole. The list is flat and paginated by design — a moderator
+// scanning a queue does not want threads — but the moment they open a row to
+// answer it, they need the conversation they are answering into.
+async function getCommentThread(req, res) {
+  try {
+    const commentId = Number(req.params.commentId);
+    if (!Number.isInteger(commentId)) {
+      return res.status(400).json({ error: { message: 'Invalid comment id' } });
+    }
+
+    const comment = await prisma.lessonComment.findUnique({
+      where: { id: commentId },
+      select: {
+        ...THREAD_SELECT,
+        lesson: {
+          select: {
+            id: true, title: true, type: true, commentsEnabled: true,
+            chapter: {
+              select: {
+                id: true, title: true,
+                course: { select: { id: true, title: true } },
+                courseType: { select: { id: true, title: true, course: { select: { id: true, title: true } } } },
+              },
+            },
+          },
+        },
+        reports: {
+          orderBy: { createdAt: 'desc' },
+          select: {
+            id: true, reason: true, createdAt: true, resolvedAt: true,
+            user: { select: { id: true, name: true } },
+          },
+        },
+      },
+    });
+    if (!comment) return res.status(404).json({ error: { message: 'Comment not found' } });
+
+    // Open a reply and you get the thread it belongs to, not a fragment of it.
+    const rootId = comment.parentId ?? comment.id;
+    const [root, replies] = await Promise.all([
+      rootId === comment.id
+        ? Promise.resolve(comment)
+        : prisma.lessonComment.findUnique({ where: { id: rootId }, select: THREAD_SELECT }),
+      prisma.lessonComment.findMany({
+        where: { parentId: rootId },
+        orderBy: { createdAt: 'asc' },
+        select: THREAD_SELECT,
+      }),
+    ]);
+
+    const { chapter, ...lessonRest } = comment.lesson;
+    const open = comment.reports.filter((r) => r.resolvedAt === null);
+
+    const thread = shapeThreadComment(root);
+    thread.replies = replies.map(shapeThreadComment);
+
+    return res.status(200).json({
+      lesson: {
+        ...lessonRest,
+        chapter: { id: chapter.id, title: chapter.title },
+        course: chapter.course ?? chapter.courseType?.course ?? null,
+        courseType: chapter.courseType
+          ? { id: chapter.courseType.id, title: chapter.courseType.title }
+          : null,
+      },
+      // Which comment was opened. It may be a reply inside `thread.replies`.
+      focusCommentId: comment.id,
+      threadRootId: rootId,
+      reportCount: comment.reports.length,
+      openReportCount: open.length,
+      needsReview: open.length > 0 && comment.status === 'published',
+      reports: comment.reports,
+      thread,
+    });
+  } catch (error) {
+    console.error('getCommentThread error:', error);
+    return res.status(500).json({ error: { message: 'Failed to load the thread' } });
+  }
+}
+
+
+// POST /admin/comments/:commentId/reply   { body }
+//
+// The teaching side answering a student. This is the whole reason a medical
+// app has comments — "I have a doubt, can you solve this" is a question, not
+// chatter, and a moderation screen that can only hide and delete has no way to
+// answer it.
+async function replyToComment(req, res) {
+  try {
+    const commentId = Number(req.params.commentId);
+    if (!Number.isInteger(commentId)) {
+      return res.status(400).json({ error: { message: 'Invalid comment id' } });
+    }
+
+    const body = typeof req.body?.body === 'string' ? req.body.body.trim() : '';
+    if (body === '') {
+      return res.status(400).json({ error: { message: 'Write a reply first' } });
+    }
+    if (body.length > MAX_BODY) {
+      return res.status(400).json({ error: { message: `Replies are limited to ${MAX_BODY} characters` } });
+    }
+
+    const target = await prisma.lessonComment.findUnique({
+      where: { id: commentId },
+      select: { id: true, parentId: true, lessonId: true, status: true },
+    });
+    if (!target) return res.status(404).json({ error: { message: 'Comment not found' } });
+
+    // Answering a hidden comment would put a visible reply under something no
+    // student can see, reading as a reply to nothing.
+    if (target.status !== 'published') {
+      return res.status(409).json({
+        error: { message: 'That comment is hidden. Restore it first if you want to reply to it.' },
+      });
+    }
+
+    // The per-lesson switch is not checked here on purpose: it stops students
+    // starting new discussions, and an instructor still needs to be able to
+    // close off the questions already asked before it was turned off.
+    const created = await prisma.lessonComment.create({
+      data: {
+        lessonId: target.lessonId,
+        adminId: req.admin.adminId,
+        userId: null,
+        // Same one-level rule as the student side: replying to a reply joins
+        // the thread rather than starting a third tier.
+        parentId: target.parentId ?? target.id,
+        body,
+      },
+      select: THREAD_SELECT,
+    });
+
+    return res.status(201).json({
+      comment: shapeThreadComment(created),
+      // May differ from the id replied to, when a reply was replied to.
+      parentId: created.parentId,
+      message: 'Reply posted. Students see it under their comment.',
+    });
+  } catch (error) {
+    console.error('replyToComment error:', error);
+    return res.status(500).json({ error: { message: 'Failed to post the reply' } });
+  }
+}
+
+
+
+// PATCH /admin/comments/:commentId/body   { body }
+//
+// Editing an instructor's OWN reply only. A student's words are never
+// rewritable from here: correcting someone's comment into something they did
+// not write is worse than any comment they could have left, and the moderation
+// tools for a bad one are hide and delete.
+async function editOwnReply(req, res) {
+  try {
+    const commentId = Number(req.params.commentId);
+    if (!Number.isInteger(commentId)) {
+      return res.status(400).json({ error: { message: 'Invalid comment id' } });
+    }
+
+    const body = typeof req.body?.body === 'string' ? req.body.body.trim() : '';
+    if (body === '') {
+      return res.status(400).json({ error: { message: 'Write something first' } });
+    }
+    if (body.length > MAX_BODY) {
+      return res.status(400).json({ error: { message: `Replies are limited to ${MAX_BODY} characters` } });
+    }
+
+    const comment = await prisma.lessonComment.findUnique({
+      where: { id: commentId }, select: { id: true, adminId: true },
+    });
+    if (!comment) return res.status(404).json({ error: { message: 'Comment not found' } });
+
+    if (comment.adminId == null) {
+      return res.status(403).json({
+        error: { message: "This is a student's comment. You can hide or delete it, but not rewrite it." },
+      });
+    }
+
+    const updated = await prisma.lessonComment.update({
+      where: { id: commentId },
+      data: { body, editedAt: new Date() },
+      select: THREAD_SELECT,
+    });
+
+    return res.status(200).json({ comment: shapeThreadComment(updated) });
+  } catch (error) {
+    console.error('editOwnReply error:', error);
+    return res.status(500).json({ error: { message: 'Failed to edit the reply' } });
   }
 }
 
@@ -322,5 +554,7 @@ async function setLessonComments(req, res) {
 
 module.exports = {
   listComments, setCommentStatus, dismissReports, deleteComment, setLessonComments,
-  courseFilter,
+  getCommentThread, replyToComment, editOwnReply,
+  // Exported for adminComment.test.js — pure, no DB.
+  courseFilter, shapeThreadComment,
 };

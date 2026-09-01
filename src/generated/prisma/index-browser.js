@@ -424,6 +424,7 @@ exports.Prisma.LessonCommentScalarFieldEnum = {
   id: 'id',
   lessonId: 'lessonId',
   userId: 'userId',
+  adminId: 'adminId',
   parentId: 'parentId',
   body: 'body',
   status: 'status',

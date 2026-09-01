@@ -51,6 +51,37 @@ assert.strictEqual(
 
 // The author's email is never shaped in. A student list must not leak it.
 assert.strictEqual(mine.author.email, undefined);
-assert.deepStrictEqual(Object.keys(mine.author).sort(), ['avatarUrl', 'id', 'name']);
+assert.deepStrictEqual(Object.keys(mine.author).sort(), ['avatarUrl', 'id', 'name', 'role']);
+assert.strictEqual(mine.author.role, 'student');
+assert.strictEqual(mine.isInstructor, false);
+assert.strictEqual(mine.canReport, false, 'you cannot report yourself');
+assert.strictEqual(theirs.canReport, true);
+
+
+// ── an instructor's reply is labelled, and is not a target ──
+
+const fromAdmin = {
+  id: 4, parentId: 1, body: 'Here is the explanation.',
+  userId: null, adminId: 1, createdAt: new Date(), editedAt: null,
+  user: null, admin: { id: 1, name: 'Dr SKM' },
+};
+const answer = shapeComment(fromAdmin, 30, new Set());
+assert.strictEqual(answer.isInstructor, true);
+assert.strictEqual(answer.author.role, 'admin');
+assert.strictEqual(answer.author.name, 'Dr SKM');
+// Not the student's own, and not reportable — the queue is for
+// student-to-student trouble, and a Report button on the tutor is noise.
+assert.strictEqual(answer.isMine, false);
+assert.strictEqual(answer.canReport, false);
+
+// A nameless admin still renders. Admin.name is nullable.
+assert.strictEqual(
+  shapeComment({ ...fromAdmin, admin: { id: 1, name: null } }, 30, new Set()).author.name,
+  'Instructor');
+
+// A student whose own id happens to match the admin id must not see it as
+// theirs — the author tables are separate and the ids overlap.
+assert.strictEqual(shapeComment(fromAdmin, 1, new Set()).isMine, false,
+  'a matching id in a different table is not the same person');
 
 console.log('comment.test.js: all assertions passed');

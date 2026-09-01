@@ -26,6 +26,7 @@ const AUTHOR_SELECT = { id: true, name: true, avatarUrl: true };
 const COMMENT_SELECT = {
   id: true, parentId: true, body: true, createdAt: true, editedAt: true,
   user: { select: AUTHOR_SELECT },
+  admin: { select: { id: true, name: true } },
 };
 
 
@@ -42,6 +43,13 @@ function threadRootId(parent) {
 
 
 function shapeComment(comment, viewerId, reportedIds) {
+  // An instructor's answer is the reason a student reads the thread at all, so
+  // it is labelled rather than left to look like one more classmate.
+  const fromAdmin = comment.adminId != null;
+  const author = fromAdmin
+    ? { id: comment.admin?.id ?? comment.adminId, name: comment.admin?.name ?? 'Instructor', avatarUrl: null, role: 'admin' }
+    : { ...comment.user, role: 'student' };
+
   return {
     id: comment.id,
     parentId: comment.parentId,
@@ -49,10 +57,14 @@ function shapeComment(comment, viewerId, reportedIds) {
     createdAt: comment.createdAt,
     editedAt: comment.editedAt,
     edited: comment.editedAt !== null,
-    author: comment.user,
+    author,
+    isInstructor: fromAdmin,
     // Drives the UI without a second call: the app shows Edit/Delete on one's
     // own, Report on everyone else's, and never both.
-    isMine: comment.userId === viewerId,
+    isMine: !fromAdmin && comment.userId === viewerId,
+    // An instructor's answer is not reportable. The report queue is for
+    // student-to-student trouble, and a Report button on the tutor is noise.
+    canReport: !fromAdmin && comment.userId !== viewerId,
     reportedByMe: reportedIds.has(comment.id),
     replies: [],
   };
@@ -120,7 +132,7 @@ async function listComments(req, res) {
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,
         take: limit,
-        select: { ...COMMENT_SELECT, userId: true },
+        select: { ...COMMENT_SELECT, userId: true, adminId: true },
       }),
       prisma.lessonComment.count({ where }),
     ]);
@@ -131,7 +143,7 @@ async function listComments(req, res) {
     const replies = rootIds.length === 0 ? [] : await prisma.lessonComment.findMany({
       where: { parentId: { in: rootIds }, status: 'published' },
       orderBy: { createdAt: 'asc' },
-      select: { ...COMMENT_SELECT, userId: true },
+      select: { ...COMMENT_SELECT, userId: true, adminId: true },
     });
 
     const visibleIds = [...rootIds, ...replies.map((r) => r.id)];
@@ -209,7 +221,7 @@ async function createComment(req, res) {
 
     const created = await prisma.lessonComment.create({
       data: { lessonId, userId, parentId, body },
-      select: { ...COMMENT_SELECT, userId: true },
+      select: { ...COMMENT_SELECT, userId: true, adminId: true },
     });
 
     return res.status(201).json({
@@ -232,14 +244,14 @@ async function ownComment(userId, commentId) {
   }
   const comment = await prisma.lessonComment.findUnique({
     where: { id: commentId },
-    select: { id: true, userId: true, status: true, lessonId: true, parentId: true },
+    select: { id: true, userId: true, adminId: true, status: true, lessonId: true, parentId: true },
   });
   // A hidden comment is 404, not 403: it is gone from the student's view, and
   // saying "you may not edit that" would confirm it is still there.
   if (!comment || comment.status !== 'published') {
     return { error: { status: 404, message: 'Comment not found' } };
   }
-  if (comment.userId !== userId) {
+  if (comment.adminId != null || comment.userId !== userId) {
     return { error: { status: 403, message: 'You can only change your own comments' } };
   }
   return { comment };
@@ -264,7 +276,7 @@ async function updateComment(req, res) {
     const updated = await prisma.lessonComment.update({
       where: { id: comment.id },
       data: { body, editedAt: new Date() },
-      select: { ...COMMENT_SELECT, userId: true },
+      select: { ...COMMENT_SELECT, userId: true, adminId: true },
     });
 
     return res.status(200).json({ comment: shapeComment(updated, userId, new Set()) });
@@ -314,10 +326,13 @@ async function reportComment(req, res) {
 
     const comment = await prisma.lessonComment.findUnique({
       where: { id: commentId },
-      select: { id: true, userId: true, status: true },
+      select: { id: true, userId: true, adminId: true, status: true },
     });
     if (!comment || comment.status !== 'published') {
       return res.status(404).json({ error: { message: 'Comment not found' } });
+    }
+    if (comment.adminId != null) {
+      return res.status(400).json({ error: { message: 'Instructor replies cannot be reported' } });
     }
     if (comment.userId === userId) {
       return res.status(400).json({ error: { message: 'You cannot report your own comment' } });
