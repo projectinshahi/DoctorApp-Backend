@@ -136,8 +136,12 @@ Template: [test-questions-template.csv](test-questions-template.csv)
 **`errors` carries a `severity`.** Entries without it block; `severity:
 "warning"` do not and the row still imports. A URL outside this test's uploads
 is a warning, not a block — it is usually a typo, but it is also how an
-existing CDN asset is referenced. Render the two differently or an admin sees
-"6 rows invalid" for a file that imported fine.
+existing CDN asset is referenced.
+
+Those foreign-URL warnings are **grouped by host**, one entry carrying a `rows`
+array of every affected line, rather than one entry per row. Render warnings
+apart from errors: a response saying `Imported 10 question(s)` succeeded,
+however many warnings came with it.
 
 **Text OR image.** A stem can be an image alone — an ECG is often the whole
 question — and so can an option. Only *neither* is an error.

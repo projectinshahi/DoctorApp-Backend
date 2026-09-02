@@ -240,6 +240,8 @@ function validateRows(header, rows, test, images = null, { allowMissingImages = 
   // spreadsheet as Q1.SVG is the same file to everyone except a computer.
   const byFilename = new Map();
   const ambiguous = new Set();
+  // host -> the file lines that referenced it
+  const foreignByHost = new Map();
   if (images) {
     for (const image of images) {
       const key = (image.originalFilename ?? '').toLowerCase();
@@ -297,11 +299,15 @@ function validateRows(header, rows, test, images = null, { allowMissingImages = 
       if (value === '') return '';
 
       if (/^https?:\/\/\S+$/i.test(value)) {
+        // Collected, not emitted per row. A 200-question paper hosting its
+        // figures on a CDN would otherwise produce 200 identical amber lines,
+        // and a wall of warnings on a file that imported perfectly reads as
+        // failure. Grouped by host after the loop instead.
         if (knownImageUrls && !knownImageUrls.has(value)) {
-          errors.push({
-            row: row.line, field, severity: 'warning',
-            message: `Not one of this test's uploaded images — check it loads: ${value}`,
-          });
+          let host = 'another host';
+          try { host = new URL(value).host; } catch { /* keep the fallback */ }
+          if (!foreignByHost.has(host)) foreignByHost.set(host, []);
+          foreignByHost.get(host).push(row.line);
         }
         return value;
       }
@@ -400,6 +406,19 @@ function validateRows(header, rows, test, images = null, { allowMissingImages = 
       section: r.section || null,
     });
   });
+
+  // One line per host, naming the lines, rather than one per row.
+  for (const [host, lines] of foreignByHost) {
+    errors.push({
+      row: lines[0],
+      field: 'question_image_url',
+      severity: 'warning',
+      rows: lines,
+      message: lines.length === 1
+        ? `Line ${lines[0]} uses an image from ${host}, which was not uploaded to this test. It will import — check the URL loads.`
+        : `${lines.length} rows use images from ${host}, which were not uploaded to this test. They will import — check the URLs load. Lines: ${lines.join(', ')}`,
+    });
+  }
 
   return { errors, questions };
 }

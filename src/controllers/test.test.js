@@ -95,6 +95,31 @@ const foreign = run(`${IHEAD}\n1,Q,https://cdn.other/x.jpg,A,,B,C,D,A\n`, KNOWN)
 assert.deepStrictEqual(foreign.errors.filter((e) => e.severity !== 'warning'), [],
   'an unknown URL must not block the import');
 assert(foreign.errors.some((e) => e.severity === 'warning' && e.field === 'question_image_url'));
+
+// Many rows on one external host collapse to ONE warning naming the lines. A
+// wall of identical amber rows on a file that imported perfectly reads as
+// failure, which is how a successful import gets mistaken for a broken one.
+const manyForeign = run(
+  `${IHEAD}\n` + [1, 2, 3, 4, 5].map((i) =>
+    `${i},Q${i},https://placehold.co/600x400?text=${i},A,,B,C,D,A`).join('\n') + '\n',
+  KNOWN);
+const warns = manyForeign.errors.filter((e) => e.severity === 'warning');
+assert.strictEqual(warns.length, 1, 'five foreign URLs on one host is one warning');
+assert.deepStrictEqual(warns[0].rows, [2, 3, 4, 5, 6], 'and it names every line');
+assert(warns[0].message.includes('placehold.co'));
+assert(warns[0].message.includes('5 rows'));
+assert.strictEqual(manyForeign.questions.length, 5, 'all five still import');
+
+// Two hosts stay two warnings — they are different things to check.
+const twoHosts = run(
+  `${IHEAD}\n1,Q,https://a.example/x.jpg,A,,B,C,D,A\n2,Q2,https://b.example/y.jpg,A,,B,C,D,A\n`,
+  KNOWN);
+assert.strictEqual(twoHosts.errors.filter((e) => e.severity === 'warning').length, 2);
+
+// A single stray URL still reads naturally, not as "1 rows".
+const oneForeign = run(`${IHEAD}\n1,Q,https://placehold.co/x.png,A,,B,C,D,A\n`, KNOWN);
+const single = oneForeign.errors.find((e) => e.severity === 'warning');
+assert(single.message.startsWith('Line 2 uses an image'), single.message);
 assert.strictEqual(foreign.questions[0].questionImageUrl, 'https://cdn.other/x.jpg',
   'the URL is kept — the admin was warned, not overruled');
 

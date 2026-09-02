@@ -86,9 +86,35 @@ Unresolvable filenames then import with `questionImageUrl: null` as warnings
 naming the question to fix. **Off by default** — a question whose diagram is
 missing is a broken question.
 
-Remember `severity`: entries without it block, `"warning"` ones do not and the
-row still imports. Render the two differently or an admin sees "6 rows invalid"
-on a file that imported fine.
+### Render warnings differently from errors, or success looks like failure
+
+`severity` is the whole distinction: entries **without** it block and nothing
+was saved; `"warning"` entries did not block and the rows are in.
+
+An import that returns `message: "Imported 10 question(s)"` **succeeded**, no
+matter how many warnings came with it. Do not render warnings in the same red
+error table, and do not put an error icon on the summary.
+
+An external image URL is now **one warning per host**, not one per row:
+
+```json
+{ "row": 2, "field": "question_image_url", "severity": "warning",
+  "rows": [2, 4, 6, 8, 10],
+  "message": "5 rows use images from placehold.co, which were not uploaded to this test. They will import — check the URLs load. Lines: 2, 4, 6, 8, 10" }
+```
+
+`rows` carries every affected line so the panel can link to all of them from
+the single row. A 200-question paper hosting its figures on a CDN used to
+produce 200 identical amber lines; a wall of those on a file that imported
+perfectly reads as failure.
+
+Suggested summary line when there are no blocking errors:
+
+> ✅ Imported 10 questions · 1 thing to check
+
+not
+
+> ⚠️ Imported 10 questions, 5 to check
 
 ---
 
