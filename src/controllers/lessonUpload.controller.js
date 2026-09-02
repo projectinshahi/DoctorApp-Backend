@@ -174,7 +174,90 @@ async function deleteLessonThumbnail(req, res) {
   }
 }
 
+// ── Question bank images ───────────────────────────────────────────────────
+//
+// A question's stem or an option can be a picture — an ECG, a histology slide,
+// a radiograph. The question bank API accepts questionImageUrl and
+// optionImageUrl as strings, but nothing produced those strings, so an admin
+// had to host the file somewhere else and paste a link. This is the missing
+// half.
+//
+// Not scoped to a question, deliberately: the upload happens while the
+// question is still being written and has no id yet.
+
+// SVG is allowed because diagrams and anatomical figures are drawn as vectors
+// and rasterising them costs legibility on a zoomed phone.
+//
+// An SVG can carry script, so this is only safe because Cloudinary serves it
+// from res.cloudinary.com — a different origin from the app, where an embedded
+// script has nothing of ours to reach. Never inline these into an admin or
+// student page; always render from the returned URL, and in Flutter through
+// flutter_svg, which does not execute script at all.
+const QUESTION_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+
+// POST /api/uploads/question-image  (multipart field name: "image")
+async function uploadQuestionImage(req, res) {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: { message: 'Attach a file in the "image" field' } });
+    }
+    if (!QUESTION_IMAGE_TYPES.includes(req.file.mimetype)) {
+      return res.status(400).json({
+        error: { message: `Unsupported file type ${req.file.mimetype} — use JPEG, PNG, WebP, or SVG` },
+      });
+    }
+
+    const result = await uploadBuffer(req.file.buffer, {
+      folder: 'question_images',
+      resource_type: 'image',
+    });
+
+    return res.status(200).json({
+      // Paste this straight into questionImageUrl or an option's
+      // optionImageUrl. It is stable; Cloudinary serves it unchanged forever.
+      url: result.secure_url,
+      // Keep it if you want to be able to delete the file later. Without it
+      // the asset is unreachable, not just unreferenced.
+      publicId: result.public_id,
+      originalFilename: req.file.originalname,
+      bytes: result.bytes ?? req.file.size,
+      format: result.format ?? null,
+    });
+  } catch (error) {
+    console.error('Upload question image error:', error);
+    return res.status(500).json({ error: { message: 'Something went wrong while uploading the image' } });
+  }
+}
+
+// DELETE /api/uploads/question-image   { publicId }
+async function deleteQuestionImage(req, res) {
+  try {
+    const { publicId } = req.body ?? {};
+    if (!publicId) {
+      return res.status(400).json({ error: { message: 'publicId is required' } });
+    }
+
+    const result = await cloudinary.uploader.destroy(publicId, { resource_type: 'image' });
+
+    // "not found" counts as success: the goal is that the file is gone, and a
+    // second delete of the same asset should not be an error the admin has to
+    // interpret.
+    if (result.result !== 'ok' && result.result !== 'not found') {
+      return res.status(500).json({
+        error: { message: `Cloudinary failed to delete the image: ${result.result}` },
+      });
+    }
+
+    return res.status(200).json({ deleted: true, publicId });
+  } catch (error) {
+    console.error('Delete question image error:', error);
+    return res.status(500).json({ error: { message: 'Something went wrong while deleting the image' } });
+  }
+}
+
+
 module.exports = {
+  uploadQuestionImage, deleteQuestionImage,
   uploadLessonVideo,
   uploadLessonNote,
   uploadLessonThumbnail,
