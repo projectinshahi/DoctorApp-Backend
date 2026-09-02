@@ -119,6 +119,34 @@ const { revokeActiveSessions, revokeSession } = require('../services/session.ser
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
+/**
+ * What this login is about to end, described for the device doing it.
+ *
+ * Pulled out of the handler because the three cases are each wrong in a way a
+ * student would see: a false alarm on an ordinary re-login, silence when their
+ * other phone really was kicked, or a "signed out elsewhere" notice on a brand
+ * new account that had no elsewhere.
+ */
+function describeSignOut(previous, deviceId) {
+  // Same device signing in again is not a device switch. Reporting it as one
+  // would tell a student they had been kicked off the phone in their hand, and
+  // it happens on every ordinary re-login, so the alert would cry wolf until
+  // it was ignored.
+  const sameDevice = Boolean(previous) && previous.deviceId === deviceId;
+  const signedOutOtherDevice = Boolean(previous) && !sameDevice;
+
+  return {
+    signedOutOtherDevice,
+    notice: signedOutOtherDevice
+      ? "You've been signed out on your other device. Only one device can be signed in at a time."
+      : null,
+    previousSession: previous
+      ? { deviceId: previous.deviceId, signedInAt: previous.createdAt, sameDevice }
+      : null,
+  };
+}
+
+
 async function googleSignIn(req, res, next) {
   try {
     const { idToken, deviceId } = req.body;
@@ -167,6 +195,16 @@ async function googleSignIn(req, res, next) {
       });
     }
 
+    // Read what is being signed out BEFORE revoking it, so the new device can
+    // say so. Without this the tablet silently ends the phone's session and
+    // nobody is told anything until the phone next makes a request and dies.
+    const previous = await prisma.session.findFirst({
+      where: { userId: user.id, revokedAt: null },
+      orderBy: { createdAt: 'desc' },
+      select: { deviceId: true, createdAt: true },
+    });
+    const signOut = describeSignOut(previous, deviceId);
+
     // Revoke any existing active session(s) for this user (single-active-session rule)
     await revokeActiveSessions(user.id);
 
@@ -201,6 +239,12 @@ async function googleSignIn(req, res, next) {
       refreshToken,
       isNewUser,
       sessionId: session.id,
+      // signedOutOtherDevice — true only when a DIFFERENT device was ended.
+      // notice — ready to show as-is, so the wording lives in one place rather
+      // than being reinvented per platform; null when there is nothing to say.
+      // previousSession.sameDevice lets the client check against its own
+      // stored deviceId.
+      ...signOut,
       user: {
         id: user.id,
         email: user.email,
@@ -318,4 +362,8 @@ async function logout(req, res) {
   }
 }
 
-module.exports = { googleSignIn, refreshAccessToken, logout };
+module.exports = {
+  googleSignIn, refreshAccessToken, logout,
+  // Exported for auth.test.js — pure, no DB.
+  describeSignOut,
+};
