@@ -79,15 +79,36 @@ POST /api/questions
 Verified end to end: uploaded, created, read back with the URL intact,
 deleted.
 
-An **option** takes one the same way:
+An **option** takes one alongside its text:
 
 ```json
-{ "optionText": null, "optionImageUrl": "https://res.cloudinary.com/...", "isCorrect": true }
+{ "optionText": "Sinus rhythm", "optionImageUrl": "https://res.cloudinary.com/...", "isCorrect": true }
 ```
 
-Both `questionText` and `optionText` may be null when an image carries the
-content — "which slide shows..." has picture answers. Do not mark the text
-fields required in the form.
+### What is optional, exactly
+
+| field | required? |
+|---|---|
+| `questionImageUrl` | **optional** — omit it, send `null`, or send a URL |
+| `optionImageUrl` | **optional**, per option |
+| `questionText` | **required** |
+| `optionText` | **required**, non-empty, on every option |
+
+Verified live:
+
+```
+text, no image            → 201, questionImageUrl: null
+image, no questionText    → 400  "questionText is required"
+option image, no text     → 400  "Option 1 must have a non-empty optionText"
+```
+
+So the **image is an addition to the text, never a replacement for it.** Keep
+the text fields required in the form and the image pickers optional. An
+image-only question is rejected by the question bank.
+
+> This differs from **test** questions, where a CSV row may carry an image with
+> no text — an ECG can be the whole stem there. The two banks are separate and
+> this one has the stricter rule.
 
 `PUT /api/questions/:id` takes the same fields for editing.
 
@@ -152,7 +173,7 @@ exam.
 
 - Field name is `image`; one file per request.
 - Store `publicId`, not just the URL.
-- `questionText` and `optionText` are nullable — an image alone is a valid
-  question or option.
+- `questionText` and `optionText` are **required**. The image is an extra, not
+  a substitute — an image-only question is a 400.
 - Render from the URL. Never inline SVG source.
 - Detect SVG from the URL extension.
