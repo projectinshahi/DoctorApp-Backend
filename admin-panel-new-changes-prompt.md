@@ -1,318 +1,232 @@
-# Task: the six admin panel changes from the latest backend build
+# Admin panel — everything the backend added, in build order
 
-Paste this into Claude inside the **admin panel repo**.
+Paste this into Claude inside the **admin panel repo**. It is the current
+delta: what the server can do that the panel does not yet use.
 
 Base URL: `https://doctorapp-backend-30gd.onrender.com`
 Auth: `Authorization: Bearer <admin token>` on every request.
 
-Full endpoint reference:
-[admin-panel-test-module-api.md](admin-panel-test-module-api.md). This file is
-only the **delta** — what to build now.
+**All of it is deployed and live.** Captured against production on 2026-09-02.
 
-**Nothing here works until the backend deploy lands.** Every endpoint below
-returns 404 on the old build. That is the "server does not have this endpoint"
-message, not a bug in the panel.
+Watch the prefix — the panel already has both:
+`ApiConstant.baseUrl` = `/api` · `ApiConstant.root` = no prefix.
 
-Already built, do not rebuild: the test list, the create wizard, CSV upload,
-image upload, publish, and the Leaderboard / All Attempts / Analytics tabs.
+Already built, do not rebuild: test list, create wizard, CSV upload, image
+upload, publish, and the Leaderboard / All Attempts / Analytics tabs.
 
 ---
 
-## 1. Instructions on the test form
+## 1. Comment moderation — the biggest gap
 
-A new `instructions` field — free text the admin writes once, read by the
-panel **and shown to students before the timer starts**.
+Nothing exists in the panel for this yet.
 
 ```
-POST  /api/admin/courses/:courseId/tests   { ..., "instructions": "..." }
-PATCH /api/admin/tests/:testId             { "instructions": "..." }
+GET    /admin/comments?status=&lessonId=&courseId=&search=&page=&limit=
+GET    /admin/comments/:id                    ← one thread, whole
+PATCH  /admin/comments/:id                    { "status": "hidden"|"published" }
+POST   /admin/comments/:id/reply              { "body" }
+PATCH  /admin/comments/:id/body               { "body" }   ← own replies only
+POST   /admin/comments/:id/dismiss-reports
+DELETE /admin/comments/:id
+PATCH  /admin/lessons/:lessonId/comments      { "enabled": bool }
 ```
 
-Comes back on every test object, `null` when unset.
+**Land on the Reported tab, not All.** A moderator's question is never "show me
+all comments", it is *"what needs me?"*. `counts.reported` is the badge.
 
-Multi-line text area, not a single input. **It stays enabled even when every
-other field is locked** — it changes nothing already marked, so a typo in the
-rules of a live paper must be fixable without building a second test.
+Five rules that decide whether the screen is any good:
+
+- **Tabs bind to `counts`, never to `comments.length`.** `counts` is the full
+  set and does not change with the filter.
+- **Hiding moves the replies too**, both directions. `affectedReplies` comes
+  back — put it in the toast.
+- **Hide is primary, Delete is quiet.** Hide removes it from students just as
+  well and is reversible. Delete is permanent.
+- **Dismiss reports** is the second button on every reported row. Without it
+  the only way out of the queue is to hide something undeserving.
+- **`isInstructor: true`** marks the teaching side's own replies. Badge them,
+  and show Edit only on those — `PATCH /body` returns **403** on a student's
+  comment. Rewriting someone's words is worse than any comment they could
+  leave; the tools for a bad one are hide and delete.
+
+Reply is the point of the feature: *"I have a doubt, can you solve this"* is a
+question, and a screen that can only hide and delete cannot answer it.
+
+Full detail: `admin-panel-comment-moderation-prompt.md`
 
 ---
 
-## 2. Edit an existing test
+## 2. CSV upload — three changes to one screen
 
-```
-PATCH /api/admin/tests/:testId
-{ "name", "instructions", "type", "courseTypeId",
-  "totalQuestions", "durationMinutes", "marksCorrect", "marksIncorrect" }
-```
-
-All optional; send only what changed.
-
-**One rule the form must enforce before the request:** once any student has
-started, only `name` and `instructions` can change.
-
-```json
-409 { "error": { "message": "3 student(s) have already started this test, so only the name can be changed..." },
-      "attemptCount": 3, "lockedFields": ["durationMinutes"] }
-```
-
-So read `attemptCount` off the test and disable those six fields when it is
-above zero, with a line under the form saying why. An admin should never fill
-in a form that is going to 409.
-
-**Editing a published test drops it to draft** and says so:
-
-```json
-{ "test": { ..., "isPublished": false }, "unpublished": true }
-```
-
-Toast that. A live paper going dark unnoticed is a support ticket.
-
-Other errors, all **400** except where noted: empty `name`; `marksIncorrect`
-above zero; `marksCorrect` at or below zero; a `courseTypeId` from another
-course; `{}` → `Nothing to update`. **409** if `totalQuestions` is dropped
-below the questions already imported.
-
----
-
-## 3. Question editor tab
-
-The biggest addition. The CSV builds the paper; this fixes it — a typo in
-question 87 of a 200-question import should not mean re-uploading the file.
-
-```
-GET    /api/admin/tests/:testId/preview
-POST   /api/admin/tests/:testId/questions
-PATCH  /api/admin/tests/:testId/questions/:questionId
-DELETE /api/admin/tests/:testId/questions/:questionId
-```
-
-Fields are camelCase, exactly as `preview` returns them: `questionText`,
-`questionImageUrl`, `optionA`–`optionD`,
-`optionAImageUrl`–`optionDImageUrl`, `correctOption`, `explanation`,
-`subject`, `topic`, `section`, `questionOrder`.
-
-- **PATCH merges** — send only changed fields. `""` and `null` both clear.
-- **Reorder**: send `questionOrder`. The question in that slot swaps places
-  with this one → `{ "swapped": true }`. That is what dragging a row means.
-- **Insert**: omit `questionOrder` to append, or give one and everything after
-  shifts down. Must be ≤ `lastOrder + 1`, else **400**.
-- **Delete**: the gap closes, the tail renumbers, the paper stays 1..n.
-
-POST and DELETE return `questionCount` and `readyToPublish` — keep the
-"97 of 100" counter live from those, no refetch.
-
-### Two rules
-
-**A locked test refuses all three**, with **409**:
-
-> This test is locked — students have already sat it. Its questions can no
-> longer be changed.
-
-Read `isLocked` and hide the edit controls. Do not let the admin find out on
-save.
-
-**Text or image, never neither.** A stem can be an image alone — an ECG is
-often the whole question — and so can an option:
-
-```json
-400 { "error": { "message": "Option B needs text or an image" },
-      "problems": [ { "field": "option_b", "message": "Option B needs text or an image" } ] }
-```
-
-Mirror that check in the form so the 400 is a backstop. Do **not** mark the
-text fields required — that would make the image-only questions the CSV
-accepts uneditable.
-
----
-
-## 4. Sections in the question list
-
-Parts of a paper are a `section` label on each question. There is no sections
-table and **no section CRUD** — a section exists exactly when questions carry
-its name. Rename a part by editing `section` on its questions.
-
-`GET /api/admin/tests/:testId/preview` now returns:
-
-```json
-{ "sections": [ { "name": "Part A", "questionCount": 2,
-                  "firstOrder": 1, "lastOrder": 2, "contiguous": true } ],
-  "unsectionedCount": 0,
-  "questions": [ { ..., "section": "Part A" } ] }
-```
-
-Group the question list under section headers using these counts. Two flags
-exist to catch a broken split:
-
-- **`contiguous: false`** — that part's questions are not consecutive. The
-  paper runs Part A, Part B, then Part A again. Almost always a reorder that
-  went wrong, and completely invisible in a flat list. Warning badge on the
-  section.
-- **`unsectionedCount > 0` while `sections` is non-empty** — the paper is half
-  labelled and those questions render outside every part. Banner above the
-  list. Zero sections with a non-zero count is normal: that is just a paper
-  with no parts.
-
-The section input on the question form should suggest existing names from
-`sections` while still accepting a new one.
-
-CSV: one new optional column, `section`. Updated template at
-[test-questions-template.csv](test-questions-template.csv). A file without it
-imports exactly as before.
-
----
-
-## 4b. Image cells accept a file name
-
-An image cell now takes a full URL **or** the name of a file uploaded to this
-test, and `question_image_filename` works as an alias for
-`question_image_url` (same for every `option_*_image_*`).
+**Image cells take a file name, not just a URL.**
 
 ```csv
 question_order,question_text,question_image_filename,option_a,...
 1,What pattern is shown?,sample_q1.svg,Pattern A,...
 ```
 
-Matching is case-insensitive. An unknown name blocks with a message naming it;
-two uploads sharing a name block rather than guess.
+`question_image_filename` is an alias for `question_image_url`, same for every
+`option_*_image_*`. Case-insensitive. An admin with a folder of
+`q1.svg`…`q200.svg` should never paste a Cloudinary URL by hand — show the
+uploaded file names beside the image list so they can be copied into the sheet.
 
-**Two upload-screen changes go with this:**
+**A count mismatch no longer blocks.**
 
-- A **count mismatch is now a warning, not a refusal.** The file imports;
-  publish still refuses until the numbers match. Show the warning with a
-  one-tap "Set totalQuestions to N" that calls
-  `PATCH /api/admin/tests/:id`. Do not block the upload button on it.
-- A checkbox, **"Import now, add images later"**, sending
-  `?allowMissingImages=true`. Unresolvable filenames then import as warnings
-  with `questionImageUrl: null` instead of failing the file. Off by default —
-  a question whose diagram is missing is a broken question.
+```json
+{ "severity": "warning",
+  "message": "This test expects 5 questions and the file has 10. It will import, but the test cannot be published until the two match." }
+```
 
-In the upload screen, say this on the help text — an admin with a folder of
-`q1.svg`…`q200.svg` should never be pasting Cloudinary URLs by hand. Show the
-uploaded file names next to the image list so they can be copied into the
-sheet.
+The file imports; publish still refuses. Do **not** gate the upload button on
+it. Put a one-tap fix beside the warning: `PATCH /api/admin/tests/:id`
+`{ "totalQuestions": 10 }`.
+
+**A checkbox: "Import now, add images later"** → `?allowMissingImages=true`.
+Unresolvable filenames then import with `questionImageUrl: null` as warnings
+naming the question to fix. **Off by default** — a question whose diagram is
+missing is a broken question.
+
+Remember `severity`: entries without it block, `"warning"` ones do not and the
+row still imports. Render the two differently or an admin sees "6 rows invalid"
+on a file that imported fine.
 
 ---
 
-## 5. Live attempts page
+## 3. Question images — upload instead of pasting a link
 
 ```
-GET /api/admin/test-attempts/in-progress?courseId=&testId=&page=1&limit=50
+POST   /api/uploads/question-image      multipart, field: image
+DELETE /api/uploads/question-image      { "publicId" }
 ```
 
 ```json
-{ "liveCount": 1, "expiredCount": 0,
-  "pagination": { "page": 1, "limit": 50, "total": 1, "totalPages": 1 },
-  "attempts": [ {
-    "attemptId": 6,
-    "student": { "id": 30, "name": "Keerthana Bineesh", "email": "...", "avatarUrl": null },
-    "test": { "id": 10, "name": "test 1", "totalQuestions": 10, "durationMinutes": 30 },
-    "startedAt": "...", "deadlineAt": "...",
-    "secondsRemaining": 1524, "expired": false,
-    "answeredCount": 1, "remainingCount": 9 } ] }
+{ "url": "https://res.cloudinary.com/.../question_images/s2ps....svg",
+  "publicId": "question_images/s2ps...", "bytes": 1468, "format": "svg" }
 ```
 
-**`expired` is the field that decides the row.** An attempt whose time is up is
-only closed when the student next touches it, so this list holds two different
-things:
+JPEG, PNG, WebP, **SVG**, 2MB. Put `url` into `questionImageUrl` or an option's
+`optionImageUrl` on `POST /api/questions`.
 
-- `expired: false` → someone is writing. `secondsRemaining` as a live `mm:ss`,
-  a progress bar from `answeredCount / totalQuestions`.
-- `expired: true` → they walked away; it submits itself on their next request.
-  Grey, labelled **Abandoned**.
+- **Keep `publicId`**, not just the URL — it is the only handle that can delete
+  the file.
+- **Delete on cancel.** The upload is not tied to a question (the file goes up
+  before the question has an id), so an abandoned form leaves an orphan.
+- **`questionText` and `optionText` stay required.** The image is an addition,
+  never a replacement — an image-only question is a **400**. (Test questions
+  differ; that bank allows image-only.)
+- Render from the URL with `<img>`. **Never inline SVG source** — it can carry
+  script, and this is only safe because Cloudinary is a different origin.
 
-Rendering both as "in progress" would report a room full of candidates who left
-hours ago.
-
-Tick the clock down locally, refetch every 30–60s. Link each row to the student
-detail.
+Full detail: `admin-panel-question-image-prompt.md`
 
 ---
 
-## 6. Two-step delete
+## 4. Question editor + sections on a test
 
 ```
-DELETE /api/admin/tests/:testId
+POST   /api/admin/tests/:id/questions
+PATCH  /api/admin/tests/:id/questions/:questionId
+DELETE /api/admin/tests/:id/questions/:questionId
 ```
 
-Clean when nobody has attempted it. Otherwise:
+camelCase fields as `preview` returns them. PATCH merges. `questionOrder`
+**swaps**. Insert shifts the tail down; delete closes the gap. All **409** on a
+locked test — read `isLocked` and hide the controls.
 
-```json
-409 { "error": { "message": "Cannot delete: 3 student attempt(s) exist, 3 of them completed. Unpublish it instead — deleting erases their results permanently." },
-      "attemptCount": 3, "submittedCount": 3, "canForce": true,
-      "forceWith": "DELETE /api/admin/tests/1?deleteAttempts=true" }
-```
+`GET /api/admin/tests/:id/preview` also returns `sections` — group the list
+under headers, and flag two things:
 
-Treat that 409 as the confirmation step, not an error. The dialog:
+- **`contiguous: false`** — the paper runs Part A, Part B, Part A again.
+  Almost always a reorder that went wrong, invisible in a flat list.
+- **`unsectionedCount > 0`** with real sections — the paper is half labelled.
 
-- quotes `attemptCount` and `submittedCount`
-- **primary button is Unpublish** (`POST .../publish` with
-  `{"isPublished": false}`) — it hides the paper from students and keeps every
-  result, which is what is wanted nine times out of ten
-- delete sits behind a secondary, destructive-styled button that requires
-  typing the test name
-
-Then repeat with `?deleteAttempts=true`:
-
-```json
-{ "message": "Deleted \"test 1\" with 10 question(s) and 0 image(s). This also erased 2 student attempt(s) and 14 answer(s).",
-  "deletedAttempts": 2, "deletedAnswers": 14 }
-```
-
-Report those counts in the toast. **Never send the flag on a first click** —
-there is no undo, no soft delete, no archive.
+No section CRUD. A section exists exactly when questions carry its label.
 
 ---
 
-## 7. Settings screen (separate from tests)
-
-Prefix is **`/admin`**, not `/api/admin`.
+## 5. Reordering — two lists, both endpoints already live
 
 ```
-GET   /admin/me
-PATCH /admin/me              { "name", "email" }
-POST  /admin/me/password     { "currentPassword", "newPassword" }
+PATCH /api/chapters/:chapterId/lessons/reorder   { "lessonIds": [...] }
+PUT   /api/admin/quizzes/:id/questions           { "questionIds": [...] }
 ```
 
-Two cards: **Profile** (name, email; `role` and `status` read-only — the API
-refuses them, since a stolen token must not promote itself) and **Password**
-(current, new, confirm — confirm is checked in the browser, the API takes two
-fields).
+Send the **full array in the new order**; position comes from the array index,
+in one transaction.
 
-Three things that matter:
+**A video is a lesson.** One `displayOrder` sequences videos, notes and quizzes
+together, so reordering from a videos-only screen renumbers the videos and
+silently drops the notes and quizzes to the end of the chapter. Drag on the
+full chapter list, or splice into it before sending.
 
-- **`GET /admin/me` on app boot.** A 401 sends them to login before they lose
-  work in a form. 403 means the account was disabled — say so, do not retry.
-- **`emailChanged: true` needs a confirm dialog.** The email is the login, and
-  nothing logs out at that moment, so the consequence lands at the next login
-  hours later.
-- **Store the token from the password response immediately.** It is a fresh 8h
-  token. A panel that shows "Password changed" and then 401s on the next click
-  looks broken.
+**A quiz has two modes.** `mode: "filter"` samples per student, so "question 3"
+differs for each of them — dragging it looks like it worked and changes
+nothing. Show handles only when `mode === "manual"`.
 
-Password errors: **401** `Your current password is incorrect` (show it under
-that field, not as a page banner) · **400** under 8 characters · **400** same
-as current.
+Detail: `admin-panel-video-reorder-prompt.md`,
+`admin-panel-quiz-reorder-prompt.md`
 
-**No "sign out everywhere" button.** Tokens issued before a password change
-stay valid until they expire — admin auth is stateless, there is no session to
-revoke. A security control that quietly does nothing is worse than none.
+---
+
+## 6. Test editing, live attempts, two-step delete
+
+```
+PATCH  /api/admin/tests/:id
+GET    /api/admin/test-attempts/in-progress?courseId=&testId=
+DELETE /api/admin/tests/:id[?deleteAttempts=true]
+```
+
+- **Edit**: once any student has started, only `name` and `instructions` change.
+  Read `attemptCount` and disable the rest up front. Editing a published test
+  drops it to draft — `"unpublished": true` — so toast it.
+- **`instructions`** is a new field, shown to students before the timer starts.
+  Multi-line, and it stays editable even when everything else is locked.
+- **Live attempts**: split by **`expired`**. False is someone writing, true is
+  someone who walked away. Counting both as live reports a room full of
+  candidates who left hours ago.
+- **Delete**: the 409 is the confirmation step. Dialog leads with **Unpublish**
+  (keeps every result); delete sits behind a type-the-name confirm. Never send
+  the flag on a first click.
+
+---
+
+## 7. Settings screen
+
+```
+GET   /admin/me           ← call on boot; 401 → login
+PATCH /admin/me           { "name", "email" }
+POST  /admin/me/password  { "currentPassword", "newPassword" }
+```
+
+`role` and `status` are read-only. `emailChanged: true` needs a confirm — the
+email is the login and nothing logs out at that moment. Store the token from
+the password response **immediately**. No "sign out everywhere" button; tokens
+live until they expire and a control that quietly does nothing is worse than
+none.
+
+Detail: `admin-panel-settings-prompt.md`
 
 ---
 
 ## Build order
 
-1. Instructions field (smallest, and the student app needs it)
-2. Edit test form — `attemptCount` gating
-3. Two-step delete dialog
-4. Question editor tab + sections
-5. Live attempts page
-6. Settings screen
+1. Comment moderation — nothing exists for it
+2. CSV upload changes — small, and it unblocks the imports failing today
+3. Question image upload
+4. Test edit form + delete dialog
+5. Question editor + sections
+6. Reordering, both lists
+7. Live attempts
+8. Settings
 
-## Constraints
+## Constraints that apply everywhere
 
-- Read `attemptCount` and `isLocked` and disable controls up front. Almost
-  every 409 in this module comes from one of them.
-- Sections are derived — build no section CRUD.
-- `questionText`, every `option*`, `section` and `instructions` are all
-  **nullable**. Do not mark them required.
-- Send only changed fields to PATCH; it merges.
+- `attemptCount` and `isLocked` gate the test screens. Almost every 409 in this
+  module comes from one of them — read both and disable up front.
+- CSV `severity: "warning"` does not block.
+- Sections are derived; build no section CRUD.
+- Send whole arrays to reorder endpoints, never deltas.
+- Render `entry.rank`, never a row index. Scores can be negative.
 - Never send `?deleteAttempts=true` from a first click.
+
+Full endpoint reference: `admin-panel-test-module-api.md`
