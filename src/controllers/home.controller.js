@@ -43,6 +43,9 @@ async function courseLessons(user) {
     select: {
       id: true, title: true, type: true, thumbnailUrl: true, quizId: true,
       accessType: true, isFreePreview: true,
+      // Needed to start playback straight from the home card instead of
+      // bouncing through GET /lessons/:id first.
+      videoUrl: true, durationSeconds: true,
       lessonPlans: { select: { planId: true } },
       quiz: { select: { id: true, title: true, subjectId: true, topicId: true, examTag: true } },
       chapter: { select: { id: true, title: true } },
@@ -80,6 +83,7 @@ async function getHome(req, res) {
           dailyQuiz: null,
         },
         continueWatching: null,
+        inProgressVideos: [],
         continueQuiz: null,
       });
     }
@@ -171,7 +175,35 @@ async function getHome(req, res) {
     const testsCompleted = quizLessons
       .filter((l) => (attemptsByLesson.get(l.id) ?? []).some((a) => a.completedAt)).length;
 
-    // Continue watching: the most recently touched unfinished video.
+    // Continue watching: every unfinished video with a resume point, most
+    // recently touched first. A single one was never enough for the home
+    // screen — a student mid-way through three videos wants the row, not
+    // whichever one they happened to open last.
+    const byLesson = new Map(lessons.map((l) => [l.id, l]));
+    const inProgressVideos = progress
+      .filter((p) => !p.completed && p.lastPositionSeconds > 0)
+      .sort((a, b) => b.updatedAt - a.updatedAt)
+      .map((p) => ({ p, lesson: byLesson.get(p.lessonId) }))
+      .filter(({ lesson }) => lesson && lesson.type === 'video')
+      .slice(0, 10)
+      .map(({ p, lesson }) => {
+        const unlocked = isLessonUnlocked(lesson, paidPlanIds);
+        return {
+          lessonId: lesson.id,
+          title: lesson.title,
+          thumbnailUrl: lesson.thumbnailUrl,
+          chapter: lesson.chapter,
+          lastPositionSeconds: p.lastPositionSeconds,
+          durationSeconds: lesson.durationSeconds,
+          watchedPercent: watchedState(p.lastPositionSeconds, lesson.durationSeconds).watchedPercent,
+          // Stripped when locked, exactly as the tree does it. A resume point
+          // is not the media, so it survives; the URL does not.
+          videoUrl: unlocked ? lesson.videoUrl : null,
+          locked: !unlocked,
+          updatedAt: p.updatedAt,
+        };
+      });
+
     const lastTouched = progress
       .filter((p) => !p.completed && p.lastPositionSeconds > 0)
       .sort((a, b) => b.updatedAt - a.updatedAt)[0];
@@ -226,9 +258,15 @@ async function getHome(req, res) {
             thumbnailUrl: continueLesson.thumbnailUrl,
             chapter: continueLesson.chapter,
             lastPositionSeconds: lastTouched.lastPositionSeconds,
+            durationSeconds: continueLesson.durationSeconds,
+            watchedPercent: watchedState(lastTouched.lastPositionSeconds, continueLesson.durationSeconds).watchedPercent,
+            videoUrl: isLessonUnlocked(continueLesson, paidPlanIds) ? continueLesson.videoUrl : null,
             locked: !isLessonUnlocked(continueLesson, paidPlanIds),
           }
         : null,
+      // The full row. `continueWatching` stays as the first of these so an
+      // existing home screen keeps working while the row is built.
+      inProgressVideos,
       continueQuiz: openAttempt
         ? {
             attemptId: openAttempt.id,
