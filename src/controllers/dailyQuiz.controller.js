@@ -458,8 +458,62 @@ async function dailyQuizHistory(req, res) {
 }
 
 
+
+/**
+ * The home card's view of today, WITHOUT starting it.
+ *
+ * `getDailyQuiz` creates the attempt on first call — that is what freezes the
+ * set. The home screen must not do that: a student who opened the app and
+ * never tapped the card would have a started, unfinished quiz and a broken
+ * streak by midnight. So this reads the attempt if one exists and reports
+ * `notStarted` otherwise.
+ */
+async function dailyQuizSummary(userId, courseId) {
+  const today = appToday();
+
+  const [attempt, completedRows] = await Promise.all([
+    prisma.dailyQuizAttempt.findUnique({
+      where: { userId_courseId_quizDate: { userId, courseId, quizDate: dateKey(today) } },
+      include: { answers: { select: { isCorrect: true, marksAwarded: true } } },
+    }),
+    prisma.dailyQuizAttempt.findMany({
+      where: { userId, courseId, completedAt: { not: null } },
+      orderBy: { quizDate: 'desc' }, take: 400, select: { quizDate: true },
+    }),
+  ]);
+
+  const streak = streakFrom(
+    completedRows.map((a) => a.quizDate.toISOString().slice(0, 10)), today,
+  );
+
+  if (!attempt) {
+    return {
+      date: today, state: 'notStarted',
+      totalQuestions: DAILY_QUESTION_COUNT,
+      answeredCount: 0, correctCount: null, score: null,
+      currentStreak: streak,
+      nextSetAt: `${shiftDays(today, 1)}T00:00:00+04:00`,
+    };
+  }
+
+  const correct = attempt.answers.filter((a) => a.isCorrect).length;
+  return {
+    date: today,
+    state: attempt.completedAt ? 'completed' : 'inProgress',
+    totalQuestions: attempt.questionIds.length,
+    answeredCount: attempt.answers.length,
+    remainingCount: attempt.questionIds.length - attempt.answers.length,
+    correctCount: attempt.completedAt ? correct : null,
+    score: attempt.completedAt ? attempt.answers.reduce((n, a) => n + a.marksAwarded, 0) : null,
+    currentStreak: streak,
+    nextSetAt: `${shiftDays(today, 1)}T00:00:00+04:00`,
+  };
+}
+
+
 module.exports = {
   getDailyQuiz, answerDailyQuestion, finishDailyQuiz, dailyQuizHistory,
+  dailyQuizSummary,
   // Exported for dailyQuiz.test.js — pure, no DB.
   pickDaily, streakFrom, appToday, shiftDays,
 };

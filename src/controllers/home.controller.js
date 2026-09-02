@@ -77,6 +77,7 @@ async function getHome(req, res) {
           qbank: { totalQuestions: 0, attempted: 0, correct: 0, accuracy: 0 },
           tests: { total: 0, attempted: 0, completed: 0, percent: 0 },
           bookmarks: { questions: 0, lessons: 0 },
+          dailyQuiz: null,
         },
         continueWatching: null,
         continueQuiz: null,
@@ -99,6 +100,11 @@ async function getHome(req, res) {
 
     const paidPlanIds = new Set(activeSubs.map((s) => s.planId));
     const hasPaid = user.selectedCourse.accessType !== 'premium' || paidPlanIds.size > 0;
+
+    // Lazy require: dailyQuiz.controller has no dependency on this file today,
+    // but every other controller pair here found a cycle eventually.
+    const daily = await require('./dailyQuiz.controller')
+      .dailyQuizSummary(userId, user.selectedCourseId);
 
     const videoLessons = lessons.filter((l) => l.type === 'video');
     // 'text' is the enum value; note lessons are text lessons carrying a
@@ -209,6 +215,9 @@ async function getHome(req, res) {
           percent: percent(testsCompleted, quizLessons.length),
         },
         bookmarks: { questions: savedQuestions, lessons: savedLessons },
+        // Read-only. Deliberately not getDailyQuiz(), which would start the
+        // day's attempt for anyone who merely opened the app.
+        dailyQuiz: daily,
       },
       continueWatching: continueLesson
         ? {

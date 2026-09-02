@@ -185,11 +185,71 @@ bug that kills the habit the feature exists to build.
 
 ---
 
+## 5. The home screen card — MCQ of the Day
+
+**Do not call `GET /daily-quiz` from the home screen.** That call starts the
+day's attempt. A student who opened the app and never tapped the card would
+have a started, unfinished quiz and a broken streak by midnight.
+
+`GET /api/users/me/home` carries a read-only summary instead:
+
+```json
+"modules": {
+  "videos": { ... }, "notes": { ... }, "qbank": { ... },
+  "bookmarks": { ... },
+  "dailyQuiz": {
+    "date": "2026-09-02",
+    "state": "notStarted",
+    "totalQuestions": 10,
+    "answeredCount": 0,
+    "correctCount": null,
+    "score": null,
+    "currentStreak": 0,
+    "nextSetAt": "2026-09-03T00:00:00+04:00"
+  }
+}
+```
+
+Verified: calling `/home` leaves the attempts table empty. Nothing starts until
+the student opens the quiz.
+
+### `state` is the card
+
+| `state` | card | button |
+|---|---|---|
+| `notStarted` | "10 questions · today's set" | **Start** |
+| `inProgress` | "`answeredCount` of `totalQuestions` answered" | **Continue** |
+| `completed` | "`correctCount`/`totalQuestions` · score `score`" | **View result**, disabled until `nextSetAt` |
+
+`correctCount` and `score` are **null until completed** — deliberately, so a
+half-finished quiz cannot show a score that is really just "what you have got
+right so far". Do not render them while `inProgress`.
+
+`dailyQuiz` is `null` when the student has not selected a course yet. Hide the
+card.
+
+### The streak
+
+`currentStreak` is on the card and on every daily-quiz response. Show it beside
+the title — "🔥 4 days".
+
+It does **not** drop to zero because today is unfinished; it counts back from
+yesterday until today is done. So a student opening the app at 9am on day 5
+sees "🔥 4", taps in, finishes, and sees "🔥 5". Never render it as lost before
+the day is over.
+
+### The countdown
+
+`nextSetAt` is an ISO timestamp with the real `+04:00` offset. When
+`state: "completed"`, count down to it — "New set in 4h 12m". Parse the offset;
+do not assume the device timezone matches.
+
+---
+
 ## What to build
 
-**Home card** — "Question of the Day", `currentStreak`, and either Start or
-Continue from `answeredCount`. When `completed`, show the score and a
-countdown to `nextSetAt`.
+**Home card** — from `modules.dailyQuiz` alone, per the table above. One call,
+no side effects.
 
 **Quiz screen** — one question at a time, options A–D, submit, reveal, Next.
 The existing QBank card and reveal component work as they are.
@@ -202,7 +262,9 @@ outlined = attempted but unfinished, empty = missed.
 
 ## Constraints
 
-- Do not call `GET /daily-quiz` on app launch; it starts the day's attempt.
+- Do not call `GET /daily-quiz` on app launch or from the home screen; it
+  starts the day's attempt. The home card reads `modules.dailyQuiz`.
+- `correctCount` and `score` are null until the quiz is completed.
 - Never reroll locally. The set is the server's, and refetching returns it
   unchanged.
 - The answer key exists only in the answer and finish responses.
