@@ -14801,6 +14801,7 @@ export namespace Prisma {
   export type LessonAvgAggregateOutputType = {
     id: number | null
     chapterId: number | null
+    durationSeconds: number | null
     displayOrder: number | null
     quizId: number | null
   }
@@ -14808,6 +14809,7 @@ export namespace Prisma {
   export type LessonSumAggregateOutputType = {
     id: number | null
     chapterId: number | null
+    durationSeconds: number | null
     displayOrder: number | null
     quizId: number | null
   }
@@ -14825,6 +14827,7 @@ export namespace Prisma {
     noteUrl: string | null
     notePublicId: string | null
     noteFileType: string | null
+    durationSeconds: number | null
     content: string | null
     displayOrder: number | null
     isFreePreview: boolean | null
@@ -14849,6 +14852,7 @@ export namespace Prisma {
     noteUrl: string | null
     notePublicId: string | null
     noteFileType: string | null
+    durationSeconds: number | null
     content: string | null
     displayOrder: number | null
     isFreePreview: boolean | null
@@ -14873,6 +14877,7 @@ export namespace Prisma {
     noteUrl: number
     notePublicId: number
     noteFileType: number
+    durationSeconds: number
     content: number
     displayOrder: number
     isFreePreview: number
@@ -14889,6 +14894,7 @@ export namespace Prisma {
   export type LessonAvgAggregateInputType = {
     id?: true
     chapterId?: true
+    durationSeconds?: true
     displayOrder?: true
     quizId?: true
   }
@@ -14896,6 +14902,7 @@ export namespace Prisma {
   export type LessonSumAggregateInputType = {
     id?: true
     chapterId?: true
+    durationSeconds?: true
     displayOrder?: true
     quizId?: true
   }
@@ -14913,6 +14920,7 @@ export namespace Prisma {
     noteUrl?: true
     notePublicId?: true
     noteFileType?: true
+    durationSeconds?: true
     content?: true
     displayOrder?: true
     isFreePreview?: true
@@ -14937,6 +14945,7 @@ export namespace Prisma {
     noteUrl?: true
     notePublicId?: true
     noteFileType?: true
+    durationSeconds?: true
     content?: true
     displayOrder?: true
     isFreePreview?: true
@@ -14961,6 +14970,7 @@ export namespace Prisma {
     noteUrl?: true
     notePublicId?: true
     noteFileType?: true
+    durationSeconds?: true
     content?: true
     displayOrder?: true
     isFreePreview?: true
@@ -15072,6 +15082,7 @@ export namespace Prisma {
     noteUrl: string | null
     notePublicId: string | null
     noteFileType: string | null
+    durationSeconds: number | null
     content: string | null
     displayOrder: number
     isFreePreview: boolean
@@ -15115,6 +15126,7 @@ export namespace Prisma {
     noteUrl?: boolean
     notePublicId?: boolean
     noteFileType?: boolean
+    durationSeconds?: boolean
     content?: boolean
     displayOrder?: boolean
     isFreePreview?: boolean
@@ -15146,6 +15158,7 @@ export namespace Prisma {
     noteUrl?: boolean
     notePublicId?: boolean
     noteFileType?: boolean
+    durationSeconds?: boolean
     content?: boolean
     displayOrder?: boolean
     isFreePreview?: boolean
@@ -15172,6 +15185,7 @@ export namespace Prisma {
     noteUrl?: boolean
     notePublicId?: boolean
     noteFileType?: boolean
+    durationSeconds?: boolean
     content?: boolean
     displayOrder?: boolean
     isFreePreview?: boolean
@@ -15198,6 +15212,7 @@ export namespace Prisma {
     noteUrl?: boolean
     notePublicId?: boolean
     noteFileType?: boolean
+    durationSeconds?: boolean
     content?: boolean
     displayOrder?: boolean
     isFreePreview?: boolean
@@ -15209,7 +15224,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chapterId" | "title" | "description" | "type" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "thumbnailPublicId" | "noteUrl" | "notePublicId" | "noteFileType" | "content" | "displayOrder" | "isFreePreview" | "accessType" | "status" | "quizId" | "commentsEnabled" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
+  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chapterId" | "title" | "description" | "type" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "thumbnailPublicId" | "noteUrl" | "notePublicId" | "noteFileType" | "durationSeconds" | "content" | "displayOrder" | "isFreePreview" | "accessType" | "status" | "quizId" | "commentsEnabled" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
   export type LessonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
     quiz?: boolean | Lesson$quizArgs<ExtArgs>
@@ -15251,6 +15266,7 @@ export namespace Prisma {
       noteUrl: string | null
       notePublicId: string | null
       noteFileType: string | null
+      durationSeconds: number | null
       content: string | null
       displayOrder: number
       isFreePreview: boolean
@@ -15701,6 +15717,7 @@ export namespace Prisma {
     readonly noteUrl: FieldRef<"Lesson", 'String'>
     readonly notePublicId: FieldRef<"Lesson", 'String'>
     readonly noteFileType: FieldRef<"Lesson", 'String'>
+    readonly durationSeconds: FieldRef<"Lesson", 'Int'>
     readonly content: FieldRef<"Lesson", 'String'>
     readonly displayOrder: FieldRef<"Lesson", 'Int'>
     readonly isFreePreview: FieldRef<"Lesson", 'Boolean'>
@@ -43140,6 +43157,7 @@ export namespace Prisma {
     noteUrl: 'noteUrl',
     notePublicId: 'notePublicId',
     noteFileType: 'noteFileType',
+    durationSeconds: 'durationSeconds',
     content: 'content',
     displayOrder: 'displayOrder',
     isFreePreview: 'isFreePreview',
@@ -44340,6 +44358,7 @@ export namespace Prisma {
     noteUrl?: StringNullableFilter<"Lesson"> | string | null
     notePublicId?: StringNullableFilter<"Lesson"> | string | null
     noteFileType?: StringNullableFilter<"Lesson"> | string | null
+    durationSeconds?: IntNullableFilter<"Lesson"> | number | null
     content?: StringNullableFilter<"Lesson"> | string | null
     displayOrder?: IntFilter<"Lesson"> | number
     isFreePreview?: BoolFilter<"Lesson"> | boolean
@@ -44370,6 +44389,7 @@ export namespace Prisma {
     noteUrl?: SortOrderInput | SortOrder
     notePublicId?: SortOrderInput | SortOrder
     noteFileType?: SortOrderInput | SortOrder
+    durationSeconds?: SortOrderInput | SortOrder
     content?: SortOrderInput | SortOrder
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
@@ -44404,6 +44424,7 @@ export namespace Prisma {
     noteUrl?: StringNullableFilter<"Lesson"> | string | null
     notePublicId?: StringNullableFilter<"Lesson"> | string | null
     noteFileType?: StringNullableFilter<"Lesson"> | string | null
+    durationSeconds?: IntNullableFilter<"Lesson"> | number | null
     content?: StringNullableFilter<"Lesson"> | string | null
     displayOrder?: IntFilter<"Lesson"> | number
     isFreePreview?: BoolFilter<"Lesson"> | boolean
@@ -44433,6 +44454,7 @@ export namespace Prisma {
     noteUrl?: SortOrderInput | SortOrder
     notePublicId?: SortOrderInput | SortOrder
     noteFileType?: SortOrderInput | SortOrder
+    durationSeconds?: SortOrderInput | SortOrder
     content?: SortOrderInput | SortOrder
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
@@ -44465,6 +44487,7 @@ export namespace Prisma {
     noteUrl?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
     notePublicId?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
     noteFileType?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
+    durationSeconds?: IntNullableWithAggregatesFilter<"Lesson"> | number | null
     content?: StringNullableWithAggregatesFilter<"Lesson"> | string | null
     displayOrder?: IntWithAggregatesFilter<"Lesson"> | number
     isFreePreview?: BoolWithAggregatesFilter<"Lesson"> | boolean
@@ -46856,6 +46879,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -46885,6 +46909,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -46911,6 +46936,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -46940,6 +46966,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -46968,6 +46995,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -46990,6 +47018,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -47013,6 +47042,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -49471,6 +49501,7 @@ export namespace Prisma {
     noteUrl?: SortOrder
     notePublicId?: SortOrder
     noteFileType?: SortOrder
+    durationSeconds?: SortOrder
     content?: SortOrder
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
@@ -49485,6 +49516,7 @@ export namespace Prisma {
   export type LessonAvgOrderByAggregateInput = {
     id?: SortOrder
     chapterId?: SortOrder
+    durationSeconds?: SortOrder
     displayOrder?: SortOrder
     quizId?: SortOrder
   }
@@ -49502,6 +49534,7 @@ export namespace Prisma {
     noteUrl?: SortOrder
     notePublicId?: SortOrder
     noteFileType?: SortOrder
+    durationSeconds?: SortOrder
     content?: SortOrder
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
@@ -49526,6 +49559,7 @@ export namespace Prisma {
     noteUrl?: SortOrder
     notePublicId?: SortOrder
     noteFileType?: SortOrder
+    durationSeconds?: SortOrder
     content?: SortOrder
     displayOrder?: SortOrder
     isFreePreview?: SortOrder
@@ -49540,6 +49574,7 @@ export namespace Prisma {
   export type LessonSumOrderByAggregateInput = {
     id?: SortOrder
     chapterId?: SortOrder
+    durationSeconds?: SortOrder
     displayOrder?: SortOrder
     quizId?: SortOrder
   }
@@ -56627,6 +56662,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -56654,6 +56690,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -56803,6 +56840,7 @@ export namespace Prisma {
     noteUrl?: StringNullableFilter<"Lesson"> | string | null
     notePublicId?: StringNullableFilter<"Lesson"> | string | null
     noteFileType?: StringNullableFilter<"Lesson"> | string | null
+    durationSeconds?: IntNullableFilter<"Lesson"> | number | null
     content?: StringNullableFilter<"Lesson"> | string | null
     displayOrder?: IntFilter<"Lesson"> | number
     isFreePreview?: BoolFilter<"Lesson"> | boolean
@@ -57120,6 +57158,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -57148,6 +57187,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -57219,6 +57259,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -57247,6 +57288,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -58203,6 +58245,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -58231,6 +58274,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -58387,6 +58431,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -58415,6 +58460,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -59318,6 +59364,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -59346,6 +59393,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -59445,6 +59493,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -59473,6 +59522,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -59550,6 +59600,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -59578,6 +59629,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -59677,6 +59729,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -59705,6 +59758,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -60716,6 +60770,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -60744,6 +60799,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -60959,6 +61015,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -60987,6 +61044,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -63011,6 +63069,7 @@ export namespace Prisma {
     noteUrl?: string | null
     notePublicId?: string | null
     noteFileType?: string | null
+    durationSeconds?: number | null
     content?: string | null
     displayOrder?: number
     isFreePreview?: boolean
@@ -63033,6 +63092,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -63060,6 +63120,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
@@ -63087,6 +63148,7 @@ export namespace Prisma {
     noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean

@@ -224,6 +224,7 @@ exports.Prisma.LessonScalarFieldEnum = {
   noteUrl: 'noteUrl',
   notePublicId: 'notePublicId',
   noteFileType: 'noteFileType',
+  durationSeconds: 'durationSeconds',
   content: 'content',
   displayOrder: 'displayOrder',
   isFreePreview: 'isFreePreview',

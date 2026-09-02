@@ -240,6 +240,32 @@ async function getHome(req, res) {
 
 // PUT /api/users/me/lessons/:id/progress
 // Body: { completed?: boolean, lastPositionSeconds?: number }
+
+// A video counts as watched at 90%. Credits are not the lesson, and a student
+// who stops on the outro has finished it — demanding 100% leaves ticks
+// permanently unearned and teaches people to scrub to the end.
+const COMPLETION_THRESHOLD = 0.9;
+
+/**
+ * Whether a reported position finishes the video, and how far through it is.
+ *
+ * Returns `completed: null` when there is no duration to measure against —
+ * "not enough information", which is different from "not finished" and must
+ * not clear a tick the student already earned.
+ */
+function watchedState(lastPositionSeconds, durationSeconds) {
+  if (!durationSeconds || durationSeconds <= 0 || lastPositionSeconds == null) {
+    return { completed: null, watchedPercent: null };
+  }
+  const ratio = lastPositionSeconds / durationSeconds;
+  return {
+    completed: ratio >= COMPLETION_THRESHOLD,
+    // Capped: a player reporting a position past the end is common and should
+    // not produce 103%.
+    watchedPercent: Math.min(100, Math.round(ratio * 100)),
+  };
+}
+
 async function saveProgress(req, res) {
   try {
     const lessonId = Number(req.params.id);
@@ -249,13 +275,13 @@ async function saveProgress(req, res) {
 
     const lesson = await prisma.lesson.findUnique({
       where: { id: lessonId },
-      select: { id: true, status: true },
+      select: { id: true, status: true, type: true, durationSeconds: true },
     });
     if (!lesson || lesson.status !== 'published') {
       return res.status(404).json({ error: { message: 'Lesson not found' } });
     }
 
-    const { completed, lastPositionSeconds } = req.body ?? {};
+    const { completed, lastPositionSeconds, durationSeconds } = req.body ?? {};
 
     if (completed !== undefined && typeof completed !== 'boolean') {
       return res.status(400).json({ error: { message: 'completed must be a boolean' } });
@@ -265,11 +291,39 @@ async function saveProgress(req, res) {
       return res.status(400).json({ error: { message: 'lastPositionSeconds must be a non-negative number' } });
     }
 
+    // Backfill the video's length from the player, once. Every existing video
+    // predates the column, and the panel only sets it on lessons uploaded from
+    // now on — without this the threshold would never apply to the back
+    // catalogue.
+    //
+    // ponytail: this trusts a client for a value on a shared row, so it is
+    // written only when absent and only within a sane range; a bad number
+    // affects a tick, and the panel overwrites it on the next lesson edit.
+    // Drop it once every video has a duration from upload.
+    let duration = lesson.durationSeconds;
+    if (duration == null && durationSeconds !== undefined) {
+      const reported = Math.floor(Number(durationSeconds));
+      if (Number.isFinite(reported) && reported > 0 && reported <= 86400) {
+        duration = reported;
+        await prisma.lesson.update({ where: { id: lessonId }, data: { durationSeconds: reported } });
+      }
+    }
+
     // Partial: sending only a position must not silently un-complete a lesson,
     // and marking complete must not reset the resume point to zero.
     const data = {};
     if (completed !== undefined) data.completed = completed;
     if (lastPositionSeconds !== undefined) data.lastPositionSeconds = Math.floor(Number(lastPositionSeconds));
+
+    // The threshold decides for videos, so every client agrees on what
+    // "watched" means instead of each shipping its own percentage.
+    const state = lesson.type === 'video' && completed === undefined
+      ? watchedState(data.lastPositionSeconds, duration)
+      : { completed: null, watchedPercent: null };
+
+    // Only ever sets the tick, never clears it. Rewinding to rewatch a section
+    // is not un-finishing the video.
+    if (state.completed === true) data.completed = true;
 
     const saved = await prisma.lessonProgress.upsert({
       where: { userId_lessonId: { userId: req.user.userId, lessonId } },
@@ -281,6 +335,11 @@ async function saveProgress(req, res) {
       lessonId,
       completed: saved.completed,
       lastPositionSeconds: saved.lastPositionSeconds,
+      durationSeconds: duration,
+      // Null when the duration is still unknown — render the tick, not a bar.
+      watchedPercent: state.watchedPercent
+        ?? watchedState(saved.lastPositionSeconds, duration).watchedPercent,
+      completionThresholdPercent: Math.round(COMPLETION_THRESHOLD * 100),
       updatedAt: saved.updatedAt,
     });
   } catch (error) {
@@ -289,4 +348,4 @@ async function saveProgress(req, res) {
   }
 }
 
-module.exports = { getHome, saveProgress, percent };
+module.exports = { getHome, saveProgress, percent, watchedState, COMPLETION_THRESHOLD };

@@ -210,6 +210,10 @@ model Lesson {
   noteUrl           String?
   notePublicId      String?
   noteFileType      String?
+  // Video length. Cloudinary returns it at upload and it was being thrown
+  // away; without it the server cannot tell 300s into a 310s clip from 300s
+  // into an hour, so it cannot decide when a video has been watched.
+  durationSeconds   Int?
   content           String?
   displayOrder      Int          @default(0)
   isFreePreview     Boolean      @default(false)

@@ -13,6 +13,8 @@ const attemptStatusByLesson = (...args) =>
 // Reused rather than re-derived so a chapter bar and a home card can never
 // disagree about what 99% means.
 const percent = (...args) => require('./home.controller').percent(...args);
+// Lazy for the same reason as `percent`: home.controller requires this file.
+const watchedState = (...args) => require('./home.controller').watchedState(...args);
 
 // Done comes from two places. A quiz lesson has no lesson_progress row — it is
 // finished when its latest attempt is submitted. Everything else is finished
@@ -110,6 +112,7 @@ async function getSelectedCourseContent(req, res) {
             thumbnailUrl: true,
             noteUrl: true,
             noteFileType: true,
+            durationSeconds: true,
             displayOrder: true,
             isFreePreview: true,
             accessType: true,
@@ -162,6 +165,12 @@ async function getSelectedCourseContent(req, res) {
           completed: lessonDone(l, p, attempt),
           // Survives the lock strip: the resume point is not the media.
           lastPositionSeconds: p?.lastPositionSeconds ?? 0,
+          // How far through, for a part-watched bar under the row. Null when
+          // the video's length is not known yet — render the tick alone rather
+          // than a bar stuck at zero.
+          watchedPercent: l.type === 'video'
+            ? watchedState(p?.lastPositionSeconds ?? 0, l.durationSeconds).watchedPercent
+            : null,
           isSaved: savedLessonIds.has(l.id),
         };
         return unlocked
@@ -226,6 +235,7 @@ async function getStudentLesson(req, res) {
         id: true, title: true, description: true, type: true, content: true,
         videoUrl: true, thumbnailUrl: true, noteUrl: true, noteFileType: true,
         displayOrder: true, isFreePreview: true, accessType: true, status: true,
+        durationSeconds: true,
         quizId: true,
         quiz: { select: { id: true, title: true, questionCount: true, status: true } },
         lessonPlans: {
@@ -293,6 +303,9 @@ async function getStudentLesson(req, res) {
       // student who later subscribes should not have lost their place.
       completed: progress?.completed ?? false,
       lastPositionSeconds: progress?.lastPositionSeconds ?? 0,
+      watchedPercent: lesson.type === 'video'
+        ? watchedState(progress?.lastPositionSeconds ?? 0, lesson.durationSeconds).watchedPercent
+        : null,
       // So the bookmark button renders its own state without fetching the
       // whole saved list and searching it.
       isSaved: Boolean(saved),
