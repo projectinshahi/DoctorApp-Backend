@@ -442,6 +442,25 @@ exports.Prisma.CommentReportScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.DailyQuizAttemptScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  courseId: 'courseId',
+  quizDate: 'quizDate',
+  questionIds: 'questionIds',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+};
+
+exports.Prisma.DailyQuizAnswerScalarFieldEnum = {
+  attemptId: 'attemptId',
+  questionId: 'questionId',
+  selectedOptionId: 'selectedOptionId',
+  isCorrect: 'isCorrect',
+  marksAwarded: 'marksAwarded',
+  answeredAt: 'answeredAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -523,7 +542,9 @@ exports.Prisma.ModelName = {
   TestAttempt: 'TestAttempt',
   TestAttemptAnswer: 'TestAttemptAnswer',
   LessonComment: 'LessonComment',
-  CommentReport: 'CommentReport'
+  CommentReport: 'CommentReport',
+  DailyQuizAttempt: 'DailyQuizAttempt',
+  DailyQuizAnswer: 'DailyQuizAnswer'
 };
 
 /**

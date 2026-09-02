@@ -33,6 +33,7 @@ model User {
   testAttempts   TestAttempt[]
   comments       LessonComment[]
   commentReports CommentReport[]
+  dailyQuizzes   DailyQuizAttempt[]
 
   selectedCourseId     Int?
   selectedCourseTypeId Int?
@@ -144,6 +145,7 @@ model Course {
   plans         Plan[]
   subscriptions Subscription[]
   tests         Test[]
+  dailyQuizzes  DailyQuizAttempt[]
 
   @@index([createdBy])
   @@map("courses")
@@ -711,4 +713,52 @@ model CommentReport {
   @@unique([commentId, userId])
   @@index([commentId, resolvedAt])
   @@map("comment_reports")
+}
+
+
+/// One student's go at one day's set.
+///
+/// The questions themselves are not stored anywhere as "today's quiz" — they
+/// are derived from (courseId, date) with a seeded shuffle, so every student
+/// on a given day gets the same set without a scheduling table, a cron job, or
+/// anyone remembering to populate tomorrow.
+///
+/// `questionIds` freezes that derivation on first open. Without it, an admin
+/// deactivating a question mid-morning would change the paper under a student
+/// halfway through it.
+model DailyQuizAttempt {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  courseId    Int
+  // The day this set belongs to, in the app's timezone — not the server's.
+  quizDate    DateTime @db.Date
+  questionIds Int[]
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  user    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course  Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  answers DailyQuizAnswer[]
+
+  // One go per student per course per day. This is the whole point of a daily
+  // quiz: unlimited retries would make it practice, and would make a streak
+  // meaningless.
+  @@unique([userId, courseId, quizDate])
+  // "This student's recent days" — the streak and the history screen.
+  @@index([userId, courseId, quizDate])
+  @@map("daily_quiz_attempts")
+}
+
+model DailyQuizAnswer {
+  attemptId        Int
+  questionId       Int
+  selectedOptionId Int
+  isCorrect        Boolean
+  marksAwarded     Float
+  answeredAt       DateTime @default(now())
+
+  attempt DailyQuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+
+  @@id([attemptId, questionId])
+  @@map("daily_quiz_answers")
 }

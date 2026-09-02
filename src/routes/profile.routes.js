@@ -14,6 +14,9 @@ const {
   listComments, createComment, updateComment, deleteComment, reportComment,
 } = require('../controllers/comment.controller');
 const {
+  getDailyQuiz, answerDailyQuestion, finishDailyQuiz, dailyQuizHistory,
+} = require('../controllers/dailyQuiz.controller');
+const {
   listTests: listStudentTests, startTestAttempt, answerTestQuestion,
   clearTestAnswer, submitTestAttempt, getTestResult, getTestLeaderboard,
 } = require('../controllers/testAttempt.controller');
@@ -71,5 +74,12 @@ router.post('/lessons/:lessonId/comments', authenticateStudent, createComment);
 router.patch('/comments/:commentId', authenticateStudent, updateComment);
 router.delete('/comments/:commentId', authenticateStudent, deleteComment);
 router.post('/comments/:commentId/report', authenticateStudent, reportComment);
+
+// Question of the Day. The set is derived from (course, date), so there is
+// nothing for an admin to schedule and nothing to run overnight.
+router.get('/courses/:courseId/daily-quiz', authenticateStudent, getDailyQuiz);
+router.post('/courses/:courseId/daily-quiz/answers', authenticateStudent, answerDailyQuestion);
+router.post('/courses/:courseId/daily-quiz/finish', authenticateStudent, finishDailyQuiz);
+router.get('/courses/:courseId/daily-quiz/history', authenticateStudent, dailyQuizHistory);
 
 module.exports = router;

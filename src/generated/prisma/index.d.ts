@@ -163,6 +163,25 @@ export type LessonComment = $Result.DefaultSelection<Prisma.$LessonCommentPayloa
  * 
  */
 export type CommentReport = $Result.DefaultSelection<Prisma.$CommentReportPayload>
+/**
+ * Model DailyQuizAttempt
+ * One student's go at one day's set.
+ * 
+ * The questions themselves are not stored anywhere as "today's quiz" — they
+ * are derived from (courseId, date) with a seeded shuffle, so every student
+ * on a given day gets the same set without a scheduling table, a cron job, or
+ * anyone remembering to populate tomorrow.
+ * 
+ * `questionIds` freezes that derivation on first open. Without it, an admin
+ * deactivating a question mid-morning would change the paper under a student
+ * halfway through it.
+ */
+export type DailyQuizAttempt = $Result.DefaultSelection<Prisma.$DailyQuizAttemptPayload>
+/**
+ * Model DailyQuizAnswer
+ * 
+ */
+export type DailyQuizAnswer = $Result.DefaultSelection<Prisma.$DailyQuizAnswerPayload>
 
 /**
  * Enums
@@ -675,6 +694,26 @@ export class PrismaClient<
     * ```
     */
   get commentReport(): Prisma.CommentReportDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.dailyQuizAttempt`: Exposes CRUD operations for the **DailyQuizAttempt** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DailyQuizAttempts
+    * const dailyQuizAttempts = await prisma.dailyQuizAttempt.findMany()
+    * ```
+    */
+  get dailyQuizAttempt(): Prisma.DailyQuizAttemptDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.dailyQuizAnswer`: Exposes CRUD operations for the **DailyQuizAnswer** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DailyQuizAnswers
+    * const dailyQuizAnswers = await prisma.dailyQuizAnswer.findMany()
+    * ```
+    */
+  get dailyQuizAnswer(): Prisma.DailyQuizAnswerDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1151,7 +1190,9 @@ export namespace Prisma {
     TestAttempt: 'TestAttempt',
     TestAttemptAnswer: 'TestAttemptAnswer',
     LessonComment: 'LessonComment',
-    CommentReport: 'CommentReport'
+    CommentReport: 'CommentReport',
+    DailyQuizAttempt: 'DailyQuizAttempt',
+    DailyQuizAnswer: 'DailyQuizAnswer'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1167,7 +1208,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "quizQuestion" | "tag" | "questionTag" | "quizAttempt" | "attemptAnswer" | "savedQuestion" | "savedLesson" | "lessonProgress" | "test" | "testQuestion" | "testImage" | "testAttempt" | "testAttemptAnswer" | "lessonComment" | "commentReport"
+      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "quizQuestion" | "tag" | "questionTag" | "quizAttempt" | "attemptAnswer" | "savedQuestion" | "savedLesson" | "lessonProgress" | "test" | "testQuestion" | "testImage" | "testAttempt" | "testAttemptAnswer" | "lessonComment" | "commentReport" | "dailyQuizAttempt" | "dailyQuizAnswer"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3391,6 +3432,154 @@ export namespace Prisma {
           }
         }
       }
+      DailyQuizAttempt: {
+        payload: Prisma.$DailyQuizAttemptPayload<ExtArgs>
+        fields: Prisma.DailyQuizAttemptFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DailyQuizAttemptFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAttemptPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DailyQuizAttemptFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAttemptPayload>
+          }
+          findFirst: {
+            args: Prisma.DailyQuizAttemptFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAttemptPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DailyQuizAttemptFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAttemptPayload>
+          }
+          findMany: {
+            args: Prisma.DailyQuizAttemptFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAttemptPayload>[]
+          }
+          create: {
+            args: Prisma.DailyQuizAttemptCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAttemptPayload>
+          }
+          createMany: {
+            args: Prisma.DailyQuizAttemptCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DailyQuizAttemptCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAttemptPayload>[]
+          }
+          delete: {
+            args: Prisma.DailyQuizAttemptDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAttemptPayload>
+          }
+          update: {
+            args: Prisma.DailyQuizAttemptUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAttemptPayload>
+          }
+          deleteMany: {
+            args: Prisma.DailyQuizAttemptDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DailyQuizAttemptUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DailyQuizAttemptUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAttemptPayload>[]
+          }
+          upsert: {
+            args: Prisma.DailyQuizAttemptUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAttemptPayload>
+          }
+          aggregate: {
+            args: Prisma.DailyQuizAttemptAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDailyQuizAttempt>
+          }
+          groupBy: {
+            args: Prisma.DailyQuizAttemptGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DailyQuizAttemptGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DailyQuizAttemptCountArgs<ExtArgs>
+            result: $Utils.Optional<DailyQuizAttemptCountAggregateOutputType> | number
+          }
+        }
+      }
+      DailyQuizAnswer: {
+        payload: Prisma.$DailyQuizAnswerPayload<ExtArgs>
+        fields: Prisma.DailyQuizAnswerFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DailyQuizAnswerFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAnswerPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DailyQuizAnswerFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAnswerPayload>
+          }
+          findFirst: {
+            args: Prisma.DailyQuizAnswerFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAnswerPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DailyQuizAnswerFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAnswerPayload>
+          }
+          findMany: {
+            args: Prisma.DailyQuizAnswerFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAnswerPayload>[]
+          }
+          create: {
+            args: Prisma.DailyQuizAnswerCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAnswerPayload>
+          }
+          createMany: {
+            args: Prisma.DailyQuizAnswerCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DailyQuizAnswerCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAnswerPayload>[]
+          }
+          delete: {
+            args: Prisma.DailyQuizAnswerDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAnswerPayload>
+          }
+          update: {
+            args: Prisma.DailyQuizAnswerUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAnswerPayload>
+          }
+          deleteMany: {
+            args: Prisma.DailyQuizAnswerDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DailyQuizAnswerUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DailyQuizAnswerUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAnswerPayload>[]
+          }
+          upsert: {
+            args: Prisma.DailyQuizAnswerUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyQuizAnswerPayload>
+          }
+          aggregate: {
+            args: Prisma.DailyQuizAnswerAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDailyQuizAnswer>
+          }
+          groupBy: {
+            args: Prisma.DailyQuizAnswerGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DailyQuizAnswerGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DailyQuizAnswerCountArgs<ExtArgs>
+            result: $Utils.Optional<DailyQuizAnswerCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3544,6 +3733,8 @@ export namespace Prisma {
     testAttemptAnswer?: TestAttemptAnswerOmit
     lessonComment?: LessonCommentOmit
     commentReport?: CommentReportOmit
+    dailyQuizAttempt?: DailyQuizAttemptOmit
+    dailyQuizAnswer?: DailyQuizAnswerOmit
   }
 
   /* Types for Logging */
@@ -3633,6 +3824,7 @@ export namespace Prisma {
     testAttempts: number
     comments: number
     commentReports: number
+    dailyQuizzes: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3645,6 +3837,7 @@ export namespace Prisma {
     testAttempts?: boolean | UserCountOutputTypeCountTestAttemptsArgs
     comments?: boolean | UserCountOutputTypeCountCommentsArgs
     commentReports?: boolean | UserCountOutputTypeCountCommentReportsArgs
+    dailyQuizzes?: boolean | UserCountOutputTypeCountDailyQuizzesArgs
   }
 
   // Custom InputTypes
@@ -3719,6 +3912,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountCommentReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CommentReportWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDailyQuizzesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DailyQuizAttemptWhereInput
   }
 
 
@@ -3872,6 +4072,7 @@ export namespace Prisma {
     plans: number
     subscriptions: number
     tests: number
+    dailyQuizzes: number
   }
 
   export type CourseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3882,6 +4083,7 @@ export namespace Prisma {
     plans?: boolean | CourseCountOutputTypeCountPlansArgs
     subscriptions?: boolean | CourseCountOutputTypeCountSubscriptionsArgs
     tests?: boolean | CourseCountOutputTypeCountTestsArgs
+    dailyQuizzes?: boolean | CourseCountOutputTypeCountDailyQuizzesArgs
   }
 
   // Custom InputTypes
@@ -3942,6 +4144,13 @@ export namespace Prisma {
    */
   export type CourseCountOutputTypeCountTestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TestWhereInput
+  }
+
+  /**
+   * CourseCountOutputType without action
+   */
+  export type CourseCountOutputTypeCountDailyQuizzesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DailyQuizAttemptWhereInput
   }
 
 
@@ -4435,6 +4644,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type DailyQuizAttemptCountOutputType
+   */
+
+  export type DailyQuizAttemptCountOutputType = {
+    answers: number
+  }
+
+  export type DailyQuizAttemptCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    answers?: boolean | DailyQuizAttemptCountOutputTypeCountAnswersArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DailyQuizAttemptCountOutputType without action
+   */
+  export type DailyQuizAttemptCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttemptCountOutputType
+     */
+    select?: DailyQuizAttemptCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DailyQuizAttemptCountOutputType without action
+   */
+  export type DailyQuizAttemptCountOutputTypeCountAnswersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DailyQuizAnswerWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -4709,6 +4949,7 @@ export namespace Prisma {
     testAttempts?: boolean | User$testAttemptsArgs<ExtArgs>
     comments?: boolean | User$commentsArgs<ExtArgs>
     commentReports?: boolean | User$commentReportsArgs<ExtArgs>
+    dailyQuizzes?: boolean | User$dailyQuizzesArgs<ExtArgs>
     selectedCourse?: boolean | User$selectedCourseArgs<ExtArgs>
     selectedCourseType?: boolean | User$selectedCourseTypeArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -4774,6 +5015,7 @@ export namespace Prisma {
     testAttempts?: boolean | User$testAttemptsArgs<ExtArgs>
     comments?: boolean | User$commentsArgs<ExtArgs>
     commentReports?: boolean | User$commentReportsArgs<ExtArgs>
+    dailyQuizzes?: boolean | User$dailyQuizzesArgs<ExtArgs>
     selectedCourse?: boolean | User$selectedCourseArgs<ExtArgs>
     selectedCourseType?: boolean | User$selectedCourseTypeArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -4799,6 +5041,7 @@ export namespace Prisma {
       testAttempts: Prisma.$TestAttemptPayload<ExtArgs>[]
       comments: Prisma.$LessonCommentPayload<ExtArgs>[]
       commentReports: Prisma.$CommentReportPayload<ExtArgs>[]
+      dailyQuizzes: Prisma.$DailyQuizAttemptPayload<ExtArgs>[]
       selectedCourse: Prisma.$CoursePayload<ExtArgs> | null
       selectedCourseType: Prisma.$CourseTypePayload<ExtArgs> | null
     }
@@ -5218,6 +5461,7 @@ export namespace Prisma {
     testAttempts<T extends User$testAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$testAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends User$commentsArgs<ExtArgs> = {}>(args?: Subset<T, User$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     commentReports<T extends User$commentReportsArgs<ExtArgs> = {}>(args?: Subset<T, User$commentReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CommentReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    dailyQuizzes<T extends User$dailyQuizzesArgs<ExtArgs> = {}>(args?: Subset<T, User$dailyQuizzesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     selectedCourse<T extends User$selectedCourseArgs<ExtArgs> = {}>(args?: Subset<T, User$selectedCourseArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     selectedCourseType<T extends User$selectedCourseTypeArgs<ExtArgs> = {}>(args?: Subset<T, User$selectedCourseTypeArgs<ExtArgs>>): Prisma__CourseTypeClient<$Result.GetResult<Prisma.$CourseTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -5875,6 +6119,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CommentReportScalarFieldEnum | CommentReportScalarFieldEnum[]
+  }
+
+  /**
+   * User.dailyQuizzes
+   */
+  export type User$dailyQuizzesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttempt
+     */
+    select?: DailyQuizAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAttempt
+     */
+    omit?: DailyQuizAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAttemptInclude<ExtArgs> | null
+    where?: DailyQuizAttemptWhereInput
+    orderBy?: DailyQuizAttemptOrderByWithRelationInput | DailyQuizAttemptOrderByWithRelationInput[]
+    cursor?: DailyQuizAttemptWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DailyQuizAttemptScalarFieldEnum | DailyQuizAttemptScalarFieldEnum[]
   }
 
   /**
@@ -10893,6 +11161,7 @@ export namespace Prisma {
     plans?: boolean | Course$plansArgs<ExtArgs>
     subscriptions?: boolean | Course$subscriptionsArgs<ExtArgs>
     tests?: boolean | Course$testsArgs<ExtArgs>
+    dailyQuizzes?: boolean | Course$dailyQuizzesArgs<ExtArgs>
     _count?: boolean | CourseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["course"]>
 
@@ -10953,6 +11222,7 @@ export namespace Prisma {
     plans?: boolean | Course$plansArgs<ExtArgs>
     subscriptions?: boolean | Course$subscriptionsArgs<ExtArgs>
     tests?: boolean | Course$testsArgs<ExtArgs>
+    dailyQuizzes?: boolean | Course$dailyQuizzesArgs<ExtArgs>
     _count?: boolean | CourseCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CourseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10973,6 +11243,7 @@ export namespace Prisma {
       plans: Prisma.$PlanPayload<ExtArgs>[]
       subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
       tests: Prisma.$TestPayload<ExtArgs>[]
+      dailyQuizzes: Prisma.$DailyQuizAttemptPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -11389,6 +11660,7 @@ export namespace Prisma {
     plans<T extends Course$plansArgs<ExtArgs> = {}>(args?: Subset<T, Course$plansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     subscriptions<T extends Course$subscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, Course$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tests<T extends Course$testsArgs<ExtArgs> = {}>(args?: Subset<T, Course$testsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    dailyQuizzes<T extends Course$dailyQuizzesArgs<ExtArgs> = {}>(args?: Subset<T, Course$dailyQuizzesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12015,6 +12287,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TestScalarFieldEnum | TestScalarFieldEnum[]
+  }
+
+  /**
+   * Course.dailyQuizzes
+   */
+  export type Course$dailyQuizzesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttempt
+     */
+    select?: DailyQuizAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAttempt
+     */
+    omit?: DailyQuizAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAttemptInclude<ExtArgs> | null
+    where?: DailyQuizAttemptWhereInput
+    orderBy?: DailyQuizAttemptOrderByWithRelationInput | DailyQuizAttemptOrderByWithRelationInput[]
+    cursor?: DailyQuizAttemptWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DailyQuizAttemptScalarFieldEnum | DailyQuizAttemptScalarFieldEnum[]
   }
 
   /**
@@ -40412,6 +40708,2297 @@ export namespace Prisma {
 
 
   /**
+   * Model DailyQuizAttempt
+   */
+
+  export type AggregateDailyQuizAttempt = {
+    _count: DailyQuizAttemptCountAggregateOutputType | null
+    _avg: DailyQuizAttemptAvgAggregateOutputType | null
+    _sum: DailyQuizAttemptSumAggregateOutputType | null
+    _min: DailyQuizAttemptMinAggregateOutputType | null
+    _max: DailyQuizAttemptMaxAggregateOutputType | null
+  }
+
+  export type DailyQuizAttemptAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    courseId: number | null
+    questionIds: number | null
+  }
+
+  export type DailyQuizAttemptSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    courseId: number | null
+    questionIds: number[]
+  }
+
+  export type DailyQuizAttemptMinAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    courseId: number | null
+    quizDate: Date | null
+    startedAt: Date | null
+    completedAt: Date | null
+  }
+
+  export type DailyQuizAttemptMaxAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    courseId: number | null
+    quizDate: Date | null
+    startedAt: Date | null
+    completedAt: Date | null
+  }
+
+  export type DailyQuizAttemptCountAggregateOutputType = {
+    id: number
+    userId: number
+    courseId: number
+    quizDate: number
+    questionIds: number
+    startedAt: number
+    completedAt: number
+    _all: number
+  }
+
+
+  export type DailyQuizAttemptAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    courseId?: true
+    questionIds?: true
+  }
+
+  export type DailyQuizAttemptSumAggregateInputType = {
+    id?: true
+    userId?: true
+    courseId?: true
+    questionIds?: true
+  }
+
+  export type DailyQuizAttemptMinAggregateInputType = {
+    id?: true
+    userId?: true
+    courseId?: true
+    quizDate?: true
+    startedAt?: true
+    completedAt?: true
+  }
+
+  export type DailyQuizAttemptMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    courseId?: true
+    quizDate?: true
+    startedAt?: true
+    completedAt?: true
+  }
+
+  export type DailyQuizAttemptCountAggregateInputType = {
+    id?: true
+    userId?: true
+    courseId?: true
+    quizDate?: true
+    questionIds?: true
+    startedAt?: true
+    completedAt?: true
+    _all?: true
+  }
+
+  export type DailyQuizAttemptAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DailyQuizAttempt to aggregate.
+     */
+    where?: DailyQuizAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DailyQuizAttempts to fetch.
+     */
+    orderBy?: DailyQuizAttemptOrderByWithRelationInput | DailyQuizAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DailyQuizAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DailyQuizAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DailyQuizAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DailyQuizAttempts
+    **/
+    _count?: true | DailyQuizAttemptCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DailyQuizAttemptAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DailyQuizAttemptSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DailyQuizAttemptMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DailyQuizAttemptMaxAggregateInputType
+  }
+
+  export type GetDailyQuizAttemptAggregateType<T extends DailyQuizAttemptAggregateArgs> = {
+        [P in keyof T & keyof AggregateDailyQuizAttempt]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDailyQuizAttempt[P]>
+      : GetScalarType<T[P], AggregateDailyQuizAttempt[P]>
+  }
+
+
+
+
+  export type DailyQuizAttemptGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DailyQuizAttemptWhereInput
+    orderBy?: DailyQuizAttemptOrderByWithAggregationInput | DailyQuizAttemptOrderByWithAggregationInput[]
+    by: DailyQuizAttemptScalarFieldEnum[] | DailyQuizAttemptScalarFieldEnum
+    having?: DailyQuizAttemptScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DailyQuizAttemptCountAggregateInputType | true
+    _avg?: DailyQuizAttemptAvgAggregateInputType
+    _sum?: DailyQuizAttemptSumAggregateInputType
+    _min?: DailyQuizAttemptMinAggregateInputType
+    _max?: DailyQuizAttemptMaxAggregateInputType
+  }
+
+  export type DailyQuizAttemptGroupByOutputType = {
+    id: number
+    userId: number
+    courseId: number
+    quizDate: Date
+    questionIds: number[]
+    startedAt: Date
+    completedAt: Date | null
+    _count: DailyQuizAttemptCountAggregateOutputType | null
+    _avg: DailyQuizAttemptAvgAggregateOutputType | null
+    _sum: DailyQuizAttemptSumAggregateOutputType | null
+    _min: DailyQuizAttemptMinAggregateOutputType | null
+    _max: DailyQuizAttemptMaxAggregateOutputType | null
+  }
+
+  type GetDailyQuizAttemptGroupByPayload<T extends DailyQuizAttemptGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DailyQuizAttemptGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DailyQuizAttemptGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DailyQuizAttemptGroupByOutputType[P]>
+            : GetScalarType<T[P], DailyQuizAttemptGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DailyQuizAttemptSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    courseId?: boolean
+    quizDate?: boolean
+    questionIds?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    course?: boolean | CourseDefaultArgs<ExtArgs>
+    answers?: boolean | DailyQuizAttempt$answersArgs<ExtArgs>
+    _count?: boolean | DailyQuizAttemptCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dailyQuizAttempt"]>
+
+  export type DailyQuizAttemptSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    courseId?: boolean
+    quizDate?: boolean
+    questionIds?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    course?: boolean | CourseDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dailyQuizAttempt"]>
+
+  export type DailyQuizAttemptSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    courseId?: boolean
+    quizDate?: boolean
+    questionIds?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    course?: boolean | CourseDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dailyQuizAttempt"]>
+
+  export type DailyQuizAttemptSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    courseId?: boolean
+    quizDate?: boolean
+    questionIds?: boolean
+    startedAt?: boolean
+    completedAt?: boolean
+  }
+
+  export type DailyQuizAttemptOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "courseId" | "quizDate" | "questionIds" | "startedAt" | "completedAt", ExtArgs["result"]["dailyQuizAttempt"]>
+  export type DailyQuizAttemptInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    course?: boolean | CourseDefaultArgs<ExtArgs>
+    answers?: boolean | DailyQuizAttempt$answersArgs<ExtArgs>
+    _count?: boolean | DailyQuizAttemptCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DailyQuizAttemptIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    course?: boolean | CourseDefaultArgs<ExtArgs>
+  }
+  export type DailyQuizAttemptIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    course?: boolean | CourseDefaultArgs<ExtArgs>
+  }
+
+  export type $DailyQuizAttemptPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DailyQuizAttempt"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      course: Prisma.$CoursePayload<ExtArgs>
+      answers: Prisma.$DailyQuizAnswerPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      userId: number
+      courseId: number
+      quizDate: Date
+      questionIds: number[]
+      startedAt: Date
+      completedAt: Date | null
+    }, ExtArgs["result"]["dailyQuizAttempt"]>
+    composites: {}
+  }
+
+  type DailyQuizAttemptGetPayload<S extends boolean | null | undefined | DailyQuizAttemptDefaultArgs> = $Result.GetResult<Prisma.$DailyQuizAttemptPayload, S>
+
+  type DailyQuizAttemptCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DailyQuizAttemptFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DailyQuizAttemptCountAggregateInputType | true
+    }
+
+  export interface DailyQuizAttemptDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DailyQuizAttempt'], meta: { name: 'DailyQuizAttempt' } }
+    /**
+     * Find zero or one DailyQuizAttempt that matches the filter.
+     * @param {DailyQuizAttemptFindUniqueArgs} args - Arguments to find a DailyQuizAttempt
+     * @example
+     * // Get one DailyQuizAttempt
+     * const dailyQuizAttempt = await prisma.dailyQuizAttempt.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DailyQuizAttemptFindUniqueArgs>(args: SelectSubset<T, DailyQuizAttemptFindUniqueArgs<ExtArgs>>): Prisma__DailyQuizAttemptClient<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DailyQuizAttempt that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DailyQuizAttemptFindUniqueOrThrowArgs} args - Arguments to find a DailyQuizAttempt
+     * @example
+     * // Get one DailyQuizAttempt
+     * const dailyQuizAttempt = await prisma.dailyQuizAttempt.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DailyQuizAttemptFindUniqueOrThrowArgs>(args: SelectSubset<T, DailyQuizAttemptFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DailyQuizAttemptClient<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DailyQuizAttempt that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyQuizAttemptFindFirstArgs} args - Arguments to find a DailyQuizAttempt
+     * @example
+     * // Get one DailyQuizAttempt
+     * const dailyQuizAttempt = await prisma.dailyQuizAttempt.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DailyQuizAttemptFindFirstArgs>(args?: SelectSubset<T, DailyQuizAttemptFindFirstArgs<ExtArgs>>): Prisma__DailyQuizAttemptClient<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DailyQuizAttempt that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyQuizAttemptFindFirstOrThrowArgs} args - Arguments to find a DailyQuizAttempt
+     * @example
+     * // Get one DailyQuizAttempt
+     * const dailyQuizAttempt = await prisma.dailyQuizAttempt.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DailyQuizAttemptFindFirstOrThrowArgs>(args?: SelectSubset<T, DailyQuizAttemptFindFirstOrThrowArgs<ExtArgs>>): Prisma__DailyQuizAttemptClient<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DailyQuizAttempts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyQuizAttemptFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DailyQuizAttempts
+     * const dailyQuizAttempts = await prisma.dailyQuizAttempt.findMany()
+     * 
+     * // Get first 10 DailyQuizAttempts
+     * const dailyQuizAttempts = await prisma.dailyQuizAttempt.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const dailyQuizAttemptWithIdOnly = await prisma.dailyQuizAttempt.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DailyQuizAttemptFindManyArgs>(args?: SelectSubset<T, DailyQuizAttemptFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DailyQuizAttempt.
+     * @param {DailyQuizAttemptCreateArgs} args - Arguments to create a DailyQuizAttempt.
+     * @example
+     * // Create one DailyQuizAttempt
+     * const DailyQuizAttempt = await prisma.dailyQuizAttempt.create({
+     *   data: {
+     *     // ... data to create a DailyQuizAttempt
+     *   }
+     * })
+     * 
+     */
+    create<T extends DailyQuizAttemptCreateArgs>(args: SelectSubset<T, DailyQuizAttemptCreateArgs<ExtArgs>>): Prisma__DailyQuizAttemptClient<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DailyQuizAttempts.
+     * @param {DailyQuizAttemptCreateManyArgs} args - Arguments to create many DailyQuizAttempts.
+     * @example
+     * // Create many DailyQuizAttempts
+     * const dailyQuizAttempt = await prisma.dailyQuizAttempt.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DailyQuizAttemptCreateManyArgs>(args?: SelectSubset<T, DailyQuizAttemptCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DailyQuizAttempts and returns the data saved in the database.
+     * @param {DailyQuizAttemptCreateManyAndReturnArgs} args - Arguments to create many DailyQuizAttempts.
+     * @example
+     * // Create many DailyQuizAttempts
+     * const dailyQuizAttempt = await prisma.dailyQuizAttempt.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DailyQuizAttempts and only return the `id`
+     * const dailyQuizAttemptWithIdOnly = await prisma.dailyQuizAttempt.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DailyQuizAttemptCreateManyAndReturnArgs>(args?: SelectSubset<T, DailyQuizAttemptCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DailyQuizAttempt.
+     * @param {DailyQuizAttemptDeleteArgs} args - Arguments to delete one DailyQuizAttempt.
+     * @example
+     * // Delete one DailyQuizAttempt
+     * const DailyQuizAttempt = await prisma.dailyQuizAttempt.delete({
+     *   where: {
+     *     // ... filter to delete one DailyQuizAttempt
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DailyQuizAttemptDeleteArgs>(args: SelectSubset<T, DailyQuizAttemptDeleteArgs<ExtArgs>>): Prisma__DailyQuizAttemptClient<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DailyQuizAttempt.
+     * @param {DailyQuizAttemptUpdateArgs} args - Arguments to update one DailyQuizAttempt.
+     * @example
+     * // Update one DailyQuizAttempt
+     * const dailyQuizAttempt = await prisma.dailyQuizAttempt.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DailyQuizAttemptUpdateArgs>(args: SelectSubset<T, DailyQuizAttemptUpdateArgs<ExtArgs>>): Prisma__DailyQuizAttemptClient<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DailyQuizAttempts.
+     * @param {DailyQuizAttemptDeleteManyArgs} args - Arguments to filter DailyQuizAttempts to delete.
+     * @example
+     * // Delete a few DailyQuizAttempts
+     * const { count } = await prisma.dailyQuizAttempt.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DailyQuizAttemptDeleteManyArgs>(args?: SelectSubset<T, DailyQuizAttemptDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DailyQuizAttempts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyQuizAttemptUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DailyQuizAttempts
+     * const dailyQuizAttempt = await prisma.dailyQuizAttempt.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DailyQuizAttemptUpdateManyArgs>(args: SelectSubset<T, DailyQuizAttemptUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DailyQuizAttempts and returns the data updated in the database.
+     * @param {DailyQuizAttemptUpdateManyAndReturnArgs} args - Arguments to update many DailyQuizAttempts.
+     * @example
+     * // Update many DailyQuizAttempts
+     * const dailyQuizAttempt = await prisma.dailyQuizAttempt.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DailyQuizAttempts and only return the `id`
+     * const dailyQuizAttemptWithIdOnly = await prisma.dailyQuizAttempt.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DailyQuizAttemptUpdateManyAndReturnArgs>(args: SelectSubset<T, DailyQuizAttemptUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DailyQuizAttempt.
+     * @param {DailyQuizAttemptUpsertArgs} args - Arguments to update or create a DailyQuizAttempt.
+     * @example
+     * // Update or create a DailyQuizAttempt
+     * const dailyQuizAttempt = await prisma.dailyQuizAttempt.upsert({
+     *   create: {
+     *     // ... data to create a DailyQuizAttempt
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DailyQuizAttempt we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DailyQuizAttemptUpsertArgs>(args: SelectSubset<T, DailyQuizAttemptUpsertArgs<ExtArgs>>): Prisma__DailyQuizAttemptClient<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DailyQuizAttempts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyQuizAttemptCountArgs} args - Arguments to filter DailyQuizAttempts to count.
+     * @example
+     * // Count the number of DailyQuizAttempts
+     * const count = await prisma.dailyQuizAttempt.count({
+     *   where: {
+     *     // ... the filter for the DailyQuizAttempts we want to count
+     *   }
+     * })
+    **/
+    count<T extends DailyQuizAttemptCountArgs>(
+      args?: Subset<T, DailyQuizAttemptCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DailyQuizAttemptCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DailyQuizAttempt.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyQuizAttemptAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DailyQuizAttemptAggregateArgs>(args: Subset<T, DailyQuizAttemptAggregateArgs>): Prisma.PrismaPromise<GetDailyQuizAttemptAggregateType<T>>
+
+    /**
+     * Group by DailyQuizAttempt.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyQuizAttemptGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DailyQuizAttemptGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DailyQuizAttemptGroupByArgs['orderBy'] }
+        : { orderBy?: DailyQuizAttemptGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DailyQuizAttemptGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDailyQuizAttemptGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DailyQuizAttempt model
+   */
+  readonly fields: DailyQuizAttemptFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DailyQuizAttempt.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DailyQuizAttemptClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    course<T extends CourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourseDefaultArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    answers<T extends DailyQuizAttempt$answersArgs<ExtArgs> = {}>(args?: Subset<T, DailyQuizAttempt$answersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyQuizAnswerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DailyQuizAttempt model
+   */
+  interface DailyQuizAttemptFieldRefs {
+    readonly id: FieldRef<"DailyQuizAttempt", 'Int'>
+    readonly userId: FieldRef<"DailyQuizAttempt", 'Int'>
+    readonly courseId: FieldRef<"DailyQuizAttempt", 'Int'>
+    readonly quizDate: FieldRef<"DailyQuizAttempt", 'DateTime'>
+    readonly questionIds: FieldRef<"DailyQuizAttempt", 'Int[]'>
+    readonly startedAt: FieldRef<"DailyQuizAttempt", 'DateTime'>
+    readonly completedAt: FieldRef<"DailyQuizAttempt", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DailyQuizAttempt findUnique
+   */
+  export type DailyQuizAttemptFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttempt
+     */
+    select?: DailyQuizAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAttempt
+     */
+    omit?: DailyQuizAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyQuizAttempt to fetch.
+     */
+    where: DailyQuizAttemptWhereUniqueInput
+  }
+
+  /**
+   * DailyQuizAttempt findUniqueOrThrow
+   */
+  export type DailyQuizAttemptFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttempt
+     */
+    select?: DailyQuizAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAttempt
+     */
+    omit?: DailyQuizAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyQuizAttempt to fetch.
+     */
+    where: DailyQuizAttemptWhereUniqueInput
+  }
+
+  /**
+   * DailyQuizAttempt findFirst
+   */
+  export type DailyQuizAttemptFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttempt
+     */
+    select?: DailyQuizAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAttempt
+     */
+    omit?: DailyQuizAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyQuizAttempt to fetch.
+     */
+    where?: DailyQuizAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DailyQuizAttempts to fetch.
+     */
+    orderBy?: DailyQuizAttemptOrderByWithRelationInput | DailyQuizAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DailyQuizAttempts.
+     */
+    cursor?: DailyQuizAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DailyQuizAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DailyQuizAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DailyQuizAttempts.
+     */
+    distinct?: DailyQuizAttemptScalarFieldEnum | DailyQuizAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * DailyQuizAttempt findFirstOrThrow
+   */
+  export type DailyQuizAttemptFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttempt
+     */
+    select?: DailyQuizAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAttempt
+     */
+    omit?: DailyQuizAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyQuizAttempt to fetch.
+     */
+    where?: DailyQuizAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DailyQuizAttempts to fetch.
+     */
+    orderBy?: DailyQuizAttemptOrderByWithRelationInput | DailyQuizAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DailyQuizAttempts.
+     */
+    cursor?: DailyQuizAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DailyQuizAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DailyQuizAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DailyQuizAttempts.
+     */
+    distinct?: DailyQuizAttemptScalarFieldEnum | DailyQuizAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * DailyQuizAttempt findMany
+   */
+  export type DailyQuizAttemptFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttempt
+     */
+    select?: DailyQuizAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAttempt
+     */
+    omit?: DailyQuizAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAttemptInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyQuizAttempts to fetch.
+     */
+    where?: DailyQuizAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DailyQuizAttempts to fetch.
+     */
+    orderBy?: DailyQuizAttemptOrderByWithRelationInput | DailyQuizAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DailyQuizAttempts.
+     */
+    cursor?: DailyQuizAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DailyQuizAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DailyQuizAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DailyQuizAttempts.
+     */
+    distinct?: DailyQuizAttemptScalarFieldEnum | DailyQuizAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * DailyQuizAttempt create
+   */
+  export type DailyQuizAttemptCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttempt
+     */
+    select?: DailyQuizAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAttempt
+     */
+    omit?: DailyQuizAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAttemptInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DailyQuizAttempt.
+     */
+    data: XOR<DailyQuizAttemptCreateInput, DailyQuizAttemptUncheckedCreateInput>
+  }
+
+  /**
+   * DailyQuizAttempt createMany
+   */
+  export type DailyQuizAttemptCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DailyQuizAttempts.
+     */
+    data: DailyQuizAttemptCreateManyInput | DailyQuizAttemptCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DailyQuizAttempt createManyAndReturn
+   */
+  export type DailyQuizAttemptCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttempt
+     */
+    select?: DailyQuizAttemptSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAttempt
+     */
+    omit?: DailyQuizAttemptOmit<ExtArgs> | null
+    /**
+     * The data used to create many DailyQuizAttempts.
+     */
+    data: DailyQuizAttemptCreateManyInput | DailyQuizAttemptCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAttemptIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DailyQuizAttempt update
+   */
+  export type DailyQuizAttemptUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttempt
+     */
+    select?: DailyQuizAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAttempt
+     */
+    omit?: DailyQuizAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAttemptInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DailyQuizAttempt.
+     */
+    data: XOR<DailyQuizAttemptUpdateInput, DailyQuizAttemptUncheckedUpdateInput>
+    /**
+     * Choose, which DailyQuizAttempt to update.
+     */
+    where: DailyQuizAttemptWhereUniqueInput
+  }
+
+  /**
+   * DailyQuizAttempt updateMany
+   */
+  export type DailyQuizAttemptUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DailyQuizAttempts.
+     */
+    data: XOR<DailyQuizAttemptUpdateManyMutationInput, DailyQuizAttemptUncheckedUpdateManyInput>
+    /**
+     * Filter which DailyQuizAttempts to update
+     */
+    where?: DailyQuizAttemptWhereInput
+    /**
+     * Limit how many DailyQuizAttempts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DailyQuizAttempt updateManyAndReturn
+   */
+  export type DailyQuizAttemptUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttempt
+     */
+    select?: DailyQuizAttemptSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAttempt
+     */
+    omit?: DailyQuizAttemptOmit<ExtArgs> | null
+    /**
+     * The data used to update DailyQuizAttempts.
+     */
+    data: XOR<DailyQuizAttemptUpdateManyMutationInput, DailyQuizAttemptUncheckedUpdateManyInput>
+    /**
+     * Filter which DailyQuizAttempts to update
+     */
+    where?: DailyQuizAttemptWhereInput
+    /**
+     * Limit how many DailyQuizAttempts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAttemptIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DailyQuizAttempt upsert
+   */
+  export type DailyQuizAttemptUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttempt
+     */
+    select?: DailyQuizAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAttempt
+     */
+    omit?: DailyQuizAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAttemptInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DailyQuizAttempt to update in case it exists.
+     */
+    where: DailyQuizAttemptWhereUniqueInput
+    /**
+     * In case the DailyQuizAttempt found by the `where` argument doesn't exist, create a new DailyQuizAttempt with this data.
+     */
+    create: XOR<DailyQuizAttemptCreateInput, DailyQuizAttemptUncheckedCreateInput>
+    /**
+     * In case the DailyQuizAttempt was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DailyQuizAttemptUpdateInput, DailyQuizAttemptUncheckedUpdateInput>
+  }
+
+  /**
+   * DailyQuizAttempt delete
+   */
+  export type DailyQuizAttemptDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttempt
+     */
+    select?: DailyQuizAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAttempt
+     */
+    omit?: DailyQuizAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAttemptInclude<ExtArgs> | null
+    /**
+     * Filter which DailyQuizAttempt to delete.
+     */
+    where: DailyQuizAttemptWhereUniqueInput
+  }
+
+  /**
+   * DailyQuizAttempt deleteMany
+   */
+  export type DailyQuizAttemptDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DailyQuizAttempts to delete
+     */
+    where?: DailyQuizAttemptWhereInput
+    /**
+     * Limit how many DailyQuizAttempts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DailyQuizAttempt.answers
+   */
+  export type DailyQuizAttempt$answersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAnswer
+     */
+    select?: DailyQuizAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAnswer
+     */
+    omit?: DailyQuizAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAnswerInclude<ExtArgs> | null
+    where?: DailyQuizAnswerWhereInput
+    orderBy?: DailyQuizAnswerOrderByWithRelationInput | DailyQuizAnswerOrderByWithRelationInput[]
+    cursor?: DailyQuizAnswerWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DailyQuizAnswerScalarFieldEnum | DailyQuizAnswerScalarFieldEnum[]
+  }
+
+  /**
+   * DailyQuizAttempt without action
+   */
+  export type DailyQuizAttemptDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAttempt
+     */
+    select?: DailyQuizAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAttempt
+     */
+    omit?: DailyQuizAttemptOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAttemptInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model DailyQuizAnswer
+   */
+
+  export type AggregateDailyQuizAnswer = {
+    _count: DailyQuizAnswerCountAggregateOutputType | null
+    _avg: DailyQuizAnswerAvgAggregateOutputType | null
+    _sum: DailyQuizAnswerSumAggregateOutputType | null
+    _min: DailyQuizAnswerMinAggregateOutputType | null
+    _max: DailyQuizAnswerMaxAggregateOutputType | null
+  }
+
+  export type DailyQuizAnswerAvgAggregateOutputType = {
+    attemptId: number | null
+    questionId: number | null
+    selectedOptionId: number | null
+    marksAwarded: number | null
+  }
+
+  export type DailyQuizAnswerSumAggregateOutputType = {
+    attemptId: number | null
+    questionId: number | null
+    selectedOptionId: number | null
+    marksAwarded: number | null
+  }
+
+  export type DailyQuizAnswerMinAggregateOutputType = {
+    attemptId: number | null
+    questionId: number | null
+    selectedOptionId: number | null
+    isCorrect: boolean | null
+    marksAwarded: number | null
+    answeredAt: Date | null
+  }
+
+  export type DailyQuizAnswerMaxAggregateOutputType = {
+    attemptId: number | null
+    questionId: number | null
+    selectedOptionId: number | null
+    isCorrect: boolean | null
+    marksAwarded: number | null
+    answeredAt: Date | null
+  }
+
+  export type DailyQuizAnswerCountAggregateOutputType = {
+    attemptId: number
+    questionId: number
+    selectedOptionId: number
+    isCorrect: number
+    marksAwarded: number
+    answeredAt: number
+    _all: number
+  }
+
+
+  export type DailyQuizAnswerAvgAggregateInputType = {
+    attemptId?: true
+    questionId?: true
+    selectedOptionId?: true
+    marksAwarded?: true
+  }
+
+  export type DailyQuizAnswerSumAggregateInputType = {
+    attemptId?: true
+    questionId?: true
+    selectedOptionId?: true
+    marksAwarded?: true
+  }
+
+  export type DailyQuizAnswerMinAggregateInputType = {
+    attemptId?: true
+    questionId?: true
+    selectedOptionId?: true
+    isCorrect?: true
+    marksAwarded?: true
+    answeredAt?: true
+  }
+
+  export type DailyQuizAnswerMaxAggregateInputType = {
+    attemptId?: true
+    questionId?: true
+    selectedOptionId?: true
+    isCorrect?: true
+    marksAwarded?: true
+    answeredAt?: true
+  }
+
+  export type DailyQuizAnswerCountAggregateInputType = {
+    attemptId?: true
+    questionId?: true
+    selectedOptionId?: true
+    isCorrect?: true
+    marksAwarded?: true
+    answeredAt?: true
+    _all?: true
+  }
+
+  export type DailyQuizAnswerAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DailyQuizAnswer to aggregate.
+     */
+    where?: DailyQuizAnswerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DailyQuizAnswers to fetch.
+     */
+    orderBy?: DailyQuizAnswerOrderByWithRelationInput | DailyQuizAnswerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DailyQuizAnswerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DailyQuizAnswers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DailyQuizAnswers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DailyQuizAnswers
+    **/
+    _count?: true | DailyQuizAnswerCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DailyQuizAnswerAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DailyQuizAnswerSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DailyQuizAnswerMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DailyQuizAnswerMaxAggregateInputType
+  }
+
+  export type GetDailyQuizAnswerAggregateType<T extends DailyQuizAnswerAggregateArgs> = {
+        [P in keyof T & keyof AggregateDailyQuizAnswer]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDailyQuizAnswer[P]>
+      : GetScalarType<T[P], AggregateDailyQuizAnswer[P]>
+  }
+
+
+
+
+  export type DailyQuizAnswerGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DailyQuizAnswerWhereInput
+    orderBy?: DailyQuizAnswerOrderByWithAggregationInput | DailyQuizAnswerOrderByWithAggregationInput[]
+    by: DailyQuizAnswerScalarFieldEnum[] | DailyQuizAnswerScalarFieldEnum
+    having?: DailyQuizAnswerScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DailyQuizAnswerCountAggregateInputType | true
+    _avg?: DailyQuizAnswerAvgAggregateInputType
+    _sum?: DailyQuizAnswerSumAggregateInputType
+    _min?: DailyQuizAnswerMinAggregateInputType
+    _max?: DailyQuizAnswerMaxAggregateInputType
+  }
+
+  export type DailyQuizAnswerGroupByOutputType = {
+    attemptId: number
+    questionId: number
+    selectedOptionId: number
+    isCorrect: boolean
+    marksAwarded: number
+    answeredAt: Date
+    _count: DailyQuizAnswerCountAggregateOutputType | null
+    _avg: DailyQuizAnswerAvgAggregateOutputType | null
+    _sum: DailyQuizAnswerSumAggregateOutputType | null
+    _min: DailyQuizAnswerMinAggregateOutputType | null
+    _max: DailyQuizAnswerMaxAggregateOutputType | null
+  }
+
+  type GetDailyQuizAnswerGroupByPayload<T extends DailyQuizAnswerGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DailyQuizAnswerGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DailyQuizAnswerGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DailyQuizAnswerGroupByOutputType[P]>
+            : GetScalarType<T[P], DailyQuizAnswerGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DailyQuizAnswerSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    attemptId?: boolean
+    questionId?: boolean
+    selectedOptionId?: boolean
+    isCorrect?: boolean
+    marksAwarded?: boolean
+    answeredAt?: boolean
+    attempt?: boolean | DailyQuizAttemptDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dailyQuizAnswer"]>
+
+  export type DailyQuizAnswerSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    attemptId?: boolean
+    questionId?: boolean
+    selectedOptionId?: boolean
+    isCorrect?: boolean
+    marksAwarded?: boolean
+    answeredAt?: boolean
+    attempt?: boolean | DailyQuizAttemptDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dailyQuizAnswer"]>
+
+  export type DailyQuizAnswerSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    attemptId?: boolean
+    questionId?: boolean
+    selectedOptionId?: boolean
+    isCorrect?: boolean
+    marksAwarded?: boolean
+    answeredAt?: boolean
+    attempt?: boolean | DailyQuizAttemptDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dailyQuizAnswer"]>
+
+  export type DailyQuizAnswerSelectScalar = {
+    attemptId?: boolean
+    questionId?: boolean
+    selectedOptionId?: boolean
+    isCorrect?: boolean
+    marksAwarded?: boolean
+    answeredAt?: boolean
+  }
+
+  export type DailyQuizAnswerOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"attemptId" | "questionId" | "selectedOptionId" | "isCorrect" | "marksAwarded" | "answeredAt", ExtArgs["result"]["dailyQuizAnswer"]>
+  export type DailyQuizAnswerInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    attempt?: boolean | DailyQuizAttemptDefaultArgs<ExtArgs>
+  }
+  export type DailyQuizAnswerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    attempt?: boolean | DailyQuizAttemptDefaultArgs<ExtArgs>
+  }
+  export type DailyQuizAnswerIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    attempt?: boolean | DailyQuizAttemptDefaultArgs<ExtArgs>
+  }
+
+  export type $DailyQuizAnswerPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DailyQuizAnswer"
+    objects: {
+      attempt: Prisma.$DailyQuizAttemptPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      attemptId: number
+      questionId: number
+      selectedOptionId: number
+      isCorrect: boolean
+      marksAwarded: number
+      answeredAt: Date
+    }, ExtArgs["result"]["dailyQuizAnswer"]>
+    composites: {}
+  }
+
+  type DailyQuizAnswerGetPayload<S extends boolean | null | undefined | DailyQuizAnswerDefaultArgs> = $Result.GetResult<Prisma.$DailyQuizAnswerPayload, S>
+
+  type DailyQuizAnswerCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DailyQuizAnswerFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DailyQuizAnswerCountAggregateInputType | true
+    }
+
+  export interface DailyQuizAnswerDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DailyQuizAnswer'], meta: { name: 'DailyQuizAnswer' } }
+    /**
+     * Find zero or one DailyQuizAnswer that matches the filter.
+     * @param {DailyQuizAnswerFindUniqueArgs} args - Arguments to find a DailyQuizAnswer
+     * @example
+     * // Get one DailyQuizAnswer
+     * const dailyQuizAnswer = await prisma.dailyQuizAnswer.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DailyQuizAnswerFindUniqueArgs>(args: SelectSubset<T, DailyQuizAnswerFindUniqueArgs<ExtArgs>>): Prisma__DailyQuizAnswerClient<$Result.GetResult<Prisma.$DailyQuizAnswerPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DailyQuizAnswer that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DailyQuizAnswerFindUniqueOrThrowArgs} args - Arguments to find a DailyQuizAnswer
+     * @example
+     * // Get one DailyQuizAnswer
+     * const dailyQuizAnswer = await prisma.dailyQuizAnswer.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DailyQuizAnswerFindUniqueOrThrowArgs>(args: SelectSubset<T, DailyQuizAnswerFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DailyQuizAnswerClient<$Result.GetResult<Prisma.$DailyQuizAnswerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DailyQuizAnswer that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyQuizAnswerFindFirstArgs} args - Arguments to find a DailyQuizAnswer
+     * @example
+     * // Get one DailyQuizAnswer
+     * const dailyQuizAnswer = await prisma.dailyQuizAnswer.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DailyQuizAnswerFindFirstArgs>(args?: SelectSubset<T, DailyQuizAnswerFindFirstArgs<ExtArgs>>): Prisma__DailyQuizAnswerClient<$Result.GetResult<Prisma.$DailyQuizAnswerPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DailyQuizAnswer that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyQuizAnswerFindFirstOrThrowArgs} args - Arguments to find a DailyQuizAnswer
+     * @example
+     * // Get one DailyQuizAnswer
+     * const dailyQuizAnswer = await prisma.dailyQuizAnswer.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DailyQuizAnswerFindFirstOrThrowArgs>(args?: SelectSubset<T, DailyQuizAnswerFindFirstOrThrowArgs<ExtArgs>>): Prisma__DailyQuizAnswerClient<$Result.GetResult<Prisma.$DailyQuizAnswerPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DailyQuizAnswers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyQuizAnswerFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DailyQuizAnswers
+     * const dailyQuizAnswers = await prisma.dailyQuizAnswer.findMany()
+     * 
+     * // Get first 10 DailyQuizAnswers
+     * const dailyQuizAnswers = await prisma.dailyQuizAnswer.findMany({ take: 10 })
+     * 
+     * // Only select the `attemptId`
+     * const dailyQuizAnswerWithAttemptIdOnly = await prisma.dailyQuizAnswer.findMany({ select: { attemptId: true } })
+     * 
+     */
+    findMany<T extends DailyQuizAnswerFindManyArgs>(args?: SelectSubset<T, DailyQuizAnswerFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyQuizAnswerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DailyQuizAnswer.
+     * @param {DailyQuizAnswerCreateArgs} args - Arguments to create a DailyQuizAnswer.
+     * @example
+     * // Create one DailyQuizAnswer
+     * const DailyQuizAnswer = await prisma.dailyQuizAnswer.create({
+     *   data: {
+     *     // ... data to create a DailyQuizAnswer
+     *   }
+     * })
+     * 
+     */
+    create<T extends DailyQuizAnswerCreateArgs>(args: SelectSubset<T, DailyQuizAnswerCreateArgs<ExtArgs>>): Prisma__DailyQuizAnswerClient<$Result.GetResult<Prisma.$DailyQuizAnswerPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DailyQuizAnswers.
+     * @param {DailyQuizAnswerCreateManyArgs} args - Arguments to create many DailyQuizAnswers.
+     * @example
+     * // Create many DailyQuizAnswers
+     * const dailyQuizAnswer = await prisma.dailyQuizAnswer.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DailyQuizAnswerCreateManyArgs>(args?: SelectSubset<T, DailyQuizAnswerCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DailyQuizAnswers and returns the data saved in the database.
+     * @param {DailyQuizAnswerCreateManyAndReturnArgs} args - Arguments to create many DailyQuizAnswers.
+     * @example
+     * // Create many DailyQuizAnswers
+     * const dailyQuizAnswer = await prisma.dailyQuizAnswer.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DailyQuizAnswers and only return the `attemptId`
+     * const dailyQuizAnswerWithAttemptIdOnly = await prisma.dailyQuizAnswer.createManyAndReturn({
+     *   select: { attemptId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DailyQuizAnswerCreateManyAndReturnArgs>(args?: SelectSubset<T, DailyQuizAnswerCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyQuizAnswerPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DailyQuizAnswer.
+     * @param {DailyQuizAnswerDeleteArgs} args - Arguments to delete one DailyQuizAnswer.
+     * @example
+     * // Delete one DailyQuizAnswer
+     * const DailyQuizAnswer = await prisma.dailyQuizAnswer.delete({
+     *   where: {
+     *     // ... filter to delete one DailyQuizAnswer
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DailyQuizAnswerDeleteArgs>(args: SelectSubset<T, DailyQuizAnswerDeleteArgs<ExtArgs>>): Prisma__DailyQuizAnswerClient<$Result.GetResult<Prisma.$DailyQuizAnswerPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DailyQuizAnswer.
+     * @param {DailyQuizAnswerUpdateArgs} args - Arguments to update one DailyQuizAnswer.
+     * @example
+     * // Update one DailyQuizAnswer
+     * const dailyQuizAnswer = await prisma.dailyQuizAnswer.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DailyQuizAnswerUpdateArgs>(args: SelectSubset<T, DailyQuizAnswerUpdateArgs<ExtArgs>>): Prisma__DailyQuizAnswerClient<$Result.GetResult<Prisma.$DailyQuizAnswerPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DailyQuizAnswers.
+     * @param {DailyQuizAnswerDeleteManyArgs} args - Arguments to filter DailyQuizAnswers to delete.
+     * @example
+     * // Delete a few DailyQuizAnswers
+     * const { count } = await prisma.dailyQuizAnswer.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DailyQuizAnswerDeleteManyArgs>(args?: SelectSubset<T, DailyQuizAnswerDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DailyQuizAnswers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyQuizAnswerUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DailyQuizAnswers
+     * const dailyQuizAnswer = await prisma.dailyQuizAnswer.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DailyQuizAnswerUpdateManyArgs>(args: SelectSubset<T, DailyQuizAnswerUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DailyQuizAnswers and returns the data updated in the database.
+     * @param {DailyQuizAnswerUpdateManyAndReturnArgs} args - Arguments to update many DailyQuizAnswers.
+     * @example
+     * // Update many DailyQuizAnswers
+     * const dailyQuizAnswer = await prisma.dailyQuizAnswer.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DailyQuizAnswers and only return the `attemptId`
+     * const dailyQuizAnswerWithAttemptIdOnly = await prisma.dailyQuizAnswer.updateManyAndReturn({
+     *   select: { attemptId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DailyQuizAnswerUpdateManyAndReturnArgs>(args: SelectSubset<T, DailyQuizAnswerUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyQuizAnswerPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DailyQuizAnswer.
+     * @param {DailyQuizAnswerUpsertArgs} args - Arguments to update or create a DailyQuizAnswer.
+     * @example
+     * // Update or create a DailyQuizAnswer
+     * const dailyQuizAnswer = await prisma.dailyQuizAnswer.upsert({
+     *   create: {
+     *     // ... data to create a DailyQuizAnswer
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DailyQuizAnswer we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DailyQuizAnswerUpsertArgs>(args: SelectSubset<T, DailyQuizAnswerUpsertArgs<ExtArgs>>): Prisma__DailyQuizAnswerClient<$Result.GetResult<Prisma.$DailyQuizAnswerPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DailyQuizAnswers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyQuizAnswerCountArgs} args - Arguments to filter DailyQuizAnswers to count.
+     * @example
+     * // Count the number of DailyQuizAnswers
+     * const count = await prisma.dailyQuizAnswer.count({
+     *   where: {
+     *     // ... the filter for the DailyQuizAnswers we want to count
+     *   }
+     * })
+    **/
+    count<T extends DailyQuizAnswerCountArgs>(
+      args?: Subset<T, DailyQuizAnswerCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DailyQuizAnswerCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DailyQuizAnswer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyQuizAnswerAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DailyQuizAnswerAggregateArgs>(args: Subset<T, DailyQuizAnswerAggregateArgs>): Prisma.PrismaPromise<GetDailyQuizAnswerAggregateType<T>>
+
+    /**
+     * Group by DailyQuizAnswer.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyQuizAnswerGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DailyQuizAnswerGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DailyQuizAnswerGroupByArgs['orderBy'] }
+        : { orderBy?: DailyQuizAnswerGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DailyQuizAnswerGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDailyQuizAnswerGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DailyQuizAnswer model
+   */
+  readonly fields: DailyQuizAnswerFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DailyQuizAnswer.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DailyQuizAnswerClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    attempt<T extends DailyQuizAttemptDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DailyQuizAttemptDefaultArgs<ExtArgs>>): Prisma__DailyQuizAttemptClient<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DailyQuizAnswer model
+   */
+  interface DailyQuizAnswerFieldRefs {
+    readonly attemptId: FieldRef<"DailyQuizAnswer", 'Int'>
+    readonly questionId: FieldRef<"DailyQuizAnswer", 'Int'>
+    readonly selectedOptionId: FieldRef<"DailyQuizAnswer", 'Int'>
+    readonly isCorrect: FieldRef<"DailyQuizAnswer", 'Boolean'>
+    readonly marksAwarded: FieldRef<"DailyQuizAnswer", 'Float'>
+    readonly answeredAt: FieldRef<"DailyQuizAnswer", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DailyQuizAnswer findUnique
+   */
+  export type DailyQuizAnswerFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAnswer
+     */
+    select?: DailyQuizAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAnswer
+     */
+    omit?: DailyQuizAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAnswerInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyQuizAnswer to fetch.
+     */
+    where: DailyQuizAnswerWhereUniqueInput
+  }
+
+  /**
+   * DailyQuizAnswer findUniqueOrThrow
+   */
+  export type DailyQuizAnswerFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAnswer
+     */
+    select?: DailyQuizAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAnswer
+     */
+    omit?: DailyQuizAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAnswerInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyQuizAnswer to fetch.
+     */
+    where: DailyQuizAnswerWhereUniqueInput
+  }
+
+  /**
+   * DailyQuizAnswer findFirst
+   */
+  export type DailyQuizAnswerFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAnswer
+     */
+    select?: DailyQuizAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAnswer
+     */
+    omit?: DailyQuizAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAnswerInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyQuizAnswer to fetch.
+     */
+    where?: DailyQuizAnswerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DailyQuizAnswers to fetch.
+     */
+    orderBy?: DailyQuizAnswerOrderByWithRelationInput | DailyQuizAnswerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DailyQuizAnswers.
+     */
+    cursor?: DailyQuizAnswerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DailyQuizAnswers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DailyQuizAnswers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DailyQuizAnswers.
+     */
+    distinct?: DailyQuizAnswerScalarFieldEnum | DailyQuizAnswerScalarFieldEnum[]
+  }
+
+  /**
+   * DailyQuizAnswer findFirstOrThrow
+   */
+  export type DailyQuizAnswerFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAnswer
+     */
+    select?: DailyQuizAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAnswer
+     */
+    omit?: DailyQuizAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAnswerInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyQuizAnswer to fetch.
+     */
+    where?: DailyQuizAnswerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DailyQuizAnswers to fetch.
+     */
+    orderBy?: DailyQuizAnswerOrderByWithRelationInput | DailyQuizAnswerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DailyQuizAnswers.
+     */
+    cursor?: DailyQuizAnswerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DailyQuizAnswers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DailyQuizAnswers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DailyQuizAnswers.
+     */
+    distinct?: DailyQuizAnswerScalarFieldEnum | DailyQuizAnswerScalarFieldEnum[]
+  }
+
+  /**
+   * DailyQuizAnswer findMany
+   */
+  export type DailyQuizAnswerFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAnswer
+     */
+    select?: DailyQuizAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAnswer
+     */
+    omit?: DailyQuizAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAnswerInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyQuizAnswers to fetch.
+     */
+    where?: DailyQuizAnswerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DailyQuizAnswers to fetch.
+     */
+    orderBy?: DailyQuizAnswerOrderByWithRelationInput | DailyQuizAnswerOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DailyQuizAnswers.
+     */
+    cursor?: DailyQuizAnswerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DailyQuizAnswers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DailyQuizAnswers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DailyQuizAnswers.
+     */
+    distinct?: DailyQuizAnswerScalarFieldEnum | DailyQuizAnswerScalarFieldEnum[]
+  }
+
+  /**
+   * DailyQuizAnswer create
+   */
+  export type DailyQuizAnswerCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAnswer
+     */
+    select?: DailyQuizAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAnswer
+     */
+    omit?: DailyQuizAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAnswerInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DailyQuizAnswer.
+     */
+    data: XOR<DailyQuizAnswerCreateInput, DailyQuizAnswerUncheckedCreateInput>
+  }
+
+  /**
+   * DailyQuizAnswer createMany
+   */
+  export type DailyQuizAnswerCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DailyQuizAnswers.
+     */
+    data: DailyQuizAnswerCreateManyInput | DailyQuizAnswerCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DailyQuizAnswer createManyAndReturn
+   */
+  export type DailyQuizAnswerCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAnswer
+     */
+    select?: DailyQuizAnswerSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAnswer
+     */
+    omit?: DailyQuizAnswerOmit<ExtArgs> | null
+    /**
+     * The data used to create many DailyQuizAnswers.
+     */
+    data: DailyQuizAnswerCreateManyInput | DailyQuizAnswerCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAnswerIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DailyQuizAnswer update
+   */
+  export type DailyQuizAnswerUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAnswer
+     */
+    select?: DailyQuizAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAnswer
+     */
+    omit?: DailyQuizAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAnswerInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DailyQuizAnswer.
+     */
+    data: XOR<DailyQuizAnswerUpdateInput, DailyQuizAnswerUncheckedUpdateInput>
+    /**
+     * Choose, which DailyQuizAnswer to update.
+     */
+    where: DailyQuizAnswerWhereUniqueInput
+  }
+
+  /**
+   * DailyQuizAnswer updateMany
+   */
+  export type DailyQuizAnswerUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DailyQuizAnswers.
+     */
+    data: XOR<DailyQuizAnswerUpdateManyMutationInput, DailyQuizAnswerUncheckedUpdateManyInput>
+    /**
+     * Filter which DailyQuizAnswers to update
+     */
+    where?: DailyQuizAnswerWhereInput
+    /**
+     * Limit how many DailyQuizAnswers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DailyQuizAnswer updateManyAndReturn
+   */
+  export type DailyQuizAnswerUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAnswer
+     */
+    select?: DailyQuizAnswerSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAnswer
+     */
+    omit?: DailyQuizAnswerOmit<ExtArgs> | null
+    /**
+     * The data used to update DailyQuizAnswers.
+     */
+    data: XOR<DailyQuizAnswerUpdateManyMutationInput, DailyQuizAnswerUncheckedUpdateManyInput>
+    /**
+     * Filter which DailyQuizAnswers to update
+     */
+    where?: DailyQuizAnswerWhereInput
+    /**
+     * Limit how many DailyQuizAnswers to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAnswerIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DailyQuizAnswer upsert
+   */
+  export type DailyQuizAnswerUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAnswer
+     */
+    select?: DailyQuizAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAnswer
+     */
+    omit?: DailyQuizAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAnswerInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DailyQuizAnswer to update in case it exists.
+     */
+    where: DailyQuizAnswerWhereUniqueInput
+    /**
+     * In case the DailyQuizAnswer found by the `where` argument doesn't exist, create a new DailyQuizAnswer with this data.
+     */
+    create: XOR<DailyQuizAnswerCreateInput, DailyQuizAnswerUncheckedCreateInput>
+    /**
+     * In case the DailyQuizAnswer was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DailyQuizAnswerUpdateInput, DailyQuizAnswerUncheckedUpdateInput>
+  }
+
+  /**
+   * DailyQuizAnswer delete
+   */
+  export type DailyQuizAnswerDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAnswer
+     */
+    select?: DailyQuizAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAnswer
+     */
+    omit?: DailyQuizAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAnswerInclude<ExtArgs> | null
+    /**
+     * Filter which DailyQuizAnswer to delete.
+     */
+    where: DailyQuizAnswerWhereUniqueInput
+  }
+
+  /**
+   * DailyQuizAnswer deleteMany
+   */
+  export type DailyQuizAnswerDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DailyQuizAnswers to delete
+     */
+    where?: DailyQuizAnswerWhereInput
+    /**
+     * Limit how many DailyQuizAnswers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DailyQuizAnswer without action
+   */
+  export type DailyQuizAnswerDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyQuizAnswer
+     */
+    select?: DailyQuizAnswerSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyQuizAnswer
+     */
+    omit?: DailyQuizAnswerOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyQuizAnswerInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -40837,6 +43424,31 @@ export namespace Prisma {
   export type CommentReportScalarFieldEnum = (typeof CommentReportScalarFieldEnum)[keyof typeof CommentReportScalarFieldEnum]
 
 
+  export const DailyQuizAttemptScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    courseId: 'courseId',
+    quizDate: 'quizDate',
+    questionIds: 'questionIds',
+    startedAt: 'startedAt',
+    completedAt: 'completedAt'
+  };
+
+  export type DailyQuizAttemptScalarFieldEnum = (typeof DailyQuizAttemptScalarFieldEnum)[keyof typeof DailyQuizAttemptScalarFieldEnum]
+
+
+  export const DailyQuizAnswerScalarFieldEnum: {
+    attemptId: 'attemptId',
+    questionId: 'questionId',
+    selectedOptionId: 'selectedOptionId',
+    isCorrect: 'isCorrect',
+    marksAwarded: 'marksAwarded',
+    answeredAt: 'answeredAt'
+  };
+
+  export type DailyQuizAnswerScalarFieldEnum = (typeof DailyQuizAnswerScalarFieldEnum)[keyof typeof DailyQuizAnswerScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -41055,6 +43667,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptListRelationFilter
     comments?: LessonCommentListRelationFilter
     commentReports?: CommentReportListRelationFilter
+    dailyQuizzes?: DailyQuizAttemptListRelationFilter
     selectedCourse?: XOR<CourseNullableScalarRelationFilter, CourseWhereInput> | null
     selectedCourseType?: XOR<CourseTypeNullableScalarRelationFilter, CourseTypeWhereInput> | null
   }
@@ -41081,6 +43694,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptOrderByRelationAggregateInput
     comments?: LessonCommentOrderByRelationAggregateInput
     commentReports?: CommentReportOrderByRelationAggregateInput
+    dailyQuizzes?: DailyQuizAttemptOrderByRelationAggregateInput
     selectedCourse?: CourseOrderByWithRelationInput
     selectedCourseType?: CourseTypeOrderByWithRelationInput
   }
@@ -41110,6 +43724,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptListRelationFilter
     comments?: LessonCommentListRelationFilter
     commentReports?: CommentReportListRelationFilter
+    dailyQuizzes?: DailyQuizAttemptListRelationFilter
     selectedCourse?: XOR<CourseNullableScalarRelationFilter, CourseWhereInput> | null
     selectedCourseType?: XOR<CourseTypeNullableScalarRelationFilter, CourseTypeWhereInput> | null
   }, "id" | "email">
@@ -41458,6 +44073,7 @@ export namespace Prisma {
     plans?: PlanListRelationFilter
     subscriptions?: SubscriptionListRelationFilter
     tests?: TestListRelationFilter
+    dailyQuizzes?: DailyQuizAttemptListRelationFilter
   }
 
   export type CourseOrderByWithRelationInput = {
@@ -41481,6 +44097,7 @@ export namespace Prisma {
     plans?: PlanOrderByRelationAggregateInput
     subscriptions?: SubscriptionOrderByRelationAggregateInput
     tests?: TestOrderByRelationAggregateInput
+    dailyQuizzes?: DailyQuizAttemptOrderByRelationAggregateInput
   }
 
   export type CourseWhereUniqueInput = Prisma.AtLeast<{
@@ -41507,6 +44124,7 @@ export namespace Prisma {
     plans?: PlanListRelationFilter
     subscriptions?: SubscriptionListRelationFilter
     tests?: TestListRelationFilter
+    dailyQuizzes?: DailyQuizAttemptListRelationFilter
   }, "id">
 
   export type CourseOrderByWithAggregationInput = {
@@ -43365,6 +45983,143 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"CommentReport"> | Date | string
   }
 
+  export type DailyQuizAttemptWhereInput = {
+    AND?: DailyQuizAttemptWhereInput | DailyQuizAttemptWhereInput[]
+    OR?: DailyQuizAttemptWhereInput[]
+    NOT?: DailyQuizAttemptWhereInput | DailyQuizAttemptWhereInput[]
+    id?: IntFilter<"DailyQuizAttempt"> | number
+    userId?: IntFilter<"DailyQuizAttempt"> | number
+    courseId?: IntFilter<"DailyQuizAttempt"> | number
+    quizDate?: DateTimeFilter<"DailyQuizAttempt"> | Date | string
+    questionIds?: IntNullableListFilter<"DailyQuizAttempt">
+    startedAt?: DateTimeFilter<"DailyQuizAttempt"> | Date | string
+    completedAt?: DateTimeNullableFilter<"DailyQuizAttempt"> | Date | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
+    answers?: DailyQuizAnswerListRelationFilter
+  }
+
+  export type DailyQuizAttemptOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    courseId?: SortOrder
+    quizDate?: SortOrder
+    questionIds?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+    course?: CourseOrderByWithRelationInput
+    answers?: DailyQuizAnswerOrderByRelationAggregateInput
+  }
+
+  export type DailyQuizAttemptWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    userId_courseId_quizDate?: DailyQuizAttemptUserIdCourseIdQuizDateCompoundUniqueInput
+    AND?: DailyQuizAttemptWhereInput | DailyQuizAttemptWhereInput[]
+    OR?: DailyQuizAttemptWhereInput[]
+    NOT?: DailyQuizAttemptWhereInput | DailyQuizAttemptWhereInput[]
+    userId?: IntFilter<"DailyQuizAttempt"> | number
+    courseId?: IntFilter<"DailyQuizAttempt"> | number
+    quizDate?: DateTimeFilter<"DailyQuizAttempt"> | Date | string
+    questionIds?: IntNullableListFilter<"DailyQuizAttempt">
+    startedAt?: DateTimeFilter<"DailyQuizAttempt"> | Date | string
+    completedAt?: DateTimeNullableFilter<"DailyQuizAttempt"> | Date | string | null
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
+    answers?: DailyQuizAnswerListRelationFilter
+  }, "id" | "userId_courseId_quizDate">
+
+  export type DailyQuizAttemptOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    courseId?: SortOrder
+    quizDate?: SortOrder
+    questionIds?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    _count?: DailyQuizAttemptCountOrderByAggregateInput
+    _avg?: DailyQuizAttemptAvgOrderByAggregateInput
+    _max?: DailyQuizAttemptMaxOrderByAggregateInput
+    _min?: DailyQuizAttemptMinOrderByAggregateInput
+    _sum?: DailyQuizAttemptSumOrderByAggregateInput
+  }
+
+  export type DailyQuizAttemptScalarWhereWithAggregatesInput = {
+    AND?: DailyQuizAttemptScalarWhereWithAggregatesInput | DailyQuizAttemptScalarWhereWithAggregatesInput[]
+    OR?: DailyQuizAttemptScalarWhereWithAggregatesInput[]
+    NOT?: DailyQuizAttemptScalarWhereWithAggregatesInput | DailyQuizAttemptScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"DailyQuizAttempt"> | number
+    userId?: IntWithAggregatesFilter<"DailyQuizAttempt"> | number
+    courseId?: IntWithAggregatesFilter<"DailyQuizAttempt"> | number
+    quizDate?: DateTimeWithAggregatesFilter<"DailyQuizAttempt"> | Date | string
+    questionIds?: IntNullableListFilter<"DailyQuizAttempt">
+    startedAt?: DateTimeWithAggregatesFilter<"DailyQuizAttempt"> | Date | string
+    completedAt?: DateTimeNullableWithAggregatesFilter<"DailyQuizAttempt"> | Date | string | null
+  }
+
+  export type DailyQuizAnswerWhereInput = {
+    AND?: DailyQuizAnswerWhereInput | DailyQuizAnswerWhereInput[]
+    OR?: DailyQuizAnswerWhereInput[]
+    NOT?: DailyQuizAnswerWhereInput | DailyQuizAnswerWhereInput[]
+    attemptId?: IntFilter<"DailyQuizAnswer"> | number
+    questionId?: IntFilter<"DailyQuizAnswer"> | number
+    selectedOptionId?: IntFilter<"DailyQuizAnswer"> | number
+    isCorrect?: BoolFilter<"DailyQuizAnswer"> | boolean
+    marksAwarded?: FloatFilter<"DailyQuizAnswer"> | number
+    answeredAt?: DateTimeFilter<"DailyQuizAnswer"> | Date | string
+    attempt?: XOR<DailyQuizAttemptScalarRelationFilter, DailyQuizAttemptWhereInput>
+  }
+
+  export type DailyQuizAnswerOrderByWithRelationInput = {
+    attemptId?: SortOrder
+    questionId?: SortOrder
+    selectedOptionId?: SortOrder
+    isCorrect?: SortOrder
+    marksAwarded?: SortOrder
+    answeredAt?: SortOrder
+    attempt?: DailyQuizAttemptOrderByWithRelationInput
+  }
+
+  export type DailyQuizAnswerWhereUniqueInput = Prisma.AtLeast<{
+    attemptId_questionId?: DailyQuizAnswerAttemptIdQuestionIdCompoundUniqueInput
+    AND?: DailyQuizAnswerWhereInput | DailyQuizAnswerWhereInput[]
+    OR?: DailyQuizAnswerWhereInput[]
+    NOT?: DailyQuizAnswerWhereInput | DailyQuizAnswerWhereInput[]
+    attemptId?: IntFilter<"DailyQuizAnswer"> | number
+    questionId?: IntFilter<"DailyQuizAnswer"> | number
+    selectedOptionId?: IntFilter<"DailyQuizAnswer"> | number
+    isCorrect?: BoolFilter<"DailyQuizAnswer"> | boolean
+    marksAwarded?: FloatFilter<"DailyQuizAnswer"> | number
+    answeredAt?: DateTimeFilter<"DailyQuizAnswer"> | Date | string
+    attempt?: XOR<DailyQuizAttemptScalarRelationFilter, DailyQuizAttemptWhereInput>
+  }, "attemptId_questionId">
+
+  export type DailyQuizAnswerOrderByWithAggregationInput = {
+    attemptId?: SortOrder
+    questionId?: SortOrder
+    selectedOptionId?: SortOrder
+    isCorrect?: SortOrder
+    marksAwarded?: SortOrder
+    answeredAt?: SortOrder
+    _count?: DailyQuizAnswerCountOrderByAggregateInput
+    _avg?: DailyQuizAnswerAvgOrderByAggregateInput
+    _max?: DailyQuizAnswerMaxOrderByAggregateInput
+    _min?: DailyQuizAnswerMinOrderByAggregateInput
+    _sum?: DailyQuizAnswerSumOrderByAggregateInput
+  }
+
+  export type DailyQuizAnswerScalarWhereWithAggregatesInput = {
+    AND?: DailyQuizAnswerScalarWhereWithAggregatesInput | DailyQuizAnswerScalarWhereWithAggregatesInput[]
+    OR?: DailyQuizAnswerScalarWhereWithAggregatesInput[]
+    NOT?: DailyQuizAnswerScalarWhereWithAggregatesInput | DailyQuizAnswerScalarWhereWithAggregatesInput[]
+    attemptId?: IntWithAggregatesFilter<"DailyQuizAnswer"> | number
+    questionId?: IntWithAggregatesFilter<"DailyQuizAnswer"> | number
+    selectedOptionId?: IntWithAggregatesFilter<"DailyQuizAnswer"> | number
+    isCorrect?: BoolWithAggregatesFilter<"DailyQuizAnswer"> | boolean
+    marksAwarded?: FloatWithAggregatesFilter<"DailyQuizAnswer"> | number
+    answeredAt?: DateTimeWithAggregatesFilter<"DailyQuizAnswer"> | Date | string
+  }
+
   export type UserCreateInput = {
     email: string
     password?: string | null
@@ -43384,6 +46139,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
     commentReports?: CommentReportCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -43410,6 +46166,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
     commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -43431,6 +46188,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -43457,6 +46215,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -43811,6 +46570,7 @@ export namespace Prisma {
     plans?: PlanCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateInput = {
@@ -43833,6 +46593,7 @@ export namespace Prisma {
     plans?: PlanUncheckedCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUpdateInput = {
@@ -43854,6 +46615,7 @@ export namespace Prisma {
     plans?: PlanUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateInput = {
@@ -43876,6 +46638,7 @@ export namespace Prisma {
     plans?: PlanUncheckedUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseCreateManyInput = {
@@ -45707,6 +48470,137 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DailyQuizAttemptCreateInput = {
+    quizDate: Date | string
+    questionIds?: DailyQuizAttemptCreatequestionIdsInput | number[]
+    startedAt?: Date | string
+    completedAt?: Date | string | null
+    user: UserCreateNestedOneWithoutDailyQuizzesInput
+    course: CourseCreateNestedOneWithoutDailyQuizzesInput
+    answers?: DailyQuizAnswerCreateNestedManyWithoutAttemptInput
+  }
+
+  export type DailyQuizAttemptUncheckedCreateInput = {
+    id?: number
+    userId: number
+    courseId: number
+    quizDate: Date | string
+    questionIds?: DailyQuizAttemptCreatequestionIdsInput | number[]
+    startedAt?: Date | string
+    completedAt?: Date | string | null
+    answers?: DailyQuizAnswerUncheckedCreateNestedManyWithoutAttemptInput
+  }
+
+  export type DailyQuizAttemptUpdateInput = {
+    quizDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    questionIds?: DailyQuizAttemptUpdatequestionIdsInput | number[]
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutDailyQuizzesNestedInput
+    course?: CourseUpdateOneRequiredWithoutDailyQuizzesNestedInput
+    answers?: DailyQuizAnswerUpdateManyWithoutAttemptNestedInput
+  }
+
+  export type DailyQuizAttemptUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    quizDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    questionIds?: DailyQuizAttemptUpdatequestionIdsInput | number[]
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    answers?: DailyQuizAnswerUncheckedUpdateManyWithoutAttemptNestedInput
+  }
+
+  export type DailyQuizAttemptCreateManyInput = {
+    id?: number
+    userId: number
+    courseId: number
+    quizDate: Date | string
+    questionIds?: DailyQuizAttemptCreatequestionIdsInput | number[]
+    startedAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type DailyQuizAttemptUpdateManyMutationInput = {
+    quizDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    questionIds?: DailyQuizAttemptUpdatequestionIdsInput | number[]
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DailyQuizAttemptUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    quizDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    questionIds?: DailyQuizAttemptUpdatequestionIdsInput | number[]
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type DailyQuizAnswerCreateInput = {
+    questionId: number
+    selectedOptionId: number
+    isCorrect: boolean
+    marksAwarded: number
+    answeredAt?: Date | string
+    attempt: DailyQuizAttemptCreateNestedOneWithoutAnswersInput
+  }
+
+  export type DailyQuizAnswerUncheckedCreateInput = {
+    attemptId: number
+    questionId: number
+    selectedOptionId: number
+    isCorrect: boolean
+    marksAwarded: number
+    answeredAt?: Date | string
+  }
+
+  export type DailyQuizAnswerUpdateInput = {
+    questionId?: IntFieldUpdateOperationsInput | number
+    selectedOptionId?: IntFieldUpdateOperationsInput | number
+    isCorrect?: BoolFieldUpdateOperationsInput | boolean
+    marksAwarded?: FloatFieldUpdateOperationsInput | number
+    answeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attempt?: DailyQuizAttemptUpdateOneRequiredWithoutAnswersNestedInput
+  }
+
+  export type DailyQuizAnswerUncheckedUpdateInput = {
+    attemptId?: IntFieldUpdateOperationsInput | number
+    questionId?: IntFieldUpdateOperationsInput | number
+    selectedOptionId?: IntFieldUpdateOperationsInput | number
+    isCorrect?: BoolFieldUpdateOperationsInput | boolean
+    marksAwarded?: FloatFieldUpdateOperationsInput | number
+    answeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DailyQuizAnswerCreateManyInput = {
+    attemptId: number
+    questionId: number
+    selectedOptionId: number
+    isCorrect: boolean
+    marksAwarded: number
+    answeredAt?: Date | string
+  }
+
+  export type DailyQuizAnswerUpdateManyMutationInput = {
+    questionId?: IntFieldUpdateOperationsInput | number
+    selectedOptionId?: IntFieldUpdateOperationsInput | number
+    isCorrect?: BoolFieldUpdateOperationsInput | boolean
+    marksAwarded?: FloatFieldUpdateOperationsInput | number
+    answeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DailyQuizAnswerUncheckedUpdateManyInput = {
+    attemptId?: IntFieldUpdateOperationsInput | number
+    questionId?: IntFieldUpdateOperationsInput | number
+    selectedOptionId?: IntFieldUpdateOperationsInput | number
+    isCorrect?: BoolFieldUpdateOperationsInput | boolean
+    marksAwarded?: FloatFieldUpdateOperationsInput | number
+    answeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -45824,6 +48718,12 @@ export namespace Prisma {
     none?: CommentReportWhereInput
   }
 
+  export type DailyQuizAttemptListRelationFilter = {
+    every?: DailyQuizAttemptWhereInput
+    some?: DailyQuizAttemptWhereInput
+    none?: DailyQuizAttemptWhereInput
+  }
+
   export type CourseNullableScalarRelationFilter = {
     is?: CourseWhereInput | null
     isNot?: CourseWhereInput | null
@@ -45872,6 +48772,10 @@ export namespace Prisma {
   }
 
   export type CommentReportOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DailyQuizAttemptOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -47859,6 +50763,115 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
+  export type DailyQuizAnswerListRelationFilter = {
+    every?: DailyQuizAnswerWhereInput
+    some?: DailyQuizAnswerWhereInput
+    none?: DailyQuizAnswerWhereInput
+  }
+
+  export type DailyQuizAnswerOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DailyQuizAttemptUserIdCourseIdQuizDateCompoundUniqueInput = {
+    userId: number
+    courseId: number
+    quizDate: Date | string
+  }
+
+  export type DailyQuizAttemptCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    courseId?: SortOrder
+    quizDate?: SortOrder
+    questionIds?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type DailyQuizAttemptAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    courseId?: SortOrder
+    questionIds?: SortOrder
+  }
+
+  export type DailyQuizAttemptMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    courseId?: SortOrder
+    quizDate?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type DailyQuizAttemptMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    courseId?: SortOrder
+    quizDate?: SortOrder
+    startedAt?: SortOrder
+    completedAt?: SortOrder
+  }
+
+  export type DailyQuizAttemptSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    courseId?: SortOrder
+    questionIds?: SortOrder
+  }
+
+  export type DailyQuizAttemptScalarRelationFilter = {
+    is?: DailyQuizAttemptWhereInput
+    isNot?: DailyQuizAttemptWhereInput
+  }
+
+  export type DailyQuizAnswerAttemptIdQuestionIdCompoundUniqueInput = {
+    attemptId: number
+    questionId: number
+  }
+
+  export type DailyQuizAnswerCountOrderByAggregateInput = {
+    attemptId?: SortOrder
+    questionId?: SortOrder
+    selectedOptionId?: SortOrder
+    isCorrect?: SortOrder
+    marksAwarded?: SortOrder
+    answeredAt?: SortOrder
+  }
+
+  export type DailyQuizAnswerAvgOrderByAggregateInput = {
+    attemptId?: SortOrder
+    questionId?: SortOrder
+    selectedOptionId?: SortOrder
+    marksAwarded?: SortOrder
+  }
+
+  export type DailyQuizAnswerMaxOrderByAggregateInput = {
+    attemptId?: SortOrder
+    questionId?: SortOrder
+    selectedOptionId?: SortOrder
+    isCorrect?: SortOrder
+    marksAwarded?: SortOrder
+    answeredAt?: SortOrder
+  }
+
+  export type DailyQuizAnswerMinOrderByAggregateInput = {
+    attemptId?: SortOrder
+    questionId?: SortOrder
+    selectedOptionId?: SortOrder
+    isCorrect?: SortOrder
+    marksAwarded?: SortOrder
+    answeredAt?: SortOrder
+  }
+
+  export type DailyQuizAnswerSumOrderByAggregateInput = {
+    attemptId?: SortOrder
+    questionId?: SortOrder
+    selectedOptionId?: SortOrder
+    marksAwarded?: SortOrder
+  }
+
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -47920,6 +50933,13 @@ export namespace Prisma {
     connectOrCreate?: CommentReportCreateOrConnectWithoutUserInput | CommentReportCreateOrConnectWithoutUserInput[]
     createMany?: CommentReportCreateManyUserInputEnvelope
     connect?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+  }
+
+  export type DailyQuizAttemptCreateNestedManyWithoutUserInput = {
+    create?: XOR<DailyQuizAttemptCreateWithoutUserInput, DailyQuizAttemptUncheckedCreateWithoutUserInput> | DailyQuizAttemptCreateWithoutUserInput[] | DailyQuizAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DailyQuizAttemptCreateOrConnectWithoutUserInput | DailyQuizAttemptCreateOrConnectWithoutUserInput[]
+    createMany?: DailyQuizAttemptCreateManyUserInputEnvelope
+    connect?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
   }
 
   export type CourseCreateNestedOneWithoutSelectedByInput = {
@@ -47995,6 +51015,13 @@ export namespace Prisma {
     connectOrCreate?: CommentReportCreateOrConnectWithoutUserInput | CommentReportCreateOrConnectWithoutUserInput[]
     createMany?: CommentReportCreateManyUserInputEnvelope
     connect?: CommentReportWhereUniqueInput | CommentReportWhereUniqueInput[]
+  }
+
+  export type DailyQuizAttemptUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<DailyQuizAttemptCreateWithoutUserInput, DailyQuizAttemptUncheckedCreateWithoutUserInput> | DailyQuizAttemptCreateWithoutUserInput[] | DailyQuizAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DailyQuizAttemptCreateOrConnectWithoutUserInput | DailyQuizAttemptCreateOrConnectWithoutUserInput[]
+    createMany?: DailyQuizAttemptCreateManyUserInputEnvelope
+    connect?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -48133,6 +51160,20 @@ export namespace Prisma {
     update?: CommentReportUpdateWithWhereUniqueWithoutUserInput | CommentReportUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: CommentReportUpdateManyWithWhereWithoutUserInput | CommentReportUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: CommentReportScalarWhereInput | CommentReportScalarWhereInput[]
+  }
+
+  export type DailyQuizAttemptUpdateManyWithoutUserNestedInput = {
+    create?: XOR<DailyQuizAttemptCreateWithoutUserInput, DailyQuizAttemptUncheckedCreateWithoutUserInput> | DailyQuizAttemptCreateWithoutUserInput[] | DailyQuizAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DailyQuizAttemptCreateOrConnectWithoutUserInput | DailyQuizAttemptCreateOrConnectWithoutUserInput[]
+    upsert?: DailyQuizAttemptUpsertWithWhereUniqueWithoutUserInput | DailyQuizAttemptUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: DailyQuizAttemptCreateManyUserInputEnvelope
+    set?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    disconnect?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    delete?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    connect?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    update?: DailyQuizAttemptUpdateWithWhereUniqueWithoutUserInput | DailyQuizAttemptUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: DailyQuizAttemptUpdateManyWithWhereWithoutUserInput | DailyQuizAttemptUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: DailyQuizAttemptScalarWhereInput | DailyQuizAttemptScalarWhereInput[]
   }
 
   export type CourseUpdateOneWithoutSelectedByNestedInput = {
@@ -48295,6 +51336,20 @@ export namespace Prisma {
     update?: CommentReportUpdateWithWhereUniqueWithoutUserInput | CommentReportUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: CommentReportUpdateManyWithWhereWithoutUserInput | CommentReportUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: CommentReportScalarWhereInput | CommentReportScalarWhereInput[]
+  }
+
+  export type DailyQuizAttemptUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<DailyQuizAttemptCreateWithoutUserInput, DailyQuizAttemptUncheckedCreateWithoutUserInput> | DailyQuizAttemptCreateWithoutUserInput[] | DailyQuizAttemptUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DailyQuizAttemptCreateOrConnectWithoutUserInput | DailyQuizAttemptCreateOrConnectWithoutUserInput[]
+    upsert?: DailyQuizAttemptUpsertWithWhereUniqueWithoutUserInput | DailyQuizAttemptUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: DailyQuizAttemptCreateManyUserInputEnvelope
+    set?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    disconnect?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    delete?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    connect?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    update?: DailyQuizAttemptUpdateWithWhereUniqueWithoutUserInput | DailyQuizAttemptUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: DailyQuizAttemptUpdateManyWithWhereWithoutUserInput | DailyQuizAttemptUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: DailyQuizAttemptScalarWhereInput | DailyQuizAttemptScalarWhereInput[]
   }
 
   export type CourseCreateNestedManyWithoutAdminInput = {
@@ -48719,6 +51774,13 @@ export namespace Prisma {
     connect?: TestWhereUniqueInput | TestWhereUniqueInput[]
   }
 
+  export type DailyQuizAttemptCreateNestedManyWithoutCourseInput = {
+    create?: XOR<DailyQuizAttemptCreateWithoutCourseInput, DailyQuizAttemptUncheckedCreateWithoutCourseInput> | DailyQuizAttemptCreateWithoutCourseInput[] | DailyQuizAttemptUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: DailyQuizAttemptCreateOrConnectWithoutCourseInput | DailyQuizAttemptCreateOrConnectWithoutCourseInput[]
+    createMany?: DailyQuizAttemptCreateManyCourseInputEnvelope
+    connect?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+  }
+
   export type SubjectUncheckedCreateNestedManyWithoutCoursesInput = {
     create?: XOR<SubjectCreateWithoutCoursesInput, SubjectUncheckedCreateWithoutCoursesInput> | SubjectCreateWithoutCoursesInput[] | SubjectUncheckedCreateWithoutCoursesInput[]
     connectOrCreate?: SubjectCreateOrConnectWithoutCoursesInput | SubjectCreateOrConnectWithoutCoursesInput[]
@@ -48765,6 +51827,13 @@ export namespace Prisma {
     connectOrCreate?: TestCreateOrConnectWithoutCourseInput | TestCreateOrConnectWithoutCourseInput[]
     createMany?: TestCreateManyCourseInputEnvelope
     connect?: TestWhereUniqueInput | TestWhereUniqueInput[]
+  }
+
+  export type DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput = {
+    create?: XOR<DailyQuizAttemptCreateWithoutCourseInput, DailyQuizAttemptUncheckedCreateWithoutCourseInput> | DailyQuizAttemptCreateWithoutCourseInput[] | DailyQuizAttemptUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: DailyQuizAttemptCreateOrConnectWithoutCourseInput | DailyQuizAttemptCreateOrConnectWithoutCourseInput[]
+    createMany?: DailyQuizAttemptCreateManyCourseInputEnvelope
+    connect?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
   }
 
   export type EnumCourseStatusFieldUpdateOperationsInput = {
@@ -48882,6 +51951,20 @@ export namespace Prisma {
     deleteMany?: TestScalarWhereInput | TestScalarWhereInput[]
   }
 
+  export type DailyQuizAttemptUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<DailyQuizAttemptCreateWithoutCourseInput, DailyQuizAttemptUncheckedCreateWithoutCourseInput> | DailyQuizAttemptCreateWithoutCourseInput[] | DailyQuizAttemptUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: DailyQuizAttemptCreateOrConnectWithoutCourseInput | DailyQuizAttemptCreateOrConnectWithoutCourseInput[]
+    upsert?: DailyQuizAttemptUpsertWithWhereUniqueWithoutCourseInput | DailyQuizAttemptUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: DailyQuizAttemptCreateManyCourseInputEnvelope
+    set?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    disconnect?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    delete?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    connect?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    update?: DailyQuizAttemptUpdateWithWhereUniqueWithoutCourseInput | DailyQuizAttemptUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: DailyQuizAttemptUpdateManyWithWhereWithoutCourseInput | DailyQuizAttemptUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: DailyQuizAttemptScalarWhereInput | DailyQuizAttemptScalarWhereInput[]
+  }
+
   export type SubjectUncheckedUpdateManyWithoutCoursesNestedInput = {
     create?: XOR<SubjectCreateWithoutCoursesInput, SubjectUncheckedCreateWithoutCoursesInput> | SubjectCreateWithoutCoursesInput[] | SubjectUncheckedCreateWithoutCoursesInput[]
     connectOrCreate?: SubjectCreateOrConnectWithoutCoursesInput | SubjectCreateOrConnectWithoutCoursesInput[]
@@ -48977,6 +52060,20 @@ export namespace Prisma {
     update?: TestUpdateWithWhereUniqueWithoutCourseInput | TestUpdateWithWhereUniqueWithoutCourseInput[]
     updateMany?: TestUpdateManyWithWhereWithoutCourseInput | TestUpdateManyWithWhereWithoutCourseInput[]
     deleteMany?: TestScalarWhereInput | TestScalarWhereInput[]
+  }
+
+  export type DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<DailyQuizAttemptCreateWithoutCourseInput, DailyQuizAttemptUncheckedCreateWithoutCourseInput> | DailyQuizAttemptCreateWithoutCourseInput[] | DailyQuizAttemptUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: DailyQuizAttemptCreateOrConnectWithoutCourseInput | DailyQuizAttemptCreateOrConnectWithoutCourseInput[]
+    upsert?: DailyQuizAttemptUpsertWithWhereUniqueWithoutCourseInput | DailyQuizAttemptUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: DailyQuizAttemptCreateManyCourseInputEnvelope
+    set?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    disconnect?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    delete?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    connect?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+    update?: DailyQuizAttemptUpdateWithWhereUniqueWithoutCourseInput | DailyQuizAttemptUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: DailyQuizAttemptUpdateManyWithWhereWithoutCourseInput | DailyQuizAttemptUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: DailyQuizAttemptScalarWhereInput | DailyQuizAttemptScalarWhereInput[]
   }
 
   export type CourseCreateNestedOneWithoutCourseTypesInput = {
@@ -50722,6 +53819,99 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCommentReportsInput, UserUpdateWithoutCommentReportsInput>, UserUncheckedUpdateWithoutCommentReportsInput>
   }
 
+  export type DailyQuizAttemptCreatequestionIdsInput = {
+    set: number[]
+  }
+
+  export type UserCreateNestedOneWithoutDailyQuizzesInput = {
+    create?: XOR<UserCreateWithoutDailyQuizzesInput, UserUncheckedCreateWithoutDailyQuizzesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDailyQuizzesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type CourseCreateNestedOneWithoutDailyQuizzesInput = {
+    create?: XOR<CourseCreateWithoutDailyQuizzesInput, CourseUncheckedCreateWithoutDailyQuizzesInput>
+    connectOrCreate?: CourseCreateOrConnectWithoutDailyQuizzesInput
+    connect?: CourseWhereUniqueInput
+  }
+
+  export type DailyQuizAnswerCreateNestedManyWithoutAttemptInput = {
+    create?: XOR<DailyQuizAnswerCreateWithoutAttemptInput, DailyQuizAnswerUncheckedCreateWithoutAttemptInput> | DailyQuizAnswerCreateWithoutAttemptInput[] | DailyQuizAnswerUncheckedCreateWithoutAttemptInput[]
+    connectOrCreate?: DailyQuizAnswerCreateOrConnectWithoutAttemptInput | DailyQuizAnswerCreateOrConnectWithoutAttemptInput[]
+    createMany?: DailyQuizAnswerCreateManyAttemptInputEnvelope
+    connect?: DailyQuizAnswerWhereUniqueInput | DailyQuizAnswerWhereUniqueInput[]
+  }
+
+  export type DailyQuizAnswerUncheckedCreateNestedManyWithoutAttemptInput = {
+    create?: XOR<DailyQuizAnswerCreateWithoutAttemptInput, DailyQuizAnswerUncheckedCreateWithoutAttemptInput> | DailyQuizAnswerCreateWithoutAttemptInput[] | DailyQuizAnswerUncheckedCreateWithoutAttemptInput[]
+    connectOrCreate?: DailyQuizAnswerCreateOrConnectWithoutAttemptInput | DailyQuizAnswerCreateOrConnectWithoutAttemptInput[]
+    createMany?: DailyQuizAnswerCreateManyAttemptInputEnvelope
+    connect?: DailyQuizAnswerWhereUniqueInput | DailyQuizAnswerWhereUniqueInput[]
+  }
+
+  export type DailyQuizAttemptUpdatequestionIdsInput = {
+    set?: number[]
+    push?: number | number[]
+  }
+
+  export type UserUpdateOneRequiredWithoutDailyQuizzesNestedInput = {
+    create?: XOR<UserCreateWithoutDailyQuizzesInput, UserUncheckedCreateWithoutDailyQuizzesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDailyQuizzesInput
+    upsert?: UserUpsertWithoutDailyQuizzesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDailyQuizzesInput, UserUpdateWithoutDailyQuizzesInput>, UserUncheckedUpdateWithoutDailyQuizzesInput>
+  }
+
+  export type CourseUpdateOneRequiredWithoutDailyQuizzesNestedInput = {
+    create?: XOR<CourseCreateWithoutDailyQuizzesInput, CourseUncheckedCreateWithoutDailyQuizzesInput>
+    connectOrCreate?: CourseCreateOrConnectWithoutDailyQuizzesInput
+    upsert?: CourseUpsertWithoutDailyQuizzesInput
+    connect?: CourseWhereUniqueInput
+    update?: XOR<XOR<CourseUpdateToOneWithWhereWithoutDailyQuizzesInput, CourseUpdateWithoutDailyQuizzesInput>, CourseUncheckedUpdateWithoutDailyQuizzesInput>
+  }
+
+  export type DailyQuizAnswerUpdateManyWithoutAttemptNestedInput = {
+    create?: XOR<DailyQuizAnswerCreateWithoutAttemptInput, DailyQuizAnswerUncheckedCreateWithoutAttemptInput> | DailyQuizAnswerCreateWithoutAttemptInput[] | DailyQuizAnswerUncheckedCreateWithoutAttemptInput[]
+    connectOrCreate?: DailyQuizAnswerCreateOrConnectWithoutAttemptInput | DailyQuizAnswerCreateOrConnectWithoutAttemptInput[]
+    upsert?: DailyQuizAnswerUpsertWithWhereUniqueWithoutAttemptInput | DailyQuizAnswerUpsertWithWhereUniqueWithoutAttemptInput[]
+    createMany?: DailyQuizAnswerCreateManyAttemptInputEnvelope
+    set?: DailyQuizAnswerWhereUniqueInput | DailyQuizAnswerWhereUniqueInput[]
+    disconnect?: DailyQuizAnswerWhereUniqueInput | DailyQuizAnswerWhereUniqueInput[]
+    delete?: DailyQuizAnswerWhereUniqueInput | DailyQuizAnswerWhereUniqueInput[]
+    connect?: DailyQuizAnswerWhereUniqueInput | DailyQuizAnswerWhereUniqueInput[]
+    update?: DailyQuizAnswerUpdateWithWhereUniqueWithoutAttemptInput | DailyQuizAnswerUpdateWithWhereUniqueWithoutAttemptInput[]
+    updateMany?: DailyQuizAnswerUpdateManyWithWhereWithoutAttemptInput | DailyQuizAnswerUpdateManyWithWhereWithoutAttemptInput[]
+    deleteMany?: DailyQuizAnswerScalarWhereInput | DailyQuizAnswerScalarWhereInput[]
+  }
+
+  export type DailyQuizAnswerUncheckedUpdateManyWithoutAttemptNestedInput = {
+    create?: XOR<DailyQuizAnswerCreateWithoutAttemptInput, DailyQuizAnswerUncheckedCreateWithoutAttemptInput> | DailyQuizAnswerCreateWithoutAttemptInput[] | DailyQuizAnswerUncheckedCreateWithoutAttemptInput[]
+    connectOrCreate?: DailyQuizAnswerCreateOrConnectWithoutAttemptInput | DailyQuizAnswerCreateOrConnectWithoutAttemptInput[]
+    upsert?: DailyQuizAnswerUpsertWithWhereUniqueWithoutAttemptInput | DailyQuizAnswerUpsertWithWhereUniqueWithoutAttemptInput[]
+    createMany?: DailyQuizAnswerCreateManyAttemptInputEnvelope
+    set?: DailyQuizAnswerWhereUniqueInput | DailyQuizAnswerWhereUniqueInput[]
+    disconnect?: DailyQuizAnswerWhereUniqueInput | DailyQuizAnswerWhereUniqueInput[]
+    delete?: DailyQuizAnswerWhereUniqueInput | DailyQuizAnswerWhereUniqueInput[]
+    connect?: DailyQuizAnswerWhereUniqueInput | DailyQuizAnswerWhereUniqueInput[]
+    update?: DailyQuizAnswerUpdateWithWhereUniqueWithoutAttemptInput | DailyQuizAnswerUpdateWithWhereUniqueWithoutAttemptInput[]
+    updateMany?: DailyQuizAnswerUpdateManyWithWhereWithoutAttemptInput | DailyQuizAnswerUpdateManyWithWhereWithoutAttemptInput[]
+    deleteMany?: DailyQuizAnswerScalarWhereInput | DailyQuizAnswerScalarWhereInput[]
+  }
+
+  export type DailyQuizAttemptCreateNestedOneWithoutAnswersInput = {
+    create?: XOR<DailyQuizAttemptCreateWithoutAnswersInput, DailyQuizAttemptUncheckedCreateWithoutAnswersInput>
+    connectOrCreate?: DailyQuizAttemptCreateOrConnectWithoutAnswersInput
+    connect?: DailyQuizAttemptWhereUniqueInput
+  }
+
+  export type DailyQuizAttemptUpdateOneRequiredWithoutAnswersNestedInput = {
+    create?: XOR<DailyQuizAttemptCreateWithoutAnswersInput, DailyQuizAttemptUncheckedCreateWithoutAnswersInput>
+    connectOrCreate?: DailyQuizAttemptCreateOrConnectWithoutAnswersInput
+    upsert?: DailyQuizAttemptUpsertWithoutAnswersInput
+    connect?: DailyQuizAttemptWhereUniqueInput
+    update?: XOR<XOR<DailyQuizAttemptUpdateToOneWithWhereWithoutAnswersInput, DailyQuizAttemptUpdateWithoutAnswersInput>, DailyQuizAttemptUncheckedUpdateWithoutAnswersInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -51310,6 +54500,35 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DailyQuizAttemptCreateWithoutUserInput = {
+    quizDate: Date | string
+    questionIds?: DailyQuizAttemptCreatequestionIdsInput | number[]
+    startedAt?: Date | string
+    completedAt?: Date | string | null
+    course: CourseCreateNestedOneWithoutDailyQuizzesInput
+    answers?: DailyQuizAnswerCreateNestedManyWithoutAttemptInput
+  }
+
+  export type DailyQuizAttemptUncheckedCreateWithoutUserInput = {
+    id?: number
+    courseId: number
+    quizDate: Date | string
+    questionIds?: DailyQuizAttemptCreatequestionIdsInput | number[]
+    startedAt?: Date | string
+    completedAt?: Date | string | null
+    answers?: DailyQuizAnswerUncheckedCreateNestedManyWithoutAttemptInput
+  }
+
+  export type DailyQuizAttemptCreateOrConnectWithoutUserInput = {
+    where: DailyQuizAttemptWhereUniqueInput
+    create: XOR<DailyQuizAttemptCreateWithoutUserInput, DailyQuizAttemptUncheckedCreateWithoutUserInput>
+  }
+
+  export type DailyQuizAttemptCreateManyUserInputEnvelope = {
+    data: DailyQuizAttemptCreateManyUserInput | DailyQuizAttemptCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CourseCreateWithoutSelectedByInput = {
     title: string
     description?: string | null
@@ -51328,6 +54547,7 @@ export namespace Prisma {
     plans?: PlanCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutSelectedByInput = {
@@ -51349,6 +54569,7 @@ export namespace Prisma {
     plans?: PlanUncheckedCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutSelectedByInput = {
@@ -51640,6 +54861,35 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"CommentReport"> | Date | string
   }
 
+  export type DailyQuizAttemptUpsertWithWhereUniqueWithoutUserInput = {
+    where: DailyQuizAttemptWhereUniqueInput
+    update: XOR<DailyQuizAttemptUpdateWithoutUserInput, DailyQuizAttemptUncheckedUpdateWithoutUserInput>
+    create: XOR<DailyQuizAttemptCreateWithoutUserInput, DailyQuizAttemptUncheckedCreateWithoutUserInput>
+  }
+
+  export type DailyQuizAttemptUpdateWithWhereUniqueWithoutUserInput = {
+    where: DailyQuizAttemptWhereUniqueInput
+    data: XOR<DailyQuizAttemptUpdateWithoutUserInput, DailyQuizAttemptUncheckedUpdateWithoutUserInput>
+  }
+
+  export type DailyQuizAttemptUpdateManyWithWhereWithoutUserInput = {
+    where: DailyQuizAttemptScalarWhereInput
+    data: XOR<DailyQuizAttemptUpdateManyMutationInput, DailyQuizAttemptUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type DailyQuizAttemptScalarWhereInput = {
+    AND?: DailyQuizAttemptScalarWhereInput | DailyQuizAttemptScalarWhereInput[]
+    OR?: DailyQuizAttemptScalarWhereInput[]
+    NOT?: DailyQuizAttemptScalarWhereInput | DailyQuizAttemptScalarWhereInput[]
+    id?: IntFilter<"DailyQuizAttempt"> | number
+    userId?: IntFilter<"DailyQuizAttempt"> | number
+    courseId?: IntFilter<"DailyQuizAttempt"> | number
+    quizDate?: DateTimeFilter<"DailyQuizAttempt"> | Date | string
+    questionIds?: IntNullableListFilter<"DailyQuizAttempt">
+    startedAt?: DateTimeFilter<"DailyQuizAttempt"> | Date | string
+    completedAt?: DateTimeNullableFilter<"DailyQuizAttempt"> | Date | string | null
+  }
+
   export type CourseUpsertWithoutSelectedByInput = {
     update: XOR<CourseUpdateWithoutSelectedByInput, CourseUncheckedUpdateWithoutSelectedByInput>
     create: XOR<CourseCreateWithoutSelectedByInput, CourseUncheckedCreateWithoutSelectedByInput>
@@ -51669,6 +54919,7 @@ export namespace Prisma {
     plans?: PlanUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutSelectedByInput = {
@@ -51690,6 +54941,7 @@ export namespace Prisma {
     plans?: PlanUncheckedUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseTypeUpsertWithoutSelectedByInput = {
@@ -51748,6 +55000,7 @@ export namespace Prisma {
     plans?: PlanCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutAdminInput = {
@@ -51769,6 +55022,7 @@ export namespace Prisma {
     plans?: PlanUncheckedCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutAdminInput = {
@@ -51917,6 +55171,7 @@ export namespace Prisma {
     plans?: PlanCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutSubjectsInput = {
@@ -51938,6 +55193,7 @@ export namespace Prisma {
     plans?: PlanUncheckedCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutSubjectsInput = {
@@ -52331,6 +55587,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
     commentReports?: CommentReportCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -52356,6 +55613,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
     commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -52392,6 +55650,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -52417,6 +55676,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SubjectCreateWithoutCoursesInput = {
@@ -52560,6 +55820,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
     commentReports?: CommentReportCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutUserInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
 
@@ -52584,6 +55845,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
     commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSelectedCourseInput = {
@@ -52704,6 +55966,35 @@ export namespace Prisma {
 
   export type TestCreateManyCourseInputEnvelope = {
     data: TestCreateManyCourseInput | TestCreateManyCourseInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DailyQuizAttemptCreateWithoutCourseInput = {
+    quizDate: Date | string
+    questionIds?: DailyQuizAttemptCreatequestionIdsInput | number[]
+    startedAt?: Date | string
+    completedAt?: Date | string | null
+    user: UserCreateNestedOneWithoutDailyQuizzesInput
+    answers?: DailyQuizAnswerCreateNestedManyWithoutAttemptInput
+  }
+
+  export type DailyQuizAttemptUncheckedCreateWithoutCourseInput = {
+    id?: number
+    userId: number
+    quizDate: Date | string
+    questionIds?: DailyQuizAttemptCreatequestionIdsInput | number[]
+    startedAt?: Date | string
+    completedAt?: Date | string | null
+    answers?: DailyQuizAnswerUncheckedCreateNestedManyWithoutAttemptInput
+  }
+
+  export type DailyQuizAttemptCreateOrConnectWithoutCourseInput = {
+    where: DailyQuizAttemptWhereUniqueInput
+    create: XOR<DailyQuizAttemptCreateWithoutCourseInput, DailyQuizAttemptUncheckedCreateWithoutCourseInput>
+  }
+
+  export type DailyQuizAttemptCreateManyCourseInputEnvelope = {
+    data: DailyQuizAttemptCreateManyCourseInput | DailyQuizAttemptCreateManyCourseInput[]
     skipDuplicates?: boolean
   }
 
@@ -52946,6 +56237,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Test"> | Date | string
   }
 
+  export type DailyQuizAttemptUpsertWithWhereUniqueWithoutCourseInput = {
+    where: DailyQuizAttemptWhereUniqueInput
+    update: XOR<DailyQuizAttemptUpdateWithoutCourseInput, DailyQuizAttemptUncheckedUpdateWithoutCourseInput>
+    create: XOR<DailyQuizAttemptCreateWithoutCourseInput, DailyQuizAttemptUncheckedCreateWithoutCourseInput>
+  }
+
+  export type DailyQuizAttemptUpdateWithWhereUniqueWithoutCourseInput = {
+    where: DailyQuizAttemptWhereUniqueInput
+    data: XOR<DailyQuizAttemptUpdateWithoutCourseInput, DailyQuizAttemptUncheckedUpdateWithoutCourseInput>
+  }
+
+  export type DailyQuizAttemptUpdateManyWithWhereWithoutCourseInput = {
+    where: DailyQuizAttemptScalarWhereInput
+    data: XOR<DailyQuizAttemptUpdateManyMutationInput, DailyQuizAttemptUncheckedUpdateManyWithoutCourseInput>
+  }
+
   export type CourseCreateWithoutCourseTypesInput = {
     title: string
     description?: string | null
@@ -52964,6 +56271,7 @@ export namespace Prisma {
     plans?: PlanCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutCourseTypesInput = {
@@ -52985,6 +56293,7 @@ export namespace Prisma {
     plans?: PlanUncheckedCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutCourseTypesInput = {
@@ -53040,6 +56349,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
     commentReports?: CommentReportCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
   }
 
@@ -53064,6 +56374,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
     commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSelectedCourseTypeInput = {
@@ -53152,6 +56463,7 @@ export namespace Prisma {
     plans?: PlanUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutCourseTypesInput = {
@@ -53173,6 +56485,7 @@ export namespace Prisma {
     plans?: PlanUncheckedUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type ChapterUpsertWithWhereUniqueWithoutCourseTypeInput = {
@@ -53241,6 +56554,7 @@ export namespace Prisma {
     plans?: PlanCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutChaptersInput = {
@@ -53262,6 +56576,7 @@ export namespace Prisma {
     plans?: PlanUncheckedCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutChaptersInput = {
@@ -53393,6 +56708,7 @@ export namespace Prisma {
     plans?: PlanUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutChaptersInput = {
@@ -53414,6 +56730,7 @@ export namespace Prisma {
     plans?: PlanUncheckedUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseTypeUpsertWithoutChaptersInput = {
@@ -53998,6 +57315,7 @@ export namespace Prisma {
     selectedBy?: UserCreateNestedManyWithoutSelectedCourseInput
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutPlansInput = {
@@ -54019,6 +57337,7 @@ export namespace Prisma {
     selectedBy?: UserUncheckedCreateNestedManyWithoutSelectedCourseInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutPlansInput = {
@@ -54102,6 +57421,7 @@ export namespace Prisma {
     selectedBy?: UserUpdateManyWithoutSelectedCourseNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutPlansInput = {
@@ -54123,6 +57443,7 @@ export namespace Prisma {
     selectedBy?: UserUncheckedUpdateManyWithoutSelectedCourseNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type SubscriptionUpsertWithWhereUniqueWithoutPlanInput = {
@@ -54175,6 +57496,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
     commentReports?: CommentReportCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -54200,6 +57522,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
     commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSubscriptionsInput = {
@@ -54225,6 +57548,7 @@ export namespace Prisma {
     selectedBy?: UserCreateNestedManyWithoutSelectedCourseInput
     plans?: PlanCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutSubscriptionsInput = {
@@ -54246,6 +57570,7 @@ export namespace Prisma {
     selectedBy?: UserUncheckedCreateNestedManyWithoutSelectedCourseInput
     plans?: PlanUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutSubscriptionsInput = {
@@ -54312,6 +57637,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -54337,6 +57663,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CourseUpsertWithoutSubscriptionsInput = {
@@ -54368,6 +57695,7 @@ export namespace Prisma {
     selectedBy?: UserUpdateManyWithoutSelectedCourseNestedInput
     plans?: PlanUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutSubscriptionsInput = {
@@ -54389,6 +57717,7 @@ export namespace Prisma {
     selectedBy?: UserUncheckedUpdateManyWithoutSelectedCourseNestedInput
     plans?: PlanUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type PlanUpsertWithoutSubscriptionsInput = {
@@ -55460,6 +58789,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
     commentReports?: CommentReportCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -55485,6 +58815,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
     commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutQuizAttemptsInput = {
@@ -55579,6 +58910,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -55604,6 +58936,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type QuizUpsertWithoutAttemptsInput = {
@@ -55744,6 +59077,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
     commentReports?: CommentReportCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -55769,6 +59103,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
     commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSavedQuestionsInput = {
@@ -55845,6 +59180,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -55870,6 +59206,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type QuestionUpsertWithoutSavedByInput = {
@@ -55936,6 +59273,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
     commentReports?: CommentReportCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -55961,6 +59299,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
     commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSavedLessonsInput = {
@@ -56055,6 +59394,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -56080,6 +59420,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LessonUpsertWithoutSavedByInput = {
@@ -56164,6 +59505,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
     commentReports?: CommentReportCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -56189,6 +59531,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
     commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutLessonProgressInput = {
@@ -56283,6 +59626,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -56308,6 +59652,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type LessonUpsertWithoutProgressInput = {
@@ -56392,6 +59737,7 @@ export namespace Prisma {
     selectedBy?: UserCreateNestedManyWithoutSelectedCourseInput
     plans?: PlanCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutTestsInput = {
@@ -56413,6 +59759,7 @@ export namespace Prisma {
     selectedBy?: UserUncheckedCreateNestedManyWithoutSelectedCourseInput
     plans?: PlanUncheckedCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutTestsInput = {
@@ -56586,6 +59933,7 @@ export namespace Prisma {
     selectedBy?: UserUpdateManyWithoutSelectedCourseNestedInput
     plans?: PlanUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutTestsInput = {
@@ -56607,6 +59955,7 @@ export namespace Prisma {
     selectedBy?: UserUncheckedUpdateManyWithoutSelectedCourseNestedInput
     plans?: PlanUncheckedUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseTypeUpsertWithoutTestsInput = {
@@ -56984,6 +60333,7 @@ export namespace Prisma {
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
     commentReports?: CommentReportCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -57009,6 +60359,7 @@ export namespace Prisma {
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
     commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTestAttemptsInput = {
@@ -57113,6 +60464,7 @@ export namespace Prisma {
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -57138,6 +60490,7 @@ export namespace Prisma {
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type TestUpsertWithoutAttemptsInput = {
@@ -57428,6 +60781,7 @@ export namespace Prisma {
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     commentReports?: CommentReportCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -57453,6 +60807,7 @@ export namespace Prisma {
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCommentsInput = {
@@ -57675,6 +61030,7 @@ export namespace Prisma {
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -57700,6 +61056,7 @@ export namespace Prisma {
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AdminUpsertWithoutCommentsInput = {
@@ -57856,6 +61213,7 @@ export namespace Prisma {
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutUserInput
     selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
     selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
   }
@@ -57881,6 +61239,7 @@ export namespace Prisma {
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCommentReportsInput = {
@@ -57955,6 +61314,7 @@ export namespace Prisma {
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
@@ -57980,6 +61340,327 @@ export namespace Prisma {
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutDailyQuizzesInput = {
+    email: string
+    password?: string | null
+    name?: string | null
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
+    quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
+    testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    comments?: LessonCommentCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportCreateNestedManyWithoutUserInput
+    selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
+    selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
+  }
+
+  export type UserUncheckedCreateWithoutDailyQuizzesInput = {
+    id?: number
+    email: string
+    password?: string | null
+    name?: string | null
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    selectedCourseId?: number | null
+    selectedCourseTypeId?: number | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
+    quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
+    testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutDailyQuizzesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDailyQuizzesInput, UserUncheckedCreateWithoutDailyQuizzesInput>
+  }
+
+  export type CourseCreateWithoutDailyQuizzesInput = {
+    title: string
+    description?: string | null
+    thumbnail?: string | null
+    classGrade?: string | null
+    difficulty?: string | null
+    status?: $Enums.CourseStatus
+    accessType?: $Enums.AccessType
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subjects?: SubjectCreateNestedManyWithoutCoursesInput
+    admin?: AdminCreateNestedOneWithoutCoursesInput
+    chapters?: ChapterCreateNestedManyWithoutCourseInput
+    courseTypes?: CourseTypeCreateNestedManyWithoutCourseInput
+    selectedBy?: UserCreateNestedManyWithoutSelectedCourseInput
+    plans?: PlanCreateNestedManyWithoutCourseInput
+    subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
+    tests?: TestCreateNestedManyWithoutCourseInput
+  }
+
+  export type CourseUncheckedCreateWithoutDailyQuizzesInput = {
+    id?: number
+    title: string
+    description?: string | null
+    thumbnail?: string | null
+    classGrade?: string | null
+    difficulty?: string | null
+    status?: $Enums.CourseStatus
+    accessType?: $Enums.AccessType
+    displayOrder?: number
+    createdBy?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subjects?: SubjectUncheckedCreateNestedManyWithoutCoursesInput
+    chapters?: ChapterUncheckedCreateNestedManyWithoutCourseInput
+    courseTypes?: CourseTypeUncheckedCreateNestedManyWithoutCourseInput
+    selectedBy?: UserUncheckedCreateNestedManyWithoutSelectedCourseInput
+    plans?: PlanUncheckedCreateNestedManyWithoutCourseInput
+    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
+    tests?: TestUncheckedCreateNestedManyWithoutCourseInput
+  }
+
+  export type CourseCreateOrConnectWithoutDailyQuizzesInput = {
+    where: CourseWhereUniqueInput
+    create: XOR<CourseCreateWithoutDailyQuizzesInput, CourseUncheckedCreateWithoutDailyQuizzesInput>
+  }
+
+  export type DailyQuizAnswerCreateWithoutAttemptInput = {
+    questionId: number
+    selectedOptionId: number
+    isCorrect: boolean
+    marksAwarded: number
+    answeredAt?: Date | string
+  }
+
+  export type DailyQuizAnswerUncheckedCreateWithoutAttemptInput = {
+    questionId: number
+    selectedOptionId: number
+    isCorrect: boolean
+    marksAwarded: number
+    answeredAt?: Date | string
+  }
+
+  export type DailyQuizAnswerCreateOrConnectWithoutAttemptInput = {
+    where: DailyQuizAnswerWhereUniqueInput
+    create: XOR<DailyQuizAnswerCreateWithoutAttemptInput, DailyQuizAnswerUncheckedCreateWithoutAttemptInput>
+  }
+
+  export type DailyQuizAnswerCreateManyAttemptInputEnvelope = {
+    data: DailyQuizAnswerCreateManyAttemptInput | DailyQuizAnswerCreateManyAttemptInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutDailyQuizzesInput = {
+    update: XOR<UserUpdateWithoutDailyQuizzesInput, UserUncheckedUpdateWithoutDailyQuizzesInput>
+    create: XOR<UserCreateWithoutDailyQuizzesInput, UserUncheckedCreateWithoutDailyQuizzesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDailyQuizzesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDailyQuizzesInput, UserUncheckedUpdateWithoutDailyQuizzesInput>
+  }
+
+  export type UserUpdateWithoutDailyQuizzesInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
+    quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
+    testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUpdateManyWithoutUserNestedInput
+    selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
+    selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDailyQuizzesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
+    selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
+    testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type CourseUpsertWithoutDailyQuizzesInput = {
+    update: XOR<CourseUpdateWithoutDailyQuizzesInput, CourseUncheckedUpdateWithoutDailyQuizzesInput>
+    create: XOR<CourseCreateWithoutDailyQuizzesInput, CourseUncheckedCreateWithoutDailyQuizzesInput>
+    where?: CourseWhereInput
+  }
+
+  export type CourseUpdateToOneWithWhereWithoutDailyQuizzesInput = {
+    where?: CourseWhereInput
+    data: XOR<CourseUpdateWithoutDailyQuizzesInput, CourseUncheckedUpdateWithoutDailyQuizzesInput>
+  }
+
+  export type CourseUpdateWithoutDailyQuizzesInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    classGrade?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subjects?: SubjectUpdateManyWithoutCoursesNestedInput
+    admin?: AdminUpdateOneWithoutCoursesNestedInput
+    chapters?: ChapterUpdateManyWithoutCourseNestedInput
+    courseTypes?: CourseTypeUpdateManyWithoutCourseNestedInput
+    selectedBy?: UserUpdateManyWithoutSelectedCourseNestedInput
+    plans?: PlanUpdateManyWithoutCourseNestedInput
+    subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
+    tests?: TestUpdateManyWithoutCourseNestedInput
+  }
+
+  export type CourseUncheckedUpdateWithoutDailyQuizzesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    classGrade?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subjects?: SubjectUncheckedUpdateManyWithoutCoursesNestedInput
+    chapters?: ChapterUncheckedUpdateManyWithoutCourseNestedInput
+    courseTypes?: CourseTypeUncheckedUpdateManyWithoutCourseNestedInput
+    selectedBy?: UserUncheckedUpdateManyWithoutSelectedCourseNestedInput
+    plans?: PlanUncheckedUpdateManyWithoutCourseNestedInput
+    subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
+    tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
+  }
+
+  export type DailyQuizAnswerUpsertWithWhereUniqueWithoutAttemptInput = {
+    where: DailyQuizAnswerWhereUniqueInput
+    update: XOR<DailyQuizAnswerUpdateWithoutAttemptInput, DailyQuizAnswerUncheckedUpdateWithoutAttemptInput>
+    create: XOR<DailyQuizAnswerCreateWithoutAttemptInput, DailyQuizAnswerUncheckedCreateWithoutAttemptInput>
+  }
+
+  export type DailyQuizAnswerUpdateWithWhereUniqueWithoutAttemptInput = {
+    where: DailyQuizAnswerWhereUniqueInput
+    data: XOR<DailyQuizAnswerUpdateWithoutAttemptInput, DailyQuizAnswerUncheckedUpdateWithoutAttemptInput>
+  }
+
+  export type DailyQuizAnswerUpdateManyWithWhereWithoutAttemptInput = {
+    where: DailyQuizAnswerScalarWhereInput
+    data: XOR<DailyQuizAnswerUpdateManyMutationInput, DailyQuizAnswerUncheckedUpdateManyWithoutAttemptInput>
+  }
+
+  export type DailyQuizAnswerScalarWhereInput = {
+    AND?: DailyQuizAnswerScalarWhereInput | DailyQuizAnswerScalarWhereInput[]
+    OR?: DailyQuizAnswerScalarWhereInput[]
+    NOT?: DailyQuizAnswerScalarWhereInput | DailyQuizAnswerScalarWhereInput[]
+    attemptId?: IntFilter<"DailyQuizAnswer"> | number
+    questionId?: IntFilter<"DailyQuizAnswer"> | number
+    selectedOptionId?: IntFilter<"DailyQuizAnswer"> | number
+    isCorrect?: BoolFilter<"DailyQuizAnswer"> | boolean
+    marksAwarded?: FloatFilter<"DailyQuizAnswer"> | number
+    answeredAt?: DateTimeFilter<"DailyQuizAnswer"> | Date | string
+  }
+
+  export type DailyQuizAttemptCreateWithoutAnswersInput = {
+    quizDate: Date | string
+    questionIds?: DailyQuizAttemptCreatequestionIdsInput | number[]
+    startedAt?: Date | string
+    completedAt?: Date | string | null
+    user: UserCreateNestedOneWithoutDailyQuizzesInput
+    course: CourseCreateNestedOneWithoutDailyQuizzesInput
+  }
+
+  export type DailyQuizAttemptUncheckedCreateWithoutAnswersInput = {
+    id?: number
+    userId: number
+    courseId: number
+    quizDate: Date | string
+    questionIds?: DailyQuizAttemptCreatequestionIdsInput | number[]
+    startedAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
+  export type DailyQuizAttemptCreateOrConnectWithoutAnswersInput = {
+    where: DailyQuizAttemptWhereUniqueInput
+    create: XOR<DailyQuizAttemptCreateWithoutAnswersInput, DailyQuizAttemptUncheckedCreateWithoutAnswersInput>
+  }
+
+  export type DailyQuizAttemptUpsertWithoutAnswersInput = {
+    update: XOR<DailyQuizAttemptUpdateWithoutAnswersInput, DailyQuizAttemptUncheckedUpdateWithoutAnswersInput>
+    create: XOR<DailyQuizAttemptCreateWithoutAnswersInput, DailyQuizAttemptUncheckedCreateWithoutAnswersInput>
+    where?: DailyQuizAttemptWhereInput
+  }
+
+  export type DailyQuizAttemptUpdateToOneWithWhereWithoutAnswersInput = {
+    where?: DailyQuizAttemptWhereInput
+    data: XOR<DailyQuizAttemptUpdateWithoutAnswersInput, DailyQuizAttemptUncheckedUpdateWithoutAnswersInput>
+  }
+
+  export type DailyQuizAttemptUpdateWithoutAnswersInput = {
+    quizDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    questionIds?: DailyQuizAttemptUpdatequestionIdsInput | number[]
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutDailyQuizzesNestedInput
+    course?: CourseUpdateOneRequiredWithoutDailyQuizzesNestedInput
+  }
+
+  export type DailyQuizAttemptUncheckedUpdateWithoutAnswersInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    quizDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    questionIds?: DailyQuizAttemptUpdatequestionIdsInput | number[]
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type SessionCreateManyUserInput = {
@@ -58052,6 +61733,15 @@ export namespace Prisma {
     reason?: string | null
     resolvedAt?: Date | string | null
     createdAt?: Date | string
+  }
+
+  export type DailyQuizAttemptCreateManyUserInput = {
+    id?: number
+    courseId: number
+    quizDate: Date | string
+    questionIds?: DailyQuizAttemptCreatequestionIdsInput | number[]
+    startedAt?: Date | string
+    completedAt?: Date | string | null
   }
 
   export type SessionUpdateWithoutUserInput = {
@@ -58272,6 +61962,34 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DailyQuizAttemptUpdateWithoutUserInput = {
+    quizDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    questionIds?: DailyQuizAttemptUpdatequestionIdsInput | number[]
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    course?: CourseUpdateOneRequiredWithoutDailyQuizzesNestedInput
+    answers?: DailyQuizAnswerUpdateManyWithoutAttemptNestedInput
+  }
+
+  export type DailyQuizAttemptUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    quizDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    questionIds?: DailyQuizAttemptUpdatequestionIdsInput | number[]
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    answers?: DailyQuizAnswerUncheckedUpdateManyWithoutAttemptNestedInput
+  }
+
+  export type DailyQuizAttemptUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    quizDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    questionIds?: DailyQuizAttemptUpdatequestionIdsInput | number[]
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type CourseCreateManyAdminInput = {
     id?: number
     title: string
@@ -58316,6 +62034,7 @@ export namespace Prisma {
     plans?: PlanUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutAdminInput = {
@@ -58337,6 +62056,7 @@ export namespace Prisma {
     plans?: PlanUncheckedUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateManyWithoutAdminInput = {
@@ -58474,6 +62194,7 @@ export namespace Prisma {
     plans?: PlanUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutSubjectsInput = {
@@ -58495,6 +62216,7 @@ export namespace Prisma {
     plans?: PlanUncheckedUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateManyWithoutSubjectsInput = {
@@ -58782,6 +62504,15 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type DailyQuizAttemptCreateManyCourseInput = {
+    id?: number
+    userId: number
+    quizDate: Date | string
+    questionIds?: DailyQuizAttemptCreatequestionIdsInput | number[]
+    startedAt?: Date | string
+    completedAt?: Date | string | null
+  }
+
   export type SubjectUpdateWithoutCoursesInput = {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -58899,6 +62630,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutUserNestedInput
     selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
   }
 
@@ -58923,6 +62655,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutSelectedCourseInput = {
@@ -59057,6 +62790,34 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DailyQuizAttemptUpdateWithoutCourseInput = {
+    quizDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    questionIds?: DailyQuizAttemptUpdatequestionIdsInput | number[]
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    user?: UserUpdateOneRequiredWithoutDailyQuizzesNestedInput
+    answers?: DailyQuizAnswerUpdateManyWithoutAttemptNestedInput
+  }
+
+  export type DailyQuizAttemptUncheckedUpdateWithoutCourseInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    quizDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    questionIds?: DailyQuizAttemptUpdatequestionIdsInput | number[]
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    answers?: DailyQuizAnswerUncheckedUpdateManyWithoutAttemptNestedInput
+  }
+
+  export type DailyQuizAttemptUncheckedUpdateManyWithoutCourseInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: IntFieldUpdateOperationsInput | number
+    quizDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    questionIds?: DailyQuizAttemptUpdatequestionIdsInput | number[]
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type ChapterCreateManyCourseTypeInput = {
     id?: number
     courseId?: number | null
@@ -59143,6 +62904,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutUserNestedInput
     selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
   }
 
@@ -59167,6 +62929,7 @@ export namespace Prisma {
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateManyWithoutSelectedCourseTypeInput = {
@@ -59990,6 +63753,38 @@ export namespace Prisma {
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DailyQuizAnswerCreateManyAttemptInput = {
+    questionId: number
+    selectedOptionId: number
+    isCorrect: boolean
+    marksAwarded: number
+    answeredAt?: Date | string
+  }
+
+  export type DailyQuizAnswerUpdateWithoutAttemptInput = {
+    questionId?: IntFieldUpdateOperationsInput | number
+    selectedOptionId?: IntFieldUpdateOperationsInput | number
+    isCorrect?: BoolFieldUpdateOperationsInput | boolean
+    marksAwarded?: FloatFieldUpdateOperationsInput | number
+    answeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DailyQuizAnswerUncheckedUpdateWithoutAttemptInput = {
+    questionId?: IntFieldUpdateOperationsInput | number
+    selectedOptionId?: IntFieldUpdateOperationsInput | number
+    isCorrect?: BoolFieldUpdateOperationsInput | boolean
+    marksAwarded?: FloatFieldUpdateOperationsInput | number
+    answeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DailyQuizAnswerUncheckedUpdateManyWithoutAttemptInput = {
+    questionId?: IntFieldUpdateOperationsInput | number
+    selectedOptionId?: IntFieldUpdateOperationsInput | number
+    isCorrect?: BoolFieldUpdateOperationsInput | boolean
+    marksAwarded?: FloatFieldUpdateOperationsInput | number
+    answeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 
