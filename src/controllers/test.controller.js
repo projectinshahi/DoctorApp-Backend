@@ -233,7 +233,7 @@ function sectionsOf(questions) {
  * image imports cleanly and then fails months later, in front of a student, as
  * a broken image.
  */
-function validateRows(header, rows, test, images = null) {
+function validateRows(header, rows, test, images = null, { allowMissingImages = false } = {}) {
   const errors = [];
 
   // Filenames are matched case-insensitively: a folder of q1.svg typed into a
@@ -314,11 +314,22 @@ function validateRows(header, rows, test, images = null) {
       const resolved = byFilename.get(key);
       if (resolved) return resolved;
 
-      // Neither a URL nor a file on this test. Blocking, because it can never
-      // load: importing it only defers the failure to a student.
-      at(field, byFilename.size === 0
+      // Neither a URL nor a file on this test. Blocking by default, because it
+      // can never load: importing it only defers the failure to a student.
+      const message = byFilename.size === 0
         ? `No images have been uploaded to this test yet, so "${value}" cannot be resolved. Upload the images first.`
-        : `"${value}" is not a URL and no image with that name was uploaded to this test`);
+        : `"${value}" is not a URL and no image with that name was uploaded to this test`;
+
+      if (allowMissingImages) {
+        // Imported with no picture, and named loudly enough that the admin can
+        // go and attach it in the question editor.
+        errors.push({
+          row: row.line, field, severity: 'warning',
+          message: `${message} Imported without an image — add it to question ${order} before publishing.`,
+        });
+        return '';
+      }
+      at(field, message);
       return '';
     };
 
@@ -440,18 +451,25 @@ async function uploadTestQuestions(req, res) {
     const images = await prisma.testImage.findMany({
       where: { testId }, select: { url: true, originalFilename: true },
     });
-    const { errors, questions } = validateRows(header, rows, test, images);
+    // Lets an admin build the paper text-first and attach pictures afterwards.
+    // Off by default: a question whose diagram is missing is a broken question,
+    // and importing one silently is how a student meets it in an exam.
+    const allowMissingImages = req.query.allowMissingImages === 'true';
+
+    const { errors, questions } = validateRows(header, rows, test, images, { allowMissingImages });
     const blocking = errors.filter((e) => e.severity !== 'warning');
 
-    // The count check is separate from row validation so the admin is told both
-    // "your file is short" and "row 12 is broken" in one response.
+    // A count mismatch is a WARNING, not a refusal.
+    //
+    // The declaration exists so a paper claiming 200 questions cannot quietly
+    // serve 198 — and publish still enforces exactly that. Blocking the import
+    // as well only forced an admin to go and edit the test before they were
+    // allowed to look at their own file, while the real gate stayed where it
+    // belongs.
     if (rows.length !== test.totalQuestions) {
-      return res.status(400).json({
-        error: { message: `This test expects ${test.totalQuestions} questions, the file has ${rows.length}. Fix the file, or change the test's totalQuestions.` },
-        expected: test.totalQuestions,
-        received: rows.length,
-        validRows: rows.length - blocking.length,
-        errors,
+      errors.push({
+        row: 1, field: 'header', severity: 'warning',
+        message: `This test expects ${test.totalQuestions} questions and the file has ${rows.length}. It will import, but the test cannot be published until the two match.`,
       });
     }
 

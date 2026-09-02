@@ -146,6 +146,52 @@ question — and so can an option. Only *neither* is an error.
 come back at once; fixing a 200-row file one error per upload would take all
 day.
 
+### A count mismatch no longer blocks
+
+```json
+{ "row": 1, "field": "header", "severity": "warning",
+  "message": "This test expects 5 questions and the file has 10. It will import, but the test cannot be published until the two match." }
+```
+
+The file imports. **Publish is the real gate** and still refuses with
+`Cannot publish: this test expects 5 questions but has 10.` — so the paper
+cannot quietly serve the wrong number either way, and the admin is not sent to
+edit the test before they are allowed to look at their own file.
+
+Offer a one-tap fix beside that warning: `PATCH /api/admin/tests/:id`
+`{ "totalQuestions": 10 }`, which is allowed while nobody has attempted it.
+
+### Importing before the images are uploaded
+
+A filename that is not among this test's uploads **blocks** by default:
+
+```json
+{ "row": 2, "field": "question_image_url",
+  "message": "No images have been uploaded to this test yet, so \"sample_q1.svg\" cannot be resolved. Upload the images first." }
+```
+
+That is right for the normal path — a question whose diagram is missing is a
+broken question, and importing one silently is how a student meets it in an
+exam. **Images before CSV** stays the recommended order.
+
+For an admin building the paper text-first:
+
+```
+POST /api/admin/tests/:testId/questions/upload?allowMissingImages=true
+```
+
+Those rows import with `questionImageUrl: null`, and each one comes back as a
+warning naming the question to fix:
+
+> …Imported without an image — add it to question 3 before publishing.
+
+Verified on a 10-row file with images on alternating rows: 5 blocking errors
+without the flag, 10 questions imported with it, and after uploading the images
+a plain re-import resolved every one with no errors at all.
+
+Put it behind a checkbox on the upload screen — "Import now, add images
+later" — not on by default.
+
 `DELETE /api/admin/tests/:testId/questions` clears the paper and unpublishes
 it.
 

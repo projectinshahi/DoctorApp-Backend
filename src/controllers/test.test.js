@@ -160,6 +160,43 @@ const twoImg = run(`${IHEAD}\n1,,https://cdn.test/a.jpg,A,,B,C,D,A\n2,,https://c
 assert.deepStrictEqual(twoImg.errors, [], 'empty text must not count as duplicate text');
 
 
+// ── importing before the images are uploaded ──
+
+// By default an unresolvable name blocks: a question whose diagram is missing
+// is a broken question, and importing it only defers the failure to a student.
+const noImagesYet = run(`${IHEAD}\n1,Q,sample_q1.svg,A,,B,C,D,A\n`, []);
+assert(noImagesYet.errors.some((e) => e.severity !== 'warning'
+  && e.message.includes('No images have been uploaded')));
+assert.strictEqual(noImagesYet.questions[0].questionImageUrl, null);
+
+// With allowMissingImages the same row imports, and the warning names the
+// question so it can be fixed in the editor rather than lost.
+const allowed = validateRows(
+  ...(() => { const { header, rows } = parseCsv(`${IHEAD}\n1,Q,sample_q1.svg,A,,B,C,D,A\n`); return [header, rows]; })(),
+  TEST, [], { allowMissingImages: true });
+assert.deepStrictEqual(allowed.errors.filter((e) => e.severity !== 'warning'), [],
+  'allowMissingImages must not block');
+assert(allowed.errors.some((e) => e.severity === 'warning' && e.message.includes('question 1')),
+  'the warning must name the question to fix');
+assert.strictEqual(allowed.questions[0].questionImageUrl, null);
+assert.strictEqual(allowed.questions[0].questionText, 'Q', 'the row still imports');
+
+// A name that DOES resolve is unaffected by the flag.
+const stillResolves = validateRows(
+  ...(() => { const { header, rows } = parseCsv(`${IHEAD}\n1,Q,a.jpg,A,,B,C,D,A\n`); return [header, rows]; })(),
+  TEST, KNOWN, { allowMissingImages: true });
+assert.deepStrictEqual(stillResolves.errors, []);
+assert.strictEqual(stillResolves.questions[0].questionImageUrl, 'https://cdn.test/a.jpg');
+
+// The flag is about missing files, not broken input: something that is not a
+// URL and not a filename shape is still whatever it was.
+const flagIsNotABypass = validateRows(
+  ...(() => { const { header, rows } = parseCsv(`${IHEAD}\n1,,,A,,B,C,D,A\n`); return [header, rows]; })(),
+  TEST, KNOWN, { allowMissingImages: true });
+assert(flagIsNotABypass.errors.some((e) => e.severity !== 'warning' && e.field === 'question_text'),
+  'a question with neither text nor image is still an error');
+
+
 // ── sections are read off the questions ──
 
 const paper = [

@@ -174,6 +174,17 @@ question_order,question_text,question_image_filename,option_a,...
 Matching is case-insensitive. An unknown name blocks with a message naming it;
 two uploads sharing a name block rather than guess.
 
+**Two upload-screen changes go with this:**
+
+- A **count mismatch is now a warning, not a refusal.** The file imports;
+  publish still refuses until the numbers match. Show the warning with a
+  one-tap "Set totalQuestions to N" that calls
+  `PATCH /api/admin/tests/:id`. Do not block the upload button on it.
+- A checkbox, **"Import now, add images later"**, sending
+  `?allowMissingImages=true`. Unresolvable filenames then import as warnings
+  with `questionImageUrl: null` instead of failing the file. Off by default —
+  a question whose diagram is missing is a broken question.
+
 In the upload screen, say this on the help text — an admin with a folder of
 `q1.svg`…`q200.svg` should never be pasting Cloudinary URLs by hand. Show the
 uploaded file names next to the image list so they can be copied into the
