@@ -93,6 +93,45 @@ Keep the two visually apart. Blocking is a punishment; signing out is help.
 
 ## What to build
 
+### Account state and session state are different fields
+
+This is the mistake to design out. They are independent and they change for
+different reasons:
+
+| | field | values | changed by |
+|---|---|---|---|
+| account | `status` | `verified` · `unverified` · `blocked` | an admin, only |
+| session | `isLoggedIn` | true / false | the student logging in and out |
+
+**Never derive the status chip from `isLoggedIn`.** A student who simply closed
+the app would show as "Inactive", which reads as deactivated — and an admin
+might then "reactivate" someone who was never blocked.
+
+Logging out changes nothing about the account. It stamps one session row;
+`status` stays `verified`. The same is true of the idle release and of
+"Sign out all devices".
+
+Live right now: three students, all `verified`, one of them not signed in. That
+combination is normal, not a problem to fix.
+
+Render them as two separate things:
+
+```
+Status:   [ Active ]                                    ← student.status
+Session:  Signed in on PHONE-A · last active 4 min ago  ← isLoggedIn + lastSeenAt
+```
+
+| `status` | chip |
+|---|---|
+| `verified` | **Active**, green |
+| `unverified` | **Unverified**, grey — signed up, never verified |
+| `blocked` | **Blocked**, red |
+
+`blocked` with `isLoggedIn: true` cannot happen — blocking revokes every
+session. The reverse, `verified` and not signed in, is the common case.
+
+---
+
 **Student detail header** — a status chip (Active / Blocked / Unverified) and
 two buttons:
 
@@ -119,3 +158,5 @@ field that answers "why can't I log in?".
 - Do not use Block to fix a locked-out student — that is
   `POST /sessions/revoke`.
 - Re-read `student.status` from the response rather than toggling a local flag.
+- The status chip comes from `status`. `isLoggedIn` is a line of text, never a
+  state badge.
