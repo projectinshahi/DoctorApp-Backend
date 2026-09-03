@@ -1,141 +1,158 @@
-# Task: show the "signed out on your other device" alert
+# Task: single-device sign-in — first device wins
 
 Paste this into Claude inside the **student app repo**.
 
 Base URL: `https://doctorapp-backend-30gd.onrender.com`
-Auth: `Authorization: Bearer <student access token>`.
+
+**This replaces the earlier behaviour.** A new device no longer takes over the
+account. While the account is in use on one device, the second is **refused**.
 
 Captured against the live backend on 2026-09-02.
 
 ---
 
-## The rule
+## Sign-up and sign-in are one call
 
-**One device at a time.** Signing in on a new device revokes the old session
-immediately. There are two sides to tell the student about, and the app needs
-both.
+`POST /api/auth/google` with `{ idToken, deviceId }` — both required, 400
+without either. New email → account created, `isNewUser: true`. Existing email
+→ sign-in.
 
 ---
 
-## 1. The NEW device — alert at login
-
-`POST /api/auth/google` (`idToken` + `deviceId`, both required) now returns
-three extra fields:
+## 1. Allowed — 200
 
 ```json
-{ "accessToken": "...", "refreshToken": "...", "isNewUser": false,
-  "sessionId": 82,
-  "signedOutOtherDevice": true,
-  "notice": "You've been signed out on your other device. Only one device can be signed in at a time.",
-  "previousSession": { "deviceId": "PHONE-A", "signedInAt": "...", "sameDevice": false },
+{ "accessToken": "...", "refreshToken": "...", "sessionId": 91,
+  "isNewUser": false,
+  "notice": null,
+  "signedOutOtherDevice": false,
+  "previousSession": null,
   "user": { "id": 35, "email": "...", "name": "..." } }
 ```
 
-**Show `notice` when it is non-null.** It is a finished sentence — do not
-rewrite it per platform, and do not build your own from
-`signedOutOtherDevice`.
+Show `notice` in a dialog **only when it is non-null**. It is a finished
+sentence — do not compose your own.
 
-```dart
-final res = await api.googleSignIn(idToken, deviceId);
-await auth.store(res);
-if (res.notice != null) {
-  await showDialog(context: context, builder: (_) => AlertDialog(
-    title: const Text('Signed in'),
-    content: Text(res.notice!),
-    actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK'))],
-  ));
-}
-goToHome();
+`isNewUser: true` → send them to course selection, not home. A new account has
+no `selectedCourseId`, so `/home` comes back empty until they pick one.
+
+## 2. Refused — 409, the case you asked for
+
+```json
+409
+{ "error": {
+    "code": "SESSION_ACTIVE_ELSEWHERE",
+    "message": "This account is signed in on another device. Sign out there first, or try again in a few minutes.",
+    "status": 409 },
+  "previousSession": { "deviceId": "PHONE-A", "signedInAt": "...", "lastSeenAt": "...", "sameDevice": false },
+  "retryAfterMinutes": 30 }
 ```
 
-### It fires only on a real device switch
+**The student stays on the login screen.** No tokens are issued, and the other
+device is untouched — it keeps working, and gets no "you were signed out"
+message, because it wasn't.
+
+Show `error.message`, and use `retryAfterMinutes` to make it concrete:
+
+> This account is signed in on another device. Sign out there first, or try
+> again in **30 minutes**.
+
+Do not retry automatically and do not offer a "force sign in" button — there is
+no force flag, by design.
+
+## 3. When a second device IS let in
+
+Two cases, both 200:
+
+- **Same device signing in again** — never refused, whatever the clock says.
+  Refusing there would lock a student out with their own phone in their hand.
+  `notice` is null, `previousSession.sameDevice` is true.
+- **The other device has gone quiet for 30 minutes** — the lock is released
+  automatically and the new device gets in with:
+
+```json
+{ "notice": "Your other device had been inactive, so it has been signed out.",
+  "signedOutOtherDevice": true }
+```
+
+Show that one. It explains why they suddenly got in, and it tells them the
+other device is now signed out.
 
 Verified end to end:
 
-| | `signedOutOtherDevice` | `notice` |
-|---|---|---|
-| first ever login | `false` | `null` |
-| **same** phone signs in again | `false` | `null` |
-| a different device signs in | **`true`** | the sentence above |
-
-The same-device case matters: re-login on the same phone happens constantly,
-and firing the alert there would tell a student they were kicked off the device
-in their hand. It would cry wolf until it was ignored.
-
-`previousSession` is still returned on a same-device login (with
-`sameDevice: true`) for an app that wants to say "welcome back" — only the
-alarm is withheld. It is `null` on a brand new account.
-
-**`deviceId` must be stable per install.** Generate it once, store it, reuse
-it. A fresh id every launch makes every login look like a device switch and the
-alert fires forever.
+```
+1. PHONE-A signs in            → 200
+2. TABLET-B tries, A active    → 409 SESSION_ACTIVE_ELSEWHERE, retryAfterMinutes 30
+3. PHONE-A signs in again      → 200, notice null
+4. A idle 31 min, B retries    → 200, "Your other device had been inactive…"
+```
 
 ---
 
-## 2. The OLD device — alert on its next request
+## `deviceId` is now load-bearing
 
-The old device is not notified; it finds out when it next calls the API. There
-is no push.
+It decides whether a student can reach their own account. Get it wrong and they
+are locked out for 30 minutes at a time.
 
-```json
-401 { "code": "SESSION_ENDED",
-      "message": "You were signed out because your account was accessed on another device." }
-```
-
-**Handle it by `code`, not by the 401.** Three different things share that
-status and only one of them should trigger a refresh:
-
-| code | meaning | do |
-|---|---|---|
-| `INVALID_TOKEN` | access token expired | refresh, retry once |
-| `SESSION_ENDED` | another device signed in | **clear + log out + show the message** |
-| `REFRESH_TOKEN_REUSED` | stale token replayed, session revoked | clear + log out |
-| `ACCOUNT_BLOCKED` (403) | admin disabled the account | log out, "contact support" |
+- **Generate once, persist, reuse forever.** A new id per launch means every
+  sign-in looks like a second device.
+- **Prefer an id that survives a reinstall** — `androidId` on Android,
+  `identifierForVendor` on iOS — falling back to a stored uuid. With a
+  SharedPreferences-only uuid, reinstalling the app looks like a brand new
+  device and the student waits out the idle window.
 
 ```dart
-if (res.statusCode == 401) {
-  final code = jsonDecode(res.body)['error']?['code'];
-  if (code == 'SESSION_ENDED' || code == 'REFRESH_TOKEN_REUSED') {
-    await auth.clear();
-    goToLogin(message: jsonDecode(res.body)['error']['message']);
-    return;                      // never refresh, never retry
-  }
-  if (code == 'INVALID_TOKEN') { await auth.refresh(); /* retry once */ }
+Future<String> deviceId() async {
+  final p = await SharedPreferences.getInstance();
+  var id = p.getString('device_id');
+  if (id != null) return id;
+  final info = DeviceInfoPlugin();
+  id = Platform.isAndroid
+      ? (await info.androidInfo).id
+      : (await info.iosInfo).identifierForVendor ?? const Uuid().v4();
+  await p.setString('device_id', id);
+  return id;
 }
 ```
 
-**If your interceptor refreshes on every 401 it will loop** — `POST
-/api/auth/refresh` returns `SESSION_ENDED` too. The student sees a spinner and
-a silent logout instead of the reason.
+## The old device: nothing changes for it
 
-Carry the message to the login screen and show it there, rather than a generic
-"session expired".
+It is never kicked by a login any more. It still gets **401 `SESSION_ENDED`**
+if its session was released for idleness, or if an admin signed it out.
 
-**It is not instant.** The old device keeps working until it makes a request.
-Sitting on a cached screen it sees nothing. Any real interaction hits the API,
-so in practice it lands quickly — but do not promise the student an immediate
-logout.
+Handle 401 by `error.code`, never by the status alone:
 
----
+| code | do |
+|---|---|
+| `INVALID_TOKEN` | refresh, retry once |
+| `SESSION_ENDED` / `REFRESH_TOKEN_REUSED` | clear, log out, show the message |
+| `ACCOUNT_BLOCKED` (403) | log out, "contact support" |
+
+`POST /api/auth/refresh` returns `SESSION_ENDED` too, so an interceptor that
+refreshes on every 401 will loop.
+
+## Logging out matters now
+
+`POST /api/auth/logout` releases the lock immediately. Before, forgetting to
+log out cost nothing; now it makes the student wait 30 minutes to use another
+device. Put a visible **Log out** in the profile menu and call it on account
+switch.
 
 ## What to build
 
-**Login flow** — store the tokens, then show `notice` if present, then
-navigate. Alert first, so it is not lost behind the home screen.
+**Login screen** — handle 200 and 409 differently. 409 stays on the screen with
+the message and the minutes; it is not an error state to retry.
 
-**A stable `deviceId`** — generated once at first launch and persisted. Not a
-new uuid per session.
+**A stable `deviceId`**, reinstall-surviving where the platform allows.
 
-**One 401 handler** keyed on `error.code`, with `SESSION_ENDED` routed to
-logout-with-message and never to refresh.
+**Log out** — visible, and actually calling the endpoint.
 
-**Login screen** — accept an optional message argument and display it above the
-sign-in button.
+**One 401 handler** keyed on `error.code`.
 
 ## Constraints
 
-- Show `notice` verbatim; do not compose your own from the boolean.
-- `notice` is `null` on a first login and on a same-device re-login.
-- `previousSession` is `null` on a brand new account.
-- Never refresh on `SESSION_ENDED` or `REFRESH_TOKEN_REUSED`.
-- `deviceId` must survive app restarts.
+- 409 is not a failure to retry. Show it and stop.
+- Never build a "force sign in" — the API has no such flag.
+- `notice` is shown verbatim, only when non-null.
+- `deviceId` must survive restarts, ideally reinstalls.
+- Never refresh on `SESSION_ENDED`.

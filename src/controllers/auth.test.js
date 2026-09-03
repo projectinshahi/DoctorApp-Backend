@@ -1,49 +1,72 @@
-// Single-device sign-out reporting. Run: node src/controllers/auth.test.js
+// First-device-wins login policy. Run: node src/controllers/auth.test.js
 const assert = require('assert');
-const { describeSignOut } = require('./auth.controller');
+const { decideLogin, IDLE_RELEASE_MS } = require('./auth.controller');
 
-const at = new Date('2026-09-02T12:08:00.000Z');
-const phone = { deviceId: 'ed309ece15f04b50', createdAt: at };
+const NOW = new Date('2026-09-02T12:00:00.000Z').getTime();
+const ago = (ms) => new Date(NOW - ms);
+const session = (deviceId, seenMsAgo, createdMsAgo = seenMsAgo) =>
+  ({ deviceId, createdAt: ago(createdMsAgo), lastSeenAt: ago(seenMsAgo) });
 
-// A different device really was ended — this is the alert the new device shows.
-const kicked = describeSignOut(phone, '4252993c2d7d9468');
-assert.strictEqual(kicked.signedOutOtherDevice, true);
-assert(kicked.notice.includes('signed out on your other device'));
-assert.strictEqual(kicked.previousSession.sameDevice, false);
-assert.strictEqual(kicked.previousSession.deviceId, 'ed309ece15f04b50');
-assert.strictEqual(kicked.previousSession.signedInAt, at);
+// Nobody signed in: the first device just gets in.
+const first = decideLogin(null, 'PHONE-A', NOW);
+assert.strictEqual(first.allow, true);
+assert.strictEqual(first.reason, 'first');
+assert.strictEqual(first.notice, null);
+assert.strictEqual(first.previousSession, null);
 
-// The same device signing in again is NOT a device switch. Firing the alert
-// here would tell a student they had been kicked off the phone in their hand,
-// and it happens on every ordinary re-login — the alert would cry wolf until
-// it was ignored.
-const again = describeSignOut(phone, 'ed309ece15f04b50');
-assert.strictEqual(again.signedOutOtherDevice, false);
-assert.strictEqual(again.notice, null, 'no alert when it is the same phone');
-assert.strictEqual(again.previousSession.sameDevice, true);
-// The session is still reported, so an app that wants to say "welcome back"
-// has the detail; only the alarm is withheld.
-assert.strictEqual(again.previousSession.deviceId, 'ed309ece15f04b50');
+// ── the rule itself ──
 
-// A brand new account, or one whose session was already logged out, has no
-// elsewhere to have been signed out of.
-for (const nothing of [null, undefined]) {
-  const fresh = describeSignOut(nothing, 'any-device');
-  assert.strictEqual(fresh.signedOutOtherDevice, false);
-  assert.strictEqual(fresh.notice, null);
-  assert.strictEqual(fresh.previousSession, null);
+// Another device, active a minute ago: REFUSED. This is the whole point — a
+// shared account cannot be taken over while its owner is using it.
+const busy = decideLogin(session('PHONE-A', 60 * 1000), 'TABLET-B', NOW);
+assert.strictEqual(busy.allow, false);
+assert.strictEqual(busy.reason, 'activeElsewhere');
+assert.strictEqual(busy.previousSession.deviceId, 'PHONE-A');
+assert.strictEqual(busy.retryAfterMinutes, 29);
+
+// The same device signing in again is never refused, whatever the clock says.
+// Refusing here would lock a student out with their own phone in their hand —
+// after a reinstall that kept the device id, or a token they simply lost.
+const mine = decideLogin(session('PHONE-A', 5 * 1000), 'PHONE-A', NOW);
+assert.strictEqual(mine.allow, true);
+assert.strictEqual(mine.reason, 'sameDevice');
+assert.strictEqual(mine.previousSession.sameDevice, true);
+assert.strictEqual(mine.notice, null, 'no alarm for your own device');
+
+// ── the escape hatch ──
+
+// Gone quiet for longer than the window: the lock is released. This is what
+// saves a lost, wiped or reinstalled phone from locking the account for ever.
+const stale = decideLogin(session('PHONE-A', IDLE_RELEASE_MS + 1000), 'TABLET-B', NOW);
+assert.strictEqual(stale.allow, true);
+assert.strictEqual(stale.reason, 'idleReleased');
+assert(stale.notice.includes('inactive'), 'the new device is told why it was let in');
+
+// Exactly at the boundary releases, rather than refusing by a millisecond.
+assert.strictEqual(decideLogin(session('PHONE-A', IDLE_RELEASE_MS), 'TABLET-B', NOW).allow, true);
+assert.strictEqual(decideLogin(session('PHONE-A', IDLE_RELEASE_MS - 1), 'TABLET-B', NOW).allow, false);
+
+// A session that has never reported activity falls back to when it was
+// created, so a row written before lastSeenAt existed cannot hold the lock for
+// ever.
+const legacy = { deviceId: 'PHONE-A', createdAt: ago(IDLE_RELEASE_MS * 2), lastSeenAt: null };
+assert.strictEqual(decideLogin(legacy, 'TABLET-B', NOW).allow, true);
+const legacyFresh = { deviceId: 'PHONE-A', createdAt: ago(1000), lastSeenAt: null };
+assert.strictEqual(decideLogin(legacyFresh, 'TABLET-B', NOW).allow, false);
+
+// ── the countdown shown to the blocked device ──
+
+// Rounded up: a session seen seconds ago must never say "0 minutes".
+assert.strictEqual(decideLogin(session('PHONE-A', 1000), 'TABLET-B', NOW).retryAfterMinutes, 30);
+assert.strictEqual(decideLogin(session('PHONE-A', 29 * 60 * 1000), 'TABLET-B', NOW).retryAfterMinutes, 1);
+// Never zero, never negative, right up to the boundary.
+for (const secs of [1, 60, 900, 1799]) {
+  const d = decideLogin(session('PHONE-A', secs * 1000), 'TABLET-B', NOW);
+  assert(d.retryAfterMinutes >= 1, `retryAfterMinutes was ${d.retryAfterMinutes} at ${secs}s`);
 }
 
-// deviceId is compared exactly. Two devices whose ids differ only by case are
-// two devices — guessing otherwise would silently merge them.
-assert.strictEqual(describeSignOut(phone, 'ED309ECE15F04B50').signedOutOtherDevice, true);
-
-// An empty deviceId cannot match a real one. Login rejects it with a 400
-// before this runs, but the function must not treat "" as "same".
-assert.strictEqual(describeSignOut(phone, '').signedOutOtherDevice, true);
-
-// The notice is a complete sentence the app can show without editing it.
-assert(kicked.notice.endsWith('.'));
-assert(!kicked.notice.includes('undefined'));
+// An allowed login never carries a countdown.
+assert.strictEqual(first.retryAfterMinutes, undefined);
+assert.strictEqual(stale.retryAfterMinutes, undefined);
 
 console.log('auth.test.js: all assertions passed');

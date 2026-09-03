@@ -9805,6 +9805,7 @@ export namespace Prisma {
     deviceId: string | null
     refreshToken: string | null
     createdAt: Date | null
+    lastSeenAt: Date | null
     revokedAt: Date | null
   }
 
@@ -9814,6 +9815,7 @@ export namespace Prisma {
     deviceId: string | null
     refreshToken: string | null
     createdAt: Date | null
+    lastSeenAt: Date | null
     revokedAt: Date | null
   }
 
@@ -9823,6 +9825,7 @@ export namespace Prisma {
     deviceId: number
     refreshToken: number
     createdAt: number
+    lastSeenAt: number
     revokedAt: number
     _all: number
   }
@@ -9844,6 +9847,7 @@ export namespace Prisma {
     deviceId?: true
     refreshToken?: true
     createdAt?: true
+    lastSeenAt?: true
     revokedAt?: true
   }
 
@@ -9853,6 +9857,7 @@ export namespace Prisma {
     deviceId?: true
     refreshToken?: true
     createdAt?: true
+    lastSeenAt?: true
     revokedAt?: true
   }
 
@@ -9862,6 +9867,7 @@ export namespace Prisma {
     deviceId?: true
     refreshToken?: true
     createdAt?: true
+    lastSeenAt?: true
     revokedAt?: true
     _all?: true
   }
@@ -9958,6 +9964,7 @@ export namespace Prisma {
     deviceId: string
     refreshToken: string
     createdAt: Date
+    lastSeenAt: Date | null
     revokedAt: Date | null
     _count: SessionCountAggregateOutputType | null
     _avg: SessionAvgAggregateOutputType | null
@@ -9986,6 +9993,7 @@ export namespace Prisma {
     deviceId?: boolean
     refreshToken?: boolean
     createdAt?: boolean
+    lastSeenAt?: boolean
     revokedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["session"]>
@@ -9996,6 +10004,7 @@ export namespace Prisma {
     deviceId?: boolean
     refreshToken?: boolean
     createdAt?: boolean
+    lastSeenAt?: boolean
     revokedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["session"]>
@@ -10006,6 +10015,7 @@ export namespace Prisma {
     deviceId?: boolean
     refreshToken?: boolean
     createdAt?: boolean
+    lastSeenAt?: boolean
     revokedAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["session"]>
@@ -10016,10 +10026,11 @@ export namespace Prisma {
     deviceId?: boolean
     refreshToken?: boolean
     createdAt?: boolean
+    lastSeenAt?: boolean
     revokedAt?: boolean
   }
 
-  export type SessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "deviceId" | "refreshToken" | "createdAt" | "revokedAt", ExtArgs["result"]["session"]>
+  export type SessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "deviceId" | "refreshToken" | "createdAt" | "lastSeenAt" | "revokedAt", ExtArgs["result"]["session"]>
   export type SessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -10041,6 +10052,7 @@ export namespace Prisma {
       deviceId: string
       refreshToken: string
       createdAt: Date
+      lastSeenAt: Date | null
       revokedAt: Date | null
     }, ExtArgs["result"]["session"]>
     composites: {}
@@ -10471,6 +10483,7 @@ export namespace Prisma {
     readonly deviceId: FieldRef<"Session", 'String'>
     readonly refreshToken: FieldRef<"Session", 'String'>
     readonly createdAt: FieldRef<"Session", 'DateTime'>
+    readonly lastSeenAt: FieldRef<"Session", 'DateTime'>
     readonly revokedAt: FieldRef<"Session", 'DateTime'>
   }
     
@@ -43092,6 +43105,7 @@ export namespace Prisma {
     deviceId: 'deviceId',
     refreshToken: 'refreshToken',
     createdAt: 'createdAt',
+    lastSeenAt: 'lastSeenAt',
     revokedAt: 'revokedAt'
   };
 
@@ -44014,6 +44028,7 @@ export namespace Prisma {
     deviceId?: StringFilter<"Session"> | string
     refreshToken?: StringFilter<"Session"> | string
     createdAt?: DateTimeFilter<"Session"> | Date | string
+    lastSeenAt?: DateTimeNullableFilter<"Session"> | Date | string | null
     revokedAt?: DateTimeNullableFilter<"Session"> | Date | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -44024,6 +44039,7 @@ export namespace Prisma {
     deviceId?: SortOrder
     refreshToken?: SortOrder
     createdAt?: SortOrder
+    lastSeenAt?: SortOrderInput | SortOrder
     revokedAt?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
   }
@@ -44037,6 +44053,7 @@ export namespace Prisma {
     userId?: IntFilter<"Session"> | number
     deviceId?: StringFilter<"Session"> | string
     createdAt?: DateTimeFilter<"Session"> | Date | string
+    lastSeenAt?: DateTimeNullableFilter<"Session"> | Date | string | null
     revokedAt?: DateTimeNullableFilter<"Session"> | Date | string | null
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "refreshToken">
@@ -44047,6 +44064,7 @@ export namespace Prisma {
     deviceId?: SortOrder
     refreshToken?: SortOrder
     createdAt?: SortOrder
+    lastSeenAt?: SortOrderInput | SortOrder
     revokedAt?: SortOrderInput | SortOrder
     _count?: SessionCountOrderByAggregateInput
     _avg?: SessionAvgOrderByAggregateInput
@@ -44064,6 +44082,7 @@ export namespace Prisma {
     deviceId?: StringWithAggregatesFilter<"Session"> | string
     refreshToken?: StringWithAggregatesFilter<"Session"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Session"> | Date | string
+    lastSeenAt?: DateTimeNullableWithAggregatesFilter<"Session"> | Date | string | null
     revokedAt?: DateTimeNullableWithAggregatesFilter<"Session"> | Date | string | null
   }
 
@@ -46519,6 +46538,7 @@ export namespace Prisma {
     deviceId: string
     refreshToken: string
     createdAt?: Date | string
+    lastSeenAt?: Date | string | null
     revokedAt?: Date | string | null
     user: UserCreateNestedOneWithoutSessionsInput
   }
@@ -46529,6 +46549,7 @@ export namespace Prisma {
     deviceId: string
     refreshToken: string
     createdAt?: Date | string
+    lastSeenAt?: Date | string | null
     revokedAt?: Date | string | null
   }
 
@@ -46536,6 +46557,7 @@ export namespace Prisma {
     deviceId?: StringFieldUpdateOperationsInput | string
     refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     user?: UserUpdateOneRequiredWithoutSessionsNestedInput
   }
@@ -46546,6 +46568,7 @@ export namespace Prisma {
     deviceId?: StringFieldUpdateOperationsInput | string
     refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -46555,6 +46578,7 @@ export namespace Prisma {
     deviceId: string
     refreshToken: string
     createdAt?: Date | string
+    lastSeenAt?: Date | string | null
     revokedAt?: Date | string | null
   }
 
@@ -46562,6 +46586,7 @@ export namespace Prisma {
     deviceId?: StringFieldUpdateOperationsInput | string
     refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -46571,6 +46596,7 @@ export namespace Prisma {
     deviceId?: StringFieldUpdateOperationsInput | string
     refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -49153,6 +49179,7 @@ export namespace Prisma {
     deviceId?: SortOrder
     refreshToken?: SortOrder
     createdAt?: SortOrder
+    lastSeenAt?: SortOrder
     revokedAt?: SortOrder
   }
 
@@ -49167,6 +49194,7 @@ export namespace Prisma {
     deviceId?: SortOrder
     refreshToken?: SortOrder
     createdAt?: SortOrder
+    lastSeenAt?: SortOrder
     revokedAt?: SortOrder
   }
 
@@ -49176,6 +49204,7 @@ export namespace Prisma {
     deviceId?: SortOrder
     refreshToken?: SortOrder
     createdAt?: SortOrder
+    lastSeenAt?: SortOrder
     revokedAt?: SortOrder
   }
 
@@ -54303,6 +54332,7 @@ export namespace Prisma {
     deviceId: string
     refreshToken: string
     createdAt?: Date | string
+    lastSeenAt?: Date | string | null
     revokedAt?: Date | string | null
   }
 
@@ -54311,6 +54341,7 @@ export namespace Prisma {
     deviceId: string
     refreshToken: string
     createdAt?: Date | string
+    lastSeenAt?: Date | string | null
     revokedAt?: Date | string | null
   }
 
@@ -54669,6 +54700,7 @@ export namespace Prisma {
     deviceId?: StringFilter<"Session"> | string
     refreshToken?: StringFilter<"Session"> | string
     createdAt?: DateTimeFilter<"Session"> | Date | string
+    lastSeenAt?: DateTimeNullableFilter<"Session"> | Date | string | null
     revokedAt?: DateTimeNullableFilter<"Session"> | Date | string | null
   }
 
@@ -61726,6 +61758,7 @@ export namespace Prisma {
     deviceId: string
     refreshToken: string
     createdAt?: Date | string
+    lastSeenAt?: Date | string | null
     revokedAt?: Date | string | null
   }
 
@@ -61806,6 +61839,7 @@ export namespace Prisma {
     deviceId?: StringFieldUpdateOperationsInput | string
     refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -61814,6 +61848,7 @@ export namespace Prisma {
     deviceId?: StringFieldUpdateOperationsInput | string
     refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -61822,6 +61857,7 @@ export namespace Prisma {
     deviceId?: StringFieldUpdateOperationsInput | string
     refreshToken?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 

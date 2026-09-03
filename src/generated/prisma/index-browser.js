@@ -171,6 +171,7 @@ exports.Prisma.SessionScalarFieldEnum = {
   deviceId: 'deviceId',
   refreshToken: 'refreshToken',
   createdAt: 'createdAt',
+  lastSeenAt: 'lastSeenAt',
   revokedAt: 'revokedAt'
 };
 

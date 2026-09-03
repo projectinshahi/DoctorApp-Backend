@@ -205,7 +205,7 @@ async function getStudentById(req, res) {
         },
         sessions: {
           where: { revokedAt: null },
-          select: { deviceId: true, createdAt: true },
+          select: { deviceId: true, createdAt: true, lastSeenAt: true },
           orderBy: { createdAt: 'desc' },
           take: 1,
         },
@@ -487,6 +487,10 @@ async function getStudentById(req, res) {
         isLoggedIn: user.sessions.length > 0,
         lastLoginAt: user.sessions[0]?.createdAt ?? null,
         currentDeviceId: user.sessions[0]?.deviceId ?? null,
+        // When this device last made a request. It is what decides whether a
+        // second device is refused, so an admin fielding "I can't log in"
+        // needs to see it.
+        lastSeenAt: user.sessions[0]?.lastSeenAt ?? null,
         createdAt: user.createdAt,
       },
       selectedCourse: user.selectedCourse,
@@ -506,4 +510,46 @@ async function getStudentById(req, res) {
   }
 }
 
-module.exports = { getStudentList, getStudentById, updateStudentStatus };
+
+// POST /admin/students/:id/sessions/revoke
+//
+// The manual release for "first device wins". A student whose phone was lost,
+// stolen, wiped or reinstalled is locked out until their old session goes idle
+// — usually half an hour, but support should not have to tell someone to wait.
+async function revokeStudentSessions(req, res) {
+  try {
+    const studentId = Number(req.params.id);
+    if (!Number.isInteger(studentId)) {
+      return res.status(400).json({ error: { message: 'Invalid student id' } });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: studentId }, select: { id: true, name: true, email: true },
+    });
+    if (!user) return res.status(404).json({ error: { message: 'Student not found' } });
+
+    const active = await prisma.session.findMany({
+      where: { userId: studentId, revokedAt: null },
+      select: { id: true, deviceId: true, createdAt: true, lastSeenAt: true },
+    });
+
+    const { count } = await revokeActiveSessions(studentId);
+
+    return res.status(200).json({
+      message: count === 0
+        ? `${user.name ?? user.email} was not signed in anywhere.`
+        : `Signed out ${count} device(s). They can sign in again straight away.`,
+      studentId,
+      revoked: count,
+      // What was released, so an admin can confirm it was the device the
+      // student described before telling them to try again.
+      sessions: active,
+    });
+  } catch (error) {
+    console.error('revokeStudentSessions error:', error);
+    return res.status(500).json({ error: { message: 'Failed to sign the student out' } });
+  }
+}
+
+
+module.exports = { getStudentList, getStudentById, updateStudentStatus, revokeStudentSessions };

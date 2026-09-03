@@ -104,6 +104,12 @@ model Session {
   deviceId     String
   refreshToken String    @unique
   createdAt    DateTime  @default(now())
+  // Last time this session made a request, written at most once every few
+  // minutes. It is what separates "someone is using this device right now"
+  // from "this device was left on a shelf a month ago", which is the whole
+  // difference between locking a second device out and locking a student out
+  // of their own account.
+  lastSeenAt   DateTime?
   revokedAt    DateTime?
 
   user User @relation(fields: [userId], references: [id])

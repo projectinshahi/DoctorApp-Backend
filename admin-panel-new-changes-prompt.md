@@ -216,6 +216,39 @@ DELETE /api/admin/tests/:id[?deleteAttempts=true]
 
 ---
 
+## 6b. Sign a student out — the single-device escape hatch
+
+Login policy is now **first device wins**: while an account is in use on one
+device, a second sign-in is **refused** (409). The lock releases itself after
+30 minutes of inactivity.
+
+That leaves one case support has to handle — a lost, stolen, wiped or
+reinstalled phone, where the student cannot wait:
+
+```
+POST /admin/students/:id/sessions/revoke
+```
+
+```json
+{ "message": "Signed out 1 device(s). They can sign in again straight away.",
+  "revoked": 1,
+  "sessions": [ { "id": 91, "deviceId": "PHONE-A", "createdAt": "...", "lastSeenAt": "..." } ] }
+```
+
+`sessions` is what was released, so an admin can confirm it matches the device
+the student described before telling them to retry.
+
+`GET /admin/students/:id` now also returns **`lastSeenAt`** beside
+`currentDeviceId`. That timestamp is what decides whether a second device is
+refused, so put it on the student detail — "Signed in on PHONE-A, last active 4
+minutes ago" answers "why can't I log in?" without opening anything else.
+
+Add a **Sign out all devices** button next to Block, with a confirm. It is not
+destructive — the student can sign straight back in — so it does not need the
+type-the-name treatment.
+
+---
+
 ## 7. Settings screen
 
 ```
@@ -243,7 +276,8 @@ Detail: `admin-panel-settings-prompt.md`
 5. Question editor + sections
 6. Reordering, both lists
 7. Live attempts
-8. Settings
+8. Sign-out button on student detail
+9. Settings
 
 ## Constraints that apply everywhere
 

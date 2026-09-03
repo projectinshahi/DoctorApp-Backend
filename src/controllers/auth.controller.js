@@ -120,29 +120,67 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
 /**
- * What this login is about to end, described for the device doing it.
+ * Whether this login may proceed, and what to say either way.
  *
- * Pulled out of the handler because the three cases are each wrong in a way a
- * student would see: a false alarm on an ordinary re-login, silence when their
- * other phone really was kicked, or a "signed out elsewhere" notice on a brand
- * new account that had no elsewhere.
+ * The policy is FIRST DEVICE WINS: while an account is genuinely in use on one
+ * device, a second is refused rather than taking it over. That is the opposite
+ * of the usual rule and it is chosen deliberately — the point is to stop one
+ * subscription being shared, and a policy that hands the account to whoever
+ * logged in most recently does not stop that at all, it just alternates.
+ *
+ * The danger with it is locking a student out of their own account: a lost
+ * phone, a reinstall that regenerates the device id, an app killed without
+ * logging out. So a session only holds the lock while it is being USED. Once
+ * it has gone quiet for IDLE_RELEASE_MS the next device may take it, which
+ * covers every one of those cases without anyone contacting support.
  */
-function describeSignOut(previous, deviceId) {
-  // Same device signing in again is not a device switch. Reporting it as one
-  // would tell a student they had been kicked off the phone in their hand, and
-  // it happens on every ordinary re-login, so the alert would cry wolf until
-  // it was ignored.
-  const sameDevice = Boolean(previous) && previous.deviceId === deviceId;
-  const signedOutOtherDevice = Boolean(previous) && !sameDevice;
+const IDLE_RELEASE_MS = 30 * 60 * 1000;
+
+function decideLogin(previous, deviceId, now = Date.now()) {
+  if (!previous) {
+    return { allow: true, reason: 'first', previousSession: null, notice: null };
+  }
+
+  const sameDevice = previous.deviceId === deviceId;
+  if (sameDevice) {
+    // The same device signing in again is not a takeover, whatever the clock
+    // says. Refusing here would lock a student out with their own phone in
+    // their hand.
+    return {
+      allow: true,
+      reason: 'sameDevice',
+      previousSession: { deviceId: previous.deviceId, signedInAt: previous.createdAt, sameDevice: true },
+      notice: null,
+    };
+  }
+
+  // A session that has never reported activity is treated as last seen when it
+  // was created, so an old row cannot hold the lock for ever.
+  const lastSeen = (previous.lastSeenAt ?? previous.createdAt).getTime();
+  const idleMs = now - lastSeen;
+
+  if (idleMs >= IDLE_RELEASE_MS) {
+    return {
+      allow: true,
+      reason: 'idleReleased',
+      previousSession: {
+        deviceId: previous.deviceId, signedInAt: previous.createdAt,
+        lastSeenAt: previous.lastSeenAt ?? previous.createdAt, sameDevice: false,
+      },
+      notice: "Your other device had been inactive, so it has been signed out.",
+    };
+  }
 
   return {
-    signedOutOtherDevice,
-    notice: signedOutOtherDevice
-      ? "You've been signed out on your other device. Only one device can be signed in at a time."
-      : null,
-    previousSession: previous
-      ? { deviceId: previous.deviceId, signedInAt: previous.createdAt, sameDevice }
-      : null,
+    allow: false,
+    reason: 'activeElsewhere',
+    previousSession: {
+      deviceId: previous.deviceId, signedInAt: previous.createdAt,
+      lastSeenAt: previous.lastSeenAt ?? previous.createdAt, sameDevice: false,
+    },
+    // Rounded up, so "0 minutes" is never shown for a session seen seconds ago.
+    retryAfterMinutes: Math.max(1, Math.ceil((IDLE_RELEASE_MS - idleMs) / 60000)),
+    notice: null,
   };
 }
 
@@ -195,17 +233,31 @@ async function googleSignIn(req, res, next) {
       });
     }
 
-    // Read what is being signed out BEFORE revoking it, so the new device can
-    // say so. Without this the tablet silently ends the phone's session and
-    // nobody is told anything until the phone next makes a request and dies.
+    // First device wins: an account in active use on one device refuses a
+    // second, rather than the second taking it over.
     const previous = await prisma.session.findFirst({
       where: { userId: user.id, revokedAt: null },
       orderBy: { createdAt: 'desc' },
-      select: { deviceId: true, createdAt: true },
+      select: { deviceId: true, createdAt: true, lastSeenAt: true },
     });
-    const signOut = describeSignOut(previous, deviceId);
+    const decision = decideLogin(previous, deviceId);
 
-    // Revoke any existing active session(s) for this user (single-active-session rule)
+    if (!decision.allow) {
+      return res.status(409).json({
+        error: {
+          code: 'SESSION_ACTIVE_ELSEWHERE',
+          message: 'This account is signed in on another device. Sign out there first, or try again in a few minutes.',
+          status: 409,
+        },
+        previousSession: decision.previousSession,
+        // How long until the other session goes idle and the lock is released,
+        // so the app can say "try again in 12 minutes" instead of "try later".
+        retryAfterMinutes: decision.retryAfterMinutes,
+      });
+    }
+
+    // Allowed. Anything still open is now released — including the idle
+    // session this login is taking over from.
     await revokeActiveSessions(user.id);
 
     // Create the new session with a temporary unique placeholder token
@@ -239,12 +291,12 @@ async function googleSignIn(req, res, next) {
       refreshToken,
       isNewUser,
       sessionId: session.id,
-      // signedOutOtherDevice — true only when a DIFFERENT device was ended.
-      // notice — ready to show as-is, so the wording lives in one place rather
-      // than being reinvented per platform; null when there is nothing to say.
-      // previousSession.sameDevice lets the client check against its own
-      // stored deviceId.
-      ...signOut,
+      // notice — ready to show as-is, non-null only when an idle device was
+      // released to let this login through. previousSession.sameDevice lets
+      // the client check against its own stored deviceId.
+      notice: decision.notice,
+      previousSession: decision.previousSession,
+      signedOutOtherDevice: decision.reason === 'idleReleased',
       user: {
         id: user.id,
         email: user.email,
@@ -365,5 +417,5 @@ async function logout(req, res) {
 module.exports = {
   googleSignIn, refreshAccessToken, logout,
   // Exported for auth.test.js — pure, no DB.
-  describeSignOut,
+  decideLogin, IDLE_RELEASE_MS,
 };

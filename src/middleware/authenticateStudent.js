@@ -8,6 +8,10 @@ const { verifyAccessToken } = require('../services/auth.service');
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
 
+// How often a session's lastSeenAt is refreshed. Short enough that an idle
+// device is spotted quickly, long enough that it is not a write per request.
+const TOUCH_EVERY_MS = 3 * 60 * 1000;
+
 async function authenticateStudent(req, res, next) {
   const authHeader = req.headers.authorization;
 
@@ -62,6 +66,23 @@ async function authenticateStudent(req, res, next) {
           status: 401,
         },
       });
+    }
+
+    // Mark the session alive, at most once every few minutes.
+    //
+    // This is what lets a second device be refused while the first is genuinely
+    // in use, and released once it clearly is not. Writing on every request
+    // would be a write per API call per student; the throttle costs one write
+    // per active student per TOUCH_EVERY_MS instead.
+    //
+    // Deliberately not awaited: a slow write must not delay the response, and
+    // a failed one only means the timestamp is a few minutes stale.
+    const now = Date.now();
+    const seen = session.lastSeenAt ? session.lastSeenAt.getTime() : 0;
+    if (now - seen > TOUCH_EVERY_MS) {
+      prisma.session
+        .update({ where: { id: session.id }, data: { lastSeenAt: new Date(now) } })
+        .catch((e) => console.error('lastSeenAt touch failed:', e.message));
     }
 
     req.user = decoded;
