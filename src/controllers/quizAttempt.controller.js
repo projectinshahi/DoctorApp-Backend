@@ -192,25 +192,38 @@ async function startAttempt(req, res) {
 // Saves one answer and returns the feedback for that question only.
 async function saveAnswer(req, res) {
   try {
-    const loaded = await loadOwnAttempt(req.user.userId, Number(req.params.attemptId));
-    if (loaded.error) return res.status(loaded.error.status).json(loaded.error.body);
-    const { attempt } = loaded;
-
-    if (attempt.completedAt) {
-      return res.status(409).json({ error: { message: 'This attempt is already finished' } });
-    }
-
+    const attemptId = Number(req.params.attemptId);
     const questionId = Number(req.body?.questionId);
     const optionId = Number(req.body?.optionId);
 
     if (!Number.isInteger(questionId) || !Number.isInteger(optionId)) {
       return res.status(400).json({ error: { message: 'questionId and optionId are required' } });
     }
+
+    // The attempt and the question are fetched together rather than one after
+    // the other. Every round trip to the database costs about 200ms from the
+    // server, and this endpoint runs on every single tap in the quiz — the
+    // student is watching it.
+    //
+    // Fetching the question before its membership of the attempt is checked
+    // means one wasted read on a request that was going to be rejected anyway.
+    // That trade buys a round trip on every legitimate answer.
+    const [loaded, questions] = await Promise.all([
+      loadOwnAttempt(req.user.userId, attemptId),
+      Number.isInteger(attemptId) ? fetchAttemptQuestions([questionId]) : Promise.resolve([]),
+    ]);
+
+    if (loaded.error) return res.status(loaded.error.status).json(loaded.error.body);
+    const { attempt } = loaded;
+
+    if (attempt.completedAt) {
+      return res.status(409).json({ error: { message: 'This attempt is already finished' } });
+    }
     if (!attempt.questionIds.includes(questionId)) {
       return res.status(400).json({ error: { message: `Question ${questionId} is not part of this attempt` } });
     }
 
-    const [question] = await fetchAttemptQuestions([questionId]);
+    const [question] = questions;
     if (!question) {
       return res.status(404).json({ error: { message: 'Question not found' } });
     }
@@ -231,7 +244,11 @@ async function saveAnswer(req, res) {
       update: { selectedOptionId: optionId, isCorrect, marksAwarded, answeredAt: new Date() },
     });
 
-    const answeredCount = await prisma.attemptAnswer.count({ where: { attemptId: attempt.id } });
+    // Counted from the answers already loaded with the attempt, plus this one
+    // if it is new. A COUNT query here would be a third round trip for a
+    // number that is already known.
+    const wasAnswered = attempt.answers.some((a) => a.questionId === questionId);
+    const answeredCount = attempt.answers.length + (wasAnswered ? 0 : 1);
 
     return res.status(200).json({
       attemptId: attempt.id,
