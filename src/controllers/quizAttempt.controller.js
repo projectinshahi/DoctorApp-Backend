@@ -5,11 +5,8 @@
 // loses the run if the app is killed mid-quiz, and cannot show feedback per
 // question without shipping the answer key to the client. Both are the reasons
 // this is server-side and incremental.
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 
 const { resolveQuizQuestions } = require('./quiz.controller');
 const { loadStudentQuiz } = require('./selected-course.controller');

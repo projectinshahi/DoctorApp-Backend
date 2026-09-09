@@ -1,10 +1,7 @@
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 const cloudinary = require('../config/cloudinary');
 const { questionPoolWhere } = require('./quiz.controller');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 
 const VALID_LESSON_TYPES = ['video', 'text', 'quiz'];
 const VALID_ACCESS_TYPES = ['free', 'premium'];

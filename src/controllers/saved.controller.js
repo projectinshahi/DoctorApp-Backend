@@ -3,11 +3,8 @@
 // The whole point is that they survive sign-out and follow the account, so
 // everything here is keyed on the authenticated user and nothing trusts a
 // client-supplied userId.
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 
 // Lazily required: selected-course.controller does not import this file, but
 // keeping the shape identical between the tree and the bookmark list matters

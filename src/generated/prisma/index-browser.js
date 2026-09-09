@@ -135,6 +135,11 @@ exports.Prisma.UserScalarFieldEnum = {
   selectedCourseTypeId: 'selectedCourseTypeId'
 };
 
+exports.Prisma.RelationLoadStrategy = {
+  query: 'query',
+  join: 'join'
+};
+
 exports.Prisma.AdminScalarFieldEnum = {
   id: 'id',
   email: 'email',

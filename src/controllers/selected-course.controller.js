@@ -1,9 +1,6 @@
 // backend/src/controllers/selected-course.controller.js
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 const { resolveQuizQuestions, fetchEligibleQuestions } = require('./quiz.controller');
 // Required lazily: quizAttempt.controller requires this file back for its
 // gates, and a top-level require here would resolve to a half-built module.

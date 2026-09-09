@@ -3,11 +3,8 @@
 // The timer is enforced on the server. A client-side countdown is a display,
 // not a rule — anyone can pause it, so the deadline is recomputed from
 // startedAt on every write.
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 
 const VALID_OPTIONS = ['A', 'B', 'C', 'D'];
 

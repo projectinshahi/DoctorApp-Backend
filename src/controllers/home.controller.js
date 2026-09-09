@@ -4,11 +4,8 @@
 // Every count is scoped to the student's SELECTED course. A global count would
 // be meaningless — a student studying DHA does not care that the bank holds
 // 4000 MOHAP questions.
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 
 const { isLessonUnlocked } = require('./selected-course.controller');
 
@@ -88,7 +85,13 @@ async function getHome(req, res) {
       });
     }
 
-    const [courseType, activeSubs, lessons] = await Promise.all([
+    // The daily-quiz summary needs nothing from the others, so it rides in the
+    // same batch. Awaiting it separately cost a whole round trip — about 200ms
+    // to a database this far away — for no reason.
+    //
+    // Lazy require: dailyQuiz.controller has no dependency on this file today,
+    // but every other controller pair here found a cycle eventually.
+    const [courseType, activeSubs, lessons, daily] = await Promise.all([
       user.selectedCourseTypeId
         ? prisma.courseType.findUnique({
             where: { id: user.selectedCourseTypeId },
@@ -100,15 +103,11 @@ async function getHome(req, res) {
         select: { planId: true },
       }),
       courseLessons(user),
+      require('./dailyQuiz.controller').dailyQuizSummary(userId, user.selectedCourseId),
     ]);
 
     const paidPlanIds = new Set(activeSubs.map((s) => s.planId));
     const hasPaid = user.selectedCourse.accessType !== 'premium' || paidPlanIds.size > 0;
-
-    // Lazy require: dailyQuiz.controller has no dependency on this file today,
-    // but every other controller pair here found a cycle eventually.
-    const daily = await require('./dailyQuiz.controller')
-      .dailyQuizSummary(userId, user.selectedCourseId);
 
     const videoLessons = lessons.filter((l) => l.type === 'video');
     // 'text' is the enum value; note lessons are text lessons carrying a

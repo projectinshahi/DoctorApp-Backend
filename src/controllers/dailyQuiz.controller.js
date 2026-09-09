@@ -7,11 +7,8 @@
 // Reloading must not reroll. That is the rule the obvious implementation
 // breaks: `ORDER BY random() LIMIT 10` gives a student a fresh set every time
 // they pull to refresh, which is both a cheat and a confusing bug.
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 
 const DAILY_QUESTION_COUNT = 10;
 

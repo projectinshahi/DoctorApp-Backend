@@ -1,9 +1,6 @@
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 const { validateSubjectAndTopic } = require('./questionBank.controller');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 
 const VALID_QUIZ_STATUSES = ['active', 'inactive'];
 

@@ -3,11 +3,8 @@
 // The queue is the point of this file. A moderator's question is never "show
 // me all comments" — it is "what needs me?", and that is `status=reported`:
 // comments still visible to students with an unresolved report against them.
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 
 const STATUSES = ['all', 'published', 'hidden', 'reported'];
 

@@ -1,12 +1,9 @@
 
 // module.exports = authenticateStudent;
 
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 const { verifyAccessToken } = require('../services/auth.service');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 
 // How often a session's lastSeenAt is refreshed. Short enough that an idle
 // device is spotted quickly, long enough that it is not a write per request.

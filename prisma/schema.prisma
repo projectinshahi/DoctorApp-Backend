@@ -6,6 +6,10 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
+  // Turns a nested select into one SQL query with LATERAL JOINs instead of one
+  // query per relation. The question bank pulls four relations, so each list
+  // was five round trips to a database ~200ms away.
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {

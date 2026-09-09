@@ -106,8 +106,6 @@
 // module.exports = { googleSignIn };
 
 const crypto = require('crypto');
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 const {
   verifyGoogleToken,
   generateAccessToken,
@@ -116,8 +114,7 @@ const {
 } = require('../services/auth.service');
 const { revokeActiveSessions, revokeSession } = require('../services/session.service');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 
 /**
  * Whether this login may proceed, and what to say either way.

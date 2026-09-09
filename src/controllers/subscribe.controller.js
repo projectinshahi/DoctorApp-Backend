@@ -1,9 +1,6 @@
 // Add to a new file: src/controllers/subscribe.controller.js
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 
 // POST /api/users/me/subscribe
 // Body: { planId: 3 }

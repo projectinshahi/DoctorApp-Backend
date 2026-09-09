@@ -10,11 +10,8 @@
 //   3. Nesting is one level deep. A reply to a reply is re-parented onto the
 //      thread root rather than rejected, because the app naturally sends the
 //      id of whatever was tapped.
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 
 const { isLessonUnlocked } = require('./selected-course.controller');
 

@@ -3,11 +3,8 @@
 // Upload and publish are deliberately two steps. A paper that goes live the
 // moment a file lands has no point at which anyone can look at it, and a bad
 // import would be visible to students before anyone noticed.
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 
 const { parseCsv, toObject } = require('../utils/csv');
 const cloudinary = require('../config/cloudinary');

@@ -1,5 +1,3 @@
-const { PrismaClient } = require('../generated/prisma');
-const { PrismaPg } = require('@prisma/adapter-pg');
 
 const { revokeActiveSessions } = require('../services/session.service');
 const { isLessonUnlocked, lessonDone } = require('./selected-course.controller');
@@ -7,8 +5,7 @@ const { percent } = require('./home.controller');
 const { attemptStatusByLesson } = require('./quizAttempt.controller');
 const { buildLeaderboard } = require('./testAttempt.controller');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = require('../db');
 
 // 'unverified' is the signup default, 'verified' is set on first Google login,
 // 'blocked' is the admin kill switch enforced in authenticateStudent.
