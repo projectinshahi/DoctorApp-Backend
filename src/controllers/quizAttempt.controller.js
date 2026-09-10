@@ -180,7 +180,10 @@ async function startAttempt(req, res) {
       });
     }
 
-    const questions = await resolveQuizQuestions(lesson.quiz);
+    // includeAnswers, because publicQuestion now serves the key for practice.
+    // It is the gate that decides what reaches the student, so the fetch has
+    // to hand it the answers to gate.
+    const questions = await resolveQuizQuestions(lesson.quiz, { includeAnswers: true });
     if (questions.length === 0) {
       return res.status(409).json({ error: { message: 'This quiz has no questions yet' } });
     }
@@ -202,7 +205,7 @@ async function startAttempt(req, res) {
       totalQuestions: questions.length,
       totalMarks: questions.reduce((sum, q) => sum + q.marksCorrect, 0),
       answered: [],
-      questions,
+      questions: questions.map(publicQuestion),
     });
   } catch (error) {
     console.error('startAttempt error:', error);
