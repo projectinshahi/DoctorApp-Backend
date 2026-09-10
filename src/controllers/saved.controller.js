@@ -27,14 +27,22 @@ const attemptStatusByLesson = (...args) => require('./quizAttempt.controller').a
  * careful to avoid. Answering it in an attempt they never finished does not
  * count either, or the same trick works one question at a time.
  */
-async function earnedQuestionIds(userId, questionIds) {
-  if (questionIds.length === 0) return new Set();
-
+/**
+ * Every question this student has answered in a COMPLETED attempt.
+ *
+ * Deliberately not narrowed to the saved list. Narrowing would mean waiting
+ * for the saved questions to come back before this could even be asked, and a
+ * round trip to the database costs about 200ms from the server — more than the
+ * whole query, which Postgres runs in a third of a millisecond. Fetching the
+ * superset lets the two run side by side, and the caller only ever looks up
+ * ids it already holds.
+ *
+ * It is a set of ids for one student, so it stays small even after a year of
+ * heavy use.
+ */
+async function earnedQuestionIds(userId) {
   const rows = await prisma.attemptAnswer.findMany({
-    where: {
-      questionId: { in: questionIds },
-      attempt: { userId, completedAt: { not: null } },
-    },
+    where: { attempt: { userId, completedAt: { not: null } } },
     select: { questionId: true },
     distinct: ['questionId'],
   });
@@ -146,13 +154,17 @@ async function unsaveQuestion(req, res) {
 // GET /api/users/me/saved-questions
 // `count` is top level so the QBank card can read it without the list.
 async function fetchSavedQuestions(userId) {
-  const rows = await prisma.savedQuestion.findMany({
+  // Side by side: the reveal gate does not depend on which questions are
+  // saved, only on what this student has answered.
+  const [rows, earned] = await Promise.all([
+    prisma.savedQuestion.findMany({
       where: { userId },
       orderBy: { savedAt: 'desc' },
       select: { savedAt: true, question: { select: SAVED_QUESTION_SELECT } },
-    });
+    }),
+    earnedQuestionIds(userId),
+  ]);
 
-  const earned = await earnedQuestionIds(userId, rows.map((r) => r.question.id));
   return rows.map((row) => shapeSavedQuestion(row, earned));
 }
 
