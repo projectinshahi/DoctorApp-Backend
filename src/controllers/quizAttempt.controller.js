@@ -42,8 +42,28 @@ function fetchAttemptQuestions(questionIds) {
   });
 }
 
-/** Strips the answer key. The same shape the serve endpoint returns. */
+/**
+ * A question as the practice quiz serves it — WITH its answer key.
+ *
+ * This is a deliberate choice for the QBank, and only for the QBank.
+ *
+ * Practice reveals the answer the instant the student taps an option, so the
+ * key is a second away no matter what. Withholding it only bought a 780ms
+ * round trip on every single tap — three quarters of a second of the student
+ * staring at a spinner, repeated for every question, to delay information they
+ * were about to be given anyway.
+ *
+ * What it costs: a student who opens a network inspector can read ahead, and
+ * their own accuracy statistic stops meaning much. Nothing else — QBank
+ * attempts are not ranked and feed no leaderboard.
+ *
+ * What it must never apply to: Grand Tests. Those are ranked, timed, and
+ * compared between students, so testAttempt.controller.js keeps its key on the
+ * server and releases it only on submit. If a leaderboard is ever added to the
+ * QBank, this has to be reverted first.
+ */
 function publicQuestion(question) {
+  const correct = question.options.find((opt) => opt.isCorrect);
   return {
     id: question.id,
     questionText: question.questionText,
@@ -51,11 +71,15 @@ function publicQuestion(question) {
     difficulty: question.difficulty,
     marksCorrect: question.marksCorrect,
     marksIncorrect: question.marksIncorrect,
+    // The app marks the answer itself, so the reveal is instant.
+    correctOptionId: correct ? correct.id : null,
+    explanation: question.explanation,
     options: question.options.map((opt) => ({
       id: opt.id,
       optionText: opt.optionText,
       optionImageUrl: opt.optionImageUrl,
       displayOrder: opt.displayOrder,
+      isCorrect: opt.isCorrect,
     })),
   };
 }
