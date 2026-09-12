@@ -43,19 +43,49 @@ The chain is validated server-side on every write:
 A cross-course pick produces a deck nobody can see, so the API refuses it
 rather than saving something invisible.
 
-### The dropdowns — all four endpoints already exist
+### The dropdowns
 
 ```
-GET /api/courses                              → course
-GET /api/courses/:id/course-types             → course type, filtered by course
-GET /api/subjects                             → subject
-GET /api/chapters?courseTypeId=…              → then
-GET /api/chapters/:chapterId/lessons          → lesson
+GET /api/courses                                        → course
+GET /api/courses/:id/course-types                       → course type
+GET /api/admin/courses/:courseId/subjects?courseTypeId= → subject   ← use THIS
+GET /api/chapters?courseTypeId=…  then
+GET /api/chapters/:chapterId/lessons                    → lesson
 ```
+
+**Do not use `GET /api/subjects` for the subject dropdown.** It returns every
+subject in the system, unrelated to the course. The endpoint above returns the
+subjects that actually belong to this course:
+
+```json
+{ "courseId": 22, "courseTypeId": 20, "fallback": false,
+  "subjects": [ { "id": 7, "name": "Internal Med", "source": "quiz" },
+                { "id": 8, "name": "OBGYN", "source": "quiz" } ] }
+```
+
+`Course.subjects` is a real relation but it is empty on the live data, so it
+unions that with the subjects behind the course's quizzes — whichever link has
+been made, the subject appears.
+
+**`fallback: true`** means nothing links this course to any subject yet, so
+every subject is offered instead. Show a quiet hint under the dropdown when it
+is true — otherwise the list looks arbitrary and the admin cannot tell why.
 
 Filter each dropdown by the one above it, and clear the ones below when a
 parent changes — otherwise the form keeps a stale lesson from the previous
 course and the save 400s.
+
+### The lesson has to match the exam, not just the course
+
+DHA and MOHAP both sit under the same course, so a lesson from one and a course
+type from the other would save a deck nobody can ever see. That is now refused:
+
+```json
+400 { "error": { "message": "That lesson belongs to a different exam under this course" } }
+```
+
+Which is why clearing the lesson dropdown when the course **type** changes
+matters, not only when the course changes.
 
 ---
 
@@ -175,7 +205,10 @@ Either may be empty; not both. One Save that PUTs the whole array.
 ## Constraints
 
 - Only `courseId` is required. Do not force the other three dropdowns.
-- Clear child dropdowns when a parent changes.
+- Clear child dropdowns when a parent changes — including when the course
+  *type* changes, not only the course.
+- Subject dropdown comes from `/api/admin/courses/:id/subjects`, never
+  `/api/subjects`.
 - `PUT /cards` sends the entire deck, never a delta.
 - A card needs an image or a note; the API refuses neither.
 - Reuse the existing upload endpoints.

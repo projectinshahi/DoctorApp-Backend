@@ -73,13 +73,26 @@ async function readScope(body, current = {}) {
     if (!Number.isInteger(id)) return { error: 'lessonId must be an integer or null' };
     const lesson = await prisma.lesson.findUnique({
       where: { id },
-      select: { id: true, chapter: { select: { courseId: true, courseType: { select: { courseId: true } } } } },
+      select: {
+        id: true,
+        chapter: { select: { courseId: true, courseTypeId: true, courseType: { select: { courseId: true } } } },
+      },
     });
     if (!lesson) return { error: 'Lesson not found' };
     // A chapter hangs off a course directly or off a course type; both are in
     // use, so either path counts.
     const lessonCourseId = lesson.chapter.courseId ?? lesson.chapter.courseType?.courseId ?? null;
     if (lessonCourseId !== courseId) return { error: 'That lesson belongs to a different course' };
+
+    // The course type has to agree too. Both DHA and MOHAP sit under the same
+    // course, so checking only the course would let a DHA-scoped deck be
+    // pinned to a MOHAP lesson — a set the student query can never match,
+    // saved without complaint.
+    if (scope.courseTypeId !== null
+        && lesson.chapter.courseTypeId !== null
+        && lesson.chapter.courseTypeId !== scope.courseTypeId) {
+      return { error: 'That lesson belongs to a different exam under this course' };
+    }
     scope.lessonId = id;
   }
 
@@ -441,10 +454,91 @@ async function getStudentRapidRecall(req, res) {
 }
 
 
+
+/**
+ * The subjects an admin can file a Rapid Recall under for a given course.
+ *
+ * Course.subjects is a real relation but it is empty on the live data, so a
+ * dropdown built on it alone shows nothing and the form looks broken. The
+ * subjects that actually matter to a course are the ones behind its quizzes,
+ * so both are unioned: whichever link an admin has bothered to make, the
+ * subject appears.
+ *
+ * Falls back to every subject when a course has neither, because an empty
+ * dropdown is worse than a long one — it stops the admin from filing anything
+ * at all.
+ */
+async function listCourseSubjects(req, res) {
+  try {
+    const courseId = Number(req.params.courseId);
+    if (!Number.isInteger(courseId)) {
+      return res.status(400).json({ error: { message: 'Invalid course id' } });
+    }
+
+    let courseTypeId = null;
+    if (req.query.courseTypeId !== undefined && req.query.courseTypeId !== '') {
+      courseTypeId = Number(req.query.courseTypeId);
+      if (!Number.isInteger(courseTypeId)) {
+        return res.status(400).json({ error: { message: 'courseTypeId must be an integer' } });
+      }
+    }
+
+    const course = await prisma.course.findUnique({
+      where: { id: courseId },
+      select: { id: true, subjects: { select: { id: true, name: true } } },
+    });
+    if (!course) return res.status(404).json({ error: { message: 'Course not found' } });
+
+    const quizLessons = await prisma.lesson.findMany({
+      where: {
+        type: 'quiz',
+        quizId: { not: null },
+        chapter: courseTypeId !== null
+          ? { courseTypeId }
+          : { OR: [{ courseId }, { courseType: { courseId } }] },
+      },
+      select: { quiz: { select: { subject: { select: { id: true, name: true } } } } },
+    });
+
+    const byId = new Map();
+    for (const s of course.subjects) byId.set(s.id, { ...s, source: 'course' });
+    for (const l of quizLessons) {
+      const subject = l.quiz?.subject;
+      if (subject && !byId.has(subject.id)) byId.set(subject.id, { ...subject, source: 'quiz' });
+    }
+
+    let subjects = [...byId.values()].sort((a, b) => a.name.localeCompare(b.name));
+    let fallback = false;
+    if (subjects.length === 0) {
+      subjects = (await prisma.subject.findMany({
+        where: { isActive: true },
+        orderBy: [{ displayOrder: 'asc' }, { name: 'asc' }],
+        select: { id: true, name: true },
+      })).map((s) => ({ ...s, source: 'all' }));
+      fallback = true;
+    }
+
+    return res.status(200).json({
+      courseId,
+      courseTypeId,
+      // True means nothing links this course to a subject yet, so every
+      // subject is offered. Worth surfacing in the form as a hint rather than
+      // leaving the admin to wonder why the list looks generic.
+      fallback,
+      subjects,
+    });
+  } catch (error) {
+    console.error('listCourseSubjects error:', error);
+    return res.status(500).json({ error: { message: 'Failed to load subjects for this course' } });
+  }
+}
+
+
 module.exports = {
   createRapidRecall, listRapidRecalls, getRapidRecall,
   updateRapidRecall, setRapidRecallCards, deleteRapidRecall,
   listStudentRapidRecalls, getStudentRapidRecall,
+  listCourseSubjects,
   // Exported for rapidRecall.test.js — pure, no DB.
   cardProblems,
 };
