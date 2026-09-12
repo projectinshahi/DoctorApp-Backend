@@ -34,7 +34,8 @@ async function createCourse(req, res) {
       accessType,
       displayOrder,
       status,
-      courseTypes, // NEW: optional array, e.g. [{ title: "DHA Exam", ... }, { title: "HAD Exam", ... }]
+      courseTypes, // optional array, e.g. [{ title: "DHA Exam", ... }, { title: "HAD Exam", ... }]
+      plans,       // optional array of pricing cards, created with the course
     } = req.body;
 
     if (!title || typeof title !== 'string' || title.trim().length === 0) {
@@ -89,6 +90,26 @@ async function createCourse(req, res) {
       }));
     }
 
+    // Plans can be written with the course, so setting up a paid course is one
+    // action rather than "create it, then remember to add the pricing".
+    // Validated by the same reader the plan editor uses, so a plan created here
+    // can never be in a shape that editor would reject.
+    let planCreates = [];
+    if (plans !== undefined) {
+      if (!Array.isArray(plans)) {
+        return res.status(400).json({ error: { message: 'plans must be an array' } });
+      }
+      const { readPlanFields } = require('./plan.controller');
+      for (let i = 0; i < plans.length; i += 1) {
+        const { data, error } = readPlanFields(plans[i] ?? {});
+        if (error) {
+          return res.status(400).json({ error: { message: `plans[${i}]: ${error}` } });
+        }
+        // Card order follows the order they were sent unless one is given.
+        planCreates.push({ displayOrder: i, ...data });
+      }
+    }
+
     const course = await prisma.course.create({
       data: {
         title: title.trim(),
@@ -102,15 +123,20 @@ async function createCourse(req, res) {
         courseTypes: {
           create: courseTypeCreates,
         },
+        plans: {
+          create: planCreates,
+        },
       },
       include: {
-        courseTypes: {
-          orderBy: { displayOrder: 'asc' },
-        },
+        courseTypes: { orderBy: { displayOrder: 'asc' } },
+        plans: { orderBy: { displayOrder: 'asc' } },
       },
     });
 
-    return res.status(201).json({ course });
+    const { shapePlan } = require('./plan.controller');
+    return res.status(201).json({
+      course: { ...course, plans: course.plans.map(shapePlan) },
+    });
   } catch (error) {
     console.error('Create course error:', error);
     return res.status(500).json({

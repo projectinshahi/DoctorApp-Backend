@@ -253,8 +253,14 @@ exports.Prisma.PlanScalarFieldEnum = {
   title: 'title',
   description: 'description',
   price: 'price',
+  currency: 'currency',
   durationDays: 'durationDays',
+  features: 'features',
+  entitlements: 'entitlements',
+  durationLabel: 'durationLabel',
+  accentColor: 'accentColor',
   isActive: 'isActive',
+  displayOrder: 'displayOrder',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

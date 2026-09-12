@@ -13,11 +13,17 @@ const {
   updateCourseType,
   deleteCourseType,
 } = require('../controllers/course.controller');
+const { getPricing } = require('../controllers/plan.controller');
 
 const authenticateAdmin = require('../middleware/authenticateAdmin');
 
 router.post('/', authenticateAdmin, createCourse);
 router.get('/', getCourses);
+// The whole pricing page — every published course with its live plans — in
+// one call. Must sit above /:id, or Express reads "plans" as a course id and
+// answers 401 from the admin-guarded route instead.
+router.get('/plans', getPricing); // public
+
 router.get('/:id', authenticateAdmin, getCourseDetails);
 
 router.get('/:id/course-types', getPublicCourseTypes);

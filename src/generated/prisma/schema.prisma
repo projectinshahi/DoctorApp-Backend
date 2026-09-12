@@ -273,13 +273,36 @@ model LessonPlan {
 }
 
 model Plan {
-  id           Int      @id @default(autoincrement())
+  id           Int     @id @default(autoincrement())
   courseId     Int
-  title        String // e.g. "3-month access"
+  title        String // e.g. "Plan B"
   description  String?
-  price        Float // e.g. 199.00
-  durationDays Int // e.g. 90
+  price        Float // e.g. 85.00
+  // Prices are quoted in USD on the site. Stored per plan so a regional price
+  // list does not need a second table.
+  currency     String  @default("USD")
+  durationDays Int // e.g. 45
+
+  // What the card lists under the price, in the admin's own words —
+  // "MCQ Bank", "Live Classes with Faculty", "Everything in Plan C".
+  //
+  // Deliberately separate from `entitlements`: this is the sales copy and it
+  // gets reworded. If access were read from it, renaming a bullet would revoke
+  // a feature someone paid for.
+  features String[] @default([])
+
+  // What the plan actually unlocks, in codes the server checks:
+  // mcq · mock · rapid_recall · video_lecture · live_class · ai_patient
+  entitlements String[] @default([])
+
+  // "3 months access" reads better than the 90 days it is stored as. Null
+  // means derive it from durationDays.
+  durationLabel String?
+  // The card's tint on the pricing page, as #RRGGBB. Null means the default.
+  accentColor   String?
+
   isActive     Boolean  @default(true) // admin can disable a plan without deleting it
+  displayOrder Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -287,7 +310,7 @@ model Plan {
   subscriptions Subscription[]
   lessonPlans   LessonPlan[]
 
-  @@index([courseId])
+  @@index([courseId, isActive, displayOrder])
   @@map("plans")
 }
 

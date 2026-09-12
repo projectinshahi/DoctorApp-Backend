@@ -17819,6 +17819,7 @@ export namespace Prisma {
     courseId: number | null
     price: number | null
     durationDays: number | null
+    displayOrder: number | null
   }
 
   export type PlanSumAggregateOutputType = {
@@ -17826,6 +17827,7 @@ export namespace Prisma {
     courseId: number | null
     price: number | null
     durationDays: number | null
+    displayOrder: number | null
   }
 
   export type PlanMinAggregateOutputType = {
@@ -17834,8 +17836,12 @@ export namespace Prisma {
     title: string | null
     description: string | null
     price: number | null
+    currency: string | null
     durationDays: number | null
+    durationLabel: string | null
+    accentColor: string | null
     isActive: boolean | null
+    displayOrder: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -17846,8 +17852,12 @@ export namespace Prisma {
     title: string | null
     description: string | null
     price: number | null
+    currency: string | null
     durationDays: number | null
+    durationLabel: string | null
+    accentColor: string | null
     isActive: boolean | null
+    displayOrder: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -17858,8 +17868,14 @@ export namespace Prisma {
     title: number
     description: number
     price: number
+    currency: number
     durationDays: number
+    features: number
+    entitlements: number
+    durationLabel: number
+    accentColor: number
     isActive: number
+    displayOrder: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -17871,6 +17887,7 @@ export namespace Prisma {
     courseId?: true
     price?: true
     durationDays?: true
+    displayOrder?: true
   }
 
   export type PlanSumAggregateInputType = {
@@ -17878,6 +17895,7 @@ export namespace Prisma {
     courseId?: true
     price?: true
     durationDays?: true
+    displayOrder?: true
   }
 
   export type PlanMinAggregateInputType = {
@@ -17886,8 +17904,12 @@ export namespace Prisma {
     title?: true
     description?: true
     price?: true
+    currency?: true
     durationDays?: true
+    durationLabel?: true
+    accentColor?: true
     isActive?: true
+    displayOrder?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -17898,8 +17920,12 @@ export namespace Prisma {
     title?: true
     description?: true
     price?: true
+    currency?: true
     durationDays?: true
+    durationLabel?: true
+    accentColor?: true
     isActive?: true
+    displayOrder?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -17910,8 +17936,14 @@ export namespace Prisma {
     title?: true
     description?: true
     price?: true
+    currency?: true
     durationDays?: true
+    features?: true
+    entitlements?: true
+    durationLabel?: true
+    accentColor?: true
     isActive?: true
+    displayOrder?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -18009,8 +18041,14 @@ export namespace Prisma {
     title: string
     description: string | null
     price: number
+    currency: string
     durationDays: number
+    features: string[]
+    entitlements: string[]
+    durationLabel: string | null
+    accentColor: string | null
     isActive: boolean
+    displayOrder: number
     createdAt: Date
     updatedAt: Date
     _count: PlanCountAggregateOutputType | null
@@ -18040,8 +18078,14 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     price?: boolean
+    currency?: boolean
     durationDays?: boolean
+    features?: boolean
+    entitlements?: boolean
+    durationLabel?: boolean
+    accentColor?: boolean
     isActive?: boolean
+    displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
@@ -18056,8 +18100,14 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     price?: boolean
+    currency?: boolean
     durationDays?: boolean
+    features?: boolean
+    entitlements?: boolean
+    durationLabel?: boolean
+    accentColor?: boolean
     isActive?: boolean
+    displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
@@ -18069,8 +18119,14 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     price?: boolean
+    currency?: boolean
     durationDays?: boolean
+    features?: boolean
+    entitlements?: boolean
+    durationLabel?: boolean
+    accentColor?: boolean
     isActive?: boolean
+    displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
@@ -18082,13 +18138,19 @@ export namespace Prisma {
     title?: boolean
     description?: boolean
     price?: boolean
+    currency?: boolean
     durationDays?: boolean
+    features?: boolean
+    entitlements?: boolean
+    durationLabel?: boolean
+    accentColor?: boolean
     isActive?: boolean
+    displayOrder?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type PlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "title" | "description" | "price" | "durationDays" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["plan"]>
+  export type PlanOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "title" | "description" | "price" | "currency" | "durationDays" | "features" | "entitlements" | "durationLabel" | "accentColor" | "isActive" | "displayOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["plan"]>
   export type PlanInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     subscriptions?: boolean | Plan$subscriptionsArgs<ExtArgs>
@@ -18115,8 +18177,14 @@ export namespace Prisma {
       title: string
       description: string | null
       price: number
+      currency: string
       durationDays: number
+      features: string[]
+      entitlements: string[]
+      durationLabel: string | null
+      accentColor: string | null
       isActive: boolean
+      displayOrder: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["plan"]>
@@ -18550,8 +18618,14 @@ export namespace Prisma {
     readonly title: FieldRef<"Plan", 'String'>
     readonly description: FieldRef<"Plan", 'String'>
     readonly price: FieldRef<"Plan", 'Float'>
+    readonly currency: FieldRef<"Plan", 'String'>
     readonly durationDays: FieldRef<"Plan", 'Int'>
+    readonly features: FieldRef<"Plan", 'String[]'>
+    readonly entitlements: FieldRef<"Plan", 'String[]'>
+    readonly durationLabel: FieldRef<"Plan", 'String'>
+    readonly accentColor: FieldRef<"Plan", 'String'>
     readonly isActive: FieldRef<"Plan", 'Boolean'>
+    readonly displayOrder: FieldRef<"Plan", 'Int'>
     readonly createdAt: FieldRef<"Plan", 'DateTime'>
     readonly updatedAt: FieldRef<"Plan", 'DateTime'>
   }
@@ -46332,8 +46406,14 @@ export namespace Prisma {
     title: 'title',
     description: 'description',
     price: 'price',
+    currency: 'currency',
     durationDays: 'durationDays',
+    features: 'features',
+    entitlements: 'entitlements',
+    durationLabel: 'durationLabel',
+    accentColor: 'accentColor',
     isActive: 'isActive',
+    displayOrder: 'displayOrder',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -47748,8 +47828,14 @@ export namespace Prisma {
     title?: StringFilter<"Plan"> | string
     description?: StringNullableFilter<"Plan"> | string | null
     price?: FloatFilter<"Plan"> | number
+    currency?: StringFilter<"Plan"> | string
     durationDays?: IntFilter<"Plan"> | number
+    features?: StringNullableListFilter<"Plan">
+    entitlements?: StringNullableListFilter<"Plan">
+    durationLabel?: StringNullableFilter<"Plan"> | string | null
+    accentColor?: StringNullableFilter<"Plan"> | string | null
     isActive?: BoolFilter<"Plan"> | boolean
+    displayOrder?: IntFilter<"Plan"> | number
     createdAt?: DateTimeFilter<"Plan"> | Date | string
     updatedAt?: DateTimeFilter<"Plan"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
@@ -47763,8 +47849,14 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     price?: SortOrder
+    currency?: SortOrder
     durationDays?: SortOrder
+    features?: SortOrder
+    entitlements?: SortOrder
+    durationLabel?: SortOrderInput | SortOrder
+    accentColor?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     course?: CourseOrderByWithRelationInput
@@ -47781,8 +47873,14 @@ export namespace Prisma {
     title?: StringFilter<"Plan"> | string
     description?: StringNullableFilter<"Plan"> | string | null
     price?: FloatFilter<"Plan"> | number
+    currency?: StringFilter<"Plan"> | string
     durationDays?: IntFilter<"Plan"> | number
+    features?: StringNullableListFilter<"Plan">
+    entitlements?: StringNullableListFilter<"Plan">
+    durationLabel?: StringNullableFilter<"Plan"> | string | null
+    accentColor?: StringNullableFilter<"Plan"> | string | null
     isActive?: BoolFilter<"Plan"> | boolean
+    displayOrder?: IntFilter<"Plan"> | number
     createdAt?: DateTimeFilter<"Plan"> | Date | string
     updatedAt?: DateTimeFilter<"Plan"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
@@ -47796,8 +47894,14 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     price?: SortOrder
+    currency?: SortOrder
     durationDays?: SortOrder
+    features?: SortOrder
+    entitlements?: SortOrder
+    durationLabel?: SortOrderInput | SortOrder
+    accentColor?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: PlanCountOrderByAggregateInput
@@ -47816,8 +47920,14 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"Plan"> | string
     description?: StringNullableWithAggregatesFilter<"Plan"> | string | null
     price?: FloatWithAggregatesFilter<"Plan"> | number
+    currency?: StringWithAggregatesFilter<"Plan"> | string
     durationDays?: IntWithAggregatesFilter<"Plan"> | number
+    features?: StringNullableListFilter<"Plan">
+    entitlements?: StringNullableListFilter<"Plan">
+    durationLabel?: StringNullableWithAggregatesFilter<"Plan"> | string | null
+    accentColor?: StringNullableWithAggregatesFilter<"Plan"> | string | null
     isActive?: BoolWithAggregatesFilter<"Plan"> | boolean
+    displayOrder?: IntWithAggregatesFilter<"Plan"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Plan"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Plan"> | Date | string
   }
@@ -50480,8 +50590,14 @@ export namespace Prisma {
     title: string
     description?: string | null
     price: number
+    currency?: string
     durationDays: number
+    features?: PlanCreatefeaturesInput | string[]
+    entitlements?: PlanCreateentitlementsInput | string[]
+    durationLabel?: string | null
+    accentColor?: string | null
     isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutPlansInput
@@ -50495,8 +50611,14 @@ export namespace Prisma {
     title: string
     description?: string | null
     price: number
+    currency?: string
     durationDays: number
+    features?: PlanCreatefeaturesInput | string[]
+    entitlements?: PlanCreateentitlementsInput | string[]
+    durationLabel?: string | null
+    accentColor?: string | null
     isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutPlanInput
@@ -50507,8 +50629,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
     durationDays?: IntFieldUpdateOperationsInput | number
+    features?: PlanUpdatefeaturesInput | string[]
+    entitlements?: PlanUpdateentitlementsInput | string[]
+    durationLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    accentColor?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutPlansNestedInput
@@ -50522,8 +50650,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
     durationDays?: IntFieldUpdateOperationsInput | number
+    features?: PlanUpdatefeaturesInput | string[]
+    entitlements?: PlanUpdateentitlementsInput | string[]
+    durationLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    accentColor?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutPlanNestedInput
@@ -50536,8 +50670,14 @@ export namespace Prisma {
     title: string
     description?: string | null
     price: number
+    currency?: string
     durationDays: number
+    features?: PlanCreatefeaturesInput | string[]
+    entitlements?: PlanCreateentitlementsInput | string[]
+    durationLabel?: string | null
+    accentColor?: string | null
     isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -50546,8 +50686,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
     durationDays?: IntFieldUpdateOperationsInput | number
+    features?: PlanUpdatefeaturesInput | string[]
+    entitlements?: PlanUpdateentitlementsInput | string[]
+    durationLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    accentColor?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -50558,8 +50704,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
     durationDays?: IntFieldUpdateOperationsInput | number
+    features?: PlanUpdatefeaturesInput | string[]
+    entitlements?: PlanUpdateentitlementsInput | string[]
+    durationLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    accentColor?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -53209,14 +53361,28 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type PlanCountOrderByAggregateInput = {
     id?: SortOrder
     courseId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     price?: SortOrder
+    currency?: SortOrder
     durationDays?: SortOrder
+    features?: SortOrder
+    entitlements?: SortOrder
+    durationLabel?: SortOrder
+    accentColor?: SortOrder
     isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -53226,6 +53392,7 @@ export namespace Prisma {
     courseId?: SortOrder
     price?: SortOrder
     durationDays?: SortOrder
+    displayOrder?: SortOrder
   }
 
   export type PlanMaxOrderByAggregateInput = {
@@ -53234,8 +53401,12 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrder
     price?: SortOrder
+    currency?: SortOrder
     durationDays?: SortOrder
+    durationLabel?: SortOrder
+    accentColor?: SortOrder
     isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -53246,8 +53417,12 @@ export namespace Prisma {
     title?: SortOrder
     description?: SortOrder
     price?: SortOrder
+    currency?: SortOrder
     durationDays?: SortOrder
+    durationLabel?: SortOrder
+    accentColor?: SortOrder
     isActive?: SortOrder
+    displayOrder?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -53257,6 +53432,7 @@ export namespace Prisma {
     courseId?: SortOrder
     price?: SortOrder
     durationDays?: SortOrder
+    displayOrder?: SortOrder
   }
 
   export type FloatWithAggregatesFilter<$PrismaModel = never> = {
@@ -56417,6 +56593,14 @@ export namespace Prisma {
     update?: XOR<XOR<PlanUpdateToOneWithWhereWithoutLessonPlansInput, PlanUpdateWithoutLessonPlansInput>, PlanUncheckedUpdateWithoutLessonPlansInput>
   }
 
+  export type PlanCreatefeaturesInput = {
+    set: string[]
+  }
+
+  export type PlanCreateentitlementsInput = {
+    set: string[]
+  }
+
   export type CourseCreateNestedOneWithoutPlansInput = {
     create?: XOR<CourseCreateWithoutPlansInput, CourseUncheckedCreateWithoutPlansInput>
     connectOrCreate?: CourseCreateOrConnectWithoutPlansInput
@@ -56457,6 +56641,16 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type PlanUpdatefeaturesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type PlanUpdateentitlementsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type CourseUpdateOneRequiredWithoutPlansNestedInput = {
@@ -59979,8 +60173,14 @@ export namespace Prisma {
     title: string
     description?: string | null
     price: number
+    currency?: string
     durationDays: number
+    features?: PlanCreatefeaturesInput | string[]
+    entitlements?: PlanCreateentitlementsInput | string[]
+    durationLabel?: string | null
+    accentColor?: string | null
     isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     subscriptions?: SubscriptionCreateNestedManyWithoutPlanInput
@@ -59992,8 +60192,14 @@ export namespace Prisma {
     title: string
     description?: string | null
     price: number
+    currency?: string
     durationDays: number
+    features?: PlanCreatefeaturesInput | string[]
+    entitlements?: PlanCreateentitlementsInput | string[]
+    durationLabel?: string | null
+    accentColor?: string | null
     isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutPlanInput
@@ -60339,8 +60545,14 @@ export namespace Prisma {
     title?: StringFilter<"Plan"> | string
     description?: StringNullableFilter<"Plan"> | string | null
     price?: FloatFilter<"Plan"> | number
+    currency?: StringFilter<"Plan"> | string
     durationDays?: IntFilter<"Plan"> | number
+    features?: StringNullableListFilter<"Plan">
+    entitlements?: StringNullableListFilter<"Plan">
+    durationLabel?: StringNullableFilter<"Plan"> | string | null
+    accentColor?: StringNullableFilter<"Plan"> | string | null
     isActive?: BoolFilter<"Plan"> | boolean
+    displayOrder?: IntFilter<"Plan"> | number
     createdAt?: DateTimeFilter<"Plan"> | Date | string
     updatedAt?: DateTimeFilter<"Plan"> | Date | string
   }
@@ -61486,8 +61698,14 @@ export namespace Prisma {
     title: string
     description?: string | null
     price: number
+    currency?: string
     durationDays: number
+    features?: PlanCreatefeaturesInput | string[]
+    entitlements?: PlanCreateentitlementsInput | string[]
+    durationLabel?: string | null
+    accentColor?: string | null
     isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutPlansInput
@@ -61500,8 +61718,14 @@ export namespace Prisma {
     title: string
     description?: string | null
     price: number
+    currency?: string
     durationDays: number
+    features?: PlanCreatefeaturesInput | string[]
+    entitlements?: PlanCreateentitlementsInput | string[]
+    durationLabel?: string | null
+    accentColor?: string | null
     isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutPlanInput
@@ -61595,8 +61819,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
     durationDays?: IntFieldUpdateOperationsInput | number
+    features?: PlanUpdatefeaturesInput | string[]
+    entitlements?: PlanUpdateentitlementsInput | string[]
+    durationLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    accentColor?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutPlansNestedInput
@@ -61609,8 +61839,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
     durationDays?: IntFieldUpdateOperationsInput | number
+    features?: PlanUpdatefeaturesInput | string[]
+    entitlements?: PlanUpdateentitlementsInput | string[]
+    durationLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    accentColor?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutPlanNestedInput
@@ -61907,8 +62143,14 @@ export namespace Prisma {
     title: string
     description?: string | null
     price: number
+    currency?: string
     durationDays: number
+    features?: PlanCreatefeaturesInput | string[]
+    entitlements?: PlanCreateentitlementsInput | string[]
+    durationLabel?: string | null
+    accentColor?: string | null
     isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutPlansInput
@@ -61921,8 +62163,14 @@ export namespace Prisma {
     title: string
     description?: string | null
     price: number
+    currency?: string
     durationDays: number
+    features?: PlanCreatefeaturesInput | string[]
+    entitlements?: PlanCreateentitlementsInput | string[]
+    durationLabel?: string | null
+    accentColor?: string | null
     isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutPlanInput
@@ -62062,8 +62310,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
     durationDays?: IntFieldUpdateOperationsInput | number
+    features?: PlanUpdatefeaturesInput | string[]
+    entitlements?: PlanUpdateentitlementsInput | string[]
+    durationLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    accentColor?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutPlansNestedInput
@@ -62076,8 +62330,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
     durationDays?: IntFieldUpdateOperationsInput | number
+    features?: PlanUpdatefeaturesInput | string[]
+    entitlements?: PlanUpdateentitlementsInput | string[]
+    durationLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    accentColor?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lessonPlans?: LessonPlanUncheckedUpdateManyWithoutPlanNestedInput
@@ -67432,8 +67692,14 @@ export namespace Prisma {
     title: string
     description?: string | null
     price: number
+    currency?: string
     durationDays: number
+    features?: PlanCreatefeaturesInput | string[]
+    entitlements?: PlanCreateentitlementsInput | string[]
+    durationLabel?: string | null
+    accentColor?: string | null
     isActive?: boolean
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -67656,8 +67922,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
     durationDays?: IntFieldUpdateOperationsInput | number
+    features?: PlanUpdatefeaturesInput | string[]
+    entitlements?: PlanUpdateentitlementsInput | string[]
+    durationLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    accentColor?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subscriptions?: SubscriptionUpdateManyWithoutPlanNestedInput
@@ -67669,8 +67941,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
     durationDays?: IntFieldUpdateOperationsInput | number
+    features?: PlanUpdatefeaturesInput | string[]
+    entitlements?: PlanUpdateentitlementsInput | string[]
+    durationLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    accentColor?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutPlanNestedInput
@@ -67682,8 +67960,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
     durationDays?: IntFieldUpdateOperationsInput | number
+    features?: PlanUpdatefeaturesInput | string[]
+    entitlements?: PlanUpdateentitlementsInput | string[]
+    durationLabel?: NullableStringFieldUpdateOperationsInput | string | null
+    accentColor?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
