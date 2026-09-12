@@ -90,12 +90,17 @@ async function readableLesson(userId, lessonId) {
   }
 
   const courseId = lesson.chapter.courseId ?? lesson.chapter.courseType?.courseId ?? null;
-  const activeSubs = courseId === null ? [] : await prisma.subscription.findMany({
-    where: { userId, courseId, isActive: true, endDate: { gte: new Date() } },
-    select: { planId: true },
-  });
+  const [activeSubs, course] = await Promise.all([
+    courseId === null ? [] : prisma.subscription.findMany({
+      where: { userId, courseId, isActive: true, endDate: { gte: new Date() } },
+      select: { planId: true },
+    }),
+    courseId === null ? null : prisma.course.findUnique({
+      where: { id: courseId }, select: { accessType: true },
+    }),
+  ]);
 
-  if (!isLessonUnlocked(lesson, new Set(activeSubs.map((s) => s.planId)))) {
+  if (!isLessonUnlocked(lesson, new Set(activeSubs.map((s) => s.planId)), course?.accessType)) {
     return { error: { status: 403, message: 'This lesson is locked. Subscribe to join the discussion.' } };
   }
   return { lesson };

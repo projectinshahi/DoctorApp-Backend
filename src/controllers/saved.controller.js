@@ -265,7 +265,12 @@ async function fetchSavedLessons(userId, type = null) {
     const quizLessonIds = rows.filter((r) => r.lesson.type === 'quiz').map((r) => r.lesson.id);
 
     const [user, progressRows, attemptByLesson] = await Promise.all([
-      prisma.user.findUnique({ where: { id: userId }, select: { selectedCourseId: true } }),
+      prisma.user.findUnique({
+        where: { id: userId },
+        // accessType: a premium course locks its lessons, so the saved list
+        // has to lock them too or a bookmark becomes a way past the paywall.
+        select: { selectedCourseId: true, selectedCourse: { select: { accessType: true } } },
+      }),
       prisma.lessonProgress.findMany({
         where: { userId, lessonId: { in: lessonIds } },
         select: { lessonId: true, completed: true, lastPositionSeconds: true },
@@ -285,7 +290,7 @@ async function fetchSavedLessons(userId, type = null) {
   return rows.map((row) => {
         const { lessonPlans = [], ...lesson } = row.lesson;
         const plans = lessonPlans.map((lp) => lp.plan);
-        const unlocked = isLessonUnlocked(row.lesson, paidPlanIds);
+        const unlocked = isLessonUnlocked(row.lesson, paidPlanIds, user?.selectedCourse?.accessType);
         const progress = progressByLesson.get(lesson.id);
         const attempt = lesson.type === 'quiz' ? attemptByLesson.get(lesson.id) ?? null : null;
 

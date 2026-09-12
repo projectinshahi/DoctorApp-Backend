@@ -41,6 +41,40 @@ assert(!isLessonUnlocked(rawPlan5, bought9));
 // A premium lesson inside a free course still needs payment.
 assert(!isLessonUnlocked({ accessType: 'premium', isFreePreview: false, planIds: [] }, none));
 
+
+// ── a premium COURSE locks its lessons ──
+//
+// Before this, marking a course premium changed a banner and nothing else:
+// every lesson had to be marked premium by hand, and one missed lesson gave
+// the whole course away.
+const plainLesson = { accessType: 'free', isFreePreview: false, planIds: [] };
+
+assert(isLessonUnlocked(plainLesson, none, 'free'),
+  'a free lesson in a free course opens');
+assert(!isLessonUnlocked(plainLesson, none, 'premium'),
+  'the same lesson in a premium course is locked');
+assert(isLessonUnlocked(plainLesson, bought9, 'premium'),
+  'and opens once anything is bought for that course');
+
+// A free preview is the only way to sample a paid course, so it opens
+// whatever the course says.
+assert(isLessonUnlocked({ accessType: 'free', isFreePreview: true, planIds: [] }, none, 'premium'),
+  'a free preview must open inside a premium course');
+assert(isLessonUnlocked({ accessType: 'premium', isFreePreview: true, planIds: [] }, none, 'premium'),
+  'a premium lesson flagged as preview still opens');
+
+// A plan-gated lesson keeps its own rule inside a premium course — the course
+// widens what is locked, it does not widen what unlocks it.
+assert(!isLessonUnlocked(plan5, bought9, 'premium'),
+  'the wrong plan still fails inside a premium course');
+assert(isLessonUnlocked(plan5, bought5, 'premium'));
+
+// Omitting the course argument behaves exactly as before, so every caller
+// that has not been updated is unaffected rather than silently locking.
+assert(isLessonUnlocked(plainLesson, none));
+assert(isLessonUnlocked(plainLesson, none, null));
+assert(isLessonUnlocked(plainLesson, none, undefined));
+
 console.log('lesson lock rules OK');
 
 // --- Progress rollup -------------------------------------------------------

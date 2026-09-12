@@ -305,8 +305,9 @@ async function getStudentById(req, res) {
           planIds: plans.map((p) => p.id),
           // What this specific student sees. Draft lessons never reach them,
           // however their subscription looks.
-          visibleToStudent: l.status === 'published' && isLessonUnlocked(l, paidPlanIds),
-          unlockedByPlan: isLessonUnlocked(l, paidPlanIds),
+          visibleToStudent: l.status === 'published'
+            && isLessonUnlocked(l, paidPlanIds, user.selectedCourse?.accessType),
+          unlockedByPlan: isLessonUnlocked(l, paidPlanIds, user.selectedCourse?.accessType),
           completed: lessonDone(l, prog, attempt),
           lastPositionSeconds: prog?.lastPositionSeconds ?? 0,
           lastActivityAt: prog?.updatedAt ?? attempt?.startedAt ?? null,

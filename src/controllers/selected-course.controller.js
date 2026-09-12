@@ -24,8 +24,19 @@ function lessonDone(lesson, progress, attempt) {
 // Free lessons and free previews are always open. A premium lesson tied to
 // plans needs *one of* them; one with no plans accepts any active subscription
 // for the course. Exported so the decision table is testable.
-function isLessonUnlocked(lesson, paidPlanIds) {
-  if (lesson.accessType !== 'premium' || lesson.isFreePreview) return true;
+/**
+ * Whether this student may open this lesson.
+ *
+ * `courseAccessType` makes a premium COURSE lock its lessons. Without it,
+ * marking a course premium changed a banner and nothing else — every lesson
+ * had to be marked premium by hand, and one missed lesson silently gave the
+ * whole thing away. A free preview still opens either way, which is the only
+ * way to sample a paid course.
+ */
+function isLessonUnlocked(lesson, paidPlanIds, courseAccessType = null) {
+  if (lesson.isFreePreview) return true;
+  const premium = lesson.accessType === 'premium' || courseAccessType === 'premium';
+  if (!premium) return true;
   const planIds = lessonPlanIds(lesson);
   if (planIds.length > 0) {
     return planIds.some((id) => paidPlanIds.has(id));
@@ -147,7 +158,7 @@ async function getSelectedCourseContent(req, res) {
 
     const shaped = chapters.map((ch) => {
       const lessons = ch.lessons.map((l) => {
-        const unlocked = isLessonUnlocked(l, paidPlanIds);
+        const unlocked = isLessonUnlocked(l, paidPlanIds, user.selectedCourse?.accessType);
         const { lessonPlans = [], ...rest } = l;
         const plans = lessonPlans.map((lp) => lp.plan);
         // null, not omitted: the app can tell "no attempt yet" from "not a
@@ -274,7 +285,7 @@ async function getStudentLesson(req, res) {
     });
     const paidPlanIds = new Set(activeSubs.map((s) => s.planId));
 
-    const unlocked = isLessonUnlocked(lesson, paidPlanIds);
+    const unlocked = isLessonUnlocked(lesson, paidPlanIds, user.selectedCourse?.accessType);
     const { status, lessonPlans = [], ...rest } = lesson;
     const requiredPlans = lessonPlans.map((lp) => lp.plan);
 
@@ -353,7 +364,11 @@ async function loadStudentQuiz(userId, lessonId) {
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { selectedCourseId: true, selectedCourseTypeId: true },
+    select: {
+      selectedCourseId: true, selectedCourseTypeId: true,
+      // Needed for the lock: a premium course locks its lessons.
+      selectedCourse: { select: { accessType: true } },
+    },
   });
 
   if (!user?.selectedCourseId) return deny(409, 'Select a course before opening a lesson');
@@ -383,7 +398,7 @@ async function loadStudentQuiz(userId, lessonId) {
     select: { planId: true },
   });
 
-  if (!isLessonUnlocked(lesson, new Set(activeSubs.map((sub) => sub.planId)))) {
+  if (!isLessonUnlocked(lesson, new Set(activeSubs.map((sub) => sub.planId)), user.selectedCourse?.accessType)) {
     return deny(403, 'This lesson is locked. Subscribe to unlock it.', {
       requiredPlans: lesson.lessonPlans.map((lp) => lp.plan),
     });

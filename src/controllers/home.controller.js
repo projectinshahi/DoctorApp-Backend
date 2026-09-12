@@ -186,7 +186,7 @@ async function getHome(req, res) {
       .filter(({ lesson }) => lesson && lesson.type === 'video')
       .slice(0, 10)
       .map(({ p, lesson }) => {
-        const unlocked = isLessonUnlocked(lesson, paidPlanIds);
+        const unlocked = isLessonUnlocked(lesson, paidPlanIds, user.selectedCourse.accessType);
         return {
           lessonId: lesson.id,
           title: lesson.title,
@@ -259,8 +259,8 @@ async function getHome(req, res) {
             lastPositionSeconds: lastTouched.lastPositionSeconds,
             durationSeconds: continueLesson.durationSeconds,
             watchedPercent: watchedState(lastTouched.lastPositionSeconds, continueLesson.durationSeconds).watchedPercent,
-            videoUrl: isLessonUnlocked(continueLesson, paidPlanIds) ? continueLesson.videoUrl : null,
-            locked: !isLessonUnlocked(continueLesson, paidPlanIds),
+            videoUrl: isLessonUnlocked(continueLesson, paidPlanIds, user.selectedCourse.accessType) ? continueLesson.videoUrl : null,
+            locked: !isLessonUnlocked(continueLesson, paidPlanIds, user.selectedCourse.accessType),
           }
         : null,
       // The full row. `continueWatching` stays as the first of these so an
