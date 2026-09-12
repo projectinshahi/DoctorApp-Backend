@@ -468,6 +468,31 @@ exports.Prisma.DailyQuizAnswerScalarFieldEnum = {
   answeredAt: 'answeredAt'
 };
 
+exports.Prisma.RapidRecallScalarFieldEnum = {
+  id: 'id',
+  courseId: 'courseId',
+  courseTypeId: 'courseTypeId',
+  subjectId: 'subjectId',
+  lessonId: 'lessonId',
+  title: 'title',
+  description: 'description',
+  noteUrl: 'noteUrl',
+  notePublicId: 'notePublicId',
+  noteFileType: 'noteFileType',
+  status: 'status',
+  displayOrder: 'displayOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RapidRecallCardScalarFieldEnum = {
+  id: 'id',
+  recallId: 'recallId',
+  imageUrl: 'imageUrl',
+  note: 'note',
+  displayOrder: 'displayOrder'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -551,7 +576,9 @@ exports.Prisma.ModelName = {
   LessonComment: 'LessonComment',
   CommentReport: 'CommentReport',
   DailyQuizAttempt: 'DailyQuizAttempt',
-  DailyQuizAnswer: 'DailyQuizAnswer'
+  DailyQuizAnswer: 'DailyQuizAnswer',
+  RapidRecall: 'RapidRecall',
+  RapidRecallCard: 'RapidRecallCard'
 };
 
 /**

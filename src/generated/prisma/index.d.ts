@@ -182,6 +182,23 @@ export type DailyQuizAttempt = $Result.DefaultSelection<Prisma.$DailyQuizAttempt
  * 
  */
 export type DailyQuizAnswer = $Result.DefaultSelection<Prisma.$DailyQuizAnswerPayload>
+/**
+ * Model RapidRecall
+ * A Rapid Recall set: images with a note against each, plus an optional
+ * document, filed under a course and narrowed as far as the admin wants.
+ * 
+ * Scoping is a funnel, not a path. Only courseId is required; courseType,
+ * subject and lesson each narrow it further and each may be null. A set
+ * pinned to one lesson shows on that lesson; one pinned only to a subject
+ * shows across every lesson of it. Requiring the whole chain would force an
+ * admin to duplicate the same revision cards for each lesson that needs them.
+ */
+export type RapidRecall = $Result.DefaultSelection<Prisma.$RapidRecallPayload>
+/**
+ * Model RapidRecallCard
+ * 
+ */
+export type RapidRecallCard = $Result.DefaultSelection<Prisma.$RapidRecallCardPayload>
 
 /**
  * Enums
@@ -714,6 +731,26 @@ export class PrismaClient<
     * ```
     */
   get dailyQuizAnswer(): Prisma.DailyQuizAnswerDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.rapidRecall`: Exposes CRUD operations for the **RapidRecall** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RapidRecalls
+    * const rapidRecalls = await prisma.rapidRecall.findMany()
+    * ```
+    */
+  get rapidRecall(): Prisma.RapidRecallDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.rapidRecallCard`: Exposes CRUD operations for the **RapidRecallCard** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RapidRecallCards
+    * const rapidRecallCards = await prisma.rapidRecallCard.findMany()
+    * ```
+    */
+  get rapidRecallCard(): Prisma.RapidRecallCardDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1192,7 +1229,9 @@ export namespace Prisma {
     LessonComment: 'LessonComment',
     CommentReport: 'CommentReport',
     DailyQuizAttempt: 'DailyQuizAttempt',
-    DailyQuizAnswer: 'DailyQuizAnswer'
+    DailyQuizAnswer: 'DailyQuizAnswer',
+    RapidRecall: 'RapidRecall',
+    RapidRecallCard: 'RapidRecallCard'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1208,7 +1247,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "quizQuestion" | "tag" | "questionTag" | "quizAttempt" | "attemptAnswer" | "savedQuestion" | "savedLesson" | "lessonProgress" | "test" | "testQuestion" | "testImage" | "testAttempt" | "testAttemptAnswer" | "lessonComment" | "commentReport" | "dailyQuizAttempt" | "dailyQuizAnswer"
+      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "quizQuestion" | "tag" | "questionTag" | "quizAttempt" | "attemptAnswer" | "savedQuestion" | "savedLesson" | "lessonProgress" | "test" | "testQuestion" | "testImage" | "testAttempt" | "testAttemptAnswer" | "lessonComment" | "commentReport" | "dailyQuizAttempt" | "dailyQuizAnswer" | "rapidRecall" | "rapidRecallCard"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3580,6 +3619,154 @@ export namespace Prisma {
           }
         }
       }
+      RapidRecall: {
+        payload: Prisma.$RapidRecallPayload<ExtArgs>
+        fields: Prisma.RapidRecallFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RapidRecallFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RapidRecallFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallPayload>
+          }
+          findFirst: {
+            args: Prisma.RapidRecallFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RapidRecallFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallPayload>
+          }
+          findMany: {
+            args: Prisma.RapidRecallFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallPayload>[]
+          }
+          create: {
+            args: Prisma.RapidRecallCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallPayload>
+          }
+          createMany: {
+            args: Prisma.RapidRecallCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RapidRecallCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallPayload>[]
+          }
+          delete: {
+            args: Prisma.RapidRecallDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallPayload>
+          }
+          update: {
+            args: Prisma.RapidRecallUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallPayload>
+          }
+          deleteMany: {
+            args: Prisma.RapidRecallDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RapidRecallUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RapidRecallUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallPayload>[]
+          }
+          upsert: {
+            args: Prisma.RapidRecallUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallPayload>
+          }
+          aggregate: {
+            args: Prisma.RapidRecallAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRapidRecall>
+          }
+          groupBy: {
+            args: Prisma.RapidRecallGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RapidRecallGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RapidRecallCountArgs<ExtArgs>
+            result: $Utils.Optional<RapidRecallCountAggregateOutputType> | number
+          }
+        }
+      }
+      RapidRecallCard: {
+        payload: Prisma.$RapidRecallCardPayload<ExtArgs>
+        fields: Prisma.RapidRecallCardFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RapidRecallCardFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallCardPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RapidRecallCardFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallCardPayload>
+          }
+          findFirst: {
+            args: Prisma.RapidRecallCardFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallCardPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RapidRecallCardFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallCardPayload>
+          }
+          findMany: {
+            args: Prisma.RapidRecallCardFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallCardPayload>[]
+          }
+          create: {
+            args: Prisma.RapidRecallCardCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallCardPayload>
+          }
+          createMany: {
+            args: Prisma.RapidRecallCardCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RapidRecallCardCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallCardPayload>[]
+          }
+          delete: {
+            args: Prisma.RapidRecallCardDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallCardPayload>
+          }
+          update: {
+            args: Prisma.RapidRecallCardUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallCardPayload>
+          }
+          deleteMany: {
+            args: Prisma.RapidRecallCardDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RapidRecallCardUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RapidRecallCardUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallCardPayload>[]
+          }
+          upsert: {
+            args: Prisma.RapidRecallCardUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RapidRecallCardPayload>
+          }
+          aggregate: {
+            args: Prisma.RapidRecallCardAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRapidRecallCard>
+          }
+          groupBy: {
+            args: Prisma.RapidRecallCardGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RapidRecallCardGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RapidRecallCardCountArgs<ExtArgs>
+            result: $Utils.Optional<RapidRecallCardCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3735,6 +3922,8 @@ export namespace Prisma {
     commentReport?: CommentReportOmit
     dailyQuizAttempt?: DailyQuizAttemptOmit
     dailyQuizAnswer?: DailyQuizAnswerOmit
+    rapidRecall?: RapidRecallOmit
+    rapidRecallCard?: RapidRecallCardOmit
   }
 
   /* Types for Logging */
@@ -3971,6 +4160,7 @@ export namespace Prisma {
     courses: number
     questions: number
     quizzes: number
+    rapidRecalls: number
   }
 
   export type SubjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3978,6 +4168,7 @@ export namespace Prisma {
     courses?: boolean | SubjectCountOutputTypeCountCoursesArgs
     questions?: boolean | SubjectCountOutputTypeCountQuestionsArgs
     quizzes?: boolean | SubjectCountOutputTypeCountQuizzesArgs
+    rapidRecalls?: boolean | SubjectCountOutputTypeCountRapidRecallsArgs
   }
 
   // Custom InputTypes
@@ -4017,6 +4208,13 @@ export namespace Prisma {
    */
   export type SubjectCountOutputTypeCountQuizzesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: QuizWhereInput
+  }
+
+  /**
+   * SubjectCountOutputType without action
+   */
+  export type SubjectCountOutputTypeCountRapidRecallsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RapidRecallWhereInput
   }
 
 
@@ -4073,6 +4271,7 @@ export namespace Prisma {
     subscriptions: number
     tests: number
     dailyQuizzes: number
+    rapidRecalls: number
   }
 
   export type CourseCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4084,6 +4283,7 @@ export namespace Prisma {
     subscriptions?: boolean | CourseCountOutputTypeCountSubscriptionsArgs
     tests?: boolean | CourseCountOutputTypeCountTestsArgs
     dailyQuizzes?: boolean | CourseCountOutputTypeCountDailyQuizzesArgs
+    rapidRecalls?: boolean | CourseCountOutputTypeCountRapidRecallsArgs
   }
 
   // Custom InputTypes
@@ -4153,6 +4353,13 @@ export namespace Prisma {
     where?: DailyQuizAttemptWhereInput
   }
 
+  /**
+   * CourseCountOutputType without action
+   */
+  export type CourseCountOutputTypeCountRapidRecallsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RapidRecallWhereInput
+  }
+
 
   /**
    * Count Type CourseTypeCountOutputType
@@ -4162,12 +4369,14 @@ export namespace Prisma {
     chapters: number
     selectedBy: number
     tests: number
+    rapidRecalls: number
   }
 
   export type CourseTypeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chapters?: boolean | CourseTypeCountOutputTypeCountChaptersArgs
     selectedBy?: boolean | CourseTypeCountOutputTypeCountSelectedByArgs
     tests?: boolean | CourseTypeCountOutputTypeCountTestsArgs
+    rapidRecalls?: boolean | CourseTypeCountOutputTypeCountRapidRecallsArgs
   }
 
   // Custom InputTypes
@@ -4200,6 +4409,13 @@ export namespace Prisma {
    */
   export type CourseTypeCountOutputTypeCountTestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TestWhereInput
+  }
+
+  /**
+   * CourseTypeCountOutputType without action
+   */
+  export type CourseTypeCountOutputTypeCountRapidRecallsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RapidRecallWhereInput
   }
 
 
@@ -4243,6 +4459,7 @@ export namespace Prisma {
     savedBy: number
     progress: number
     comments: number
+    rapidRecalls: number
   }
 
   export type LessonCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4250,6 +4467,7 @@ export namespace Prisma {
     savedBy?: boolean | LessonCountOutputTypeCountSavedByArgs
     progress?: boolean | LessonCountOutputTypeCountProgressArgs
     comments?: boolean | LessonCountOutputTypeCountCommentsArgs
+    rapidRecalls?: boolean | LessonCountOutputTypeCountRapidRecallsArgs
   }
 
   // Custom InputTypes
@@ -4289,6 +4507,13 @@ export namespace Prisma {
    */
   export type LessonCountOutputTypeCountCommentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: LessonCommentWhereInput
+  }
+
+  /**
+   * LessonCountOutputType without action
+   */
+  export type LessonCountOutputTypeCountRapidRecallsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RapidRecallWhereInput
   }
 
 
@@ -4671,6 +4896,37 @@ export namespace Prisma {
    */
   export type DailyQuizAttemptCountOutputTypeCountAnswersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DailyQuizAnswerWhereInput
+  }
+
+
+  /**
+   * Count Type RapidRecallCountOutputType
+   */
+
+  export type RapidRecallCountOutputType = {
+    cards: number
+  }
+
+  export type RapidRecallCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cards?: boolean | RapidRecallCountOutputTypeCountCardsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * RapidRecallCountOutputType without action
+   */
+  export type RapidRecallCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecallCountOutputType
+     */
+    select?: RapidRecallCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * RapidRecallCountOutputType without action
+   */
+  export type RapidRecallCountOutputTypeCountCardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RapidRecallCardWhereInput
   }
 
 
@@ -7610,6 +7866,7 @@ export namespace Prisma {
     courses?: boolean | Subject$coursesArgs<ExtArgs>
     questions?: boolean | Subject$questionsArgs<ExtArgs>
     quizzes?: boolean | Subject$quizzesArgs<ExtArgs>
+    rapidRecalls?: boolean | Subject$rapidRecallsArgs<ExtArgs>
     _count?: boolean | SubjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["subject"]>
 
@@ -7646,6 +7903,7 @@ export namespace Prisma {
     courses?: boolean | Subject$coursesArgs<ExtArgs>
     questions?: boolean | Subject$questionsArgs<ExtArgs>
     quizzes?: boolean | Subject$quizzesArgs<ExtArgs>
+    rapidRecalls?: boolean | Subject$rapidRecallsArgs<ExtArgs>
     _count?: boolean | SubjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type SubjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -7658,6 +7916,7 @@ export namespace Prisma {
       courses: Prisma.$CoursePayload<ExtArgs>[]
       questions: Prisma.$QuestionPayload<ExtArgs>[]
       quizzes: Prisma.$QuizPayload<ExtArgs>[]
+      rapidRecalls: Prisma.$RapidRecallPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -8064,6 +8323,7 @@ export namespace Prisma {
     courses<T extends Subject$coursesArgs<ExtArgs> = {}>(args?: Subset<T, Subject$coursesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     questions<T extends Subject$questionsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     quizzes<T extends Subject$quizzesArgs<ExtArgs> = {}>(args?: Subset<T, Subject$quizzesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    rapidRecalls<T extends Subject$rapidRecallsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$rapidRecallsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8594,6 +8854,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: QuizScalarFieldEnum | QuizScalarFieldEnum[]
+  }
+
+  /**
+   * Subject.rapidRecalls
+   */
+  export type Subject$rapidRecallsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+    where?: RapidRecallWhereInput
+    orderBy?: RapidRecallOrderByWithRelationInput | RapidRecallOrderByWithRelationInput[]
+    cursor?: RapidRecallWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RapidRecallScalarFieldEnum | RapidRecallScalarFieldEnum[]
   }
 
   /**
@@ -11220,6 +11504,7 @@ export namespace Prisma {
     subscriptions?: boolean | Course$subscriptionsArgs<ExtArgs>
     tests?: boolean | Course$testsArgs<ExtArgs>
     dailyQuizzes?: boolean | Course$dailyQuizzesArgs<ExtArgs>
+    rapidRecalls?: boolean | Course$rapidRecallsArgs<ExtArgs>
     _count?: boolean | CourseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["course"]>
 
@@ -11281,6 +11566,7 @@ export namespace Prisma {
     subscriptions?: boolean | Course$subscriptionsArgs<ExtArgs>
     tests?: boolean | Course$testsArgs<ExtArgs>
     dailyQuizzes?: boolean | Course$dailyQuizzesArgs<ExtArgs>
+    rapidRecalls?: boolean | Course$rapidRecallsArgs<ExtArgs>
     _count?: boolean | CourseCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CourseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11302,6 +11588,7 @@ export namespace Prisma {
       subscriptions: Prisma.$SubscriptionPayload<ExtArgs>[]
       tests: Prisma.$TestPayload<ExtArgs>[]
       dailyQuizzes: Prisma.$DailyQuizAttemptPayload<ExtArgs>[]
+      rapidRecalls: Prisma.$RapidRecallPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -11719,6 +12006,7 @@ export namespace Prisma {
     subscriptions<T extends Course$subscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, Course$subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tests<T extends Course$testsArgs<ExtArgs> = {}>(args?: Subset<T, Course$testsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     dailyQuizzes<T extends Course$dailyQuizzesArgs<ExtArgs> = {}>(args?: Subset<T, Course$dailyQuizzesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyQuizAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    rapidRecalls<T extends Course$rapidRecallsArgs<ExtArgs> = {}>(args?: Subset<T, Course$rapidRecallsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12381,6 +12669,30 @@ export namespace Prisma {
   }
 
   /**
+   * Course.rapidRecalls
+   */
+  export type Course$rapidRecallsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+    where?: RapidRecallWhereInput
+    orderBy?: RapidRecallOrderByWithRelationInput | RapidRecallOrderByWithRelationInput[]
+    cursor?: RapidRecallWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RapidRecallScalarFieldEnum | RapidRecallScalarFieldEnum[]
+  }
+
+  /**
    * Course without action
    */
   export type CourseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12641,6 +12953,7 @@ export namespace Prisma {
     chapters?: boolean | CourseType$chaptersArgs<ExtArgs>
     selectedBy?: boolean | CourseType$selectedByArgs<ExtArgs>
     tests?: boolean | CourseType$testsArgs<ExtArgs>
+    rapidRecalls?: boolean | CourseType$rapidRecallsArgs<ExtArgs>
     _count?: boolean | CourseTypeCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["courseType"]>
 
@@ -12688,6 +13001,7 @@ export namespace Prisma {
     chapters?: boolean | CourseType$chaptersArgs<ExtArgs>
     selectedBy?: boolean | CourseType$selectedByArgs<ExtArgs>
     tests?: boolean | CourseType$testsArgs<ExtArgs>
+    rapidRecalls?: boolean | CourseType$rapidRecallsArgs<ExtArgs>
     _count?: boolean | CourseTypeCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CourseTypeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12704,6 +13018,7 @@ export namespace Prisma {
       chapters: Prisma.$ChapterPayload<ExtArgs>[]
       selectedBy: Prisma.$UserPayload<ExtArgs>[]
       tests: Prisma.$TestPayload<ExtArgs>[]
+      rapidRecalls: Prisma.$RapidRecallPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -13113,6 +13428,7 @@ export namespace Prisma {
     chapters<T extends CourseType$chaptersArgs<ExtArgs> = {}>(args?: Subset<T, CourseType$chaptersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ChapterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     selectedBy<T extends CourseType$selectedByArgs<ExtArgs> = {}>(args?: Subset<T, CourseType$selectedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tests<T extends CourseType$testsArgs<ExtArgs> = {}>(args?: Subset<T, CourseType$testsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    rapidRecalls<T extends CourseType$rapidRecallsArgs<ExtArgs> = {}>(args?: Subset<T, CourseType$rapidRecallsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13630,6 +13946,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TestScalarFieldEnum | TestScalarFieldEnum[]
+  }
+
+  /**
+   * CourseType.rapidRecalls
+   */
+  export type CourseType$rapidRecallsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+    where?: RapidRecallWhereInput
+    orderBy?: RapidRecallOrderByWithRelationInput | RapidRecallOrderByWithRelationInput[]
+    cursor?: RapidRecallWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RapidRecallScalarFieldEnum | RapidRecallScalarFieldEnum[]
   }
 
   /**
@@ -15227,6 +15567,7 @@ export namespace Prisma {
     savedBy?: boolean | Lesson$savedByArgs<ExtArgs>
     progress?: boolean | Lesson$progressArgs<ExtArgs>
     comments?: boolean | Lesson$commentsArgs<ExtArgs>
+    rapidRecalls?: boolean | Lesson$rapidRecallsArgs<ExtArgs>
     _count?: boolean | LessonCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lesson"]>
 
@@ -15317,6 +15658,7 @@ export namespace Prisma {
     savedBy?: boolean | Lesson$savedByArgs<ExtArgs>
     progress?: boolean | Lesson$progressArgs<ExtArgs>
     comments?: boolean | Lesson$commentsArgs<ExtArgs>
+    rapidRecalls?: boolean | Lesson$rapidRecallsArgs<ExtArgs>
     _count?: boolean | LessonCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LessonIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15337,6 +15679,7 @@ export namespace Prisma {
       savedBy: Prisma.$SavedLessonPayload<ExtArgs>[]
       progress: Prisma.$LessonProgressPayload<ExtArgs>[]
       comments: Prisma.$LessonCommentPayload<ExtArgs>[]
+      rapidRecalls: Prisma.$RapidRecallPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -15761,6 +16104,7 @@ export namespace Prisma {
     savedBy<T extends Lesson$savedByArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$savedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     progress<T extends Lesson$progressArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$progressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends Lesson$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    rapidRecalls<T extends Lesson$rapidRecallsArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$rapidRecallsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16334,6 +16678,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: LessonCommentScalarFieldEnum | LessonCommentScalarFieldEnum[]
+  }
+
+  /**
+   * Lesson.rapidRecalls
+   */
+  export type Lesson$rapidRecallsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+    where?: RapidRecallWhereInput
+    orderBy?: RapidRecallOrderByWithRelationInput | RapidRecallOrderByWithRelationInput[]
+    cursor?: RapidRecallWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RapidRecallScalarFieldEnum | RapidRecallScalarFieldEnum[]
   }
 
   /**
@@ -43317,6 +43685,2474 @@ export namespace Prisma {
 
 
   /**
+   * Model RapidRecall
+   */
+
+  export type AggregateRapidRecall = {
+    _count: RapidRecallCountAggregateOutputType | null
+    _avg: RapidRecallAvgAggregateOutputType | null
+    _sum: RapidRecallSumAggregateOutputType | null
+    _min: RapidRecallMinAggregateOutputType | null
+    _max: RapidRecallMaxAggregateOutputType | null
+  }
+
+  export type RapidRecallAvgAggregateOutputType = {
+    id: number | null
+    courseId: number | null
+    courseTypeId: number | null
+    subjectId: number | null
+    lessonId: number | null
+    displayOrder: number | null
+  }
+
+  export type RapidRecallSumAggregateOutputType = {
+    id: number | null
+    courseId: number | null
+    courseTypeId: number | null
+    subjectId: number | null
+    lessonId: number | null
+    displayOrder: number | null
+  }
+
+  export type RapidRecallMinAggregateOutputType = {
+    id: number | null
+    courseId: number | null
+    courseTypeId: number | null
+    subjectId: number | null
+    lessonId: number | null
+    title: string | null
+    description: string | null
+    noteUrl: string | null
+    notePublicId: string | null
+    noteFileType: string | null
+    status: $Enums.CourseStatus | null
+    displayOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RapidRecallMaxAggregateOutputType = {
+    id: number | null
+    courseId: number | null
+    courseTypeId: number | null
+    subjectId: number | null
+    lessonId: number | null
+    title: string | null
+    description: string | null
+    noteUrl: string | null
+    notePublicId: string | null
+    noteFileType: string | null
+    status: $Enums.CourseStatus | null
+    displayOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RapidRecallCountAggregateOutputType = {
+    id: number
+    courseId: number
+    courseTypeId: number
+    subjectId: number
+    lessonId: number
+    title: number
+    description: number
+    noteUrl: number
+    notePublicId: number
+    noteFileType: number
+    status: number
+    displayOrder: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type RapidRecallAvgAggregateInputType = {
+    id?: true
+    courseId?: true
+    courseTypeId?: true
+    subjectId?: true
+    lessonId?: true
+    displayOrder?: true
+  }
+
+  export type RapidRecallSumAggregateInputType = {
+    id?: true
+    courseId?: true
+    courseTypeId?: true
+    subjectId?: true
+    lessonId?: true
+    displayOrder?: true
+  }
+
+  export type RapidRecallMinAggregateInputType = {
+    id?: true
+    courseId?: true
+    courseTypeId?: true
+    subjectId?: true
+    lessonId?: true
+    title?: true
+    description?: true
+    noteUrl?: true
+    notePublicId?: true
+    noteFileType?: true
+    status?: true
+    displayOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RapidRecallMaxAggregateInputType = {
+    id?: true
+    courseId?: true
+    courseTypeId?: true
+    subjectId?: true
+    lessonId?: true
+    title?: true
+    description?: true
+    noteUrl?: true
+    notePublicId?: true
+    noteFileType?: true
+    status?: true
+    displayOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RapidRecallCountAggregateInputType = {
+    id?: true
+    courseId?: true
+    courseTypeId?: true
+    subjectId?: true
+    lessonId?: true
+    title?: true
+    description?: true
+    noteUrl?: true
+    notePublicId?: true
+    noteFileType?: true
+    status?: true
+    displayOrder?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type RapidRecallAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RapidRecall to aggregate.
+     */
+    where?: RapidRecallWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RapidRecalls to fetch.
+     */
+    orderBy?: RapidRecallOrderByWithRelationInput | RapidRecallOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RapidRecallWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RapidRecalls from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RapidRecalls.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RapidRecalls
+    **/
+    _count?: true | RapidRecallCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RapidRecallAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RapidRecallSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RapidRecallMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RapidRecallMaxAggregateInputType
+  }
+
+  export type GetRapidRecallAggregateType<T extends RapidRecallAggregateArgs> = {
+        [P in keyof T & keyof AggregateRapidRecall]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRapidRecall[P]>
+      : GetScalarType<T[P], AggregateRapidRecall[P]>
+  }
+
+
+
+
+  export type RapidRecallGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RapidRecallWhereInput
+    orderBy?: RapidRecallOrderByWithAggregationInput | RapidRecallOrderByWithAggregationInput[]
+    by: RapidRecallScalarFieldEnum[] | RapidRecallScalarFieldEnum
+    having?: RapidRecallScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RapidRecallCountAggregateInputType | true
+    _avg?: RapidRecallAvgAggregateInputType
+    _sum?: RapidRecallSumAggregateInputType
+    _min?: RapidRecallMinAggregateInputType
+    _max?: RapidRecallMaxAggregateInputType
+  }
+
+  export type RapidRecallGroupByOutputType = {
+    id: number
+    courseId: number
+    courseTypeId: number | null
+    subjectId: number | null
+    lessonId: number | null
+    title: string
+    description: string | null
+    noteUrl: string | null
+    notePublicId: string | null
+    noteFileType: string | null
+    status: $Enums.CourseStatus
+    displayOrder: number
+    createdAt: Date
+    updatedAt: Date
+    _count: RapidRecallCountAggregateOutputType | null
+    _avg: RapidRecallAvgAggregateOutputType | null
+    _sum: RapidRecallSumAggregateOutputType | null
+    _min: RapidRecallMinAggregateOutputType | null
+    _max: RapidRecallMaxAggregateOutputType | null
+  }
+
+  type GetRapidRecallGroupByPayload<T extends RapidRecallGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RapidRecallGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RapidRecallGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RapidRecallGroupByOutputType[P]>
+            : GetScalarType<T[P], RapidRecallGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RapidRecallSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    courseId?: boolean
+    courseTypeId?: boolean
+    subjectId?: boolean
+    lessonId?: boolean
+    title?: boolean
+    description?: boolean
+    noteUrl?: boolean
+    notePublicId?: boolean
+    noteFileType?: boolean
+    status?: boolean
+    displayOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    course?: boolean | CourseDefaultArgs<ExtArgs>
+    courseType?: boolean | RapidRecall$courseTypeArgs<ExtArgs>
+    subject?: boolean | RapidRecall$subjectArgs<ExtArgs>
+    lesson?: boolean | RapidRecall$lessonArgs<ExtArgs>
+    cards?: boolean | RapidRecall$cardsArgs<ExtArgs>
+    _count?: boolean | RapidRecallCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["rapidRecall"]>
+
+  export type RapidRecallSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    courseId?: boolean
+    courseTypeId?: boolean
+    subjectId?: boolean
+    lessonId?: boolean
+    title?: boolean
+    description?: boolean
+    noteUrl?: boolean
+    notePublicId?: boolean
+    noteFileType?: boolean
+    status?: boolean
+    displayOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    course?: boolean | CourseDefaultArgs<ExtArgs>
+    courseType?: boolean | RapidRecall$courseTypeArgs<ExtArgs>
+    subject?: boolean | RapidRecall$subjectArgs<ExtArgs>
+    lesson?: boolean | RapidRecall$lessonArgs<ExtArgs>
+  }, ExtArgs["result"]["rapidRecall"]>
+
+  export type RapidRecallSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    courseId?: boolean
+    courseTypeId?: boolean
+    subjectId?: boolean
+    lessonId?: boolean
+    title?: boolean
+    description?: boolean
+    noteUrl?: boolean
+    notePublicId?: boolean
+    noteFileType?: boolean
+    status?: boolean
+    displayOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    course?: boolean | CourseDefaultArgs<ExtArgs>
+    courseType?: boolean | RapidRecall$courseTypeArgs<ExtArgs>
+    subject?: boolean | RapidRecall$subjectArgs<ExtArgs>
+    lesson?: boolean | RapidRecall$lessonArgs<ExtArgs>
+  }, ExtArgs["result"]["rapidRecall"]>
+
+  export type RapidRecallSelectScalar = {
+    id?: boolean
+    courseId?: boolean
+    courseTypeId?: boolean
+    subjectId?: boolean
+    lessonId?: boolean
+    title?: boolean
+    description?: boolean
+    noteUrl?: boolean
+    notePublicId?: boolean
+    noteFileType?: boolean
+    status?: boolean
+    displayOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type RapidRecallOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "courseTypeId" | "subjectId" | "lessonId" | "title" | "description" | "noteUrl" | "notePublicId" | "noteFileType" | "status" | "displayOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["rapidRecall"]>
+  export type RapidRecallInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    course?: boolean | CourseDefaultArgs<ExtArgs>
+    courseType?: boolean | RapidRecall$courseTypeArgs<ExtArgs>
+    subject?: boolean | RapidRecall$subjectArgs<ExtArgs>
+    lesson?: boolean | RapidRecall$lessonArgs<ExtArgs>
+    cards?: boolean | RapidRecall$cardsArgs<ExtArgs>
+    _count?: boolean | RapidRecallCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type RapidRecallIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    course?: boolean | CourseDefaultArgs<ExtArgs>
+    courseType?: boolean | RapidRecall$courseTypeArgs<ExtArgs>
+    subject?: boolean | RapidRecall$subjectArgs<ExtArgs>
+    lesson?: boolean | RapidRecall$lessonArgs<ExtArgs>
+  }
+  export type RapidRecallIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    course?: boolean | CourseDefaultArgs<ExtArgs>
+    courseType?: boolean | RapidRecall$courseTypeArgs<ExtArgs>
+    subject?: boolean | RapidRecall$subjectArgs<ExtArgs>
+    lesson?: boolean | RapidRecall$lessonArgs<ExtArgs>
+  }
+
+  export type $RapidRecallPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RapidRecall"
+    objects: {
+      course: Prisma.$CoursePayload<ExtArgs>
+      courseType: Prisma.$CourseTypePayload<ExtArgs> | null
+      subject: Prisma.$SubjectPayload<ExtArgs> | null
+      lesson: Prisma.$LessonPayload<ExtArgs> | null
+      cards: Prisma.$RapidRecallCardPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      courseId: number
+      courseTypeId: number | null
+      subjectId: number | null
+      lessonId: number | null
+      title: string
+      description: string | null
+      noteUrl: string | null
+      notePublicId: string | null
+      noteFileType: string | null
+      status: $Enums.CourseStatus
+      displayOrder: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["rapidRecall"]>
+    composites: {}
+  }
+
+  type RapidRecallGetPayload<S extends boolean | null | undefined | RapidRecallDefaultArgs> = $Result.GetResult<Prisma.$RapidRecallPayload, S>
+
+  type RapidRecallCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RapidRecallFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
+      select?: RapidRecallCountAggregateInputType | true
+    }
+
+  export interface RapidRecallDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RapidRecall'], meta: { name: 'RapidRecall' } }
+    /**
+     * Find zero or one RapidRecall that matches the filter.
+     * @param {RapidRecallFindUniqueArgs} args - Arguments to find a RapidRecall
+     * @example
+     * // Get one RapidRecall
+     * const rapidRecall = await prisma.rapidRecall.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RapidRecallFindUniqueArgs>(args: SelectSubset<T, RapidRecallFindUniqueArgs<ExtArgs>>): Prisma__RapidRecallClient<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RapidRecall that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RapidRecallFindUniqueOrThrowArgs} args - Arguments to find a RapidRecall
+     * @example
+     * // Get one RapidRecall
+     * const rapidRecall = await prisma.rapidRecall.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RapidRecallFindUniqueOrThrowArgs>(args: SelectSubset<T, RapidRecallFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RapidRecallClient<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RapidRecall that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RapidRecallFindFirstArgs} args - Arguments to find a RapidRecall
+     * @example
+     * // Get one RapidRecall
+     * const rapidRecall = await prisma.rapidRecall.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RapidRecallFindFirstArgs>(args?: SelectSubset<T, RapidRecallFindFirstArgs<ExtArgs>>): Prisma__RapidRecallClient<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RapidRecall that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RapidRecallFindFirstOrThrowArgs} args - Arguments to find a RapidRecall
+     * @example
+     * // Get one RapidRecall
+     * const rapidRecall = await prisma.rapidRecall.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RapidRecallFindFirstOrThrowArgs>(args?: SelectSubset<T, RapidRecallFindFirstOrThrowArgs<ExtArgs>>): Prisma__RapidRecallClient<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RapidRecalls that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RapidRecallFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RapidRecalls
+     * const rapidRecalls = await prisma.rapidRecall.findMany()
+     * 
+     * // Get first 10 RapidRecalls
+     * const rapidRecalls = await prisma.rapidRecall.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const rapidRecallWithIdOnly = await prisma.rapidRecall.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RapidRecallFindManyArgs>(args?: SelectSubset<T, RapidRecallFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RapidRecall.
+     * @param {RapidRecallCreateArgs} args - Arguments to create a RapidRecall.
+     * @example
+     * // Create one RapidRecall
+     * const RapidRecall = await prisma.rapidRecall.create({
+     *   data: {
+     *     // ... data to create a RapidRecall
+     *   }
+     * })
+     * 
+     */
+    create<T extends RapidRecallCreateArgs>(args: SelectSubset<T, RapidRecallCreateArgs<ExtArgs>>): Prisma__RapidRecallClient<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RapidRecalls.
+     * @param {RapidRecallCreateManyArgs} args - Arguments to create many RapidRecalls.
+     * @example
+     * // Create many RapidRecalls
+     * const rapidRecall = await prisma.rapidRecall.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RapidRecallCreateManyArgs>(args?: SelectSubset<T, RapidRecallCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RapidRecalls and returns the data saved in the database.
+     * @param {RapidRecallCreateManyAndReturnArgs} args - Arguments to create many RapidRecalls.
+     * @example
+     * // Create many RapidRecalls
+     * const rapidRecall = await prisma.rapidRecall.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RapidRecalls and only return the `id`
+     * const rapidRecallWithIdOnly = await prisma.rapidRecall.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RapidRecallCreateManyAndReturnArgs>(args?: SelectSubset<T, RapidRecallCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RapidRecall.
+     * @param {RapidRecallDeleteArgs} args - Arguments to delete one RapidRecall.
+     * @example
+     * // Delete one RapidRecall
+     * const RapidRecall = await prisma.rapidRecall.delete({
+     *   where: {
+     *     // ... filter to delete one RapidRecall
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RapidRecallDeleteArgs>(args: SelectSubset<T, RapidRecallDeleteArgs<ExtArgs>>): Prisma__RapidRecallClient<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RapidRecall.
+     * @param {RapidRecallUpdateArgs} args - Arguments to update one RapidRecall.
+     * @example
+     * // Update one RapidRecall
+     * const rapidRecall = await prisma.rapidRecall.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RapidRecallUpdateArgs>(args: SelectSubset<T, RapidRecallUpdateArgs<ExtArgs>>): Prisma__RapidRecallClient<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RapidRecalls.
+     * @param {RapidRecallDeleteManyArgs} args - Arguments to filter RapidRecalls to delete.
+     * @example
+     * // Delete a few RapidRecalls
+     * const { count } = await prisma.rapidRecall.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RapidRecallDeleteManyArgs>(args?: SelectSubset<T, RapidRecallDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RapidRecalls.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RapidRecallUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RapidRecalls
+     * const rapidRecall = await prisma.rapidRecall.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RapidRecallUpdateManyArgs>(args: SelectSubset<T, RapidRecallUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RapidRecalls and returns the data updated in the database.
+     * @param {RapidRecallUpdateManyAndReturnArgs} args - Arguments to update many RapidRecalls.
+     * @example
+     * // Update many RapidRecalls
+     * const rapidRecall = await prisma.rapidRecall.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RapidRecalls and only return the `id`
+     * const rapidRecallWithIdOnly = await prisma.rapidRecall.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RapidRecallUpdateManyAndReturnArgs>(args: SelectSubset<T, RapidRecallUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RapidRecall.
+     * @param {RapidRecallUpsertArgs} args - Arguments to update or create a RapidRecall.
+     * @example
+     * // Update or create a RapidRecall
+     * const rapidRecall = await prisma.rapidRecall.upsert({
+     *   create: {
+     *     // ... data to create a RapidRecall
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RapidRecall we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RapidRecallUpsertArgs>(args: SelectSubset<T, RapidRecallUpsertArgs<ExtArgs>>): Prisma__RapidRecallClient<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RapidRecalls.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RapidRecallCountArgs} args - Arguments to filter RapidRecalls to count.
+     * @example
+     * // Count the number of RapidRecalls
+     * const count = await prisma.rapidRecall.count({
+     *   where: {
+     *     // ... the filter for the RapidRecalls we want to count
+     *   }
+     * })
+    **/
+    count<T extends RapidRecallCountArgs>(
+      args?: Subset<T, RapidRecallCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RapidRecallCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RapidRecall.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RapidRecallAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RapidRecallAggregateArgs>(args: Subset<T, RapidRecallAggregateArgs>): Prisma.PrismaPromise<GetRapidRecallAggregateType<T>>
+
+    /**
+     * Group by RapidRecall.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RapidRecallGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RapidRecallGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RapidRecallGroupByArgs['orderBy'] }
+        : { orderBy?: RapidRecallGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RapidRecallGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRapidRecallGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RapidRecall model
+   */
+  readonly fields: RapidRecallFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RapidRecall.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RapidRecallClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    course<T extends CourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourseDefaultArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    courseType<T extends RapidRecall$courseTypeArgs<ExtArgs> = {}>(args?: Subset<T, RapidRecall$courseTypeArgs<ExtArgs>>): Prisma__CourseTypeClient<$Result.GetResult<Prisma.$CourseTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    subject<T extends RapidRecall$subjectArgs<ExtArgs> = {}>(args?: Subset<T, RapidRecall$subjectArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    lesson<T extends RapidRecall$lessonArgs<ExtArgs> = {}>(args?: Subset<T, RapidRecall$lessonArgs<ExtArgs>>): Prisma__LessonClient<$Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    cards<T extends RapidRecall$cardsArgs<ExtArgs> = {}>(args?: Subset<T, RapidRecall$cardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallCardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RapidRecall model
+   */
+  interface RapidRecallFieldRefs {
+    readonly id: FieldRef<"RapidRecall", 'Int'>
+    readonly courseId: FieldRef<"RapidRecall", 'Int'>
+    readonly courseTypeId: FieldRef<"RapidRecall", 'Int'>
+    readonly subjectId: FieldRef<"RapidRecall", 'Int'>
+    readonly lessonId: FieldRef<"RapidRecall", 'Int'>
+    readonly title: FieldRef<"RapidRecall", 'String'>
+    readonly description: FieldRef<"RapidRecall", 'String'>
+    readonly noteUrl: FieldRef<"RapidRecall", 'String'>
+    readonly notePublicId: FieldRef<"RapidRecall", 'String'>
+    readonly noteFileType: FieldRef<"RapidRecall", 'String'>
+    readonly status: FieldRef<"RapidRecall", 'CourseStatus'>
+    readonly displayOrder: FieldRef<"RapidRecall", 'Int'>
+    readonly createdAt: FieldRef<"RapidRecall", 'DateTime'>
+    readonly updatedAt: FieldRef<"RapidRecall", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RapidRecall findUnique
+   */
+  export type RapidRecallFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+    /**
+     * Filter, which RapidRecall to fetch.
+     */
+    where: RapidRecallWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecall findUniqueOrThrow
+   */
+  export type RapidRecallFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+    /**
+     * Filter, which RapidRecall to fetch.
+     */
+    where: RapidRecallWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecall findFirst
+   */
+  export type RapidRecallFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+    /**
+     * Filter, which RapidRecall to fetch.
+     */
+    where?: RapidRecallWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RapidRecalls to fetch.
+     */
+    orderBy?: RapidRecallOrderByWithRelationInput | RapidRecallOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RapidRecalls.
+     */
+    cursor?: RapidRecallWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RapidRecalls from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RapidRecalls.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RapidRecalls.
+     */
+    distinct?: RapidRecallScalarFieldEnum | RapidRecallScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecall findFirstOrThrow
+   */
+  export type RapidRecallFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+    /**
+     * Filter, which RapidRecall to fetch.
+     */
+    where?: RapidRecallWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RapidRecalls to fetch.
+     */
+    orderBy?: RapidRecallOrderByWithRelationInput | RapidRecallOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RapidRecalls.
+     */
+    cursor?: RapidRecallWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RapidRecalls from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RapidRecalls.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RapidRecalls.
+     */
+    distinct?: RapidRecallScalarFieldEnum | RapidRecallScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecall findMany
+   */
+  export type RapidRecallFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+    /**
+     * Filter, which RapidRecalls to fetch.
+     */
+    where?: RapidRecallWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RapidRecalls to fetch.
+     */
+    orderBy?: RapidRecallOrderByWithRelationInput | RapidRecallOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RapidRecalls.
+     */
+    cursor?: RapidRecallWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RapidRecalls from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RapidRecalls.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RapidRecalls.
+     */
+    distinct?: RapidRecallScalarFieldEnum | RapidRecallScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecall create
+   */
+  export type RapidRecallCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RapidRecall.
+     */
+    data: XOR<RapidRecallCreateInput, RapidRecallUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecall createMany
+   */
+  export type RapidRecallCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RapidRecalls.
+     */
+    data: RapidRecallCreateManyInput | RapidRecallCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RapidRecall createManyAndReturn
+   */
+  export type RapidRecallCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * The data used to create many RapidRecalls.
+     */
+    data: RapidRecallCreateManyInput | RapidRecallCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RapidRecall update
+   */
+  export type RapidRecallUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RapidRecall.
+     */
+    data: XOR<RapidRecallUpdateInput, RapidRecallUncheckedUpdateInput>
+    /**
+     * Choose, which RapidRecall to update.
+     */
+    where: RapidRecallWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecall updateMany
+   */
+  export type RapidRecallUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RapidRecalls.
+     */
+    data: XOR<RapidRecallUpdateManyMutationInput, RapidRecallUncheckedUpdateManyInput>
+    /**
+     * Filter which RapidRecalls to update
+     */
+    where?: RapidRecallWhereInput
+    /**
+     * Limit how many RapidRecalls to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RapidRecall updateManyAndReturn
+   */
+  export type RapidRecallUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * The data used to update RapidRecalls.
+     */
+    data: XOR<RapidRecallUpdateManyMutationInput, RapidRecallUncheckedUpdateManyInput>
+    /**
+     * Filter which RapidRecalls to update
+     */
+    where?: RapidRecallWhereInput
+    /**
+     * Limit how many RapidRecalls to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RapidRecall upsert
+   */
+  export type RapidRecallUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RapidRecall to update in case it exists.
+     */
+    where: RapidRecallWhereUniqueInput
+    /**
+     * In case the RapidRecall found by the `where` argument doesn't exist, create a new RapidRecall with this data.
+     */
+    create: XOR<RapidRecallCreateInput, RapidRecallUncheckedCreateInput>
+    /**
+     * In case the RapidRecall was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RapidRecallUpdateInput, RapidRecallUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecall delete
+   */
+  export type RapidRecallDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+    /**
+     * Filter which RapidRecall to delete.
+     */
+    where: RapidRecallWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecall deleteMany
+   */
+  export type RapidRecallDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RapidRecalls to delete
+     */
+    where?: RapidRecallWhereInput
+    /**
+     * Limit how many RapidRecalls to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RapidRecall.courseType
+   */
+  export type RapidRecall$courseTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CourseType
+     */
+    select?: CourseTypeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CourseType
+     */
+    omit?: CourseTypeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CourseTypeInclude<ExtArgs> | null
+    where?: CourseTypeWhereInput
+  }
+
+  /**
+   * RapidRecall.subject
+   */
+  export type RapidRecall$subjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Subject
+     */
+    select?: SubjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Subject
+     */
+    omit?: SubjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubjectInclude<ExtArgs> | null
+    where?: SubjectWhereInput
+  }
+
+  /**
+   * RapidRecall.lesson
+   */
+  export type RapidRecall$lessonArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Lesson
+     */
+    select?: LessonSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Lesson
+     */
+    omit?: LessonOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonInclude<ExtArgs> | null
+    where?: LessonWhereInput
+  }
+
+  /**
+   * RapidRecall.cards
+   */
+  export type RapidRecall$cardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecallCard
+     */
+    select?: RapidRecallCardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecallCard
+     */
+    omit?: RapidRecallCardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallCardInclude<ExtArgs> | null
+    where?: RapidRecallCardWhereInput
+    orderBy?: RapidRecallCardOrderByWithRelationInput | RapidRecallCardOrderByWithRelationInput[]
+    cursor?: RapidRecallCardWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RapidRecallCardScalarFieldEnum | RapidRecallCardScalarFieldEnum[]
+  }
+
+  /**
+   * RapidRecall without action
+   */
+  export type RapidRecallDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model RapidRecallCard
+   */
+
+  export type AggregateRapidRecallCard = {
+    _count: RapidRecallCardCountAggregateOutputType | null
+    _avg: RapidRecallCardAvgAggregateOutputType | null
+    _sum: RapidRecallCardSumAggregateOutputType | null
+    _min: RapidRecallCardMinAggregateOutputType | null
+    _max: RapidRecallCardMaxAggregateOutputType | null
+  }
+
+  export type RapidRecallCardAvgAggregateOutputType = {
+    id: number | null
+    recallId: number | null
+    displayOrder: number | null
+  }
+
+  export type RapidRecallCardSumAggregateOutputType = {
+    id: number | null
+    recallId: number | null
+    displayOrder: number | null
+  }
+
+  export type RapidRecallCardMinAggregateOutputType = {
+    id: number | null
+    recallId: number | null
+    imageUrl: string | null
+    note: string | null
+    displayOrder: number | null
+  }
+
+  export type RapidRecallCardMaxAggregateOutputType = {
+    id: number | null
+    recallId: number | null
+    imageUrl: string | null
+    note: string | null
+    displayOrder: number | null
+  }
+
+  export type RapidRecallCardCountAggregateOutputType = {
+    id: number
+    recallId: number
+    imageUrl: number
+    note: number
+    displayOrder: number
+    _all: number
+  }
+
+
+  export type RapidRecallCardAvgAggregateInputType = {
+    id?: true
+    recallId?: true
+    displayOrder?: true
+  }
+
+  export type RapidRecallCardSumAggregateInputType = {
+    id?: true
+    recallId?: true
+    displayOrder?: true
+  }
+
+  export type RapidRecallCardMinAggregateInputType = {
+    id?: true
+    recallId?: true
+    imageUrl?: true
+    note?: true
+    displayOrder?: true
+  }
+
+  export type RapidRecallCardMaxAggregateInputType = {
+    id?: true
+    recallId?: true
+    imageUrl?: true
+    note?: true
+    displayOrder?: true
+  }
+
+  export type RapidRecallCardCountAggregateInputType = {
+    id?: true
+    recallId?: true
+    imageUrl?: true
+    note?: true
+    displayOrder?: true
+    _all?: true
+  }
+
+  export type RapidRecallCardAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RapidRecallCard to aggregate.
+     */
+    where?: RapidRecallCardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RapidRecallCards to fetch.
+     */
+    orderBy?: RapidRecallCardOrderByWithRelationInput | RapidRecallCardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RapidRecallCardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RapidRecallCards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RapidRecallCards.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RapidRecallCards
+    **/
+    _count?: true | RapidRecallCardCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RapidRecallCardAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RapidRecallCardSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RapidRecallCardMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RapidRecallCardMaxAggregateInputType
+  }
+
+  export type GetRapidRecallCardAggregateType<T extends RapidRecallCardAggregateArgs> = {
+        [P in keyof T & keyof AggregateRapidRecallCard]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRapidRecallCard[P]>
+      : GetScalarType<T[P], AggregateRapidRecallCard[P]>
+  }
+
+
+
+
+  export type RapidRecallCardGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RapidRecallCardWhereInput
+    orderBy?: RapidRecallCardOrderByWithAggregationInput | RapidRecallCardOrderByWithAggregationInput[]
+    by: RapidRecallCardScalarFieldEnum[] | RapidRecallCardScalarFieldEnum
+    having?: RapidRecallCardScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RapidRecallCardCountAggregateInputType | true
+    _avg?: RapidRecallCardAvgAggregateInputType
+    _sum?: RapidRecallCardSumAggregateInputType
+    _min?: RapidRecallCardMinAggregateInputType
+    _max?: RapidRecallCardMaxAggregateInputType
+  }
+
+  export type RapidRecallCardGroupByOutputType = {
+    id: number
+    recallId: number
+    imageUrl: string | null
+    note: string | null
+    displayOrder: number
+    _count: RapidRecallCardCountAggregateOutputType | null
+    _avg: RapidRecallCardAvgAggregateOutputType | null
+    _sum: RapidRecallCardSumAggregateOutputType | null
+    _min: RapidRecallCardMinAggregateOutputType | null
+    _max: RapidRecallCardMaxAggregateOutputType | null
+  }
+
+  type GetRapidRecallCardGroupByPayload<T extends RapidRecallCardGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RapidRecallCardGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RapidRecallCardGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RapidRecallCardGroupByOutputType[P]>
+            : GetScalarType<T[P], RapidRecallCardGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RapidRecallCardSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    recallId?: boolean
+    imageUrl?: boolean
+    note?: boolean
+    displayOrder?: boolean
+    recall?: boolean | RapidRecallDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["rapidRecallCard"]>
+
+  export type RapidRecallCardSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    recallId?: boolean
+    imageUrl?: boolean
+    note?: boolean
+    displayOrder?: boolean
+    recall?: boolean | RapidRecallDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["rapidRecallCard"]>
+
+  export type RapidRecallCardSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    recallId?: boolean
+    imageUrl?: boolean
+    note?: boolean
+    displayOrder?: boolean
+    recall?: boolean | RapidRecallDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["rapidRecallCard"]>
+
+  export type RapidRecallCardSelectScalar = {
+    id?: boolean
+    recallId?: boolean
+    imageUrl?: boolean
+    note?: boolean
+    displayOrder?: boolean
+  }
+
+  export type RapidRecallCardOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "recallId" | "imageUrl" | "note" | "displayOrder", ExtArgs["result"]["rapidRecallCard"]>
+  export type RapidRecallCardInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    recall?: boolean | RapidRecallDefaultArgs<ExtArgs>
+  }
+  export type RapidRecallCardIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    recall?: boolean | RapidRecallDefaultArgs<ExtArgs>
+  }
+  export type RapidRecallCardIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    recall?: boolean | RapidRecallDefaultArgs<ExtArgs>
+  }
+
+  export type $RapidRecallCardPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RapidRecallCard"
+    objects: {
+      recall: Prisma.$RapidRecallPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      recallId: number
+      imageUrl: string | null
+      note: string | null
+      displayOrder: number
+    }, ExtArgs["result"]["rapidRecallCard"]>
+    composites: {}
+  }
+
+  type RapidRecallCardGetPayload<S extends boolean | null | undefined | RapidRecallCardDefaultArgs> = $Result.GetResult<Prisma.$RapidRecallCardPayload, S>
+
+  type RapidRecallCardCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RapidRecallCardFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
+      select?: RapidRecallCardCountAggregateInputType | true
+    }
+
+  export interface RapidRecallCardDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RapidRecallCard'], meta: { name: 'RapidRecallCard' } }
+    /**
+     * Find zero or one RapidRecallCard that matches the filter.
+     * @param {RapidRecallCardFindUniqueArgs} args - Arguments to find a RapidRecallCard
+     * @example
+     * // Get one RapidRecallCard
+     * const rapidRecallCard = await prisma.rapidRecallCard.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RapidRecallCardFindUniqueArgs>(args: SelectSubset<T, RapidRecallCardFindUniqueArgs<ExtArgs>>): Prisma__RapidRecallCardClient<$Result.GetResult<Prisma.$RapidRecallCardPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RapidRecallCard that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RapidRecallCardFindUniqueOrThrowArgs} args - Arguments to find a RapidRecallCard
+     * @example
+     * // Get one RapidRecallCard
+     * const rapidRecallCard = await prisma.rapidRecallCard.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RapidRecallCardFindUniqueOrThrowArgs>(args: SelectSubset<T, RapidRecallCardFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RapidRecallCardClient<$Result.GetResult<Prisma.$RapidRecallCardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RapidRecallCard that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RapidRecallCardFindFirstArgs} args - Arguments to find a RapidRecallCard
+     * @example
+     * // Get one RapidRecallCard
+     * const rapidRecallCard = await prisma.rapidRecallCard.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RapidRecallCardFindFirstArgs>(args?: SelectSubset<T, RapidRecallCardFindFirstArgs<ExtArgs>>): Prisma__RapidRecallCardClient<$Result.GetResult<Prisma.$RapidRecallCardPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RapidRecallCard that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RapidRecallCardFindFirstOrThrowArgs} args - Arguments to find a RapidRecallCard
+     * @example
+     * // Get one RapidRecallCard
+     * const rapidRecallCard = await prisma.rapidRecallCard.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RapidRecallCardFindFirstOrThrowArgs>(args?: SelectSubset<T, RapidRecallCardFindFirstOrThrowArgs<ExtArgs>>): Prisma__RapidRecallCardClient<$Result.GetResult<Prisma.$RapidRecallCardPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RapidRecallCards that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RapidRecallCardFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RapidRecallCards
+     * const rapidRecallCards = await prisma.rapidRecallCard.findMany()
+     * 
+     * // Get first 10 RapidRecallCards
+     * const rapidRecallCards = await prisma.rapidRecallCard.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const rapidRecallCardWithIdOnly = await prisma.rapidRecallCard.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RapidRecallCardFindManyArgs>(args?: SelectSubset<T, RapidRecallCardFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallCardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RapidRecallCard.
+     * @param {RapidRecallCardCreateArgs} args - Arguments to create a RapidRecallCard.
+     * @example
+     * // Create one RapidRecallCard
+     * const RapidRecallCard = await prisma.rapidRecallCard.create({
+     *   data: {
+     *     // ... data to create a RapidRecallCard
+     *   }
+     * })
+     * 
+     */
+    create<T extends RapidRecallCardCreateArgs>(args: SelectSubset<T, RapidRecallCardCreateArgs<ExtArgs>>): Prisma__RapidRecallCardClient<$Result.GetResult<Prisma.$RapidRecallCardPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RapidRecallCards.
+     * @param {RapidRecallCardCreateManyArgs} args - Arguments to create many RapidRecallCards.
+     * @example
+     * // Create many RapidRecallCards
+     * const rapidRecallCard = await prisma.rapidRecallCard.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RapidRecallCardCreateManyArgs>(args?: SelectSubset<T, RapidRecallCardCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RapidRecallCards and returns the data saved in the database.
+     * @param {RapidRecallCardCreateManyAndReturnArgs} args - Arguments to create many RapidRecallCards.
+     * @example
+     * // Create many RapidRecallCards
+     * const rapidRecallCard = await prisma.rapidRecallCard.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RapidRecallCards and only return the `id`
+     * const rapidRecallCardWithIdOnly = await prisma.rapidRecallCard.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RapidRecallCardCreateManyAndReturnArgs>(args?: SelectSubset<T, RapidRecallCardCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallCardPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RapidRecallCard.
+     * @param {RapidRecallCardDeleteArgs} args - Arguments to delete one RapidRecallCard.
+     * @example
+     * // Delete one RapidRecallCard
+     * const RapidRecallCard = await prisma.rapidRecallCard.delete({
+     *   where: {
+     *     // ... filter to delete one RapidRecallCard
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RapidRecallCardDeleteArgs>(args: SelectSubset<T, RapidRecallCardDeleteArgs<ExtArgs>>): Prisma__RapidRecallCardClient<$Result.GetResult<Prisma.$RapidRecallCardPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RapidRecallCard.
+     * @param {RapidRecallCardUpdateArgs} args - Arguments to update one RapidRecallCard.
+     * @example
+     * // Update one RapidRecallCard
+     * const rapidRecallCard = await prisma.rapidRecallCard.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RapidRecallCardUpdateArgs>(args: SelectSubset<T, RapidRecallCardUpdateArgs<ExtArgs>>): Prisma__RapidRecallCardClient<$Result.GetResult<Prisma.$RapidRecallCardPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RapidRecallCards.
+     * @param {RapidRecallCardDeleteManyArgs} args - Arguments to filter RapidRecallCards to delete.
+     * @example
+     * // Delete a few RapidRecallCards
+     * const { count } = await prisma.rapidRecallCard.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RapidRecallCardDeleteManyArgs>(args?: SelectSubset<T, RapidRecallCardDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RapidRecallCards.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RapidRecallCardUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RapidRecallCards
+     * const rapidRecallCard = await prisma.rapidRecallCard.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RapidRecallCardUpdateManyArgs>(args: SelectSubset<T, RapidRecallCardUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RapidRecallCards and returns the data updated in the database.
+     * @param {RapidRecallCardUpdateManyAndReturnArgs} args - Arguments to update many RapidRecallCards.
+     * @example
+     * // Update many RapidRecallCards
+     * const rapidRecallCard = await prisma.rapidRecallCard.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RapidRecallCards and only return the `id`
+     * const rapidRecallCardWithIdOnly = await prisma.rapidRecallCard.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RapidRecallCardUpdateManyAndReturnArgs>(args: SelectSubset<T, RapidRecallCardUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallCardPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RapidRecallCard.
+     * @param {RapidRecallCardUpsertArgs} args - Arguments to update or create a RapidRecallCard.
+     * @example
+     * // Update or create a RapidRecallCard
+     * const rapidRecallCard = await prisma.rapidRecallCard.upsert({
+     *   create: {
+     *     // ... data to create a RapidRecallCard
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RapidRecallCard we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RapidRecallCardUpsertArgs>(args: SelectSubset<T, RapidRecallCardUpsertArgs<ExtArgs>>): Prisma__RapidRecallCardClient<$Result.GetResult<Prisma.$RapidRecallCardPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RapidRecallCards.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RapidRecallCardCountArgs} args - Arguments to filter RapidRecallCards to count.
+     * @example
+     * // Count the number of RapidRecallCards
+     * const count = await prisma.rapidRecallCard.count({
+     *   where: {
+     *     // ... the filter for the RapidRecallCards we want to count
+     *   }
+     * })
+    **/
+    count<T extends RapidRecallCardCountArgs>(
+      args?: Subset<T, RapidRecallCardCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RapidRecallCardCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RapidRecallCard.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RapidRecallCardAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RapidRecallCardAggregateArgs>(args: Subset<T, RapidRecallCardAggregateArgs>): Prisma.PrismaPromise<GetRapidRecallCardAggregateType<T>>
+
+    /**
+     * Group by RapidRecallCard.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RapidRecallCardGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RapidRecallCardGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RapidRecallCardGroupByArgs['orderBy'] }
+        : { orderBy?: RapidRecallCardGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RapidRecallCardGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRapidRecallCardGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RapidRecallCard model
+   */
+  readonly fields: RapidRecallCardFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RapidRecallCard.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RapidRecallCardClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    recall<T extends RapidRecallDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RapidRecallDefaultArgs<ExtArgs>>): Prisma__RapidRecallClient<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RapidRecallCard model
+   */
+  interface RapidRecallCardFieldRefs {
+    readonly id: FieldRef<"RapidRecallCard", 'Int'>
+    readonly recallId: FieldRef<"RapidRecallCard", 'Int'>
+    readonly imageUrl: FieldRef<"RapidRecallCard", 'String'>
+    readonly note: FieldRef<"RapidRecallCard", 'String'>
+    readonly displayOrder: FieldRef<"RapidRecallCard", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RapidRecallCard findUnique
+   */
+  export type RapidRecallCardFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecallCard
+     */
+    select?: RapidRecallCardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecallCard
+     */
+    omit?: RapidRecallCardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallCardInclude<ExtArgs> | null
+    /**
+     * Filter, which RapidRecallCard to fetch.
+     */
+    where: RapidRecallCardWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecallCard findUniqueOrThrow
+   */
+  export type RapidRecallCardFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecallCard
+     */
+    select?: RapidRecallCardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecallCard
+     */
+    omit?: RapidRecallCardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallCardInclude<ExtArgs> | null
+    /**
+     * Filter, which RapidRecallCard to fetch.
+     */
+    where: RapidRecallCardWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecallCard findFirst
+   */
+  export type RapidRecallCardFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecallCard
+     */
+    select?: RapidRecallCardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecallCard
+     */
+    omit?: RapidRecallCardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallCardInclude<ExtArgs> | null
+    /**
+     * Filter, which RapidRecallCard to fetch.
+     */
+    where?: RapidRecallCardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RapidRecallCards to fetch.
+     */
+    orderBy?: RapidRecallCardOrderByWithRelationInput | RapidRecallCardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RapidRecallCards.
+     */
+    cursor?: RapidRecallCardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RapidRecallCards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RapidRecallCards.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RapidRecallCards.
+     */
+    distinct?: RapidRecallCardScalarFieldEnum | RapidRecallCardScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecallCard findFirstOrThrow
+   */
+  export type RapidRecallCardFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecallCard
+     */
+    select?: RapidRecallCardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecallCard
+     */
+    omit?: RapidRecallCardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallCardInclude<ExtArgs> | null
+    /**
+     * Filter, which RapidRecallCard to fetch.
+     */
+    where?: RapidRecallCardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RapidRecallCards to fetch.
+     */
+    orderBy?: RapidRecallCardOrderByWithRelationInput | RapidRecallCardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RapidRecallCards.
+     */
+    cursor?: RapidRecallCardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RapidRecallCards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RapidRecallCards.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RapidRecallCards.
+     */
+    distinct?: RapidRecallCardScalarFieldEnum | RapidRecallCardScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecallCard findMany
+   */
+  export type RapidRecallCardFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecallCard
+     */
+    select?: RapidRecallCardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecallCard
+     */
+    omit?: RapidRecallCardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallCardInclude<ExtArgs> | null
+    /**
+     * Filter, which RapidRecallCards to fetch.
+     */
+    where?: RapidRecallCardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RapidRecallCards to fetch.
+     */
+    orderBy?: RapidRecallCardOrderByWithRelationInput | RapidRecallCardOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RapidRecallCards.
+     */
+    cursor?: RapidRecallCardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RapidRecallCards from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RapidRecallCards.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RapidRecallCards.
+     */
+    distinct?: RapidRecallCardScalarFieldEnum | RapidRecallCardScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecallCard create
+   */
+  export type RapidRecallCardCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecallCard
+     */
+    select?: RapidRecallCardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecallCard
+     */
+    omit?: RapidRecallCardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallCardInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RapidRecallCard.
+     */
+    data: XOR<RapidRecallCardCreateInput, RapidRecallCardUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecallCard createMany
+   */
+  export type RapidRecallCardCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RapidRecallCards.
+     */
+    data: RapidRecallCardCreateManyInput | RapidRecallCardCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RapidRecallCard createManyAndReturn
+   */
+  export type RapidRecallCardCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecallCard
+     */
+    select?: RapidRecallCardSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecallCard
+     */
+    omit?: RapidRecallCardOmit<ExtArgs> | null
+    /**
+     * The data used to create many RapidRecallCards.
+     */
+    data: RapidRecallCardCreateManyInput | RapidRecallCardCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallCardIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RapidRecallCard update
+   */
+  export type RapidRecallCardUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecallCard
+     */
+    select?: RapidRecallCardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecallCard
+     */
+    omit?: RapidRecallCardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallCardInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RapidRecallCard.
+     */
+    data: XOR<RapidRecallCardUpdateInput, RapidRecallCardUncheckedUpdateInput>
+    /**
+     * Choose, which RapidRecallCard to update.
+     */
+    where: RapidRecallCardWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecallCard updateMany
+   */
+  export type RapidRecallCardUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RapidRecallCards.
+     */
+    data: XOR<RapidRecallCardUpdateManyMutationInput, RapidRecallCardUncheckedUpdateManyInput>
+    /**
+     * Filter which RapidRecallCards to update
+     */
+    where?: RapidRecallCardWhereInput
+    /**
+     * Limit how many RapidRecallCards to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RapidRecallCard updateManyAndReturn
+   */
+  export type RapidRecallCardUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecallCard
+     */
+    select?: RapidRecallCardSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecallCard
+     */
+    omit?: RapidRecallCardOmit<ExtArgs> | null
+    /**
+     * The data used to update RapidRecallCards.
+     */
+    data: XOR<RapidRecallCardUpdateManyMutationInput, RapidRecallCardUncheckedUpdateManyInput>
+    /**
+     * Filter which RapidRecallCards to update
+     */
+    where?: RapidRecallCardWhereInput
+    /**
+     * Limit how many RapidRecallCards to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallCardIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RapidRecallCard upsert
+   */
+  export type RapidRecallCardUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecallCard
+     */
+    select?: RapidRecallCardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecallCard
+     */
+    omit?: RapidRecallCardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallCardInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RapidRecallCard to update in case it exists.
+     */
+    where: RapidRecallCardWhereUniqueInput
+    /**
+     * In case the RapidRecallCard found by the `where` argument doesn't exist, create a new RapidRecallCard with this data.
+     */
+    create: XOR<RapidRecallCardCreateInput, RapidRecallCardUncheckedCreateInput>
+    /**
+     * In case the RapidRecallCard was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RapidRecallCardUpdateInput, RapidRecallCardUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecallCard delete
+   */
+  export type RapidRecallCardDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecallCard
+     */
+    select?: RapidRecallCardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecallCard
+     */
+    omit?: RapidRecallCardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallCardInclude<ExtArgs> | null
+    /**
+     * Filter which RapidRecallCard to delete.
+     */
+    where: RapidRecallCardWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * RapidRecallCard deleteMany
+   */
+  export type RapidRecallCardDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RapidRecallCards to delete
+     */
+    where?: RapidRecallCardWhereInput
+    /**
+     * Limit how many RapidRecallCards to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RapidRecallCard without action
+   */
+  export type RapidRecallCardDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecallCard
+     */
+    select?: RapidRecallCardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecallCard
+     */
+    omit?: RapidRecallCardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallCardInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -43777,6 +46613,37 @@ export namespace Prisma {
   export type DailyQuizAnswerScalarFieldEnum = (typeof DailyQuizAnswerScalarFieldEnum)[keyof typeof DailyQuizAnswerScalarFieldEnum]
 
 
+  export const RapidRecallScalarFieldEnum: {
+    id: 'id',
+    courseId: 'courseId',
+    courseTypeId: 'courseTypeId',
+    subjectId: 'subjectId',
+    lessonId: 'lessonId',
+    title: 'title',
+    description: 'description',
+    noteUrl: 'noteUrl',
+    notePublicId: 'notePublicId',
+    noteFileType: 'noteFileType',
+    status: 'status',
+    displayOrder: 'displayOrder',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type RapidRecallScalarFieldEnum = (typeof RapidRecallScalarFieldEnum)[keyof typeof RapidRecallScalarFieldEnum]
+
+
+  export const RapidRecallCardScalarFieldEnum: {
+    id: 'id',
+    recallId: 'recallId',
+    imageUrl: 'imageUrl',
+    note: 'note',
+    displayOrder: 'displayOrder'
+  };
+
+  export type RapidRecallCardScalarFieldEnum = (typeof RapidRecallCardScalarFieldEnum)[keyof typeof RapidRecallCardScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -44184,6 +47051,7 @@ export namespace Prisma {
     courses?: CourseListRelationFilter
     questions?: QuestionListRelationFilter
     quizzes?: QuizListRelationFilter
+    rapidRecalls?: RapidRecallListRelationFilter
   }
 
   export type SubjectOrderByWithRelationInput = {
@@ -44197,6 +47065,7 @@ export namespace Prisma {
     courses?: CourseOrderByRelationAggregateInput
     questions?: QuestionOrderByRelationAggregateInput
     quizzes?: QuizOrderByRelationAggregateInput
+    rapidRecalls?: RapidRecallOrderByRelationAggregateInput
   }
 
   export type SubjectWhereUniqueInput = Prisma.AtLeast<{
@@ -44213,6 +47082,7 @@ export namespace Prisma {
     courses?: CourseListRelationFilter
     questions?: QuestionListRelationFilter
     quizzes?: QuizListRelationFilter
+    rapidRecalls?: RapidRecallListRelationFilter
   }, "id" | "name">
 
   export type SubjectOrderByWithAggregationInput = {
@@ -44407,6 +47277,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionListRelationFilter
     tests?: TestListRelationFilter
     dailyQuizzes?: DailyQuizAttemptListRelationFilter
+    rapidRecalls?: RapidRecallListRelationFilter
   }
 
   export type CourseOrderByWithRelationInput = {
@@ -44431,6 +47302,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionOrderByRelationAggregateInput
     tests?: TestOrderByRelationAggregateInput
     dailyQuizzes?: DailyQuizAttemptOrderByRelationAggregateInput
+    rapidRecalls?: RapidRecallOrderByRelationAggregateInput
   }
 
   export type CourseWhereUniqueInput = Prisma.AtLeast<{
@@ -44458,6 +47330,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionListRelationFilter
     tests?: TestListRelationFilter
     dailyQuizzes?: DailyQuizAttemptListRelationFilter
+    rapidRecalls?: RapidRecallListRelationFilter
   }, "id">
 
   export type CourseOrderByWithAggregationInput = {
@@ -44515,6 +47388,7 @@ export namespace Prisma {
     chapters?: ChapterListRelationFilter
     selectedBy?: UserListRelationFilter
     tests?: TestListRelationFilter
+    rapidRecalls?: RapidRecallListRelationFilter
   }
 
   export type CourseTypeOrderByWithRelationInput = {
@@ -44531,6 +47405,7 @@ export namespace Prisma {
     chapters?: ChapterOrderByRelationAggregateInput
     selectedBy?: UserOrderByRelationAggregateInput
     tests?: TestOrderByRelationAggregateInput
+    rapidRecalls?: RapidRecallOrderByRelationAggregateInput
   }
 
   export type CourseTypeWhereUniqueInput = Prisma.AtLeast<{
@@ -44550,6 +47425,7 @@ export namespace Prisma {
     chapters?: ChapterListRelationFilter
     selectedBy?: UserListRelationFilter
     tests?: TestListRelationFilter
+    rapidRecalls?: RapidRecallListRelationFilter
   }, "id">
 
   export type CourseTypeOrderByWithAggregationInput = {
@@ -44689,6 +47565,7 @@ export namespace Prisma {
     savedBy?: SavedLessonListRelationFilter
     progress?: LessonProgressListRelationFilter
     comments?: LessonCommentListRelationFilter
+    rapidRecalls?: RapidRecallListRelationFilter
   }
 
   export type LessonOrderByWithRelationInput = {
@@ -44720,6 +47597,7 @@ export namespace Prisma {
     savedBy?: SavedLessonOrderByRelationAggregateInput
     progress?: LessonProgressOrderByRelationAggregateInput
     comments?: LessonCommentOrderByRelationAggregateInput
+    rapidRecalls?: RapidRecallOrderByRelationAggregateInput
   }
 
   export type LessonWhereUniqueInput = Prisma.AtLeast<{
@@ -44754,6 +47632,7 @@ export namespace Prisma {
     savedBy?: SavedLessonListRelationFilter
     progress?: LessonProgressListRelationFilter
     comments?: LessonCommentListRelationFilter
+    rapidRecalls?: RapidRecallListRelationFilter
   }, "id" | "quizId">
 
   export type LessonOrderByWithAggregationInput = {
@@ -46458,6 +49337,177 @@ export namespace Prisma {
     answeredAt?: DateTimeWithAggregatesFilter<"DailyQuizAnswer"> | Date | string
   }
 
+  export type RapidRecallWhereInput = {
+    AND?: RapidRecallWhereInput | RapidRecallWhereInput[]
+    OR?: RapidRecallWhereInput[]
+    NOT?: RapidRecallWhereInput | RapidRecallWhereInput[]
+    id?: IntFilter<"RapidRecall"> | number
+    courseId?: IntFilter<"RapidRecall"> | number
+    courseTypeId?: IntNullableFilter<"RapidRecall"> | number | null
+    subjectId?: IntNullableFilter<"RapidRecall"> | number | null
+    lessonId?: IntNullableFilter<"RapidRecall"> | number | null
+    title?: StringFilter<"RapidRecall"> | string
+    description?: StringNullableFilter<"RapidRecall"> | string | null
+    noteUrl?: StringNullableFilter<"RapidRecall"> | string | null
+    notePublicId?: StringNullableFilter<"RapidRecall"> | string | null
+    noteFileType?: StringNullableFilter<"RapidRecall"> | string | null
+    status?: EnumCourseStatusFilter<"RapidRecall"> | $Enums.CourseStatus
+    displayOrder?: IntFilter<"RapidRecall"> | number
+    createdAt?: DateTimeFilter<"RapidRecall"> | Date | string
+    updatedAt?: DateTimeFilter<"RapidRecall"> | Date | string
+    course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
+    courseType?: XOR<CourseTypeNullableScalarRelationFilter, CourseTypeWhereInput> | null
+    subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
+    lesson?: XOR<LessonNullableScalarRelationFilter, LessonWhereInput> | null
+    cards?: RapidRecallCardListRelationFilter
+  }
+
+  export type RapidRecallOrderByWithRelationInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    courseTypeId?: SortOrderInput | SortOrder
+    subjectId?: SortOrderInput | SortOrder
+    lessonId?: SortOrderInput | SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    noteUrl?: SortOrderInput | SortOrder
+    notePublicId?: SortOrderInput | SortOrder
+    noteFileType?: SortOrderInput | SortOrder
+    status?: SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    course?: CourseOrderByWithRelationInput
+    courseType?: CourseTypeOrderByWithRelationInput
+    subject?: SubjectOrderByWithRelationInput
+    lesson?: LessonOrderByWithRelationInput
+    cards?: RapidRecallCardOrderByRelationAggregateInput
+  }
+
+  export type RapidRecallWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: RapidRecallWhereInput | RapidRecallWhereInput[]
+    OR?: RapidRecallWhereInput[]
+    NOT?: RapidRecallWhereInput | RapidRecallWhereInput[]
+    courseId?: IntFilter<"RapidRecall"> | number
+    courseTypeId?: IntNullableFilter<"RapidRecall"> | number | null
+    subjectId?: IntNullableFilter<"RapidRecall"> | number | null
+    lessonId?: IntNullableFilter<"RapidRecall"> | number | null
+    title?: StringFilter<"RapidRecall"> | string
+    description?: StringNullableFilter<"RapidRecall"> | string | null
+    noteUrl?: StringNullableFilter<"RapidRecall"> | string | null
+    notePublicId?: StringNullableFilter<"RapidRecall"> | string | null
+    noteFileType?: StringNullableFilter<"RapidRecall"> | string | null
+    status?: EnumCourseStatusFilter<"RapidRecall"> | $Enums.CourseStatus
+    displayOrder?: IntFilter<"RapidRecall"> | number
+    createdAt?: DateTimeFilter<"RapidRecall"> | Date | string
+    updatedAt?: DateTimeFilter<"RapidRecall"> | Date | string
+    course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
+    courseType?: XOR<CourseTypeNullableScalarRelationFilter, CourseTypeWhereInput> | null
+    subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
+    lesson?: XOR<LessonNullableScalarRelationFilter, LessonWhereInput> | null
+    cards?: RapidRecallCardListRelationFilter
+  }, "id">
+
+  export type RapidRecallOrderByWithAggregationInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    courseTypeId?: SortOrderInput | SortOrder
+    subjectId?: SortOrderInput | SortOrder
+    lessonId?: SortOrderInput | SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    noteUrl?: SortOrderInput | SortOrder
+    notePublicId?: SortOrderInput | SortOrder
+    noteFileType?: SortOrderInput | SortOrder
+    status?: SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: RapidRecallCountOrderByAggregateInput
+    _avg?: RapidRecallAvgOrderByAggregateInput
+    _max?: RapidRecallMaxOrderByAggregateInput
+    _min?: RapidRecallMinOrderByAggregateInput
+    _sum?: RapidRecallSumOrderByAggregateInput
+  }
+
+  export type RapidRecallScalarWhereWithAggregatesInput = {
+    AND?: RapidRecallScalarWhereWithAggregatesInput | RapidRecallScalarWhereWithAggregatesInput[]
+    OR?: RapidRecallScalarWhereWithAggregatesInput[]
+    NOT?: RapidRecallScalarWhereWithAggregatesInput | RapidRecallScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"RapidRecall"> | number
+    courseId?: IntWithAggregatesFilter<"RapidRecall"> | number
+    courseTypeId?: IntNullableWithAggregatesFilter<"RapidRecall"> | number | null
+    subjectId?: IntNullableWithAggregatesFilter<"RapidRecall"> | number | null
+    lessonId?: IntNullableWithAggregatesFilter<"RapidRecall"> | number | null
+    title?: StringWithAggregatesFilter<"RapidRecall"> | string
+    description?: StringNullableWithAggregatesFilter<"RapidRecall"> | string | null
+    noteUrl?: StringNullableWithAggregatesFilter<"RapidRecall"> | string | null
+    notePublicId?: StringNullableWithAggregatesFilter<"RapidRecall"> | string | null
+    noteFileType?: StringNullableWithAggregatesFilter<"RapidRecall"> | string | null
+    status?: EnumCourseStatusWithAggregatesFilter<"RapidRecall"> | $Enums.CourseStatus
+    displayOrder?: IntWithAggregatesFilter<"RapidRecall"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"RapidRecall"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"RapidRecall"> | Date | string
+  }
+
+  export type RapidRecallCardWhereInput = {
+    AND?: RapidRecallCardWhereInput | RapidRecallCardWhereInput[]
+    OR?: RapidRecallCardWhereInput[]
+    NOT?: RapidRecallCardWhereInput | RapidRecallCardWhereInput[]
+    id?: IntFilter<"RapidRecallCard"> | number
+    recallId?: IntFilter<"RapidRecallCard"> | number
+    imageUrl?: StringNullableFilter<"RapidRecallCard"> | string | null
+    note?: StringNullableFilter<"RapidRecallCard"> | string | null
+    displayOrder?: IntFilter<"RapidRecallCard"> | number
+    recall?: XOR<RapidRecallScalarRelationFilter, RapidRecallWhereInput>
+  }
+
+  export type RapidRecallCardOrderByWithRelationInput = {
+    id?: SortOrder
+    recallId?: SortOrder
+    imageUrl?: SortOrderInput | SortOrder
+    note?: SortOrderInput | SortOrder
+    displayOrder?: SortOrder
+    recall?: RapidRecallOrderByWithRelationInput
+  }
+
+  export type RapidRecallCardWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: RapidRecallCardWhereInput | RapidRecallCardWhereInput[]
+    OR?: RapidRecallCardWhereInput[]
+    NOT?: RapidRecallCardWhereInput | RapidRecallCardWhereInput[]
+    recallId?: IntFilter<"RapidRecallCard"> | number
+    imageUrl?: StringNullableFilter<"RapidRecallCard"> | string | null
+    note?: StringNullableFilter<"RapidRecallCard"> | string | null
+    displayOrder?: IntFilter<"RapidRecallCard"> | number
+    recall?: XOR<RapidRecallScalarRelationFilter, RapidRecallWhereInput>
+  }, "id">
+
+  export type RapidRecallCardOrderByWithAggregationInput = {
+    id?: SortOrder
+    recallId?: SortOrder
+    imageUrl?: SortOrderInput | SortOrder
+    note?: SortOrderInput | SortOrder
+    displayOrder?: SortOrder
+    _count?: RapidRecallCardCountOrderByAggregateInput
+    _avg?: RapidRecallCardAvgOrderByAggregateInput
+    _max?: RapidRecallCardMaxOrderByAggregateInput
+    _min?: RapidRecallCardMinOrderByAggregateInput
+    _sum?: RapidRecallCardSumOrderByAggregateInput
+  }
+
+  export type RapidRecallCardScalarWhereWithAggregatesInput = {
+    AND?: RapidRecallCardScalarWhereWithAggregatesInput | RapidRecallCardScalarWhereWithAggregatesInput[]
+    OR?: RapidRecallCardScalarWhereWithAggregatesInput[]
+    NOT?: RapidRecallCardScalarWhereWithAggregatesInput | RapidRecallCardScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"RapidRecallCard"> | number
+    recallId?: IntWithAggregatesFilter<"RapidRecallCard"> | number
+    imageUrl?: StringNullableWithAggregatesFilter<"RapidRecallCard"> | string | null
+    note?: StringNullableWithAggregatesFilter<"RapidRecallCard"> | string | null
+    displayOrder?: IntWithAggregatesFilter<"RapidRecallCard"> | number
+  }
+
   export type UserCreateInput = {
     email: string
     password?: string | null
@@ -46690,6 +49740,7 @@ export namespace Prisma {
     courses?: CourseCreateNestedManyWithoutSubjectsInput
     questions?: QuestionCreateNestedManyWithoutSubjectInput
     quizzes?: QuizCreateNestedManyWithoutSubjectInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateInput = {
@@ -46703,6 +49754,7 @@ export namespace Prisma {
     courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
     questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
     quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUpdateInput = {
@@ -46715,6 +49767,7 @@ export namespace Prisma {
     courses?: CourseUpdateManyWithoutSubjectsNestedInput
     questions?: QuestionUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUpdateManyWithoutSubjectNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateInput = {
@@ -46728,6 +49781,7 @@ export namespace Prisma {
     courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectCreateManyInput = {
@@ -46916,6 +49970,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateInput = {
@@ -46939,6 +49994,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUpdateInput = {
@@ -46961,6 +50017,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateInput = {
@@ -46984,6 +50041,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseCreateManyInput = {
@@ -47041,6 +50099,7 @@ export namespace Prisma {
     chapters?: ChapterCreateNestedManyWithoutCourseTypeInput
     selectedBy?: UserCreateNestedManyWithoutSelectedCourseTypeInput
     tests?: TestCreateNestedManyWithoutCourseTypeInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseTypeInput
   }
 
   export type CourseTypeUncheckedCreateInput = {
@@ -47056,6 +50115,7 @@ export namespace Prisma {
     chapters?: ChapterUncheckedCreateNestedManyWithoutCourseTypeInput
     selectedBy?: UserUncheckedCreateNestedManyWithoutSelectedCourseTypeInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseTypeInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseTypeInput
   }
 
   export type CourseTypeUpdateInput = {
@@ -47070,6 +50130,7 @@ export namespace Prisma {
     chapters?: ChapterUpdateManyWithoutCourseTypeNestedInput
     selectedBy?: UserUpdateManyWithoutSelectedCourseTypeNestedInput
     tests?: TestUpdateManyWithoutCourseTypeNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseTypeNestedInput
   }
 
   export type CourseTypeUncheckedUpdateInput = {
@@ -47085,6 +50146,7 @@ export namespace Prisma {
     chapters?: ChapterUncheckedUpdateManyWithoutCourseTypeNestedInput
     selectedBy?: UserUncheckedUpdateManyWithoutSelectedCourseTypeNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseTypeNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseTypeNestedInput
   }
 
   export type CourseTypeCreateManyInput = {
@@ -47216,6 +50278,7 @@ export namespace Prisma {
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateInput = {
@@ -47245,6 +50308,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUpdateInput = {
@@ -47273,6 +50337,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateInput = {
@@ -47302,6 +50367,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonCreateManyInput = {
@@ -48953,6 +52019,174 @@ export namespace Prisma {
     answeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type RapidRecallCreateInput = {
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    course: CourseCreateNestedOneWithoutRapidRecallsInput
+    courseType?: CourseTypeCreateNestedOneWithoutRapidRecallsInput
+    subject?: SubjectCreateNestedOneWithoutRapidRecallsInput
+    lesson?: LessonCreateNestedOneWithoutRapidRecallsInput
+    cards?: RapidRecallCardCreateNestedManyWithoutRecallInput
+  }
+
+  export type RapidRecallUncheckedCreateInput = {
+    id?: number
+    courseId: number
+    courseTypeId?: number | null
+    subjectId?: number | null
+    lessonId?: number | null
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cards?: RapidRecallCardUncheckedCreateNestedManyWithoutRecallInput
+  }
+
+  export type RapidRecallUpdateInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    course?: CourseUpdateOneRequiredWithoutRapidRecallsNestedInput
+    courseType?: CourseTypeUpdateOneWithoutRapidRecallsNestedInput
+    subject?: SubjectUpdateOneWithoutRapidRecallsNestedInput
+    lesson?: LessonUpdateOneWithoutRapidRecallsNestedInput
+    cards?: RapidRecallCardUpdateManyWithoutRecallNestedInput
+  }
+
+  export type RapidRecallUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cards?: RapidRecallCardUncheckedUpdateManyWithoutRecallNestedInput
+  }
+
+  export type RapidRecallCreateManyInput = {
+    id?: number
+    courseId: number
+    courseTypeId?: number | null
+    subjectId?: number | null
+    lessonId?: number | null
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RapidRecallUpdateManyMutationInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RapidRecallUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RapidRecallCardCreateInput = {
+    imageUrl?: string | null
+    note?: string | null
+    displayOrder?: number
+    recall: RapidRecallCreateNestedOneWithoutCardsInput
+  }
+
+  export type RapidRecallCardUncheckedCreateInput = {
+    id?: number
+    recallId: number
+    imageUrl?: string | null
+    note?: string | null
+    displayOrder?: number
+  }
+
+  export type RapidRecallCardUpdateInput = {
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    recall?: RapidRecallUpdateOneRequiredWithoutCardsNestedInput
+  }
+
+  export type RapidRecallCardUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    recallId?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type RapidRecallCardCreateManyInput = {
+    id?: number
+    recallId: number
+    imageUrl?: string | null
+    note?: string | null
+    displayOrder?: number
+  }
+
+  export type RapidRecallCardUpdateManyMutationInput = {
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type RapidRecallCardUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    recallId?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -49344,6 +52578,12 @@ export namespace Prisma {
     none?: QuizWhereInput
   }
 
+  export type RapidRecallListRelationFilter = {
+    every?: RapidRecallWhereInput
+    some?: RapidRecallWhereInput
+    none?: RapidRecallWhereInput
+  }
+
   export type TopicOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -49353,6 +52593,10 @@ export namespace Prisma {
   }
 
   export type QuizOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RapidRecallOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -51232,6 +54476,131 @@ export namespace Prisma {
     marksAwarded?: SortOrder
   }
 
+  export type SubjectNullableScalarRelationFilter = {
+    is?: SubjectWhereInput | null
+    isNot?: SubjectWhereInput | null
+  }
+
+  export type RapidRecallCardListRelationFilter = {
+    every?: RapidRecallCardWhereInput
+    some?: RapidRecallCardWhereInput
+    none?: RapidRecallCardWhereInput
+  }
+
+  export type RapidRecallCardOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type RapidRecallCountOrderByAggregateInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    courseTypeId?: SortOrder
+    subjectId?: SortOrder
+    lessonId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    noteUrl?: SortOrder
+    notePublicId?: SortOrder
+    noteFileType?: SortOrder
+    status?: SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RapidRecallAvgOrderByAggregateInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    courseTypeId?: SortOrder
+    subjectId?: SortOrder
+    lessonId?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type RapidRecallMaxOrderByAggregateInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    courseTypeId?: SortOrder
+    subjectId?: SortOrder
+    lessonId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    noteUrl?: SortOrder
+    notePublicId?: SortOrder
+    noteFileType?: SortOrder
+    status?: SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RapidRecallMinOrderByAggregateInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    courseTypeId?: SortOrder
+    subjectId?: SortOrder
+    lessonId?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    noteUrl?: SortOrder
+    notePublicId?: SortOrder
+    noteFileType?: SortOrder
+    status?: SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RapidRecallSumOrderByAggregateInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    courseTypeId?: SortOrder
+    subjectId?: SortOrder
+    lessonId?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type RapidRecallScalarRelationFilter = {
+    is?: RapidRecallWhereInput
+    isNot?: RapidRecallWhereInput
+  }
+
+  export type RapidRecallCardCountOrderByAggregateInput = {
+    id?: SortOrder
+    recallId?: SortOrder
+    imageUrl?: SortOrder
+    note?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type RapidRecallCardAvgOrderByAggregateInput = {
+    id?: SortOrder
+    recallId?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type RapidRecallCardMaxOrderByAggregateInput = {
+    id?: SortOrder
+    recallId?: SortOrder
+    imageUrl?: SortOrder
+    note?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type RapidRecallCardMinOrderByAggregateInput = {
+    id?: SortOrder
+    recallId?: SortOrder
+    imageUrl?: SortOrder
+    note?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type RapidRecallCardSumOrderByAggregateInput = {
+    id?: SortOrder
+    recallId?: SortOrder
+    displayOrder?: SortOrder
+  }
+
   export type SessionCreateNestedManyWithoutUserInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -51823,6 +55192,13 @@ export namespace Prisma {
     connect?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
   }
 
+  export type RapidRecallCreateNestedManyWithoutSubjectInput = {
+    create?: XOR<RapidRecallCreateWithoutSubjectInput, RapidRecallUncheckedCreateWithoutSubjectInput> | RapidRecallCreateWithoutSubjectInput[] | RapidRecallUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutSubjectInput | RapidRecallCreateOrConnectWithoutSubjectInput[]
+    createMany?: RapidRecallCreateManySubjectInputEnvelope
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+  }
+
   export type TopicUncheckedCreateNestedManyWithoutSubjectInput = {
     create?: XOR<TopicCreateWithoutSubjectInput, TopicUncheckedCreateWithoutSubjectInput> | TopicCreateWithoutSubjectInput[] | TopicUncheckedCreateWithoutSubjectInput[]
     connectOrCreate?: TopicCreateOrConnectWithoutSubjectInput | TopicCreateOrConnectWithoutSubjectInput[]
@@ -51848,6 +55224,13 @@ export namespace Prisma {
     connectOrCreate?: QuizCreateOrConnectWithoutSubjectInput | QuizCreateOrConnectWithoutSubjectInput[]
     createMany?: QuizCreateManySubjectInputEnvelope
     connect?: QuizWhereUniqueInput | QuizWhereUniqueInput[]
+  }
+
+  export type RapidRecallUncheckedCreateNestedManyWithoutSubjectInput = {
+    create?: XOR<RapidRecallCreateWithoutSubjectInput, RapidRecallUncheckedCreateWithoutSubjectInput> | RapidRecallCreateWithoutSubjectInput[] | RapidRecallUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutSubjectInput | RapidRecallCreateOrConnectWithoutSubjectInput[]
+    createMany?: RapidRecallCreateManySubjectInputEnvelope
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
   }
 
   export type BoolFieldUpdateOperationsInput = {
@@ -51909,6 +55292,20 @@ export namespace Prisma {
     deleteMany?: QuizScalarWhereInput | QuizScalarWhereInput[]
   }
 
+  export type RapidRecallUpdateManyWithoutSubjectNestedInput = {
+    create?: XOR<RapidRecallCreateWithoutSubjectInput, RapidRecallUncheckedCreateWithoutSubjectInput> | RapidRecallCreateWithoutSubjectInput[] | RapidRecallUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutSubjectInput | RapidRecallCreateOrConnectWithoutSubjectInput[]
+    upsert?: RapidRecallUpsertWithWhereUniqueWithoutSubjectInput | RapidRecallUpsertWithWhereUniqueWithoutSubjectInput[]
+    createMany?: RapidRecallCreateManySubjectInputEnvelope
+    set?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    disconnect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    delete?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    update?: RapidRecallUpdateWithWhereUniqueWithoutSubjectInput | RapidRecallUpdateWithWhereUniqueWithoutSubjectInput[]
+    updateMany?: RapidRecallUpdateManyWithWhereWithoutSubjectInput | RapidRecallUpdateManyWithWhereWithoutSubjectInput[]
+    deleteMany?: RapidRecallScalarWhereInput | RapidRecallScalarWhereInput[]
+  }
+
   export type TopicUncheckedUpdateManyWithoutSubjectNestedInput = {
     create?: XOR<TopicCreateWithoutSubjectInput, TopicUncheckedCreateWithoutSubjectInput> | TopicCreateWithoutSubjectInput[] | TopicUncheckedCreateWithoutSubjectInput[]
     connectOrCreate?: TopicCreateOrConnectWithoutSubjectInput | TopicCreateOrConnectWithoutSubjectInput[]
@@ -51962,6 +55359,20 @@ export namespace Prisma {
     update?: QuizUpdateWithWhereUniqueWithoutSubjectInput | QuizUpdateWithWhereUniqueWithoutSubjectInput[]
     updateMany?: QuizUpdateManyWithWhereWithoutSubjectInput | QuizUpdateManyWithWhereWithoutSubjectInput[]
     deleteMany?: QuizScalarWhereInput | QuizScalarWhereInput[]
+  }
+
+  export type RapidRecallUncheckedUpdateManyWithoutSubjectNestedInput = {
+    create?: XOR<RapidRecallCreateWithoutSubjectInput, RapidRecallUncheckedCreateWithoutSubjectInput> | RapidRecallCreateWithoutSubjectInput[] | RapidRecallUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutSubjectInput | RapidRecallCreateOrConnectWithoutSubjectInput[]
+    upsert?: RapidRecallUpsertWithWhereUniqueWithoutSubjectInput | RapidRecallUpsertWithWhereUniqueWithoutSubjectInput[]
+    createMany?: RapidRecallCreateManySubjectInputEnvelope
+    set?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    disconnect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    delete?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    update?: RapidRecallUpdateWithWhereUniqueWithoutSubjectInput | RapidRecallUpdateWithWhereUniqueWithoutSubjectInput[]
+    updateMany?: RapidRecallUpdateManyWithWhereWithoutSubjectInput | RapidRecallUpdateManyWithWhereWithoutSubjectInput[]
+    deleteMany?: RapidRecallScalarWhereInput | RapidRecallScalarWhereInput[]
   }
 
   export type SubjectCreateNestedOneWithoutTopicsInput = {
@@ -52141,6 +55552,13 @@ export namespace Prisma {
     connect?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
   }
 
+  export type RapidRecallCreateNestedManyWithoutCourseInput = {
+    create?: XOR<RapidRecallCreateWithoutCourseInput, RapidRecallUncheckedCreateWithoutCourseInput> | RapidRecallCreateWithoutCourseInput[] | RapidRecallUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutCourseInput | RapidRecallCreateOrConnectWithoutCourseInput[]
+    createMany?: RapidRecallCreateManyCourseInputEnvelope
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+  }
+
   export type SubjectUncheckedCreateNestedManyWithoutCoursesInput = {
     create?: XOR<SubjectCreateWithoutCoursesInput, SubjectUncheckedCreateWithoutCoursesInput> | SubjectCreateWithoutCoursesInput[] | SubjectUncheckedCreateWithoutCoursesInput[]
     connectOrCreate?: SubjectCreateOrConnectWithoutCoursesInput | SubjectCreateOrConnectWithoutCoursesInput[]
@@ -52194,6 +55612,13 @@ export namespace Prisma {
     connectOrCreate?: DailyQuizAttemptCreateOrConnectWithoutCourseInput | DailyQuizAttemptCreateOrConnectWithoutCourseInput[]
     createMany?: DailyQuizAttemptCreateManyCourseInputEnvelope
     connect?: DailyQuizAttemptWhereUniqueInput | DailyQuizAttemptWhereUniqueInput[]
+  }
+
+  export type RapidRecallUncheckedCreateNestedManyWithoutCourseInput = {
+    create?: XOR<RapidRecallCreateWithoutCourseInput, RapidRecallUncheckedCreateWithoutCourseInput> | RapidRecallCreateWithoutCourseInput[] | RapidRecallUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutCourseInput | RapidRecallCreateOrConnectWithoutCourseInput[]
+    createMany?: RapidRecallCreateManyCourseInputEnvelope
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
   }
 
   export type EnumCourseStatusFieldUpdateOperationsInput = {
@@ -52325,6 +55750,20 @@ export namespace Prisma {
     deleteMany?: DailyQuizAttemptScalarWhereInput | DailyQuizAttemptScalarWhereInput[]
   }
 
+  export type RapidRecallUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<RapidRecallCreateWithoutCourseInput, RapidRecallUncheckedCreateWithoutCourseInput> | RapidRecallCreateWithoutCourseInput[] | RapidRecallUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutCourseInput | RapidRecallCreateOrConnectWithoutCourseInput[]
+    upsert?: RapidRecallUpsertWithWhereUniqueWithoutCourseInput | RapidRecallUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: RapidRecallCreateManyCourseInputEnvelope
+    set?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    disconnect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    delete?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    update?: RapidRecallUpdateWithWhereUniqueWithoutCourseInput | RapidRecallUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: RapidRecallUpdateManyWithWhereWithoutCourseInput | RapidRecallUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: RapidRecallScalarWhereInput | RapidRecallScalarWhereInput[]
+  }
+
   export type SubjectUncheckedUpdateManyWithoutCoursesNestedInput = {
     create?: XOR<SubjectCreateWithoutCoursesInput, SubjectUncheckedCreateWithoutCoursesInput> | SubjectCreateWithoutCoursesInput[] | SubjectUncheckedCreateWithoutCoursesInput[]
     connectOrCreate?: SubjectCreateOrConnectWithoutCoursesInput | SubjectCreateOrConnectWithoutCoursesInput[]
@@ -52436,6 +55875,20 @@ export namespace Prisma {
     deleteMany?: DailyQuizAttemptScalarWhereInput | DailyQuizAttemptScalarWhereInput[]
   }
 
+  export type RapidRecallUncheckedUpdateManyWithoutCourseNestedInput = {
+    create?: XOR<RapidRecallCreateWithoutCourseInput, RapidRecallUncheckedCreateWithoutCourseInput> | RapidRecallCreateWithoutCourseInput[] | RapidRecallUncheckedCreateWithoutCourseInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutCourseInput | RapidRecallCreateOrConnectWithoutCourseInput[]
+    upsert?: RapidRecallUpsertWithWhereUniqueWithoutCourseInput | RapidRecallUpsertWithWhereUniqueWithoutCourseInput[]
+    createMany?: RapidRecallCreateManyCourseInputEnvelope
+    set?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    disconnect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    delete?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    update?: RapidRecallUpdateWithWhereUniqueWithoutCourseInput | RapidRecallUpdateWithWhereUniqueWithoutCourseInput[]
+    updateMany?: RapidRecallUpdateManyWithWhereWithoutCourseInput | RapidRecallUpdateManyWithWhereWithoutCourseInput[]
+    deleteMany?: RapidRecallScalarWhereInput | RapidRecallScalarWhereInput[]
+  }
+
   export type CourseCreateNestedOneWithoutCourseTypesInput = {
     create?: XOR<CourseCreateWithoutCourseTypesInput, CourseUncheckedCreateWithoutCourseTypesInput>
     connectOrCreate?: CourseCreateOrConnectWithoutCourseTypesInput
@@ -52463,6 +55916,13 @@ export namespace Prisma {
     connect?: TestWhereUniqueInput | TestWhereUniqueInput[]
   }
 
+  export type RapidRecallCreateNestedManyWithoutCourseTypeInput = {
+    create?: XOR<RapidRecallCreateWithoutCourseTypeInput, RapidRecallUncheckedCreateWithoutCourseTypeInput> | RapidRecallCreateWithoutCourseTypeInput[] | RapidRecallUncheckedCreateWithoutCourseTypeInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutCourseTypeInput | RapidRecallCreateOrConnectWithoutCourseTypeInput[]
+    createMany?: RapidRecallCreateManyCourseTypeInputEnvelope
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+  }
+
   export type ChapterUncheckedCreateNestedManyWithoutCourseTypeInput = {
     create?: XOR<ChapterCreateWithoutCourseTypeInput, ChapterUncheckedCreateWithoutCourseTypeInput> | ChapterCreateWithoutCourseTypeInput[] | ChapterUncheckedCreateWithoutCourseTypeInput[]
     connectOrCreate?: ChapterCreateOrConnectWithoutCourseTypeInput | ChapterCreateOrConnectWithoutCourseTypeInput[]
@@ -52482,6 +55942,13 @@ export namespace Prisma {
     connectOrCreate?: TestCreateOrConnectWithoutCourseTypeInput | TestCreateOrConnectWithoutCourseTypeInput[]
     createMany?: TestCreateManyCourseTypeInputEnvelope
     connect?: TestWhereUniqueInput | TestWhereUniqueInput[]
+  }
+
+  export type RapidRecallUncheckedCreateNestedManyWithoutCourseTypeInput = {
+    create?: XOR<RapidRecallCreateWithoutCourseTypeInput, RapidRecallUncheckedCreateWithoutCourseTypeInput> | RapidRecallCreateWithoutCourseTypeInput[] | RapidRecallUncheckedCreateWithoutCourseTypeInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutCourseTypeInput | RapidRecallCreateOrConnectWithoutCourseTypeInput[]
+    createMany?: RapidRecallCreateManyCourseTypeInputEnvelope
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
   }
 
   export type CourseUpdateOneRequiredWithoutCourseTypesNestedInput = {
@@ -52534,6 +56001,20 @@ export namespace Prisma {
     deleteMany?: TestScalarWhereInput | TestScalarWhereInput[]
   }
 
+  export type RapidRecallUpdateManyWithoutCourseTypeNestedInput = {
+    create?: XOR<RapidRecallCreateWithoutCourseTypeInput, RapidRecallUncheckedCreateWithoutCourseTypeInput> | RapidRecallCreateWithoutCourseTypeInput[] | RapidRecallUncheckedCreateWithoutCourseTypeInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutCourseTypeInput | RapidRecallCreateOrConnectWithoutCourseTypeInput[]
+    upsert?: RapidRecallUpsertWithWhereUniqueWithoutCourseTypeInput | RapidRecallUpsertWithWhereUniqueWithoutCourseTypeInput[]
+    createMany?: RapidRecallCreateManyCourseTypeInputEnvelope
+    set?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    disconnect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    delete?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    update?: RapidRecallUpdateWithWhereUniqueWithoutCourseTypeInput | RapidRecallUpdateWithWhereUniqueWithoutCourseTypeInput[]
+    updateMany?: RapidRecallUpdateManyWithWhereWithoutCourseTypeInput | RapidRecallUpdateManyWithWhereWithoutCourseTypeInput[]
+    deleteMany?: RapidRecallScalarWhereInput | RapidRecallScalarWhereInput[]
+  }
+
   export type ChapterUncheckedUpdateManyWithoutCourseTypeNestedInput = {
     create?: XOR<ChapterCreateWithoutCourseTypeInput, ChapterUncheckedCreateWithoutCourseTypeInput> | ChapterCreateWithoutCourseTypeInput[] | ChapterUncheckedCreateWithoutCourseTypeInput[]
     connectOrCreate?: ChapterCreateOrConnectWithoutCourseTypeInput | ChapterCreateOrConnectWithoutCourseTypeInput[]
@@ -52574,6 +56055,20 @@ export namespace Prisma {
     update?: TestUpdateWithWhereUniqueWithoutCourseTypeInput | TestUpdateWithWhereUniqueWithoutCourseTypeInput[]
     updateMany?: TestUpdateManyWithWhereWithoutCourseTypeInput | TestUpdateManyWithWhereWithoutCourseTypeInput[]
     deleteMany?: TestScalarWhereInput | TestScalarWhereInput[]
+  }
+
+  export type RapidRecallUncheckedUpdateManyWithoutCourseTypeNestedInput = {
+    create?: XOR<RapidRecallCreateWithoutCourseTypeInput, RapidRecallUncheckedCreateWithoutCourseTypeInput> | RapidRecallCreateWithoutCourseTypeInput[] | RapidRecallUncheckedCreateWithoutCourseTypeInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutCourseTypeInput | RapidRecallCreateOrConnectWithoutCourseTypeInput[]
+    upsert?: RapidRecallUpsertWithWhereUniqueWithoutCourseTypeInput | RapidRecallUpsertWithWhereUniqueWithoutCourseTypeInput[]
+    createMany?: RapidRecallCreateManyCourseTypeInputEnvelope
+    set?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    disconnect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    delete?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    update?: RapidRecallUpdateWithWhereUniqueWithoutCourseTypeInput | RapidRecallUpdateWithWhereUniqueWithoutCourseTypeInput[]
+    updateMany?: RapidRecallUpdateManyWithWhereWithoutCourseTypeInput | RapidRecallUpdateManyWithWhereWithoutCourseTypeInput[]
+    deleteMany?: RapidRecallScalarWhereInput | RapidRecallScalarWhereInput[]
   }
 
   export type CourseCreateNestedOneWithoutChaptersInput = {
@@ -52690,6 +56185,13 @@ export namespace Prisma {
     connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
   }
 
+  export type RapidRecallCreateNestedManyWithoutLessonInput = {
+    create?: XOR<RapidRecallCreateWithoutLessonInput, RapidRecallUncheckedCreateWithoutLessonInput> | RapidRecallCreateWithoutLessonInput[] | RapidRecallUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutLessonInput | RapidRecallCreateOrConnectWithoutLessonInput[]
+    createMany?: RapidRecallCreateManyLessonInputEnvelope
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+  }
+
   export type LessonPlanUncheckedCreateNestedManyWithoutLessonInput = {
     create?: XOR<LessonPlanCreateWithoutLessonInput, LessonPlanUncheckedCreateWithoutLessonInput> | LessonPlanCreateWithoutLessonInput[] | LessonPlanUncheckedCreateWithoutLessonInput[]
     connectOrCreate?: LessonPlanCreateOrConnectWithoutLessonInput | LessonPlanCreateOrConnectWithoutLessonInput[]
@@ -52716,6 +56218,13 @@ export namespace Prisma {
     connectOrCreate?: LessonCommentCreateOrConnectWithoutLessonInput | LessonCommentCreateOrConnectWithoutLessonInput[]
     createMany?: LessonCommentCreateManyLessonInputEnvelope
     connect?: LessonCommentWhereUniqueInput | LessonCommentWhereUniqueInput[]
+  }
+
+  export type RapidRecallUncheckedCreateNestedManyWithoutLessonInput = {
+    create?: XOR<RapidRecallCreateWithoutLessonInput, RapidRecallUncheckedCreateWithoutLessonInput> | RapidRecallCreateWithoutLessonInput[] | RapidRecallUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutLessonInput | RapidRecallCreateOrConnectWithoutLessonInput[]
+    createMany?: RapidRecallCreateManyLessonInputEnvelope
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
   }
 
   export type EnumLessonTypeFieldUpdateOperationsInput = {
@@ -52796,6 +56305,20 @@ export namespace Prisma {
     deleteMany?: LessonCommentScalarWhereInput | LessonCommentScalarWhereInput[]
   }
 
+  export type RapidRecallUpdateManyWithoutLessonNestedInput = {
+    create?: XOR<RapidRecallCreateWithoutLessonInput, RapidRecallUncheckedCreateWithoutLessonInput> | RapidRecallCreateWithoutLessonInput[] | RapidRecallUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutLessonInput | RapidRecallCreateOrConnectWithoutLessonInput[]
+    upsert?: RapidRecallUpsertWithWhereUniqueWithoutLessonInput | RapidRecallUpsertWithWhereUniqueWithoutLessonInput[]
+    createMany?: RapidRecallCreateManyLessonInputEnvelope
+    set?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    disconnect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    delete?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    update?: RapidRecallUpdateWithWhereUniqueWithoutLessonInput | RapidRecallUpdateWithWhereUniqueWithoutLessonInput[]
+    updateMany?: RapidRecallUpdateManyWithWhereWithoutLessonInput | RapidRecallUpdateManyWithWhereWithoutLessonInput[]
+    deleteMany?: RapidRecallScalarWhereInput | RapidRecallScalarWhereInput[]
+  }
+
   export type LessonPlanUncheckedUpdateManyWithoutLessonNestedInput = {
     create?: XOR<LessonPlanCreateWithoutLessonInput, LessonPlanUncheckedCreateWithoutLessonInput> | LessonPlanCreateWithoutLessonInput[] | LessonPlanUncheckedCreateWithoutLessonInput[]
     connectOrCreate?: LessonPlanCreateOrConnectWithoutLessonInput | LessonPlanCreateOrConnectWithoutLessonInput[]
@@ -52850,6 +56373,20 @@ export namespace Prisma {
     update?: LessonCommentUpdateWithWhereUniqueWithoutLessonInput | LessonCommentUpdateWithWhereUniqueWithoutLessonInput[]
     updateMany?: LessonCommentUpdateManyWithWhereWithoutLessonInput | LessonCommentUpdateManyWithWhereWithoutLessonInput[]
     deleteMany?: LessonCommentScalarWhereInput | LessonCommentScalarWhereInput[]
+  }
+
+  export type RapidRecallUncheckedUpdateManyWithoutLessonNestedInput = {
+    create?: XOR<RapidRecallCreateWithoutLessonInput, RapidRecallUncheckedCreateWithoutLessonInput> | RapidRecallCreateWithoutLessonInput[] | RapidRecallUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutLessonInput | RapidRecallCreateOrConnectWithoutLessonInput[]
+    upsert?: RapidRecallUpsertWithWhereUniqueWithoutLessonInput | RapidRecallUpsertWithWhereUniqueWithoutLessonInput[]
+    createMany?: RapidRecallCreateManyLessonInputEnvelope
+    set?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    disconnect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    delete?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    update?: RapidRecallUpdateWithWhereUniqueWithoutLessonInput | RapidRecallUpdateWithWhereUniqueWithoutLessonInput[]
+    updateMany?: RapidRecallUpdateManyWithWhereWithoutLessonInput | RapidRecallUpdateManyWithWhereWithoutLessonInput[]
+    deleteMany?: RapidRecallScalarWhereInput | RapidRecallScalarWhereInput[]
   }
 
   export type LessonCreateNestedOneWithoutLessonPlansInput = {
@@ -54272,6 +57809,124 @@ export namespace Prisma {
     update?: XOR<XOR<DailyQuizAttemptUpdateToOneWithWhereWithoutAnswersInput, DailyQuizAttemptUpdateWithoutAnswersInput>, DailyQuizAttemptUncheckedUpdateWithoutAnswersInput>
   }
 
+  export type CourseCreateNestedOneWithoutRapidRecallsInput = {
+    create?: XOR<CourseCreateWithoutRapidRecallsInput, CourseUncheckedCreateWithoutRapidRecallsInput>
+    connectOrCreate?: CourseCreateOrConnectWithoutRapidRecallsInput
+    connect?: CourseWhereUniqueInput
+  }
+
+  export type CourseTypeCreateNestedOneWithoutRapidRecallsInput = {
+    create?: XOR<CourseTypeCreateWithoutRapidRecallsInput, CourseTypeUncheckedCreateWithoutRapidRecallsInput>
+    connectOrCreate?: CourseTypeCreateOrConnectWithoutRapidRecallsInput
+    connect?: CourseTypeWhereUniqueInput
+  }
+
+  export type SubjectCreateNestedOneWithoutRapidRecallsInput = {
+    create?: XOR<SubjectCreateWithoutRapidRecallsInput, SubjectUncheckedCreateWithoutRapidRecallsInput>
+    connectOrCreate?: SubjectCreateOrConnectWithoutRapidRecallsInput
+    connect?: SubjectWhereUniqueInput
+  }
+
+  export type LessonCreateNestedOneWithoutRapidRecallsInput = {
+    create?: XOR<LessonCreateWithoutRapidRecallsInput, LessonUncheckedCreateWithoutRapidRecallsInput>
+    connectOrCreate?: LessonCreateOrConnectWithoutRapidRecallsInput
+    connect?: LessonWhereUniqueInput
+  }
+
+  export type RapidRecallCardCreateNestedManyWithoutRecallInput = {
+    create?: XOR<RapidRecallCardCreateWithoutRecallInput, RapidRecallCardUncheckedCreateWithoutRecallInput> | RapidRecallCardCreateWithoutRecallInput[] | RapidRecallCardUncheckedCreateWithoutRecallInput[]
+    connectOrCreate?: RapidRecallCardCreateOrConnectWithoutRecallInput | RapidRecallCardCreateOrConnectWithoutRecallInput[]
+    createMany?: RapidRecallCardCreateManyRecallInputEnvelope
+    connect?: RapidRecallCardWhereUniqueInput | RapidRecallCardWhereUniqueInput[]
+  }
+
+  export type RapidRecallCardUncheckedCreateNestedManyWithoutRecallInput = {
+    create?: XOR<RapidRecallCardCreateWithoutRecallInput, RapidRecallCardUncheckedCreateWithoutRecallInput> | RapidRecallCardCreateWithoutRecallInput[] | RapidRecallCardUncheckedCreateWithoutRecallInput[]
+    connectOrCreate?: RapidRecallCardCreateOrConnectWithoutRecallInput | RapidRecallCardCreateOrConnectWithoutRecallInput[]
+    createMany?: RapidRecallCardCreateManyRecallInputEnvelope
+    connect?: RapidRecallCardWhereUniqueInput | RapidRecallCardWhereUniqueInput[]
+  }
+
+  export type CourseUpdateOneRequiredWithoutRapidRecallsNestedInput = {
+    create?: XOR<CourseCreateWithoutRapidRecallsInput, CourseUncheckedCreateWithoutRapidRecallsInput>
+    connectOrCreate?: CourseCreateOrConnectWithoutRapidRecallsInput
+    upsert?: CourseUpsertWithoutRapidRecallsInput
+    connect?: CourseWhereUniqueInput
+    update?: XOR<XOR<CourseUpdateToOneWithWhereWithoutRapidRecallsInput, CourseUpdateWithoutRapidRecallsInput>, CourseUncheckedUpdateWithoutRapidRecallsInput>
+  }
+
+  export type CourseTypeUpdateOneWithoutRapidRecallsNestedInput = {
+    create?: XOR<CourseTypeCreateWithoutRapidRecallsInput, CourseTypeUncheckedCreateWithoutRapidRecallsInput>
+    connectOrCreate?: CourseTypeCreateOrConnectWithoutRapidRecallsInput
+    upsert?: CourseTypeUpsertWithoutRapidRecallsInput
+    disconnect?: CourseTypeWhereInput | boolean
+    delete?: CourseTypeWhereInput | boolean
+    connect?: CourseTypeWhereUniqueInput
+    update?: XOR<XOR<CourseTypeUpdateToOneWithWhereWithoutRapidRecallsInput, CourseTypeUpdateWithoutRapidRecallsInput>, CourseTypeUncheckedUpdateWithoutRapidRecallsInput>
+  }
+
+  export type SubjectUpdateOneWithoutRapidRecallsNestedInput = {
+    create?: XOR<SubjectCreateWithoutRapidRecallsInput, SubjectUncheckedCreateWithoutRapidRecallsInput>
+    connectOrCreate?: SubjectCreateOrConnectWithoutRapidRecallsInput
+    upsert?: SubjectUpsertWithoutRapidRecallsInput
+    disconnect?: SubjectWhereInput | boolean
+    delete?: SubjectWhereInput | boolean
+    connect?: SubjectWhereUniqueInput
+    update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutRapidRecallsInput, SubjectUpdateWithoutRapidRecallsInput>, SubjectUncheckedUpdateWithoutRapidRecallsInput>
+  }
+
+  export type LessonUpdateOneWithoutRapidRecallsNestedInput = {
+    create?: XOR<LessonCreateWithoutRapidRecallsInput, LessonUncheckedCreateWithoutRapidRecallsInput>
+    connectOrCreate?: LessonCreateOrConnectWithoutRapidRecallsInput
+    upsert?: LessonUpsertWithoutRapidRecallsInput
+    disconnect?: LessonWhereInput | boolean
+    delete?: LessonWhereInput | boolean
+    connect?: LessonWhereUniqueInput
+    update?: XOR<XOR<LessonUpdateToOneWithWhereWithoutRapidRecallsInput, LessonUpdateWithoutRapidRecallsInput>, LessonUncheckedUpdateWithoutRapidRecallsInput>
+  }
+
+  export type RapidRecallCardUpdateManyWithoutRecallNestedInput = {
+    create?: XOR<RapidRecallCardCreateWithoutRecallInput, RapidRecallCardUncheckedCreateWithoutRecallInput> | RapidRecallCardCreateWithoutRecallInput[] | RapidRecallCardUncheckedCreateWithoutRecallInput[]
+    connectOrCreate?: RapidRecallCardCreateOrConnectWithoutRecallInput | RapidRecallCardCreateOrConnectWithoutRecallInput[]
+    upsert?: RapidRecallCardUpsertWithWhereUniqueWithoutRecallInput | RapidRecallCardUpsertWithWhereUniqueWithoutRecallInput[]
+    createMany?: RapidRecallCardCreateManyRecallInputEnvelope
+    set?: RapidRecallCardWhereUniqueInput | RapidRecallCardWhereUniqueInput[]
+    disconnect?: RapidRecallCardWhereUniqueInput | RapidRecallCardWhereUniqueInput[]
+    delete?: RapidRecallCardWhereUniqueInput | RapidRecallCardWhereUniqueInput[]
+    connect?: RapidRecallCardWhereUniqueInput | RapidRecallCardWhereUniqueInput[]
+    update?: RapidRecallCardUpdateWithWhereUniqueWithoutRecallInput | RapidRecallCardUpdateWithWhereUniqueWithoutRecallInput[]
+    updateMany?: RapidRecallCardUpdateManyWithWhereWithoutRecallInput | RapidRecallCardUpdateManyWithWhereWithoutRecallInput[]
+    deleteMany?: RapidRecallCardScalarWhereInput | RapidRecallCardScalarWhereInput[]
+  }
+
+  export type RapidRecallCardUncheckedUpdateManyWithoutRecallNestedInput = {
+    create?: XOR<RapidRecallCardCreateWithoutRecallInput, RapidRecallCardUncheckedCreateWithoutRecallInput> | RapidRecallCardCreateWithoutRecallInput[] | RapidRecallCardUncheckedCreateWithoutRecallInput[]
+    connectOrCreate?: RapidRecallCardCreateOrConnectWithoutRecallInput | RapidRecallCardCreateOrConnectWithoutRecallInput[]
+    upsert?: RapidRecallCardUpsertWithWhereUniqueWithoutRecallInput | RapidRecallCardUpsertWithWhereUniqueWithoutRecallInput[]
+    createMany?: RapidRecallCardCreateManyRecallInputEnvelope
+    set?: RapidRecallCardWhereUniqueInput | RapidRecallCardWhereUniqueInput[]
+    disconnect?: RapidRecallCardWhereUniqueInput | RapidRecallCardWhereUniqueInput[]
+    delete?: RapidRecallCardWhereUniqueInput | RapidRecallCardWhereUniqueInput[]
+    connect?: RapidRecallCardWhereUniqueInput | RapidRecallCardWhereUniqueInput[]
+    update?: RapidRecallCardUpdateWithWhereUniqueWithoutRecallInput | RapidRecallCardUpdateWithWhereUniqueWithoutRecallInput[]
+    updateMany?: RapidRecallCardUpdateManyWithWhereWithoutRecallInput | RapidRecallCardUpdateManyWithWhereWithoutRecallInput[]
+    deleteMany?: RapidRecallCardScalarWhereInput | RapidRecallCardScalarWhereInput[]
+  }
+
+  export type RapidRecallCreateNestedOneWithoutCardsInput = {
+    create?: XOR<RapidRecallCreateWithoutCardsInput, RapidRecallUncheckedCreateWithoutCardsInput>
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutCardsInput
+    connect?: RapidRecallWhereUniqueInput
+  }
+
+  export type RapidRecallUpdateOneRequiredWithoutCardsNestedInput = {
+    create?: XOR<RapidRecallCreateWithoutCardsInput, RapidRecallUncheckedCreateWithoutCardsInput>
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutCardsInput
+    upsert?: RapidRecallUpsertWithoutCardsInput
+    connect?: RapidRecallWhereUniqueInput
+    update?: XOR<XOR<RapidRecallUpdateToOneWithWhereWithoutCardsInput, RapidRecallUpdateWithoutCardsInput>, RapidRecallUncheckedUpdateWithoutCardsInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -54910,6 +58565,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutSelectedByInput = {
@@ -54932,6 +58588,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutSelectedByInput = {
@@ -54950,6 +58607,7 @@ export namespace Prisma {
     course: CourseCreateNestedOneWithoutCourseTypesInput
     chapters?: ChapterCreateNestedManyWithoutCourseTypeInput
     tests?: TestCreateNestedManyWithoutCourseTypeInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseTypeInput
   }
 
   export type CourseTypeUncheckedCreateWithoutSelectedByInput = {
@@ -54964,6 +58622,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     chapters?: ChapterUncheckedCreateNestedManyWithoutCourseTypeInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseTypeInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseTypeInput
   }
 
   export type CourseTypeCreateOrConnectWithoutSelectedByInput = {
@@ -55283,6 +58942,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutSelectedByInput = {
@@ -55305,6 +58965,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseTypeUpsertWithoutSelectedByInput = {
@@ -55329,6 +58990,7 @@ export namespace Prisma {
     course?: CourseUpdateOneRequiredWithoutCourseTypesNestedInput
     chapters?: ChapterUpdateManyWithoutCourseTypeNestedInput
     tests?: TestUpdateManyWithoutCourseTypeNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseTypeNestedInput
   }
 
   export type CourseTypeUncheckedUpdateWithoutSelectedByInput = {
@@ -55343,6 +59005,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapters?: ChapterUncheckedUpdateManyWithoutCourseTypeNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseTypeNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseTypeNestedInput
   }
 
   export type CourseCreateWithoutAdminInput = {
@@ -55364,6 +59027,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutAdminInput = {
@@ -55386,6 +59050,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutAdminInput = {
@@ -55535,6 +59200,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutSubjectsInput = {
@@ -55557,6 +59223,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutSubjectsInput = {
@@ -55643,6 +59310,49 @@ export namespace Prisma {
 
   export type QuizCreateManySubjectInputEnvelope = {
     data: QuizCreateManySubjectInput | QuizCreateManySubjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RapidRecallCreateWithoutSubjectInput = {
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    course: CourseCreateNestedOneWithoutRapidRecallsInput
+    courseType?: CourseTypeCreateNestedOneWithoutRapidRecallsInput
+    lesson?: LessonCreateNestedOneWithoutRapidRecallsInput
+    cards?: RapidRecallCardCreateNestedManyWithoutRecallInput
+  }
+
+  export type RapidRecallUncheckedCreateWithoutSubjectInput = {
+    id?: number
+    courseId: number
+    courseTypeId?: number | null
+    lessonId?: number | null
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cards?: RapidRecallCardUncheckedCreateNestedManyWithoutRecallInput
+  }
+
+  export type RapidRecallCreateOrConnectWithoutSubjectInput = {
+    where: RapidRecallWhereUniqueInput
+    create: XOR<RapidRecallCreateWithoutSubjectInput, RapidRecallUncheckedCreateWithoutSubjectInput>
+  }
+
+  export type RapidRecallCreateManySubjectInputEnvelope = {
+    data: RapidRecallCreateManySubjectInput | RapidRecallCreateManySubjectInput[]
     skipDuplicates?: boolean
   }
 
@@ -55756,6 +59466,42 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Quiz"> | Date | string
   }
 
+  export type RapidRecallUpsertWithWhereUniqueWithoutSubjectInput = {
+    where: RapidRecallWhereUniqueInput
+    update: XOR<RapidRecallUpdateWithoutSubjectInput, RapidRecallUncheckedUpdateWithoutSubjectInput>
+    create: XOR<RapidRecallCreateWithoutSubjectInput, RapidRecallUncheckedCreateWithoutSubjectInput>
+  }
+
+  export type RapidRecallUpdateWithWhereUniqueWithoutSubjectInput = {
+    where: RapidRecallWhereUniqueInput
+    data: XOR<RapidRecallUpdateWithoutSubjectInput, RapidRecallUncheckedUpdateWithoutSubjectInput>
+  }
+
+  export type RapidRecallUpdateManyWithWhereWithoutSubjectInput = {
+    where: RapidRecallScalarWhereInput
+    data: XOR<RapidRecallUpdateManyMutationInput, RapidRecallUncheckedUpdateManyWithoutSubjectInput>
+  }
+
+  export type RapidRecallScalarWhereInput = {
+    AND?: RapidRecallScalarWhereInput | RapidRecallScalarWhereInput[]
+    OR?: RapidRecallScalarWhereInput[]
+    NOT?: RapidRecallScalarWhereInput | RapidRecallScalarWhereInput[]
+    id?: IntFilter<"RapidRecall"> | number
+    courseId?: IntFilter<"RapidRecall"> | number
+    courseTypeId?: IntNullableFilter<"RapidRecall"> | number | null
+    subjectId?: IntNullableFilter<"RapidRecall"> | number | null
+    lessonId?: IntNullableFilter<"RapidRecall"> | number | null
+    title?: StringFilter<"RapidRecall"> | string
+    description?: StringNullableFilter<"RapidRecall"> | string | null
+    noteUrl?: StringNullableFilter<"RapidRecall"> | string | null
+    notePublicId?: StringNullableFilter<"RapidRecall"> | string | null
+    noteFileType?: StringNullableFilter<"RapidRecall"> | string | null
+    status?: EnumCourseStatusFilter<"RapidRecall"> | $Enums.CourseStatus
+    displayOrder?: IntFilter<"RapidRecall"> | number
+    createdAt?: DateTimeFilter<"RapidRecall"> | Date | string
+    updatedAt?: DateTimeFilter<"RapidRecall"> | Date | string
+  }
+
   export type SubjectCreateWithoutTopicsInput = {
     name: string
     isActive?: boolean
@@ -55765,6 +59511,7 @@ export namespace Prisma {
     courses?: CourseCreateNestedManyWithoutSubjectsInput
     questions?: QuestionCreateNestedManyWithoutSubjectInput
     quizzes?: QuizCreateNestedManyWithoutSubjectInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateWithoutTopicsInput = {
@@ -55777,6 +59524,7 @@ export namespace Prisma {
     courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
     questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
     quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectCreateOrConnectWithoutTopicsInput = {
@@ -55886,6 +59634,7 @@ export namespace Prisma {
     courses?: CourseUpdateManyWithoutSubjectsNestedInput
     questions?: QuestionUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUpdateManyWithoutSubjectNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateWithoutTopicsInput = {
@@ -55898,6 +59647,7 @@ export namespace Prisma {
     courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type QuestionUpsertWithWhereUniqueWithoutTopicInput = {
@@ -56051,6 +59801,7 @@ export namespace Prisma {
     topics?: TopicCreateNestedManyWithoutSubjectInput
     questions?: QuestionCreateNestedManyWithoutSubjectInput
     quizzes?: QuizCreateNestedManyWithoutSubjectInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateWithoutCoursesInput = {
@@ -56063,6 +59814,7 @@ export namespace Prisma {
     topics?: TopicUncheckedCreateNestedManyWithoutSubjectInput
     questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
     quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectCreateOrConnectWithoutCoursesInput = {
@@ -56138,6 +59890,7 @@ export namespace Prisma {
     chapters?: ChapterCreateNestedManyWithoutCourseTypeInput
     selectedBy?: UserCreateNestedManyWithoutSelectedCourseTypeInput
     tests?: TestCreateNestedManyWithoutCourseTypeInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseTypeInput
   }
 
   export type CourseTypeUncheckedCreateWithoutCourseInput = {
@@ -56152,6 +59905,7 @@ export namespace Prisma {
     chapters?: ChapterUncheckedCreateNestedManyWithoutCourseTypeInput
     selectedBy?: UserUncheckedCreateNestedManyWithoutSelectedCourseTypeInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseTypeInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseTypeInput
   }
 
   export type CourseTypeCreateOrConnectWithoutCourseInput = {
@@ -56358,6 +60112,49 @@ export namespace Prisma {
 
   export type DailyQuizAttemptCreateManyCourseInputEnvelope = {
     data: DailyQuizAttemptCreateManyCourseInput | DailyQuizAttemptCreateManyCourseInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RapidRecallCreateWithoutCourseInput = {
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    courseType?: CourseTypeCreateNestedOneWithoutRapidRecallsInput
+    subject?: SubjectCreateNestedOneWithoutRapidRecallsInput
+    lesson?: LessonCreateNestedOneWithoutRapidRecallsInput
+    cards?: RapidRecallCardCreateNestedManyWithoutRecallInput
+  }
+
+  export type RapidRecallUncheckedCreateWithoutCourseInput = {
+    id?: number
+    courseTypeId?: number | null
+    subjectId?: number | null
+    lessonId?: number | null
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cards?: RapidRecallCardUncheckedCreateNestedManyWithoutRecallInput
+  }
+
+  export type RapidRecallCreateOrConnectWithoutCourseInput = {
+    where: RapidRecallWhereUniqueInput
+    create: XOR<RapidRecallCreateWithoutCourseInput, RapidRecallUncheckedCreateWithoutCourseInput>
+  }
+
+  export type RapidRecallCreateManyCourseInputEnvelope = {
+    data: RapidRecallCreateManyCourseInput | RapidRecallCreateManyCourseInput[]
     skipDuplicates?: boolean
   }
 
@@ -56616,6 +60413,22 @@ export namespace Prisma {
     data: XOR<DailyQuizAttemptUpdateManyMutationInput, DailyQuizAttemptUncheckedUpdateManyWithoutCourseInput>
   }
 
+  export type RapidRecallUpsertWithWhereUniqueWithoutCourseInput = {
+    where: RapidRecallWhereUniqueInput
+    update: XOR<RapidRecallUpdateWithoutCourseInput, RapidRecallUncheckedUpdateWithoutCourseInput>
+    create: XOR<RapidRecallCreateWithoutCourseInput, RapidRecallUncheckedCreateWithoutCourseInput>
+  }
+
+  export type RapidRecallUpdateWithWhereUniqueWithoutCourseInput = {
+    where: RapidRecallWhereUniqueInput
+    data: XOR<RapidRecallUpdateWithoutCourseInput, RapidRecallUncheckedUpdateWithoutCourseInput>
+  }
+
+  export type RapidRecallUpdateManyWithWhereWithoutCourseInput = {
+    where: RapidRecallScalarWhereInput
+    data: XOR<RapidRecallUpdateManyMutationInput, RapidRecallUncheckedUpdateManyWithoutCourseInput>
+  }
+
   export type CourseCreateWithoutCourseTypesInput = {
     title: string
     description?: string | null
@@ -56635,6 +60448,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutCourseTypesInput = {
@@ -56657,6 +60471,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutCourseTypesInput = {
@@ -56797,6 +60612,49 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type RapidRecallCreateWithoutCourseTypeInput = {
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    course: CourseCreateNestedOneWithoutRapidRecallsInput
+    subject?: SubjectCreateNestedOneWithoutRapidRecallsInput
+    lesson?: LessonCreateNestedOneWithoutRapidRecallsInput
+    cards?: RapidRecallCardCreateNestedManyWithoutRecallInput
+  }
+
+  export type RapidRecallUncheckedCreateWithoutCourseTypeInput = {
+    id?: number
+    courseId: number
+    subjectId?: number | null
+    lessonId?: number | null
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cards?: RapidRecallCardUncheckedCreateNestedManyWithoutRecallInput
+  }
+
+  export type RapidRecallCreateOrConnectWithoutCourseTypeInput = {
+    where: RapidRecallWhereUniqueInput
+    create: XOR<RapidRecallCreateWithoutCourseTypeInput, RapidRecallUncheckedCreateWithoutCourseTypeInput>
+  }
+
+  export type RapidRecallCreateManyCourseTypeInputEnvelope = {
+    data: RapidRecallCreateManyCourseTypeInput | RapidRecallCreateManyCourseTypeInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CourseUpsertWithoutCourseTypesInput = {
     update: XOR<CourseUpdateWithoutCourseTypesInput, CourseUncheckedUpdateWithoutCourseTypesInput>
     create: XOR<CourseCreateWithoutCourseTypesInput, CourseUncheckedCreateWithoutCourseTypesInput>
@@ -56827,6 +60685,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutCourseTypesInput = {
@@ -56849,6 +60708,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type ChapterUpsertWithWhereUniqueWithoutCourseTypeInput = {
@@ -56899,6 +60759,22 @@ export namespace Prisma {
     data: XOR<TestUpdateManyMutationInput, TestUncheckedUpdateManyWithoutCourseTypeInput>
   }
 
+  export type RapidRecallUpsertWithWhereUniqueWithoutCourseTypeInput = {
+    where: RapidRecallWhereUniqueInput
+    update: XOR<RapidRecallUpdateWithoutCourseTypeInput, RapidRecallUncheckedUpdateWithoutCourseTypeInput>
+    create: XOR<RapidRecallCreateWithoutCourseTypeInput, RapidRecallUncheckedCreateWithoutCourseTypeInput>
+  }
+
+  export type RapidRecallUpdateWithWhereUniqueWithoutCourseTypeInput = {
+    where: RapidRecallWhereUniqueInput
+    data: XOR<RapidRecallUpdateWithoutCourseTypeInput, RapidRecallUncheckedUpdateWithoutCourseTypeInput>
+  }
+
+  export type RapidRecallUpdateManyWithWhereWithoutCourseTypeInput = {
+    where: RapidRecallScalarWhereInput
+    data: XOR<RapidRecallUpdateManyMutationInput, RapidRecallUncheckedUpdateManyWithoutCourseTypeInput>
+  }
+
   export type CourseCreateWithoutChaptersInput = {
     title: string
     description?: string | null
@@ -56918,6 +60794,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutChaptersInput = {
@@ -56940,6 +60817,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutChaptersInput = {
@@ -56958,6 +60836,7 @@ export namespace Prisma {
     course: CourseCreateNestedOneWithoutCourseTypesInput
     selectedBy?: UserCreateNestedManyWithoutSelectedCourseTypeInput
     tests?: TestCreateNestedManyWithoutCourseTypeInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseTypeInput
   }
 
   export type CourseTypeUncheckedCreateWithoutChaptersInput = {
@@ -56972,6 +60851,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     selectedBy?: UserUncheckedCreateNestedManyWithoutSelectedCourseTypeInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseTypeInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseTypeInput
   }
 
   export type CourseTypeCreateOrConnectWithoutChaptersInput = {
@@ -57004,6 +60884,7 @@ export namespace Prisma {
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutChapterInput = {
@@ -57032,6 +60913,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutChapterInput = {
@@ -57074,6 +60956,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutChaptersInput = {
@@ -57096,6 +60979,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseTypeUpsertWithoutChaptersInput = {
@@ -57120,6 +61004,7 @@ export namespace Prisma {
     course?: CourseUpdateOneRequiredWithoutCourseTypesNestedInput
     selectedBy?: UserUpdateManyWithoutSelectedCourseTypeNestedInput
     tests?: TestUpdateManyWithoutCourseTypeNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseTypeNestedInput
   }
 
   export type CourseTypeUncheckedUpdateWithoutChaptersInput = {
@@ -57134,6 +61019,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     selectedBy?: UserUncheckedUpdateManyWithoutSelectedCourseTypeNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseTypeNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseTypeNestedInput
   }
 
   export type LessonUpsertWithWhereUniqueWithoutChapterInput = {
@@ -57335,6 +61221,49 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type RapidRecallCreateWithoutLessonInput = {
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    course: CourseCreateNestedOneWithoutRapidRecallsInput
+    courseType?: CourseTypeCreateNestedOneWithoutRapidRecallsInput
+    subject?: SubjectCreateNestedOneWithoutRapidRecallsInput
+    cards?: RapidRecallCardCreateNestedManyWithoutRecallInput
+  }
+
+  export type RapidRecallUncheckedCreateWithoutLessonInput = {
+    id?: number
+    courseId: number
+    courseTypeId?: number | null
+    subjectId?: number | null
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cards?: RapidRecallCardUncheckedCreateNestedManyWithoutRecallInput
+  }
+
+  export type RapidRecallCreateOrConnectWithoutLessonInput = {
+    where: RapidRecallWhereUniqueInput
+    create: XOR<RapidRecallCreateWithoutLessonInput, RapidRecallUncheckedCreateWithoutLessonInput>
+  }
+
+  export type RapidRecallCreateManyLessonInputEnvelope = {
+    data: RapidRecallCreateManyLessonInput | RapidRecallCreateManyLessonInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ChapterUpsertWithoutLessonsInput = {
     update: XOR<ChapterUpdateWithoutLessonsInput, ChapterUncheckedUpdateWithoutLessonsInput>
     create: XOR<ChapterCreateWithoutLessonsInput, ChapterUncheckedCreateWithoutLessonsInput>
@@ -57475,6 +61404,22 @@ export namespace Prisma {
     data: XOR<LessonCommentUpdateManyMutationInput, LessonCommentUncheckedUpdateManyWithoutLessonInput>
   }
 
+  export type RapidRecallUpsertWithWhereUniqueWithoutLessonInput = {
+    where: RapidRecallWhereUniqueInput
+    update: XOR<RapidRecallUpdateWithoutLessonInput, RapidRecallUncheckedUpdateWithoutLessonInput>
+    create: XOR<RapidRecallCreateWithoutLessonInput, RapidRecallUncheckedCreateWithoutLessonInput>
+  }
+
+  export type RapidRecallUpdateWithWhereUniqueWithoutLessonInput = {
+    where: RapidRecallWhereUniqueInput
+    data: XOR<RapidRecallUpdateWithoutLessonInput, RapidRecallUncheckedUpdateWithoutLessonInput>
+  }
+
+  export type RapidRecallUpdateManyWithWhereWithoutLessonInput = {
+    where: RapidRecallScalarWhereInput
+    data: XOR<RapidRecallUpdateManyMutationInput, RapidRecallUncheckedUpdateManyWithoutLessonInput>
+  }
+
   export type LessonCreateWithoutLessonPlansInput = {
     title: string
     description?: string | null
@@ -57500,6 +61445,7 @@ export namespace Prisma {
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutLessonPlansInput = {
@@ -57528,6 +61474,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutLessonPlansInput = {
@@ -57601,6 +61548,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutLessonPlansInput = {
@@ -57629,6 +61577,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type PlanUpsertWithoutLessonPlansInput = {
@@ -57686,6 +61635,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutPlansInput = {
@@ -57708,6 +61658,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutPlansInput = {
@@ -57792,6 +61743,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutPlansInput = {
@@ -57814,6 +61766,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type SubscriptionUpsertWithWhereUniqueWithoutPlanInput = {
@@ -57919,6 +61872,7 @@ export namespace Prisma {
     plans?: PlanCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutSubscriptionsInput = {
@@ -57941,6 +61895,7 @@ export namespace Prisma {
     plans?: PlanUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutSubscriptionsInput = {
@@ -58066,6 +62021,7 @@ export namespace Prisma {
     plans?: PlanUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutSubscriptionsInput = {
@@ -58088,6 +62044,7 @@ export namespace Prisma {
     plans?: PlanUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type PlanUpsertWithoutSubscriptionsInput = {
@@ -58135,6 +62092,7 @@ export namespace Prisma {
     topics?: TopicCreateNestedManyWithoutSubjectInput
     courses?: CourseCreateNestedManyWithoutSubjectsInput
     quizzes?: QuizCreateNestedManyWithoutSubjectInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateWithoutQuestionsInput = {
@@ -58147,6 +62105,7 @@ export namespace Prisma {
     topics?: TopicUncheckedCreateNestedManyWithoutSubjectInput
     courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
     quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectCreateOrConnectWithoutQuestionsInput = {
@@ -58283,6 +62242,7 @@ export namespace Prisma {
     topics?: TopicUpdateManyWithoutSubjectNestedInput
     courses?: CourseUpdateManyWithoutSubjectsNestedInput
     quizzes?: QuizUpdateManyWithoutSubjectNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateWithoutQuestionsInput = {
@@ -58295,6 +62255,7 @@ export namespace Prisma {
     topics?: TopicUncheckedUpdateManyWithoutSubjectNestedInput
     courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
     quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type TopicUpsertWithoutQuestionsInput = {
@@ -58517,6 +62478,7 @@ export namespace Prisma {
     topics?: TopicCreateNestedManyWithoutSubjectInput
     courses?: CourseCreateNestedManyWithoutSubjectsInput
     questions?: QuestionCreateNestedManyWithoutSubjectInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateWithoutQuizzesInput = {
@@ -58529,6 +62491,7 @@ export namespace Prisma {
     topics?: TopicUncheckedCreateNestedManyWithoutSubjectInput
     courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
     questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectCreateOrConnectWithoutQuizzesInput = {
@@ -58587,6 +62550,7 @@ export namespace Prisma {
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutQuizInput = {
@@ -58615,6 +62579,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutQuizInput = {
@@ -58691,6 +62656,7 @@ export namespace Prisma {
     topics?: TopicUpdateManyWithoutSubjectNestedInput
     courses?: CourseUpdateManyWithoutSubjectsNestedInput
     questions?: QuestionUpdateManyWithoutSubjectNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateWithoutQuizzesInput = {
@@ -58703,6 +62669,7 @@ export namespace Prisma {
     topics?: TopicUncheckedUpdateManyWithoutSubjectNestedInput
     courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type TopicUpsertWithoutQuizzesInput = {
@@ -58773,6 +62740,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutQuizInput = {
@@ -58801,6 +62769,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type QuizQuestionUpsertWithWhereUniqueWithoutQuizInput = {
@@ -59706,6 +63675,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutSavedByInput = {
@@ -59734,6 +63704,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutSavedByInput = {
@@ -59835,6 +63806,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutSavedByInput = {
@@ -59863,6 +63835,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type UserCreateWithoutLessonProgressInput = {
@@ -59942,6 +63915,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutProgressInput = {
@@ -59970,6 +63944,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutProgressInput = {
@@ -60071,6 +64046,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutProgressInput = {
@@ -60099,6 +64075,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type CourseCreateWithoutTestsInput = {
@@ -60120,6 +64097,7 @@ export namespace Prisma {
     plans?: PlanCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutTestsInput = {
@@ -60142,6 +64120,7 @@ export namespace Prisma {
     plans?: PlanUncheckedCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutTestsInput = {
@@ -60160,6 +64139,7 @@ export namespace Prisma {
     course: CourseCreateNestedOneWithoutCourseTypesInput
     chapters?: ChapterCreateNestedManyWithoutCourseTypeInput
     selectedBy?: UserCreateNestedManyWithoutSelectedCourseTypeInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseTypeInput
   }
 
   export type CourseTypeUncheckedCreateWithoutTestsInput = {
@@ -60174,6 +64154,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     chapters?: ChapterUncheckedCreateNestedManyWithoutCourseTypeInput
     selectedBy?: UserUncheckedCreateNestedManyWithoutSelectedCourseTypeInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseTypeInput
   }
 
   export type CourseTypeCreateOrConnectWithoutTestsInput = {
@@ -60316,6 +64297,7 @@ export namespace Prisma {
     plans?: PlanUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutTestsInput = {
@@ -60338,6 +64320,7 @@ export namespace Prisma {
     plans?: PlanUncheckedUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseTypeUpsertWithoutTestsInput = {
@@ -60362,6 +64345,7 @@ export namespace Prisma {
     course?: CourseUpdateOneRequiredWithoutCourseTypesNestedInput
     chapters?: ChapterUpdateManyWithoutCourseTypeNestedInput
     selectedBy?: UserUpdateManyWithoutSelectedCourseTypeNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseTypeNestedInput
   }
 
   export type CourseTypeUncheckedUpdateWithoutTestsInput = {
@@ -60376,6 +64360,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapters?: ChapterUncheckedUpdateManyWithoutCourseTypeNestedInput
     selectedBy?: UserUncheckedUpdateManyWithoutSelectedCourseTypeNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseTypeNestedInput
   }
 
   export type TestQuestionUpsertWithWhereUniqueWithoutTestInput = {
@@ -61112,6 +65097,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutCommentsInput = {
@@ -61140,6 +65126,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutCommentsInput = {
@@ -61357,6 +65344,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutCommentsInput = {
@@ -61385,6 +65373,7 @@ export namespace Prisma {
     lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type UserUpsertWithoutCommentsInput = {
@@ -61800,6 +65789,7 @@ export namespace Prisma {
     plans?: PlanCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
     tests?: TestCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutCourseInput
   }
 
   export type CourseUncheckedCreateWithoutDailyQuizzesInput = {
@@ -61822,6 +65812,7 @@ export namespace Prisma {
     plans?: PlanUncheckedCreateNestedManyWithoutCourseInput
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
     tests?: TestUncheckedCreateNestedManyWithoutCourseInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutCourseInput
   }
 
   export type CourseCreateOrConnectWithoutDailyQuizzesInput = {
@@ -61943,6 +65934,7 @@ export namespace Prisma {
     plans?: PlanUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutDailyQuizzesInput = {
@@ -61965,6 +65957,7 @@ export namespace Prisma {
     plans?: PlanUncheckedUpdateManyWithoutCourseNestedInput
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type DailyQuizAnswerUpsertWithWhereUniqueWithoutAttemptInput = {
@@ -62047,6 +66040,514 @@ export namespace Prisma {
     questionIds?: DailyQuizAttemptUpdatequestionIdsInput | number[]
     startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type CourseCreateWithoutRapidRecallsInput = {
+    title: string
+    description?: string | null
+    thumbnail?: string | null
+    classGrade?: string | null
+    difficulty?: string | null
+    status?: $Enums.CourseStatus
+    accessType?: $Enums.AccessType
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subjects?: SubjectCreateNestedManyWithoutCoursesInput
+    admin?: AdminCreateNestedOneWithoutCoursesInput
+    chapters?: ChapterCreateNestedManyWithoutCourseInput
+    courseTypes?: CourseTypeCreateNestedManyWithoutCourseInput
+    selectedBy?: UserCreateNestedManyWithoutSelectedCourseInput
+    plans?: PlanCreateNestedManyWithoutCourseInput
+    subscriptions?: SubscriptionCreateNestedManyWithoutCourseInput
+    tests?: TestCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutCourseInput
+  }
+
+  export type CourseUncheckedCreateWithoutRapidRecallsInput = {
+    id?: number
+    title: string
+    description?: string | null
+    thumbnail?: string | null
+    classGrade?: string | null
+    difficulty?: string | null
+    status?: $Enums.CourseStatus
+    accessType?: $Enums.AccessType
+    displayOrder?: number
+    createdBy?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subjects?: SubjectUncheckedCreateNestedManyWithoutCoursesInput
+    chapters?: ChapterUncheckedCreateNestedManyWithoutCourseInput
+    courseTypes?: CourseTypeUncheckedCreateNestedManyWithoutCourseInput
+    selectedBy?: UserUncheckedCreateNestedManyWithoutSelectedCourseInput
+    plans?: PlanUncheckedCreateNestedManyWithoutCourseInput
+    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutCourseInput
+    tests?: TestUncheckedCreateNestedManyWithoutCourseInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutCourseInput
+  }
+
+  export type CourseCreateOrConnectWithoutRapidRecallsInput = {
+    where: CourseWhereUniqueInput
+    create: XOR<CourseCreateWithoutRapidRecallsInput, CourseUncheckedCreateWithoutRapidRecallsInput>
+  }
+
+  export type CourseTypeCreateWithoutRapidRecallsInput = {
+    title: string
+    description?: string | null
+    status?: $Enums.CourseStatus
+    accessType?: $Enums.AccessType
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    course: CourseCreateNestedOneWithoutCourseTypesInput
+    chapters?: ChapterCreateNestedManyWithoutCourseTypeInput
+    selectedBy?: UserCreateNestedManyWithoutSelectedCourseTypeInput
+    tests?: TestCreateNestedManyWithoutCourseTypeInput
+  }
+
+  export type CourseTypeUncheckedCreateWithoutRapidRecallsInput = {
+    id?: number
+    courseId: number
+    title: string
+    description?: string | null
+    status?: $Enums.CourseStatus
+    accessType?: $Enums.AccessType
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    chapters?: ChapterUncheckedCreateNestedManyWithoutCourseTypeInput
+    selectedBy?: UserUncheckedCreateNestedManyWithoutSelectedCourseTypeInput
+    tests?: TestUncheckedCreateNestedManyWithoutCourseTypeInput
+  }
+
+  export type CourseTypeCreateOrConnectWithoutRapidRecallsInput = {
+    where: CourseTypeWhereUniqueInput
+    create: XOR<CourseTypeCreateWithoutRapidRecallsInput, CourseTypeUncheckedCreateWithoutRapidRecallsInput>
+  }
+
+  export type SubjectCreateWithoutRapidRecallsInput = {
+    name: string
+    isActive?: boolean
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    topics?: TopicCreateNestedManyWithoutSubjectInput
+    courses?: CourseCreateNestedManyWithoutSubjectsInput
+    questions?: QuestionCreateNestedManyWithoutSubjectInput
+    quizzes?: QuizCreateNestedManyWithoutSubjectInput
+  }
+
+  export type SubjectUncheckedCreateWithoutRapidRecallsInput = {
+    id?: number
+    name: string
+    isActive?: boolean
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    topics?: TopicUncheckedCreateNestedManyWithoutSubjectInput
+    courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
+    questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
+    quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
+  }
+
+  export type SubjectCreateOrConnectWithoutRapidRecallsInput = {
+    where: SubjectWhereUniqueInput
+    create: XOR<SubjectCreateWithoutRapidRecallsInput, SubjectUncheckedCreateWithoutRapidRecallsInput>
+  }
+
+  export type LessonCreateWithoutRapidRecallsInput = {
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    durationSeconds?: number | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    commentsEnabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    chapter: ChapterCreateNestedOneWithoutLessonsInput
+    quiz?: QuizCreateNestedOneWithoutLessonInput
+    lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
+    savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
+    progress?: LessonProgressCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentCreateNestedManyWithoutLessonInput
+  }
+
+  export type LessonUncheckedCreateWithoutRapidRecallsInput = {
+    id?: number
+    chapterId: number
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    durationSeconds?: number | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    quizId?: number | null
+    commentsEnabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
+    savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
+    progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
+  }
+
+  export type LessonCreateOrConnectWithoutRapidRecallsInput = {
+    where: LessonWhereUniqueInput
+    create: XOR<LessonCreateWithoutRapidRecallsInput, LessonUncheckedCreateWithoutRapidRecallsInput>
+  }
+
+  export type RapidRecallCardCreateWithoutRecallInput = {
+    imageUrl?: string | null
+    note?: string | null
+    displayOrder?: number
+  }
+
+  export type RapidRecallCardUncheckedCreateWithoutRecallInput = {
+    id?: number
+    imageUrl?: string | null
+    note?: string | null
+    displayOrder?: number
+  }
+
+  export type RapidRecallCardCreateOrConnectWithoutRecallInput = {
+    where: RapidRecallCardWhereUniqueInput
+    create: XOR<RapidRecallCardCreateWithoutRecallInput, RapidRecallCardUncheckedCreateWithoutRecallInput>
+  }
+
+  export type RapidRecallCardCreateManyRecallInputEnvelope = {
+    data: RapidRecallCardCreateManyRecallInput | RapidRecallCardCreateManyRecallInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CourseUpsertWithoutRapidRecallsInput = {
+    update: XOR<CourseUpdateWithoutRapidRecallsInput, CourseUncheckedUpdateWithoutRapidRecallsInput>
+    create: XOR<CourseCreateWithoutRapidRecallsInput, CourseUncheckedCreateWithoutRapidRecallsInput>
+    where?: CourseWhereInput
+  }
+
+  export type CourseUpdateToOneWithWhereWithoutRapidRecallsInput = {
+    where?: CourseWhereInput
+    data: XOR<CourseUpdateWithoutRapidRecallsInput, CourseUncheckedUpdateWithoutRapidRecallsInput>
+  }
+
+  export type CourseUpdateWithoutRapidRecallsInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    classGrade?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subjects?: SubjectUpdateManyWithoutCoursesNestedInput
+    admin?: AdminUpdateOneWithoutCoursesNestedInput
+    chapters?: ChapterUpdateManyWithoutCourseNestedInput
+    courseTypes?: CourseTypeUpdateManyWithoutCourseNestedInput
+    selectedBy?: UserUpdateManyWithoutSelectedCourseNestedInput
+    plans?: PlanUpdateManyWithoutCourseNestedInput
+    subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
+    tests?: TestUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
+  }
+
+  export type CourseUncheckedUpdateWithoutRapidRecallsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    classGrade?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdBy?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subjects?: SubjectUncheckedUpdateManyWithoutCoursesNestedInput
+    chapters?: ChapterUncheckedUpdateManyWithoutCourseNestedInput
+    courseTypes?: CourseTypeUncheckedUpdateManyWithoutCourseNestedInput
+    selectedBy?: UserUncheckedUpdateManyWithoutSelectedCourseNestedInput
+    plans?: PlanUncheckedUpdateManyWithoutCourseNestedInput
+    subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
+    tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
+  }
+
+  export type CourseTypeUpsertWithoutRapidRecallsInput = {
+    update: XOR<CourseTypeUpdateWithoutRapidRecallsInput, CourseTypeUncheckedUpdateWithoutRapidRecallsInput>
+    create: XOR<CourseTypeCreateWithoutRapidRecallsInput, CourseTypeUncheckedCreateWithoutRapidRecallsInput>
+    where?: CourseTypeWhereInput
+  }
+
+  export type CourseTypeUpdateToOneWithWhereWithoutRapidRecallsInput = {
+    where?: CourseTypeWhereInput
+    data: XOR<CourseTypeUpdateWithoutRapidRecallsInput, CourseTypeUncheckedUpdateWithoutRapidRecallsInput>
+  }
+
+  export type CourseTypeUpdateWithoutRapidRecallsInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    course?: CourseUpdateOneRequiredWithoutCourseTypesNestedInput
+    chapters?: ChapterUpdateManyWithoutCourseTypeNestedInput
+    selectedBy?: UserUpdateManyWithoutSelectedCourseTypeNestedInput
+    tests?: TestUpdateManyWithoutCourseTypeNestedInput
+  }
+
+  export type CourseTypeUncheckedUpdateWithoutRapidRecallsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chapters?: ChapterUncheckedUpdateManyWithoutCourseTypeNestedInput
+    selectedBy?: UserUncheckedUpdateManyWithoutSelectedCourseTypeNestedInput
+    tests?: TestUncheckedUpdateManyWithoutCourseTypeNestedInput
+  }
+
+  export type SubjectUpsertWithoutRapidRecallsInput = {
+    update: XOR<SubjectUpdateWithoutRapidRecallsInput, SubjectUncheckedUpdateWithoutRapidRecallsInput>
+    create: XOR<SubjectCreateWithoutRapidRecallsInput, SubjectUncheckedCreateWithoutRapidRecallsInput>
+    where?: SubjectWhereInput
+  }
+
+  export type SubjectUpdateToOneWithWhereWithoutRapidRecallsInput = {
+    where?: SubjectWhereInput
+    data: XOR<SubjectUpdateWithoutRapidRecallsInput, SubjectUncheckedUpdateWithoutRapidRecallsInput>
+  }
+
+  export type SubjectUpdateWithoutRapidRecallsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topics?: TopicUpdateManyWithoutSubjectNestedInput
+    courses?: CourseUpdateManyWithoutSubjectsNestedInput
+    questions?: QuestionUpdateManyWithoutSubjectNestedInput
+    quizzes?: QuizUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type SubjectUncheckedUpdateWithoutRapidRecallsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    topics?: TopicUncheckedUpdateManyWithoutSubjectNestedInput
+    courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
+    questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
+    quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type LessonUpsertWithoutRapidRecallsInput = {
+    update: XOR<LessonUpdateWithoutRapidRecallsInput, LessonUncheckedUpdateWithoutRapidRecallsInput>
+    create: XOR<LessonCreateWithoutRapidRecallsInput, LessonUncheckedCreateWithoutRapidRecallsInput>
+    where?: LessonWhereInput
+  }
+
+  export type LessonUpdateToOneWithWhereWithoutRapidRecallsInput = {
+    where?: LessonWhereInput
+    data: XOR<LessonUpdateWithoutRapidRecallsInput, LessonUncheckedUpdateWithoutRapidRecallsInput>
+  }
+
+  export type LessonUpdateWithoutRapidRecallsInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
+    quiz?: QuizUpdateOneWithoutLessonNestedInput
+    lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
+    savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
+    progress?: LessonProgressUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUpdateManyWithoutLessonNestedInput
+  }
+
+  export type LessonUncheckedUpdateWithoutRapidRecallsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    chapterId?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    quizId?: NullableIntFieldUpdateOperationsInput | number | null
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
+    savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
+    progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
+  }
+
+  export type RapidRecallCardUpsertWithWhereUniqueWithoutRecallInput = {
+    where: RapidRecallCardWhereUniqueInput
+    update: XOR<RapidRecallCardUpdateWithoutRecallInput, RapidRecallCardUncheckedUpdateWithoutRecallInput>
+    create: XOR<RapidRecallCardCreateWithoutRecallInput, RapidRecallCardUncheckedCreateWithoutRecallInput>
+  }
+
+  export type RapidRecallCardUpdateWithWhereUniqueWithoutRecallInput = {
+    where: RapidRecallCardWhereUniqueInput
+    data: XOR<RapidRecallCardUpdateWithoutRecallInput, RapidRecallCardUncheckedUpdateWithoutRecallInput>
+  }
+
+  export type RapidRecallCardUpdateManyWithWhereWithoutRecallInput = {
+    where: RapidRecallCardScalarWhereInput
+    data: XOR<RapidRecallCardUpdateManyMutationInput, RapidRecallCardUncheckedUpdateManyWithoutRecallInput>
+  }
+
+  export type RapidRecallCardScalarWhereInput = {
+    AND?: RapidRecallCardScalarWhereInput | RapidRecallCardScalarWhereInput[]
+    OR?: RapidRecallCardScalarWhereInput[]
+    NOT?: RapidRecallCardScalarWhereInput | RapidRecallCardScalarWhereInput[]
+    id?: IntFilter<"RapidRecallCard"> | number
+    recallId?: IntFilter<"RapidRecallCard"> | number
+    imageUrl?: StringNullableFilter<"RapidRecallCard"> | string | null
+    note?: StringNullableFilter<"RapidRecallCard"> | string | null
+    displayOrder?: IntFilter<"RapidRecallCard"> | number
+  }
+
+  export type RapidRecallCreateWithoutCardsInput = {
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    course: CourseCreateNestedOneWithoutRapidRecallsInput
+    courseType?: CourseTypeCreateNestedOneWithoutRapidRecallsInput
+    subject?: SubjectCreateNestedOneWithoutRapidRecallsInput
+    lesson?: LessonCreateNestedOneWithoutRapidRecallsInput
+  }
+
+  export type RapidRecallUncheckedCreateWithoutCardsInput = {
+    id?: number
+    courseId: number
+    courseTypeId?: number | null
+    subjectId?: number | null
+    lessonId?: number | null
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RapidRecallCreateOrConnectWithoutCardsInput = {
+    where: RapidRecallWhereUniqueInput
+    create: XOR<RapidRecallCreateWithoutCardsInput, RapidRecallUncheckedCreateWithoutCardsInput>
+  }
+
+  export type RapidRecallUpsertWithoutCardsInput = {
+    update: XOR<RapidRecallUpdateWithoutCardsInput, RapidRecallUncheckedUpdateWithoutCardsInput>
+    create: XOR<RapidRecallCreateWithoutCardsInput, RapidRecallUncheckedCreateWithoutCardsInput>
+    where?: RapidRecallWhereInput
+  }
+
+  export type RapidRecallUpdateToOneWithWhereWithoutCardsInput = {
+    where?: RapidRecallWhereInput
+    data: XOR<RapidRecallUpdateWithoutCardsInput, RapidRecallUncheckedUpdateWithoutCardsInput>
+  }
+
+  export type RapidRecallUpdateWithoutCardsInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    course?: CourseUpdateOneRequiredWithoutRapidRecallsNestedInput
+    courseType?: CourseTypeUpdateOneWithoutRapidRecallsNestedInput
+    subject?: SubjectUpdateOneWithoutRapidRecallsNestedInput
+    lesson?: LessonUpdateOneWithoutRapidRecallsNestedInput
+  }
+
+  export type RapidRecallUncheckedUpdateWithoutCardsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SessionCreateManyUserInput = {
@@ -62425,6 +66926,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutAdminInput = {
@@ -62447,6 +66949,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateManyWithoutAdminInput = {
@@ -62536,6 +67039,22 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type RapidRecallCreateManySubjectInput = {
+    id?: number
+    courseId: number
+    courseTypeId?: number | null
+    lessonId?: number | null
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type TopicUpdateWithoutSubjectInput = {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -62585,6 +67104,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutCourseNestedInput
     tests?: TestUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateWithoutSubjectsInput = {
@@ -62607,6 +67127,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutCourseNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseNestedInput
     dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutCourseNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseNestedInput
   }
 
   export type CourseUncheckedUpdateManyWithoutSubjectsInput = {
@@ -62707,6 +67228,55 @@ export namespace Prisma {
     examTag?: NullableStringFieldUpdateOperationsInput | string | null
     questionCount?: NullableIntFieldUpdateOperationsInput | number | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RapidRecallUpdateWithoutSubjectInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    course?: CourseUpdateOneRequiredWithoutRapidRecallsNestedInput
+    courseType?: CourseTypeUpdateOneWithoutRapidRecallsNestedInput
+    lesson?: LessonUpdateOneWithoutRapidRecallsNestedInput
+    cards?: RapidRecallCardUpdateManyWithoutRecallNestedInput
+  }
+
+  export type RapidRecallUncheckedUpdateWithoutSubjectInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cards?: RapidRecallCardUncheckedUpdateManyWithoutRecallNestedInput
+  }
+
+  export type RapidRecallUncheckedUpdateManyWithoutSubjectInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -62903,6 +67473,22 @@ export namespace Prisma {
     completedAt?: Date | string | null
   }
 
+  export type RapidRecallCreateManyCourseInput = {
+    id?: number
+    courseTypeId?: number | null
+    subjectId?: number | null
+    lessonId?: number | null
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type SubjectUpdateWithoutCoursesInput = {
     name?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -62912,6 +67498,7 @@ export namespace Prisma {
     topics?: TopicUpdateManyWithoutSubjectNestedInput
     questions?: QuestionUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUpdateManyWithoutSubjectNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateWithoutCoursesInput = {
@@ -62924,6 +67511,7 @@ export namespace Prisma {
     topics?: TopicUncheckedUpdateManyWithoutSubjectNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateManyWithoutCoursesInput = {
@@ -62974,6 +67562,7 @@ export namespace Prisma {
     chapters?: ChapterUpdateManyWithoutCourseTypeNestedInput
     selectedBy?: UserUpdateManyWithoutSelectedCourseTypeNestedInput
     tests?: TestUpdateManyWithoutCourseTypeNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutCourseTypeNestedInput
   }
 
   export type CourseTypeUncheckedUpdateWithoutCourseInput = {
@@ -62988,6 +67577,7 @@ export namespace Prisma {
     chapters?: ChapterUncheckedUpdateManyWithoutCourseTypeNestedInput
     selectedBy?: UserUncheckedUpdateManyWithoutSelectedCourseTypeNestedInput
     tests?: TestUncheckedUpdateManyWithoutCourseTypeNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutCourseTypeNestedInput
   }
 
   export type CourseTypeUncheckedUpdateManyWithoutCourseInput = {
@@ -63208,6 +67798,55 @@ export namespace Prisma {
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type RapidRecallUpdateWithoutCourseInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    courseType?: CourseTypeUpdateOneWithoutRapidRecallsNestedInput
+    subject?: SubjectUpdateOneWithoutRapidRecallsNestedInput
+    lesson?: LessonUpdateOneWithoutRapidRecallsNestedInput
+    cards?: RapidRecallCardUpdateManyWithoutRecallNestedInput
+  }
+
+  export type RapidRecallUncheckedUpdateWithoutCourseInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cards?: RapidRecallCardUncheckedUpdateManyWithoutRecallNestedInput
+  }
+
+  export type RapidRecallUncheckedUpdateManyWithoutCourseInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ChapterCreateManyCourseTypeInput = {
     id?: number
     courseId?: number | null
@@ -63243,6 +67882,22 @@ export namespace Prisma {
     marksIncorrect?: number
     isPublished?: boolean
     isLocked?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RapidRecallCreateManyCourseTypeInput = {
+    id?: number
+    courseId: number
+    subjectId?: number | null
+    lessonId?: number | null
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -63389,6 +68044,55 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type RapidRecallUpdateWithoutCourseTypeInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    course?: CourseUpdateOneRequiredWithoutRapidRecallsNestedInput
+    subject?: SubjectUpdateOneWithoutRapidRecallsNestedInput
+    lesson?: LessonUpdateOneWithoutRapidRecallsNestedInput
+    cards?: RapidRecallCardUpdateManyWithoutRecallNestedInput
+  }
+
+  export type RapidRecallUncheckedUpdateWithoutCourseTypeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cards?: RapidRecallCardUncheckedUpdateManyWithoutRecallNestedInput
+  }
+
+  export type RapidRecallUncheckedUpdateManyWithoutCourseTypeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type LessonCreateManyChapterInput = {
     id?: number
     title: string
@@ -63438,6 +68142,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutChapterInput = {
@@ -63466,6 +68171,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateManyWithoutChapterInput = {
@@ -63516,6 +68222,22 @@ export namespace Prisma {
     body: string
     status?: $Enums.CommentStatus
     editedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RapidRecallCreateManyLessonInput = {
+    id?: number
+    courseId: number
+    courseTypeId?: number | null
+    subjectId?: number | null
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -63603,6 +68325,55 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     status?: EnumCommentStatusFieldUpdateOperationsInput | $Enums.CommentStatus
     editedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RapidRecallUpdateWithoutLessonInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    course?: CourseUpdateOneRequiredWithoutRapidRecallsNestedInput
+    courseType?: CourseTypeUpdateOneWithoutRapidRecallsNestedInput
+    subject?: SubjectUpdateOneWithoutRapidRecallsNestedInput
+    cards?: RapidRecallCardUpdateManyWithoutRecallNestedInput
+  }
+
+  export type RapidRecallUncheckedUpdateWithoutLessonInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cards?: RapidRecallCardUncheckedUpdateManyWithoutRecallNestedInput
+  }
+
+  export type RapidRecallUncheckedUpdateManyWithoutLessonInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -64179,6 +68950,33 @@ export namespace Prisma {
     isCorrect?: BoolFieldUpdateOperationsInput | boolean
     marksAwarded?: FloatFieldUpdateOperationsInput | number
     answeredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RapidRecallCardCreateManyRecallInput = {
+    id?: number
+    imageUrl?: string | null
+    note?: string | null
+    displayOrder?: number
+  }
+
+  export type RapidRecallCardUpdateWithoutRecallInput = {
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type RapidRecallCardUncheckedUpdateWithoutRecallInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type RapidRecallCardUncheckedUpdateManyWithoutRecallInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
   }
 
 

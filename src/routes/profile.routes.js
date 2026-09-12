@@ -17,6 +17,9 @@ const {
   getDailyQuiz, answerDailyQuestion, finishDailyQuiz, dailyQuizHistory,
 } = require('../controllers/dailyQuiz.controller');
 const {
+  listStudentRapidRecalls, getStudentRapidRecall,
+} = require('../controllers/rapidRecall.controller');
+const {
   listTests: listStudentTests, startTestAttempt, answerTestQuestion,
   clearTestAnswer, submitTestAttempt, getTestResult, getTestLeaderboard,
 } = require('../controllers/testAttempt.controller');
@@ -81,5 +84,9 @@ router.get('/courses/:courseId/daily-quiz', authenticateStudent, getDailyQuiz);
 router.post('/courses/:courseId/daily-quiz/answers', authenticateStudent, answerDailyQuestion);
 router.post('/courses/:courseId/daily-quiz/finish', authenticateStudent, finishDailyQuiz);
 router.get('/courses/:courseId/daily-quiz/history', authenticateStudent, dailyQuizHistory);
+
+// Rapid Recall — revision cards for the student's selected course.
+router.get('/rapid-recalls', authenticateStudent, listStudentRapidRecalls);
+router.get('/rapid-recalls/:id', authenticateStudent, getStudentRapidRecall);
 
 module.exports = router;

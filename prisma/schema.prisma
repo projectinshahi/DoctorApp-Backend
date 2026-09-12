@@ -80,6 +80,7 @@ model Subject {
   courses   Course[]
   questions Question[]
   quizzes   Quiz[]
+  rapidRecalls RapidRecall[]
 
   @@map("subjects")
 }
@@ -156,6 +157,7 @@ model Course {
   subscriptions Subscription[]
   tests         Test[]
   dailyQuizzes  DailyQuizAttempt[]
+  rapidRecalls  RapidRecall[]
 
   @@index([createdBy])
   @@map("courses")
@@ -178,9 +180,11 @@ model CourseType {
   chapters   Chapter[]
   selectedBy User[]
 
+  tests        Test[]
+  rapidRecalls RapidRecall[]
+
   @@index([courseId])
   @@map("course_types")
-  tests    Test[]
 }
 
 model Chapter {
@@ -248,6 +252,7 @@ model Lesson {
   savedBy     SavedLesson[]
   progress    LessonProgress[]
   comments    LessonComment[]
+  rapidRecalls RapidRecall[]
 
   @@index([chapterId, displayOrder])
   @@map("lessons")
@@ -775,4 +780,63 @@ model DailyQuizAnswer {
 
   @@id([attemptId, questionId])
   @@map("daily_quiz_answers")
+}
+
+
+/// A Rapid Recall set: images with a note against each, plus an optional
+/// document, filed under a course and narrowed as far as the admin wants.
+///
+/// Scoping is a funnel, not a path. Only courseId is required; courseType,
+/// subject and lesson each narrow it further and each may be null. A set
+/// pinned to one lesson shows on that lesson; one pinned only to a subject
+/// shows across every lesson of it. Requiring the whole chain would force an
+/// admin to duplicate the same revision cards for each lesson that needs them.
+model RapidRecall {
+  id           Int          @id @default(autoincrement())
+  courseId     Int
+  courseTypeId Int?
+  subjectId    Int?
+  lessonId     Int?
+
+  title       String
+  description String?
+
+  // An uploaded PDF or DOC alongside the cards. Separate from the per-card
+  // notes: this is the handout, those are the captions.
+  noteUrl      String?
+  notePublicId String?
+  noteFileType String?
+
+  status       CourseStatus @default(draft)
+  displayOrder Int          @default(0)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  course     Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseType CourseType? @relation(fields: [courseTypeId], references: [id], onDelete: Cascade)
+  subject    Subject?    @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  lesson     Lesson?     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  cards      RapidRecallCard[]
+
+  // The student query filters on course + type + published, then narrows.
+  @@index([courseId, courseTypeId, status, displayOrder])
+  @@index([subjectId])
+  @@index([lessonId])
+  @@map("rapid_recalls")
+}
+
+model RapidRecallCard {
+  id           Int    @id @default(autoincrement())
+  recallId     Int
+  // Either carries the card: a diagram with no words, or a note with no
+  // picture. The API enforces that at least one is present, the way test
+  // questions do.
+  imageUrl     String?
+  note         String?
+  displayOrder Int    @default(0)
+
+  recall RapidRecall @relation(fields: [recallId], references: [id], onDelete: Cascade)
+
+  @@index([recallId, displayOrder])
+  @@map("rapid_recall_cards")
 }
