@@ -3,6 +3,7 @@
 
 
 const prisma = require('../db');
+const { notifyCoursePublished, becamePublished } = require('../services/push.service');
 
 const VALID_STATUSES = ['draft', 'published', 'archived'];
 const VALID_ACCESS_TYPES = ['free', 'premium'];
@@ -132,6 +133,12 @@ async function createCourse(req, res) {
         plans: { orderBy: { displayOrder: 'asc' } },
       },
     });
+
+    // Not awaited: the admin should not wait on Firebase, and a failed send
+    // must never undo or delay a course that saved successfully.
+    if (becamePublished(null, course.status)) {
+      notifyCoursePublished(course).catch(() => {});
+    }
 
     const { shapePlan } = require('./plan.controller');
     return res.status(201).json({
@@ -453,6 +460,12 @@ async function updateCourse(req, res) {
         courseTypes: { orderBy: { displayOrder: 'asc' } },
       },
     });
+
+    // Only the save that takes a course live announces it. Editing a course
+    // that is already published says nothing.
+    if (becamePublished(existingCourse.status, updatedCourse.status)) {
+      notifyCoursePublished(updatedCourse).catch(() => {});
+    }
 
     return res.status(200).json({ course: updatedCourse });
   } catch (error) {
