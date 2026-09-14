@@ -356,7 +356,10 @@ const STUDENT_RECALL_SELECT = {
   noteUrl: true, noteFileType: true,
   courseTypeId: true, subjectId: true, lessonId: true, displayOrder: true,
   subject: { select: { id: true, name: true } },
-  lesson: { select: { id: true, title: true } },
+  // With its chapter, because lesson titles are not unique — two lessons are
+  // both called "Obstetrics" — and a lesson list of bare titles would show
+  // the student two identical rows with different decks behind them.
+  lesson: { select: { id: true, title: true, chapter: { select: { id: true, title: true } } } },
   _count: { select: { cards: true } },
 };
 
@@ -380,9 +383,10 @@ function studentWhere(user, query) {
     if (query[key] === undefined) continue;
     const id = Number(query[key]);
     if (!Number.isInteger(id)) return { error: `${key} must be an integer` };
-    // A lesson's own decks plus the ones that apply more broadly, so opening a
-    // lesson shows its cards and its subject's cards together.
-    where[key] = query.exact === 'true' ? id : { in: [id] };
+    // Exact. A lesson has no subject — lessons and subjects are separate
+    // hierarchies — so a lesson's screen has nothing broader to pull in;
+    // course-wide decks come from the unfiltered list.
+    where[key] = id;
   }
 
   return { where };
