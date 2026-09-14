@@ -35,31 +35,25 @@ use.
 
 ---
 
-## 1. Firebase setup
+## 1. Firebase setup — already done
 
-Android package name: **`com.keerthana.dr_app`**
+These are in place; do not redo them:
 
-1. console.firebase.google.com → the project → **Add app → Android**, package
-   `com.keerthana.dr_app`.
-2. Run `flutterfire configure` in the project root and pick Android only. It
-   writes `android/app/google-services.json`, `lib/firebase_options.dart`, and
-   adds the Gradle plugin.
+- Android app registered in Firebase with package **`com.keerthana.dr_app`**
+- `android/app/google-services.json` downloaded from that registration
+- `com.google.gms.google-services` declared in `android/settings.gradle.kts`
+  and applied in `android/app/build.gradle.kts` (Kotlin DSL)
+- `firebase_core` in `pubspec.yaml`, and `Firebase.initializeApp()` in `main.dart`
 
-If configuring by hand: this project uses **Kotlin DSL** (`.gradle.kts`), so the
-Groovy snippets in most tutorials will not compile.
-
-```kotlin
-// android/settings.gradle.kts — inside plugins { }
-id("com.google.gms.google-services") version "4.4.2" apply false
-
-// android/app/build.gradle.kts — inside plugins { }
-id("com.google.gms.google-services")
-```
+**Do not run `flutterfire configure`.** This project initialises Firebase from
+`google-services.json` with a plain `Firebase.initializeApp()`, and there is no
+`lib/firebase_options.dart`. Running it would generate that file and change how
+startup works for no benefit on Android.
 
 ## 2. Packages
 
 ```
-flutter pub add firebase_core firebase_messaging flutter_local_notifications
+flutter pub add firebase_messaging flutter_local_notifications
 ```
 
 ## 3. Keep iOS building
@@ -75,7 +69,6 @@ import 'dart:io' show Platform;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'firebase_options.dart';
 
 final localNotifications = FlutterLocalNotificationsPlugin();
 
@@ -90,14 +83,16 @@ const newCoursesChannel = AndroidNotificationChannel(
 // app is closed.
 @pragma('vm:entry-point')
 Future<void> _onBackgroundMessage(RemoteMessage message) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp();
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (Platform.isAndroid) {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    // Keep the existing try/catch around this — a broken Firebase config must
+    // never stop the app opening.
+    await Firebase.initializeApp();
     FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage);
 
     await localNotifications
