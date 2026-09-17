@@ -43,11 +43,14 @@ function getMessaging() {
       credentials.private_key = credentials.private_key.replace(/\\n/g, '\n');
     }
 
-    const admin = require('firebase-admin');
-    const app = admin.apps.length
-      ? admin.app()
-      : admin.initializeApp({ credential: admin.credential.cert(credentials) });
-    messaging = admin.messaging(app);
+    // The modular API. firebase-admin 14 removed the old namespace —
+    // admin.apps, admin.credential, admin.messaging() — entirely. Those calls
+    // threw inside this try, the catch below swallowed it, and push stayed
+    // silently disabled even with a valid key configured.
+    const { initializeApp, getApps, getApp, cert } = require('firebase-admin/app');
+    const { getMessaging: firebaseMessaging } = require('firebase-admin/messaging');
+    const app = getApps().length ? getApp() : initializeApp({ credential: cert(credentials) });
+    messaging = firebaseMessaging(app);
   } catch (error) {
     console.error('[push] could not initialise Firebase:', error.message);
     messaging = null;
@@ -93,8 +96,12 @@ function newCourseMessage(course) {
  * because nothing records that it was already announced. Rare, and harmless
  * compared with a migration on the live database days before launch. Add a
  * notifiedAt column to Course if it starts happening.
+ *
+ * `dryRun` asks Firebase to validate the message and the credentials without
+ * delivering it — the only way to check the real production path end to end
+ * without notifying every student.
  */
-async function notifyCoursePublished(course) {
+async function notifyCoursePublished(course, { dryRun = false } = {}) {
   const message = newCourseMessage(course);
   const client = getMessaging();
 
@@ -104,9 +111,9 @@ async function notifyCoursePublished(course) {
   }
 
   try {
-    const messageId = await client.send(message);
-    console.log(`[push] announced course ${course.id} to ${TOPIC}:`, messageId);
-    return { sent: true, messageId };
+    const messageId = await client.send(message, dryRun);
+    console.log(`[push] ${dryRun ? 'validated (dry run, not delivered)' : 'announced'} course ${course.id} to ${TOPIC}:`, messageId);
+    return { sent: !dryRun, dryRun, messageId };
   } catch (error) {
     console.error(`[push] failed to announce course ${course.id}:`, error.message);
     return { sent: false, reason: error.message };
@@ -117,4 +124,6 @@ module.exports = {
   notifyCoursePublished,
   // Exported for push.test.js.
   becamePublished, newCourseMessage, TOPIC, NEW_COURSE_CHANNEL,
+  _messagingClient: getMessaging,
+  _resetForTests() { messaging = null; initialised = false; },
 };
