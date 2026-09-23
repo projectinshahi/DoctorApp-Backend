@@ -401,10 +401,53 @@ async function notifySubjectQuestions(subjectId, count) {
   return sendToTokens(rows.map((r) => r.token), message, label);
 }
 
+
+/**
+ * An announcement written by an admin, to everyone on one course.
+ *
+ * data.type is deliberately generic: the app has nothing to open, so tapping
+ * it should just bring the app up.
+ */
+function adminMessagePayload({ title, body, courseId }) {
+  return {
+    title,
+    body,
+    data: { type: 'admin_message', ...(courseId ? { courseId } : {}) },
+    channelId: courseId ? COURSE_UPDATES_CHANNEL : NEW_COURSE_CHANNEL,
+  };
+}
+
+/** How many devices an announcement would reach, before sending it. */
+async function countCourseDevices({ courseId, courseTypeId }) {
+  const prisma = require('../db');
+  const user = { selectedCourseId: courseId };
+  if (courseTypeId !== null && courseTypeId !== undefined) user.selectedCourseTypeId = courseTypeId;
+  return prisma.fcmToken.count({ where: { user } });
+}
+
+/** The same announcement to every student, through the topic. */
+async function broadcast({ title, body }) {
+  const message = { topic: TOPIC, ...studentMessage(adminMessagePayload({ title, body })) };
+  const client = getMessaging();
+  if (!client) {
+    console.log('[push] would broadcast:', JSON.stringify({ title, body }));
+    return { sent: false, reason: 'not configured' };
+  }
+  try {
+    const messageId = await client.send(message);
+    console.log(`[push] broadcast to ${TOPIC}:`, messageId);
+    return { sent: true, messageId };
+  } catch (error) {
+    console.error('[push] broadcast failed:', error.message);
+    return { sent: false, reason: error.message };
+  }
+}
+
 module.exports = {
   notifyCoursePublished, notifyStudent, notifyCourseJoined,
   notifyCourseStudents, notifyTestPublished, notifyRapidRecallPublished, notifyLessonPublished,
   notifySubjectQuestions, coursesUsingSubject,
+  broadcast, countCourseDevices, adminMessagePayload,
   // Exported for push.test.js.
   becamePublished, newCourseMessage, TOPIC, NEW_COURSE_CHANNEL, COURSE_UPDATES_CHANNEL,
   studentMessage, isDeadToken,
