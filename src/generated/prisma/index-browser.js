@@ -131,6 +131,7 @@ exports.Prisma.UserScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  notificationsReadAt: 'notificationsReadAt',
   selectedCourseId: 'selectedCourseId',
   selectedCourseTypeId: 'selectedCourseTypeId'
 };
@@ -509,9 +510,26 @@ exports.Prisma.FcmTokenScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  courseId: 'courseId',
+  courseTypeId: 'courseTypeId',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  data: 'data',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -522,6 +540,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.CourseStatus = exports.$Enums.CourseStatus = {
   draft: 'draft',
@@ -595,7 +619,8 @@ exports.Prisma.ModelName = {
   DailyQuizAnswer: 'DailyQuizAnswer',
   RapidRecall: 'RapidRecall',
   RapidRecallCard: 'RapidRecallCard',
-  FcmToken: 'FcmToken'
+  FcmToken: 'FcmToken',
+  Notification: 'Notification'
 };
 
 /**

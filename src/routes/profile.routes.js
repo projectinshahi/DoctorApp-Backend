@@ -20,6 +20,7 @@ const {
   listStudentRapidRecalls, getStudentRapidRecall,
 } = require('../controllers/rapidRecall.controller');
 const { registerFcmToken, deleteFcmToken } = require('../controllers/fcmToken.controller');
+const { listNotifications, markNotificationsRead } = require('../controllers/notificationFeed.controller');
 const {
   listTests: listStudentTests, startTestAttempt, answerTestQuestion,
   clearTestAnswer, submitTestAttempt, getTestResult, getTestLeaderboard,
@@ -89,6 +90,11 @@ router.get('/courses/:courseId/daily-quiz/history', authenticateStudent, dailyQu
 // Rapid Recall — revision cards for the student's selected course.
 router.get('/rapid-recalls', authenticateStudent, listStudentRapidRecalls);
 router.get('/rapid-recalls/:id', authenticateStudent, getStudentRapidRecall);
+
+// The notifications screen. Scoped to the course the student has selected
+// now, so switching course switches the list.
+router.get('/notifications', authenticateStudent, listNotifications);
+router.post('/notifications/read', authenticateStudent, markNotificationsRead);
 
 // Push notification devices. The student comes from the auth token, never the
 // URL — an id in the path would let anyone register a phone against someone

@@ -39,6 +39,11 @@ model User {
   commentReports CommentReport[]
   dailyQuizzes   DailyQuizAttempt[]
   fcmTokens      FcmToken[]
+  notifications  Notification[]
+  // When this student last opened the notifications screen. Everything newer
+  // counts as unread — one timestamp instead of a row per student per
+  // notification, which is all a badge needs.
+  notificationsReadAt DateTime?
 
   selectedCourseId     Int?
   selectedCourseTypeId Int?
@@ -894,4 +899,40 @@ model FcmToken {
 
   @@index([userId])
   @@map("fcm_tokens")
+}
+
+
+/// A notification as the student sees it in the app.
+///
+/// Written whether or not the push is delivered: a phone with notifications
+/// switched off, or no device registered at all, should still find the item in
+/// the app. That makes this the record, and the push a best effort on top.
+model Notification {
+  id Int @id @default(autoincrement())
+
+  /// Set for a message meant for one student. Null means everyone matching
+  /// the course scope below.
+  userId       Int?
+  /// Null course = every student. Null courseTypeId = the whole course.
+  courseId     Int?
+  courseTypeId Int?
+
+  /// Matches data.type in the push: new_course, new_test, new_lesson,
+  /// new_quiz, new_rapid_recall, new_questions, course_join, admin_message.
+  type  String
+  title String
+  body  String
+  /// The push's data map, so a tap in the app opens what the push would have.
+  data  Json?
+
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Course ids are plain integers, not relations: a deleted course leaves a
+  // harmless orphan row that no student matches any more, and cascading a
+  // course delete into a student's history would rewrite what they saw.
+  @@index([courseId, courseTypeId, createdAt])
+  @@index([userId, createdAt])
+  @@map("notifications")
 }

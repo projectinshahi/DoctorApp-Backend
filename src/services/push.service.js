@@ -109,6 +109,11 @@ function newCourseMessage(course) {
  */
 async function notifyCoursePublished(course, { dryRun = false } = {}) {
   const message = newCourseMessage(course);
+  // A dry run is a health check, not an announcement; recording it would put
+  // a phantom line on every student's screen.
+  if (!dryRun) {
+    await record({ payload: { title: message.notification.title, body: message.notification.body, data: message.data } });
+  }
   const client = getMessaging();
 
   if (!client) {
@@ -169,8 +174,35 @@ function studentMessage({ title, body, data = {}, channelId = NEW_COURSE_CHANNEL
  * Lazy require for the database so this file still loads, and its tests still
  * run, with no database at all.
  */
+/**
+ * Writes what was sent, so the app can show it on a notifications screen.
+ *
+ * Called before the send, and never awaited by the caller's result: a student
+ * whose phone has notifications switched off, or who has no device registered,
+ * should still find the item in the app. That makes this the record and the
+ * push the best effort on top.
+ */
+async function record({ userId = null, courseId = null, courseTypeId = null, payload }) {
+  const prisma = require('../db');
+  try {
+    await prisma.notification.create({
+      data: {
+        userId, courseId, courseTypeId,
+        type: payload.data?.type ?? 'message',
+        title: payload.title,
+        body: payload.body,
+        data: payload.data ?? {},
+      },
+    });
+  } catch (error) {
+    // A lost history row must not stop the notification going out.
+    console.error('[push] could not record the notification:', error.message);
+  }
+}
+
 async function notifyStudent(userId, payload) {
   const prisma = require('../db');
+  await record({ userId, payload });
   const rows = await prisma.fcmToken.findMany({ where: { userId }, select: { token: true } });
   const message = studentMessage(payload);
 
@@ -242,6 +274,8 @@ async function notifyCourseStudents({ courseId, courseTypeId }, payload) {
   if (courseTypeId !== null && courseTypeId !== undefined) {
     user.selectedCourseTypeId = courseTypeId;
   }
+
+  await record({ courseId, courseTypeId: user.selectedCourseTypeId ?? null, payload });
 
   const rows = await prisma.fcmToken.findMany({ where: { user }, select: { token: true } });
   const message = studentMessage(payload);
@@ -392,13 +426,16 @@ async function notifySubjectQuestions(subjectId, count) {
     return { sent: 0, reason: 'subject is not linked to any course' };
   }
 
+  const payload = subjectQuestionsPayload(subject, count);
+  await Promise.all(courseIds.map((courseId) => record({ courseId, payload })));
+
   const rows = await prisma.fcmToken.findMany({
     where: { user: { selectedCourseId: { in: courseIds } } },
     select: { token: true },
   });
   if (rows.length === 0) return { sent: 0, reason: 'no devices registered' };
 
-  const message = studentMessage(subjectQuestionsPayload(subject, count));
+  const message = studentMessage(payload);
   const label = `subject ${subject.name} (course ${courseIds.join(', ')})`;
   if (!getMessaging()) {
     console.log(`[push] would notify ${label} (${rows.length} device(s)):`, JSON.stringify({ ...message.notification, ...message.data }));
@@ -434,7 +471,9 @@ async function countCourseDevices({ courseId, courseTypeId }) {
 
 /** The same announcement to every student, through the topic. */
 async function broadcast({ title, body }) {
-  const message = { topic: TOPIC, ...studentMessage(adminMessagePayload({ title, body })) };
+  const payload = adminMessagePayload({ title, body });
+  await record({ payload });
+  const message = { topic: TOPIC, ...studentMessage(payload) };
   const client = getMessaging();
   if (!client) {
     console.log('[push] would broadcast:', JSON.stringify({ title, body }));
