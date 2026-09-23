@@ -279,7 +279,7 @@ function rapidRecallPayload(recall) {
 
 // What a lesson is called in the notification. The type is the useful part:
 // "New video" tells a student whether they have twenty minutes for this.
-const LESSON_TITLES = { quiz: 'New quiz', video: 'New video lesson', note: 'New notes' };
+const LESSON_TITLES = { quiz: 'New quiz', video: 'New video lesson' };
 
 function lessonPayload(lesson) {
   return {
@@ -316,12 +316,19 @@ async function notifyLessonPublished(lesson) {
   const prisma = require('../db');
   const chapter = await prisma.chapter.findUnique({
     where: { id: lesson.chapterId },
-    select: { courseId: true, courseTypeId: true },
+    select: { courseId: true, courseTypeId: true, courseType: { select: { courseId: true } } },
   });
-  // Chapters may sit outside any course; there is nobody to tell.
-  if (!chapter || chapter.courseId === null) return { sent: 0, reason: 'lesson is not under a course' };
+  if (!chapter) return { sent: 0, reason: 'lesson is not under a chapter' };
 
-  return notifyCourseStudents(chapter, lessonPayload({ ...lesson, courseId: chapter.courseId }));
+  // Live chapters carry a courseTypeId and leave courseId null — every one of
+  // them, in fact. Reading only courseId found nothing and told nobody.
+  const courseId = chapter.courseId ?? chapter.courseType?.courseId ?? null;
+  if (courseId === null) return { sent: 0, reason: 'lesson is not under a course' };
+
+  return notifyCourseStudents(
+    { courseId, courseTypeId: chapter.courseTypeId },
+    lessonPayload({ ...lesson, courseId }),
+  );
 }
 
 /**

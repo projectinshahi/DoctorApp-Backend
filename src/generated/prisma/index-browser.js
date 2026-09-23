@@ -236,6 +236,7 @@ exports.Prisma.LessonScalarFieldEnum = {
   isFreePreview: 'isFreePreview',
   accessType: 'accessType',
   status: 'status',
+  subjectId: 'subjectId',
   quizId: 'quizId',
   commentsEnabled: 'commentsEnabled',
   createdAt: 'createdAt',

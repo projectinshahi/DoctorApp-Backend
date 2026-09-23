@@ -74,8 +74,7 @@ const contentCases = [
   ['rapid recall', rapidRecallPayload({ id: 4, title: 'Cardiology cards', courseId: 22 }), 'new_rapid_recall', 'New rapid recall', 'Cardiology cards'],
   ['quiz lesson', lessonPayload({ id: 77, title: 'Anatomy quiz', type: 'quiz', courseId: 22 }), 'new_quiz', 'New quiz', 'Anatomy quiz'],
   ['video lesson', lessonPayload({ id: 78, title: 'The heart', type: 'video', courseId: 22 }), 'new_lesson', 'New video lesson', 'The heart'],
-  ['note lesson', lessonPayload({ id: 79, title: 'Renal notes', type: 'note', courseId: 22 }), 'new_lesson', 'New notes', 'Renal notes'],
-  ['other lesson', lessonPayload({ id: 80, title: 'Intro', type: 'text', courseId: 22 }), 'new_lesson', 'New lesson', 'Intro'],
+  ['text lesson', lessonPayload({ id: 79, title: 'Renal notes', type: 'text', courseId: 22 }), 'new_lesson', 'New lesson', 'Renal notes'],
 ];
 
 for (const [label, payload, type, title, body] of contentCases) {

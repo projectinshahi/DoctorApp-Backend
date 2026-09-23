@@ -79,6 +79,7 @@ model Subject {
 
   topics       Topic[]
   courses      Course[]
+  lessons      Lesson[]
   questions    Question[]
   quizzes      Quiz[]
   rapidRecalls RapidRecall[]
@@ -234,6 +235,10 @@ model Lesson {
   isFreePreview     Boolean      @default(false)
   accessType        AccessType   @default(free)
   status            CourseStatus @default(draft)
+  // Which subject this lesson teaches. Optional, and unrelated to the
+  // chapter it sits in: the Rapid Recall form filters lessons by subject, and
+  // nothing else in the schema connects the two.
+  subjectId         Int?
   // A quiz-type lesson points at a Quiz instead of stuffing a ref into
   // `content`. Unique: a quiz is served by at most one lesson.
   quizId            Int?         @unique
@@ -244,8 +249,10 @@ model Lesson {
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
 
-  chapter Chapter @relation(fields: [chapterId], references: [id])
-  quiz    Quiz?   @relation(fields: [quizId], references: [id])
+  chapter Chapter  @relation(fields: [chapterId], references: [id])
+  quiz    Quiz?    @relation(fields: [quizId], references: [id])
+  // Losing a subject must not take its lessons with it.
+  subject Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
 
   // A premium lesson can be unlocked by any number of plans. No rows means
   // "any active subscription for the course" — the old planId = null case.
@@ -256,6 +263,7 @@ model Lesson {
   rapidRecalls RapidRecall[]
 
   @@index([chapterId, displayOrder])
+  @@index([subjectId])
   @@map("lessons")
 }
 
