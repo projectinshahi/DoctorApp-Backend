@@ -84,7 +84,6 @@ model Subject {
 
   topics       Topic[]
   courses      Course[]
-  lessons      Lesson[]
   questions    Question[]
   quizzes      Quiz[]
   rapidRecalls RapidRecall[]
@@ -207,6 +206,8 @@ model Chapter {
   courseType CourseType? @relation(fields: [courseTypeId], references: [id], onDelete: Cascade)
   lessons    Lesson[]
 
+  rapidRecalls RapidRecall[]
+
   @@index([courseId])
   @@index([courseTypeId])
   @@map("chapters")
@@ -240,10 +241,6 @@ model Lesson {
   isFreePreview     Boolean      @default(false)
   accessType        AccessType   @default(free)
   status            CourseStatus @default(draft)
-  // Which subject this lesson teaches. Optional, and unrelated to the
-  // chapter it sits in: the Rapid Recall form filters lessons by subject, and
-  // nothing else in the schema connects the two.
-  subjectId         Int?
   // A quiz-type lesson points at a Quiz instead of stuffing a ref into
   // `content`. Unique: a quiz is served by at most one lesson.
   quizId            Int?         @unique
@@ -254,10 +251,8 @@ model Lesson {
   createdAt         DateTime     @default(now())
   updatedAt         DateTime     @updatedAt
 
-  chapter Chapter  @relation(fields: [chapterId], references: [id])
-  quiz    Quiz?    @relation(fields: [quizId], references: [id])
-  // Losing a subject must not take its lessons with it.
-  subject Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  chapter Chapter @relation(fields: [chapterId], references: [id])
+  quiz    Quiz?   @relation(fields: [quizId], references: [id])
 
   // A premium lesson can be unlocked by any number of plans. No rows means
   // "any active subscription for the course" — the old planId = null case.
@@ -268,7 +263,6 @@ model Lesson {
   rapidRecalls RapidRecall[]
 
   @@index([chapterId, displayOrder])
-  @@index([subjectId])
   @@map("lessons")
 }
 
@@ -829,6 +823,11 @@ model RapidRecall {
   id           Int  @id @default(autoincrement())
   courseId     Int
   courseTypeId Int?
+  // The chapter these cards belong to. A course is built as
+  // course -> exam type -> chapter -> lesson, and an admin calls the chapter
+  // the subject, so this is a deck's subject. subjectId below points at the
+  // question bank's own subject list and is left over from the old model.
+  chapterId    Int?
   subjectId    Int?
   lessonId     Int?
 
@@ -848,12 +847,14 @@ model RapidRecall {
 
   course     Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseType CourseType?       @relation(fields: [courseTypeId], references: [id], onDelete: Cascade)
+  chapter    Chapter?          @relation(fields: [chapterId], references: [id], onDelete: SetNull)
   subject    Subject?          @relation(fields: [subjectId], references: [id], onDelete: SetNull)
   lesson     Lesson?           @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   cards      RapidRecallCard[]
 
   // The student query filters on course + type + published, then narrows.
   @@index([courseId, courseTypeId, status, displayOrder])
+  @@index([chapterId])
   @@index([subjectId])
   @@index([lessonId])
   @@map("rapid_recalls")

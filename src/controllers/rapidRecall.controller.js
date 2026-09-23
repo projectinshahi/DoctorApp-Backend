@@ -12,12 +12,13 @@ const VALID_STATUSES = ['draft', 'published'];
 const CARD_SELECT = { id: true, imageUrl: true, note: true, displayOrder: true };
 
 const RECALL_SELECT = {
-  id: true, courseId: true, courseTypeId: true, subjectId: true, lessonId: true,
+  id: true, courseId: true, courseTypeId: true, chapterId: true, subjectId: true, lessonId: true,
   title: true, description: true,
   noteUrl: true, notePublicId: true, noteFileType: true,
   status: true, displayOrder: true, createdAt: true, updatedAt: true,
   course: { select: { id: true, title: true } },
   courseType: { select: { id: true, title: true } },
+  chapter: { select: { id: true, title: true } },
   subject: { select: { id: true, name: true } },
   lesson: { select: { id: true, title: true } },
   _count: { select: { cards: true } },
@@ -46,7 +47,7 @@ async function readScope(body, current = {}) {
   const course = await prisma.course.findUnique({ where: { id: courseId }, select: { id: true } });
   if (!course) return { error: 'Course not found' };
 
-  const scope = { courseId, courseTypeId: null, subjectId: null, lessonId: null };
+  const scope = { courseId, courseTypeId: null, chapterId: null, subjectId: null, lessonId: null };
 
   const rawType = pick('courseTypeId');
   if (rawType !== null && rawType !== '') {
@@ -67,6 +68,30 @@ async function readScope(body, current = {}) {
     scope.subjectId = id;
   }
 
+  // The chapter: "Internal Medicine", "General Surgery". This is the subject
+  // an admin picks, and the one the lesson dropdown is filtered by.
+  const rawChapter = pick('chapterId');
+  if (rawChapter !== null && rawChapter !== '') {
+    const id = Number(rawChapter);
+    if (!Number.isInteger(id)) return { error: 'chapterId must be an integer or null' };
+    const chapter = await prisma.chapter.findUnique({
+      where: { id },
+      select: { id: true, courseId: true, courseTypeId: true, courseType: { select: { courseId: true } } },
+    });
+    if (!chapter) return { error: 'Chapter not found' };
+
+    // A chapter hangs off a course directly or off a course type; both shapes
+    // are in live data, so either path counts.
+    const chapterCourseId = chapter.courseId ?? chapter.courseType?.courseId ?? null;
+    if (chapterCourseId !== courseId) return { error: 'That chapter belongs to a different course' };
+    if (scope.courseTypeId !== null
+        && chapter.courseTypeId !== null
+        && chapter.courseTypeId !== scope.courseTypeId) {
+      return { error: 'That chapter belongs to a different exam under this course' };
+    }
+    scope.chapterId = id;
+  }
+
   const rawLesson = pick('lessonId');
   if (rawLesson !== null && rawLesson !== '') {
     const id = Number(rawLesson);
@@ -75,6 +100,7 @@ async function readScope(body, current = {}) {
       where: { id },
       select: {
         id: true,
+        chapterId: true,
         chapter: { select: { courseId: true, courseTypeId: true, courseType: { select: { courseId: true } } } },
       },
     });
@@ -93,7 +119,21 @@ async function readScope(body, current = {}) {
         && lesson.chapter.courseTypeId !== scope.courseTypeId) {
       return { error: 'That lesson belongs to a different exam under this course' };
     }
+    // And inside the chosen chapter, when one was chosen. Picking "Internal
+    // Medicine" and then a General Surgery lesson is a slip, and the deck
+    // would file itself under a chapter it has nothing to do with.
+    if (scope.chapterId !== null && lesson.chapterId !== scope.chapterId) {
+      return { error: 'That lesson belongs to a different chapter' };
+    }
+
     scope.lessonId = id;
+  }
+
+  // A deck pinned to a lesson belongs to that lesson's chapter, whether or not
+  // the form sent one.
+  if (scope.lessonId !== null && scope.chapterId === null) {
+    const lesson = await prisma.lesson.findUnique({ where: { id: scope.lessonId }, select: { chapterId: true } });
+    scope.chapterId = lesson?.chapterId ?? null;
   }
 
   return { scope };
@@ -147,7 +187,7 @@ async function createRapidRecall(req, res) {
 async function listRapidRecalls(req, res) {
   try {
     const where = {};
-    for (const key of ['courseId', 'courseTypeId', 'subjectId', 'lessonId']) {
+    for (const key of ['courseId', 'courseTypeId', 'chapterId', 'subjectId', 'lessonId']) {
       if (req.query[key] === undefined) continue;
       // "null" filters for unscoped sets — the ones that apply broadly.
       if (req.query[key] === 'null') { where[key] = null; continue; }
@@ -211,7 +251,7 @@ async function updateRapidRecall(req, res) {
 
     const existing = await prisma.rapidRecall.findUnique({
       where: { id },
-      select: { id: true, courseId: true, courseTypeId: true, subjectId: true, lessonId: true, status: true },
+      select: { id: true, courseId: true, courseTypeId: true, chapterId: true, subjectId: true, lessonId: true, status: true },
     });
     if (!existing) return res.status(404).json({ error: { message: 'Rapid recall not found' } });
 
@@ -246,7 +286,7 @@ async function updateRapidRecall(req, res) {
 
     // Re-validated as a whole whenever any part of it moves, so a courseType
     // can never be left pointing outside a newly changed course.
-    const touchesScope = ['courseId', 'courseTypeId', 'subjectId', 'lessonId']
+    const touchesScope = ['courseId', 'courseTypeId', 'chapterId', 'subjectId', 'lessonId']
       .some((k) => body[k] !== undefined);
     if (touchesScope) {
       const { scope, error } = await readScope(body, existing);
@@ -365,7 +405,9 @@ async function deleteRapidRecall(req, res) {
 const STUDENT_RECALL_SELECT = {
   id: true, title: true, description: true,
   noteUrl: true, noteFileType: true,
-  courseTypeId: true, subjectId: true, lessonId: true, displayOrder: true,
+  courseTypeId: true, chapterId: true, subjectId: true, lessonId: true, displayOrder: true,
+  // The chapter is what a student sees as the subject heading.
+  chapter: { select: { id: true, title: true } },
   subject: { select: { id: true, name: true } },
   // With its chapter, because lesson titles are not unique — two lessons are
   // both called "Obstetrics" — and a lesson list of bare titles would show
@@ -390,13 +432,12 @@ function studentWhere(user, query) {
       : {}),
   };
 
-  for (const key of ['subjectId', 'lessonId']) {
+  for (const key of ['chapterId', 'subjectId', 'lessonId']) {
     if (query[key] === undefined) continue;
     const id = Number(query[key]);
     if (!Number.isInteger(id)) return { error: `${key} must be an integer` };
-    // Exact. A lesson has no subject — lessons and subjects are separate
-    // hierarchies — so a lesson's screen has nothing broader to pull in;
-    // course-wide decks come from the unfiltered list.
+    // Exact. A lesson's screen has nothing broader to pull in; chapter-wide
+    // and course-wide decks come from the less filtered lists.
     where[key] = id;
   }
 
@@ -404,7 +445,7 @@ function studentWhere(user, query) {
 }
 
 
-// GET /api/users/me/rapid-recalls?subjectId=&lessonId=
+// GET /api/users/me/rapid-recalls?chapterId=&subjectId=&lessonId=
 async function listStudentRapidRecalls(req, res) {
   try {
     const user = await prisma.user.findUnique({

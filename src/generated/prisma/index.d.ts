@@ -4368,7 +4368,6 @@ export namespace Prisma {
   export type SubjectCountOutputType = {
     topics: number
     courses: number
-    lessons: number
     questions: number
     quizzes: number
     rapidRecalls: number
@@ -4377,7 +4376,6 @@ export namespace Prisma {
   export type SubjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     topics?: boolean | SubjectCountOutputTypeCountTopicsArgs
     courses?: boolean | SubjectCountOutputTypeCountCoursesArgs
-    lessons?: boolean | SubjectCountOutputTypeCountLessonsArgs
     questions?: boolean | SubjectCountOutputTypeCountQuestionsArgs
     quizzes?: boolean | SubjectCountOutputTypeCountQuizzesArgs
     rapidRecalls?: boolean | SubjectCountOutputTypeCountRapidRecallsArgs
@@ -4406,13 +4404,6 @@ export namespace Prisma {
    */
   export type SubjectCountOutputTypeCountCoursesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CourseWhereInput
-  }
-
-  /**
-   * SubjectCountOutputType without action
-   */
-  export type SubjectCountOutputTypeCountLessonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: LessonWhereInput
   }
 
   /**
@@ -4644,10 +4635,12 @@ export namespace Prisma {
 
   export type ChapterCountOutputType = {
     lessons: number
+    rapidRecalls: number
   }
 
   export type ChapterCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lessons?: boolean | ChapterCountOutputTypeCountLessonsArgs
+    rapidRecalls?: boolean | ChapterCountOutputTypeCountRapidRecallsArgs
   }
 
   // Custom InputTypes
@@ -4666,6 +4659,13 @@ export namespace Prisma {
    */
   export type ChapterCountOutputTypeCountLessonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: LessonWhereInput
+  }
+
+  /**
+   * ChapterCountOutputType without action
+   */
+  export type ChapterCountOutputTypeCountRapidRecallsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RapidRecallWhereInput
   }
 
 
@@ -8152,7 +8152,6 @@ export namespace Prisma {
     updatedAt?: boolean
     topics?: boolean | Subject$topicsArgs<ExtArgs>
     courses?: boolean | Subject$coursesArgs<ExtArgs>
-    lessons?: boolean | Subject$lessonsArgs<ExtArgs>
     questions?: boolean | Subject$questionsArgs<ExtArgs>
     quizzes?: boolean | Subject$quizzesArgs<ExtArgs>
     rapidRecalls?: boolean | Subject$rapidRecallsArgs<ExtArgs>
@@ -8190,7 +8189,6 @@ export namespace Prisma {
   export type SubjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     topics?: boolean | Subject$topicsArgs<ExtArgs>
     courses?: boolean | Subject$coursesArgs<ExtArgs>
-    lessons?: boolean | Subject$lessonsArgs<ExtArgs>
     questions?: boolean | Subject$questionsArgs<ExtArgs>
     quizzes?: boolean | Subject$quizzesArgs<ExtArgs>
     rapidRecalls?: boolean | Subject$rapidRecallsArgs<ExtArgs>
@@ -8204,7 +8202,6 @@ export namespace Prisma {
     objects: {
       topics: Prisma.$TopicPayload<ExtArgs>[]
       courses: Prisma.$CoursePayload<ExtArgs>[]
-      lessons: Prisma.$LessonPayload<ExtArgs>[]
       questions: Prisma.$QuestionPayload<ExtArgs>[]
       quizzes: Prisma.$QuizPayload<ExtArgs>[]
       rapidRecalls: Prisma.$RapidRecallPayload<ExtArgs>[]
@@ -8612,7 +8609,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     topics<T extends Subject$topicsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$topicsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TopicPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     courses<T extends Subject$coursesArgs<ExtArgs> = {}>(args?: Subset<T, Subject$coursesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    lessons<T extends Subject$lessonsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$lessonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     questions<T extends Subject$questionsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     quizzes<T extends Subject$quizzesArgs<ExtArgs> = {}>(args?: Subset<T, Subject$quizzesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     rapidRecalls<T extends Subject$rapidRecallsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$rapidRecallsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -9098,30 +9094,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CourseScalarFieldEnum | CourseScalarFieldEnum[]
-  }
-
-  /**
-   * Subject.lessons
-   */
-  export type Subject$lessonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Lesson
-     */
-    select?: LessonSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Lesson
-     */
-    omit?: LessonOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: LessonInclude<ExtArgs> | null
-    where?: LessonWhereInput
-    orderBy?: LessonOrderByWithRelationInput | LessonOrderByWithRelationInput[]
-    cursor?: LessonWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: LessonScalarFieldEnum | LessonScalarFieldEnum[]
   }
 
   /**
@@ -14536,6 +14508,7 @@ export namespace Prisma {
     course?: boolean | Chapter$courseArgs<ExtArgs>
     courseType?: boolean | Chapter$courseTypeArgs<ExtArgs>
     lessons?: boolean | Chapter$lessonsArgs<ExtArgs>
+    rapidRecalls?: boolean | Chapter$rapidRecallsArgs<ExtArgs>
     _count?: boolean | ChapterCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["chapter"]>
 
@@ -14578,6 +14551,7 @@ export namespace Prisma {
     course?: boolean | Chapter$courseArgs<ExtArgs>
     courseType?: boolean | Chapter$courseTypeArgs<ExtArgs>
     lessons?: boolean | Chapter$lessonsArgs<ExtArgs>
+    rapidRecalls?: boolean | Chapter$rapidRecallsArgs<ExtArgs>
     _count?: boolean | ChapterCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ChapterIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14595,6 +14569,7 @@ export namespace Prisma {
       course: Prisma.$CoursePayload<ExtArgs> | null
       courseType: Prisma.$CourseTypePayload<ExtArgs> | null
       lessons: Prisma.$LessonPayload<ExtArgs>[]
+      rapidRecalls: Prisma.$RapidRecallPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -15001,6 +14976,7 @@ export namespace Prisma {
     course<T extends Chapter$courseArgs<ExtArgs> = {}>(args?: Subset<T, Chapter$courseArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     courseType<T extends Chapter$courseTypeArgs<ExtArgs> = {}>(args?: Subset<T, Chapter$courseTypeArgs<ExtArgs>>): Prisma__CourseTypeClient<$Result.GetResult<Prisma.$CourseTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     lessons<T extends Chapter$lessonsArgs<ExtArgs> = {}>(args?: Subset<T, Chapter$lessonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    rapidRecalls<T extends Chapter$rapidRecallsArgs<ExtArgs> = {}>(args?: Subset<T, Chapter$rapidRecallsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15509,6 +15485,30 @@ export namespace Prisma {
   }
 
   /**
+   * Chapter.rapidRecalls
+   */
+  export type Chapter$rapidRecallsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RapidRecall
+     */
+    select?: RapidRecallSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RapidRecall
+     */
+    omit?: RapidRecallOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RapidRecallInclude<ExtArgs> | null
+    where?: RapidRecallWhereInput
+    orderBy?: RapidRecallOrderByWithRelationInput | RapidRecallOrderByWithRelationInput[]
+    cursor?: RapidRecallWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RapidRecallScalarFieldEnum | RapidRecallScalarFieldEnum[]
+  }
+
+  /**
    * Chapter without action
    */
   export type ChapterDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15544,7 +15544,6 @@ export namespace Prisma {
     chapterId: number | null
     durationSeconds: number | null
     displayOrder: number | null
-    subjectId: number | null
     quizId: number | null
   }
 
@@ -15553,7 +15552,6 @@ export namespace Prisma {
     chapterId: number | null
     durationSeconds: number | null
     displayOrder: number | null
-    subjectId: number | null
     quizId: number | null
   }
 
@@ -15576,7 +15574,6 @@ export namespace Prisma {
     isFreePreview: boolean | null
     accessType: $Enums.AccessType | null
     status: $Enums.CourseStatus | null
-    subjectId: number | null
     quizId: number | null
     commentsEnabled: boolean | null
     createdAt: Date | null
@@ -15602,7 +15599,6 @@ export namespace Prisma {
     isFreePreview: boolean | null
     accessType: $Enums.AccessType | null
     status: $Enums.CourseStatus | null
-    subjectId: number | null
     quizId: number | null
     commentsEnabled: boolean | null
     createdAt: Date | null
@@ -15628,7 +15624,6 @@ export namespace Prisma {
     isFreePreview: number
     accessType: number
     status: number
-    subjectId: number
     quizId: number
     commentsEnabled: number
     createdAt: number
@@ -15642,7 +15637,6 @@ export namespace Prisma {
     chapterId?: true
     durationSeconds?: true
     displayOrder?: true
-    subjectId?: true
     quizId?: true
   }
 
@@ -15651,7 +15645,6 @@ export namespace Prisma {
     chapterId?: true
     durationSeconds?: true
     displayOrder?: true
-    subjectId?: true
     quizId?: true
   }
 
@@ -15674,7 +15667,6 @@ export namespace Prisma {
     isFreePreview?: true
     accessType?: true
     status?: true
-    subjectId?: true
     quizId?: true
     commentsEnabled?: true
     createdAt?: true
@@ -15700,7 +15692,6 @@ export namespace Prisma {
     isFreePreview?: true
     accessType?: true
     status?: true
-    subjectId?: true
     quizId?: true
     commentsEnabled?: true
     createdAt?: true
@@ -15726,7 +15717,6 @@ export namespace Prisma {
     isFreePreview?: true
     accessType?: true
     status?: true
-    subjectId?: true
     quizId?: true
     commentsEnabled?: true
     createdAt?: true
@@ -15839,7 +15829,6 @@ export namespace Prisma {
     isFreePreview: boolean
     accessType: $Enums.AccessType
     status: $Enums.CourseStatus
-    subjectId: number | null
     quizId: number | null
     commentsEnabled: boolean
     createdAt: Date
@@ -15884,14 +15873,12 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: boolean
     status?: boolean
-    subjectId?: boolean
     quizId?: boolean
     commentsEnabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
     quiz?: boolean | Lesson$quizArgs<ExtArgs>
-    subject?: boolean | Lesson$subjectArgs<ExtArgs>
     lessonPlans?: boolean | Lesson$lessonPlansArgs<ExtArgs>
     savedBy?: boolean | Lesson$savedByArgs<ExtArgs>
     progress?: boolean | Lesson$progressArgs<ExtArgs>
@@ -15919,14 +15906,12 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: boolean
     status?: boolean
-    subjectId?: boolean
     quizId?: boolean
     commentsEnabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
     quiz?: boolean | Lesson$quizArgs<ExtArgs>
-    subject?: boolean | Lesson$subjectArgs<ExtArgs>
   }, ExtArgs["result"]["lesson"]>
 
   export type LessonSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -15948,14 +15933,12 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: boolean
     status?: boolean
-    subjectId?: boolean
     quizId?: boolean
     commentsEnabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
     quiz?: boolean | Lesson$quizArgs<ExtArgs>
-    subject?: boolean | Lesson$subjectArgs<ExtArgs>
   }, ExtArgs["result"]["lesson"]>
 
   export type LessonSelectScalar = {
@@ -15977,18 +15960,16 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: boolean
     status?: boolean
-    subjectId?: boolean
     quizId?: boolean
     commentsEnabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chapterId" | "title" | "description" | "type" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "thumbnailPublicId" | "noteUrl" | "notePublicId" | "noteFileType" | "durationSeconds" | "content" | "displayOrder" | "isFreePreview" | "accessType" | "status" | "subjectId" | "quizId" | "commentsEnabled" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
+  export type LessonOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "chapterId" | "title" | "description" | "type" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "thumbnailPublicId" | "noteUrl" | "notePublicId" | "noteFileType" | "durationSeconds" | "content" | "displayOrder" | "isFreePreview" | "accessType" | "status" | "quizId" | "commentsEnabled" | "createdAt" | "updatedAt", ExtArgs["result"]["lesson"]>
   export type LessonInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
     quiz?: boolean | Lesson$quizArgs<ExtArgs>
-    subject?: boolean | Lesson$subjectArgs<ExtArgs>
     lessonPlans?: boolean | Lesson$lessonPlansArgs<ExtArgs>
     savedBy?: boolean | Lesson$savedByArgs<ExtArgs>
     progress?: boolean | Lesson$progressArgs<ExtArgs>
@@ -15999,12 +15980,10 @@ export namespace Prisma {
   export type LessonIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
     quiz?: boolean | Lesson$quizArgs<ExtArgs>
-    subject?: boolean | Lesson$subjectArgs<ExtArgs>
   }
   export type LessonIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     chapter?: boolean | ChapterDefaultArgs<ExtArgs>
     quiz?: boolean | Lesson$quizArgs<ExtArgs>
-    subject?: boolean | Lesson$subjectArgs<ExtArgs>
   }
 
   export type $LessonPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16012,7 +15991,6 @@ export namespace Prisma {
     objects: {
       chapter: Prisma.$ChapterPayload<ExtArgs>
       quiz: Prisma.$QuizPayload<ExtArgs> | null
-      subject: Prisma.$SubjectPayload<ExtArgs> | null
       lessonPlans: Prisma.$LessonPlanPayload<ExtArgs>[]
       savedBy: Prisma.$SavedLessonPayload<ExtArgs>[]
       progress: Prisma.$LessonProgressPayload<ExtArgs>[]
@@ -16038,7 +16016,6 @@ export namespace Prisma {
       isFreePreview: boolean
       accessType: $Enums.AccessType
       status: $Enums.CourseStatus
-      subjectId: number | null
       quizId: number | null
       commentsEnabled: boolean
       createdAt: Date
@@ -16439,7 +16416,6 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     chapter<T extends ChapterDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChapterDefaultArgs<ExtArgs>>): Prisma__ChapterClient<$Result.GetResult<Prisma.$ChapterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     quiz<T extends Lesson$quizArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$quizArgs<ExtArgs>>): Prisma__QuizClient<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    subject<T extends Lesson$subjectArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$subjectArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     lessonPlans<T extends Lesson$lessonPlansArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$lessonPlansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     savedBy<T extends Lesson$savedByArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$savedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     progress<T extends Lesson$progressArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$progressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -16492,7 +16468,6 @@ export namespace Prisma {
     readonly isFreePreview: FieldRef<"Lesson", 'Boolean'>
     readonly accessType: FieldRef<"Lesson", 'AccessType'>
     readonly status: FieldRef<"Lesson", 'CourseStatus'>
-    readonly subjectId: FieldRef<"Lesson", 'Int'>
     readonly quizId: FieldRef<"Lesson", 'Int'>
     readonly commentsEnabled: FieldRef<"Lesson", 'Boolean'>
     readonly createdAt: FieldRef<"Lesson", 'DateTime'>
@@ -16923,25 +16898,6 @@ export namespace Prisma {
      */
     include?: QuizInclude<ExtArgs> | null
     where?: QuizWhereInput
-  }
-
-  /**
-   * Lesson.subject
-   */
-  export type Lesson$subjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Subject
-     */
-    select?: SubjectSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Subject
-     */
-    omit?: SubjectOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: SubjectInclude<ExtArgs> | null
-    where?: SubjectWhereInput
   }
 
   /**
@@ -44134,6 +44090,7 @@ export namespace Prisma {
     id: number | null
     courseId: number | null
     courseTypeId: number | null
+    chapterId: number | null
     subjectId: number | null
     lessonId: number | null
     displayOrder: number | null
@@ -44143,6 +44100,7 @@ export namespace Prisma {
     id: number | null
     courseId: number | null
     courseTypeId: number | null
+    chapterId: number | null
     subjectId: number | null
     lessonId: number | null
     displayOrder: number | null
@@ -44152,6 +44110,7 @@ export namespace Prisma {
     id: number | null
     courseId: number | null
     courseTypeId: number | null
+    chapterId: number | null
     subjectId: number | null
     lessonId: number | null
     title: string | null
@@ -44169,6 +44128,7 @@ export namespace Prisma {
     id: number | null
     courseId: number | null
     courseTypeId: number | null
+    chapterId: number | null
     subjectId: number | null
     lessonId: number | null
     title: string | null
@@ -44186,6 +44146,7 @@ export namespace Prisma {
     id: number
     courseId: number
     courseTypeId: number
+    chapterId: number
     subjectId: number
     lessonId: number
     title: number
@@ -44205,6 +44166,7 @@ export namespace Prisma {
     id?: true
     courseId?: true
     courseTypeId?: true
+    chapterId?: true
     subjectId?: true
     lessonId?: true
     displayOrder?: true
@@ -44214,6 +44176,7 @@ export namespace Prisma {
     id?: true
     courseId?: true
     courseTypeId?: true
+    chapterId?: true
     subjectId?: true
     lessonId?: true
     displayOrder?: true
@@ -44223,6 +44186,7 @@ export namespace Prisma {
     id?: true
     courseId?: true
     courseTypeId?: true
+    chapterId?: true
     subjectId?: true
     lessonId?: true
     title?: true
@@ -44240,6 +44204,7 @@ export namespace Prisma {
     id?: true
     courseId?: true
     courseTypeId?: true
+    chapterId?: true
     subjectId?: true
     lessonId?: true
     title?: true
@@ -44257,6 +44222,7 @@ export namespace Prisma {
     id?: true
     courseId?: true
     courseTypeId?: true
+    chapterId?: true
     subjectId?: true
     lessonId?: true
     title?: true
@@ -44361,6 +44327,7 @@ export namespace Prisma {
     id: number
     courseId: number
     courseTypeId: number | null
+    chapterId: number | null
     subjectId: number | null
     lessonId: number | null
     title: string
@@ -44397,6 +44364,7 @@ export namespace Prisma {
     id?: boolean
     courseId?: boolean
     courseTypeId?: boolean
+    chapterId?: boolean
     subjectId?: boolean
     lessonId?: boolean
     title?: boolean
@@ -44410,6 +44378,7 @@ export namespace Prisma {
     updatedAt?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
     courseType?: boolean | RapidRecall$courseTypeArgs<ExtArgs>
+    chapter?: boolean | RapidRecall$chapterArgs<ExtArgs>
     subject?: boolean | RapidRecall$subjectArgs<ExtArgs>
     lesson?: boolean | RapidRecall$lessonArgs<ExtArgs>
     cards?: boolean | RapidRecall$cardsArgs<ExtArgs>
@@ -44420,6 +44389,7 @@ export namespace Prisma {
     id?: boolean
     courseId?: boolean
     courseTypeId?: boolean
+    chapterId?: boolean
     subjectId?: boolean
     lessonId?: boolean
     title?: boolean
@@ -44433,6 +44403,7 @@ export namespace Prisma {
     updatedAt?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
     courseType?: boolean | RapidRecall$courseTypeArgs<ExtArgs>
+    chapter?: boolean | RapidRecall$chapterArgs<ExtArgs>
     subject?: boolean | RapidRecall$subjectArgs<ExtArgs>
     lesson?: boolean | RapidRecall$lessonArgs<ExtArgs>
   }, ExtArgs["result"]["rapidRecall"]>
@@ -44441,6 +44412,7 @@ export namespace Prisma {
     id?: boolean
     courseId?: boolean
     courseTypeId?: boolean
+    chapterId?: boolean
     subjectId?: boolean
     lessonId?: boolean
     title?: boolean
@@ -44454,6 +44426,7 @@ export namespace Prisma {
     updatedAt?: boolean
     course?: boolean | CourseDefaultArgs<ExtArgs>
     courseType?: boolean | RapidRecall$courseTypeArgs<ExtArgs>
+    chapter?: boolean | RapidRecall$chapterArgs<ExtArgs>
     subject?: boolean | RapidRecall$subjectArgs<ExtArgs>
     lesson?: boolean | RapidRecall$lessonArgs<ExtArgs>
   }, ExtArgs["result"]["rapidRecall"]>
@@ -44462,6 +44435,7 @@ export namespace Prisma {
     id?: boolean
     courseId?: boolean
     courseTypeId?: boolean
+    chapterId?: boolean
     subjectId?: boolean
     lessonId?: boolean
     title?: boolean
@@ -44475,10 +44449,11 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type RapidRecallOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "courseTypeId" | "subjectId" | "lessonId" | "title" | "description" | "noteUrl" | "notePublicId" | "noteFileType" | "status" | "displayOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["rapidRecall"]>
+  export type RapidRecallOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "courseTypeId" | "chapterId" | "subjectId" | "lessonId" | "title" | "description" | "noteUrl" | "notePublicId" | "noteFileType" | "status" | "displayOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["rapidRecall"]>
   export type RapidRecallInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     courseType?: boolean | RapidRecall$courseTypeArgs<ExtArgs>
+    chapter?: boolean | RapidRecall$chapterArgs<ExtArgs>
     subject?: boolean | RapidRecall$subjectArgs<ExtArgs>
     lesson?: boolean | RapidRecall$lessonArgs<ExtArgs>
     cards?: boolean | RapidRecall$cardsArgs<ExtArgs>
@@ -44487,12 +44462,14 @@ export namespace Prisma {
   export type RapidRecallIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     courseType?: boolean | RapidRecall$courseTypeArgs<ExtArgs>
+    chapter?: boolean | RapidRecall$chapterArgs<ExtArgs>
     subject?: boolean | RapidRecall$subjectArgs<ExtArgs>
     lesson?: boolean | RapidRecall$lessonArgs<ExtArgs>
   }
   export type RapidRecallIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     courseType?: boolean | RapidRecall$courseTypeArgs<ExtArgs>
+    chapter?: boolean | RapidRecall$chapterArgs<ExtArgs>
     subject?: boolean | RapidRecall$subjectArgs<ExtArgs>
     lesson?: boolean | RapidRecall$lessonArgs<ExtArgs>
   }
@@ -44502,6 +44479,7 @@ export namespace Prisma {
     objects: {
       course: Prisma.$CoursePayload<ExtArgs>
       courseType: Prisma.$CourseTypePayload<ExtArgs> | null
+      chapter: Prisma.$ChapterPayload<ExtArgs> | null
       subject: Prisma.$SubjectPayload<ExtArgs> | null
       lesson: Prisma.$LessonPayload<ExtArgs> | null
       cards: Prisma.$RapidRecallCardPayload<ExtArgs>[]
@@ -44510,6 +44488,7 @@ export namespace Prisma {
       id: number
       courseId: number
       courseTypeId: number | null
+      chapterId: number | null
       subjectId: number | null
       lessonId: number | null
       title: string
@@ -44917,6 +44896,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     course<T extends CourseDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CourseDefaultArgs<ExtArgs>>): Prisma__CourseClient<$Result.GetResult<Prisma.$CoursePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     courseType<T extends RapidRecall$courseTypeArgs<ExtArgs> = {}>(args?: Subset<T, RapidRecall$courseTypeArgs<ExtArgs>>): Prisma__CourseTypeClient<$Result.GetResult<Prisma.$CourseTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    chapter<T extends RapidRecall$chapterArgs<ExtArgs> = {}>(args?: Subset<T, RapidRecall$chapterArgs<ExtArgs>>): Prisma__ChapterClient<$Result.GetResult<Prisma.$ChapterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     subject<T extends RapidRecall$subjectArgs<ExtArgs> = {}>(args?: Subset<T, RapidRecall$subjectArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     lesson<T extends RapidRecall$lessonArgs<ExtArgs> = {}>(args?: Subset<T, RapidRecall$lessonArgs<ExtArgs>>): Prisma__LessonClient<$Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     cards<T extends RapidRecall$cardsArgs<ExtArgs> = {}>(args?: Subset<T, RapidRecall$cardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallCardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -44952,6 +44932,7 @@ export namespace Prisma {
     readonly id: FieldRef<"RapidRecall", 'Int'>
     readonly courseId: FieldRef<"RapidRecall", 'Int'>
     readonly courseTypeId: FieldRef<"RapidRecall", 'Int'>
+    readonly chapterId: FieldRef<"RapidRecall", 'Int'>
     readonly subjectId: FieldRef<"RapidRecall", 'Int'>
     readonly lessonId: FieldRef<"RapidRecall", 'Int'>
     readonly title: FieldRef<"RapidRecall", 'String'>
@@ -45389,6 +45370,25 @@ export namespace Prisma {
      */
     include?: CourseTypeInclude<ExtArgs> | null
     where?: CourseTypeWhereInput
+  }
+
+  /**
+   * RapidRecall.chapter
+   */
+  export type RapidRecall$chapterArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Chapter
+     */
+    select?: ChapterSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Chapter
+     */
+    omit?: ChapterOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChapterInclude<ExtArgs> | null
+    where?: ChapterWhereInput
   }
 
   /**
@@ -49066,7 +49066,6 @@ export namespace Prisma {
     isFreePreview: 'isFreePreview',
     accessType: 'accessType',
     status: 'status',
-    subjectId: 'subjectId',
     quizId: 'quizId',
     commentsEnabled: 'commentsEnabled',
     createdAt: 'createdAt',
@@ -49381,6 +49380,7 @@ export namespace Prisma {
     id: 'id',
     courseId: 'courseId',
     courseTypeId: 'courseTypeId',
+    chapterId: 'chapterId',
     subjectId: 'subjectId',
     lessonId: 'lessonId',
     title: 'title',
@@ -49882,7 +49882,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Subject"> | Date | string
     topics?: TopicListRelationFilter
     courses?: CourseListRelationFilter
-    lessons?: LessonListRelationFilter
     questions?: QuestionListRelationFilter
     quizzes?: QuizListRelationFilter
     rapidRecalls?: RapidRecallListRelationFilter
@@ -49897,7 +49896,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
     topics?: TopicOrderByRelationAggregateInput
     courses?: CourseOrderByRelationAggregateInput
-    lessons?: LessonOrderByRelationAggregateInput
     questions?: QuestionOrderByRelationAggregateInput
     quizzes?: QuizOrderByRelationAggregateInput
     rapidRecalls?: RapidRecallOrderByRelationAggregateInput
@@ -49915,7 +49913,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Subject"> | Date | string
     topics?: TopicListRelationFilter
     courses?: CourseListRelationFilter
-    lessons?: LessonListRelationFilter
     questions?: QuestionListRelationFilter
     quizzes?: QuizListRelationFilter
     rapidRecalls?: RapidRecallListRelationFilter
@@ -50310,6 +50307,7 @@ export namespace Prisma {
     course?: XOR<CourseNullableScalarRelationFilter, CourseWhereInput> | null
     courseType?: XOR<CourseTypeNullableScalarRelationFilter, CourseTypeWhereInput> | null
     lessons?: LessonListRelationFilter
+    rapidRecalls?: RapidRecallListRelationFilter
   }
 
   export type ChapterOrderByWithRelationInput = {
@@ -50323,6 +50321,7 @@ export namespace Prisma {
     course?: CourseOrderByWithRelationInput
     courseType?: CourseTypeOrderByWithRelationInput
     lessons?: LessonOrderByRelationAggregateInput
+    rapidRecalls?: RapidRecallOrderByRelationAggregateInput
   }
 
   export type ChapterWhereUniqueInput = Prisma.AtLeast<{
@@ -50339,6 +50338,7 @@ export namespace Prisma {
     course?: XOR<CourseNullableScalarRelationFilter, CourseWhereInput> | null
     courseType?: XOR<CourseTypeNullableScalarRelationFilter, CourseTypeWhereInput> | null
     lessons?: LessonListRelationFilter
+    rapidRecalls?: RapidRecallListRelationFilter
   }, "id">
 
   export type ChapterOrderByWithAggregationInput = {
@@ -50391,14 +50391,12 @@ export namespace Prisma {
     isFreePreview?: BoolFilter<"Lesson"> | boolean
     accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
     status?: EnumCourseStatusFilter<"Lesson"> | $Enums.CourseStatus
-    subjectId?: IntNullableFilter<"Lesson"> | number | null
     quizId?: IntNullableFilter<"Lesson"> | number | null
     commentsEnabled?: BoolFilter<"Lesson"> | boolean
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
     chapter?: XOR<ChapterScalarRelationFilter, ChapterWhereInput>
     quiz?: XOR<QuizNullableScalarRelationFilter, QuizWhereInput> | null
-    subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
     lessonPlans?: LessonPlanListRelationFilter
     savedBy?: SavedLessonListRelationFilter
     progress?: LessonProgressListRelationFilter
@@ -50425,14 +50423,12 @@ export namespace Prisma {
     isFreePreview?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
-    subjectId?: SortOrderInput | SortOrder
     quizId?: SortOrderInput | SortOrder
     commentsEnabled?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     chapter?: ChapterOrderByWithRelationInput
     quiz?: QuizOrderByWithRelationInput
-    subject?: SubjectOrderByWithRelationInput
     lessonPlans?: LessonPlanOrderByRelationAggregateInput
     savedBy?: SavedLessonOrderByRelationAggregateInput
     progress?: LessonProgressOrderByRelationAggregateInput
@@ -50463,13 +50459,11 @@ export namespace Prisma {
     isFreePreview?: BoolFilter<"Lesson"> | boolean
     accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
     status?: EnumCourseStatusFilter<"Lesson"> | $Enums.CourseStatus
-    subjectId?: IntNullableFilter<"Lesson"> | number | null
     commentsEnabled?: BoolFilter<"Lesson"> | boolean
     createdAt?: DateTimeFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeFilter<"Lesson"> | Date | string
     chapter?: XOR<ChapterScalarRelationFilter, ChapterWhereInput>
     quiz?: XOR<QuizNullableScalarRelationFilter, QuizWhereInput> | null
-    subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
     lessonPlans?: LessonPlanListRelationFilter
     savedBy?: SavedLessonListRelationFilter
     progress?: LessonProgressListRelationFilter
@@ -50496,7 +50490,6 @@ export namespace Prisma {
     isFreePreview?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
-    subjectId?: SortOrderInput | SortOrder
     quizId?: SortOrderInput | SortOrder
     commentsEnabled?: SortOrder
     createdAt?: SortOrder
@@ -50530,7 +50523,6 @@ export namespace Prisma {
     isFreePreview?: BoolWithAggregatesFilter<"Lesson"> | boolean
     accessType?: EnumAccessTypeWithAggregatesFilter<"Lesson"> | $Enums.AccessType
     status?: EnumCourseStatusWithAggregatesFilter<"Lesson"> | $Enums.CourseStatus
-    subjectId?: IntNullableWithAggregatesFilter<"Lesson"> | number | null
     quizId?: IntNullableWithAggregatesFilter<"Lesson"> | number | null
     commentsEnabled?: BoolWithAggregatesFilter<"Lesson"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
@@ -52218,6 +52210,7 @@ export namespace Prisma {
     id?: IntFilter<"RapidRecall"> | number
     courseId?: IntFilter<"RapidRecall"> | number
     courseTypeId?: IntNullableFilter<"RapidRecall"> | number | null
+    chapterId?: IntNullableFilter<"RapidRecall"> | number | null
     subjectId?: IntNullableFilter<"RapidRecall"> | number | null
     lessonId?: IntNullableFilter<"RapidRecall"> | number | null
     title?: StringFilter<"RapidRecall"> | string
@@ -52231,6 +52224,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"RapidRecall"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     courseType?: XOR<CourseTypeNullableScalarRelationFilter, CourseTypeWhereInput> | null
+    chapter?: XOR<ChapterNullableScalarRelationFilter, ChapterWhereInput> | null
     subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
     lesson?: XOR<LessonNullableScalarRelationFilter, LessonWhereInput> | null
     cards?: RapidRecallCardListRelationFilter
@@ -52240,6 +52234,7 @@ export namespace Prisma {
     id?: SortOrder
     courseId?: SortOrder
     courseTypeId?: SortOrderInput | SortOrder
+    chapterId?: SortOrderInput | SortOrder
     subjectId?: SortOrderInput | SortOrder
     lessonId?: SortOrderInput | SortOrder
     title?: SortOrder
@@ -52253,6 +52248,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     course?: CourseOrderByWithRelationInput
     courseType?: CourseTypeOrderByWithRelationInput
+    chapter?: ChapterOrderByWithRelationInput
     subject?: SubjectOrderByWithRelationInput
     lesson?: LessonOrderByWithRelationInput
     cards?: RapidRecallCardOrderByRelationAggregateInput
@@ -52265,6 +52261,7 @@ export namespace Prisma {
     NOT?: RapidRecallWhereInput | RapidRecallWhereInput[]
     courseId?: IntFilter<"RapidRecall"> | number
     courseTypeId?: IntNullableFilter<"RapidRecall"> | number | null
+    chapterId?: IntNullableFilter<"RapidRecall"> | number | null
     subjectId?: IntNullableFilter<"RapidRecall"> | number | null
     lessonId?: IntNullableFilter<"RapidRecall"> | number | null
     title?: StringFilter<"RapidRecall"> | string
@@ -52278,6 +52275,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"RapidRecall"> | Date | string
     course?: XOR<CourseScalarRelationFilter, CourseWhereInput>
     courseType?: XOR<CourseTypeNullableScalarRelationFilter, CourseTypeWhereInput> | null
+    chapter?: XOR<ChapterNullableScalarRelationFilter, ChapterWhereInput> | null
     subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
     lesson?: XOR<LessonNullableScalarRelationFilter, LessonWhereInput> | null
     cards?: RapidRecallCardListRelationFilter
@@ -52287,6 +52285,7 @@ export namespace Prisma {
     id?: SortOrder
     courseId?: SortOrder
     courseTypeId?: SortOrderInput | SortOrder
+    chapterId?: SortOrderInput | SortOrder
     subjectId?: SortOrderInput | SortOrder
     lessonId?: SortOrderInput | SortOrder
     title?: SortOrder
@@ -52312,6 +52311,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"RapidRecall"> | number
     courseId?: IntWithAggregatesFilter<"RapidRecall"> | number
     courseTypeId?: IntNullableWithAggregatesFilter<"RapidRecall"> | number | null
+    chapterId?: IntNullableWithAggregatesFilter<"RapidRecall"> | number | null
     subjectId?: IntNullableWithAggregatesFilter<"RapidRecall"> | number | null
     lessonId?: IntNullableWithAggregatesFilter<"RapidRecall"> | number | null
     title?: StringWithAggregatesFilter<"RapidRecall"> | string
@@ -52766,7 +52766,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     topics?: TopicCreateNestedManyWithoutSubjectInput
     courses?: CourseCreateNestedManyWithoutSubjectsInput
-    lessons?: LessonCreateNestedManyWithoutSubjectInput
     questions?: QuestionCreateNestedManyWithoutSubjectInput
     quizzes?: QuizCreateNestedManyWithoutSubjectInput
     rapidRecalls?: RapidRecallCreateNestedManyWithoutSubjectInput
@@ -52781,7 +52780,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     topics?: TopicUncheckedCreateNestedManyWithoutSubjectInput
     courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
-    lessons?: LessonUncheckedCreateNestedManyWithoutSubjectInput
     questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
     quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
     rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutSubjectInput
@@ -52795,7 +52793,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUpdateManyWithoutSubjectNestedInput
     courses?: CourseUpdateManyWithoutSubjectsNestedInput
-    lessons?: LessonUpdateManyWithoutSubjectNestedInput
     questions?: QuestionUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUpdateManyWithoutSubjectNestedInput
     rapidRecalls?: RapidRecallUpdateManyWithoutSubjectNestedInput
@@ -52810,7 +52807,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUncheckedUpdateManyWithoutSubjectNestedInput
     courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
-    lessons?: LessonUncheckedUpdateManyWithoutSubjectNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
     rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutSubjectNestedInput
@@ -53223,6 +53219,7 @@ export namespace Prisma {
     course?: CourseCreateNestedOneWithoutChaptersInput
     courseType?: CourseTypeCreateNestedOneWithoutChaptersInput
     lessons?: LessonCreateNestedManyWithoutChapterInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutChapterInput
   }
 
   export type ChapterUncheckedCreateInput = {
@@ -53234,6 +53231,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lessons?: LessonUncheckedCreateNestedManyWithoutChapterInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutChapterInput
   }
 
   export type ChapterUpdateInput = {
@@ -53244,6 +53242,7 @@ export namespace Prisma {
     course?: CourseUpdateOneWithoutChaptersNestedInput
     courseType?: CourseTypeUpdateOneWithoutChaptersNestedInput
     lessons?: LessonUpdateManyWithoutChapterNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutChapterNestedInput
   }
 
   export type ChapterUncheckedUpdateInput = {
@@ -53255,6 +53254,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lessons?: LessonUncheckedUpdateManyWithoutChapterNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutChapterNestedInput
   }
 
   export type ChapterCreateManyInput = {
@@ -53306,7 +53306,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
     quiz?: QuizCreateNestedOneWithoutLessonInput
-    subject?: SubjectCreateNestedOneWithoutLessonsInput
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
@@ -53333,7 +53332,6 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
-    subjectId?: number | null
     quizId?: number | null
     commentsEnabled?: boolean
     createdAt?: Date | string
@@ -53367,7 +53365,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
     quiz?: QuizUpdateOneWithoutLessonNestedInput
-    subject?: SubjectUpdateOneWithoutLessonsNestedInput
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
@@ -53394,7 +53391,6 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
     commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53425,7 +53421,6 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
-    subjectId?: number | null
     quizId?: number | null
     commentsEnabled?: boolean
     createdAt?: Date | string
@@ -53473,7 +53468,6 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
     commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55111,6 +55105,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutRapidRecallsInput
     courseType?: CourseTypeCreateNestedOneWithoutRapidRecallsInput
+    chapter?: ChapterCreateNestedOneWithoutRapidRecallsInput
     subject?: SubjectCreateNestedOneWithoutRapidRecallsInput
     lesson?: LessonCreateNestedOneWithoutRapidRecallsInput
     cards?: RapidRecallCardCreateNestedManyWithoutRecallInput
@@ -55120,6 +55115,7 @@ export namespace Prisma {
     id?: number
     courseId: number
     courseTypeId?: number | null
+    chapterId?: number | null
     subjectId?: number | null
     lessonId?: number | null
     title: string
@@ -55146,6 +55142,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutRapidRecallsNestedInput
     courseType?: CourseTypeUpdateOneWithoutRapidRecallsNestedInput
+    chapter?: ChapterUpdateOneWithoutRapidRecallsNestedInput
     subject?: SubjectUpdateOneWithoutRapidRecallsNestedInput
     lesson?: LessonUpdateOneWithoutRapidRecallsNestedInput
     cards?: RapidRecallCardUpdateManyWithoutRecallNestedInput
@@ -55155,6 +55152,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     courseId?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    chapterId?: NullableIntFieldUpdateOperationsInput | number | null
     subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     lessonId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
@@ -55173,6 +55171,7 @@ export namespace Prisma {
     id?: number
     courseId: number
     courseTypeId?: number | null
+    chapterId?: number | null
     subjectId?: number | null
     lessonId?: number | null
     title: string
@@ -55202,6 +55201,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     courseId?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    chapterId?: NullableIntFieldUpdateOperationsInput | number | null
     subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     lessonId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
@@ -55833,12 +55833,6 @@ export namespace Prisma {
     none?: TopicWhereInput
   }
 
-  export type LessonListRelationFilter = {
-    every?: LessonWhereInput
-    some?: LessonWhereInput
-    none?: LessonWhereInput
-  }
-
   export type QuestionListRelationFilter = {
     every?: QuestionWhereInput
     some?: QuestionWhereInput
@@ -55858,10 +55852,6 @@ export namespace Prisma {
   }
 
   export type TopicOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type LessonOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -56228,6 +56218,16 @@ export namespace Prisma {
     displayOrder?: SortOrder
   }
 
+  export type LessonListRelationFilter = {
+    every?: LessonWhereInput
+    some?: LessonWhereInput
+    none?: LessonWhereInput
+  }
+
+  export type LessonOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ChapterCountOrderByAggregateInput = {
     id?: SortOrder
     courseId?: SortOrder
@@ -56289,11 +56289,6 @@ export namespace Prisma {
     isNot?: QuizWhereInput | null
   }
 
-  export type SubjectNullableScalarRelationFilter = {
-    is?: SubjectWhereInput | null
-    isNot?: SubjectWhereInput | null
-  }
-
   export type LessonPlanListRelationFilter = {
     every?: LessonPlanWhereInput
     some?: LessonPlanWhereInput
@@ -56323,7 +56318,6 @@ export namespace Prisma {
     isFreePreview?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
-    subjectId?: SortOrder
     quizId?: SortOrder
     commentsEnabled?: SortOrder
     createdAt?: SortOrder
@@ -56335,7 +56329,6 @@ export namespace Prisma {
     chapterId?: SortOrder
     durationSeconds?: SortOrder
     displayOrder?: SortOrder
-    subjectId?: SortOrder
     quizId?: SortOrder
   }
 
@@ -56358,7 +56351,6 @@ export namespace Prisma {
     isFreePreview?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
-    subjectId?: SortOrder
     quizId?: SortOrder
     commentsEnabled?: SortOrder
     createdAt?: SortOrder
@@ -56384,7 +56376,6 @@ export namespace Prisma {
     isFreePreview?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
-    subjectId?: SortOrder
     quizId?: SortOrder
     commentsEnabled?: SortOrder
     createdAt?: SortOrder
@@ -56396,7 +56387,6 @@ export namespace Prisma {
     chapterId?: SortOrder
     durationSeconds?: SortOrder
     displayOrder?: SortOrder
-    subjectId?: SortOrder
     quizId?: SortOrder
   }
 
@@ -57752,6 +57742,16 @@ export namespace Prisma {
     marksAwarded?: SortOrder
   }
 
+  export type ChapterNullableScalarRelationFilter = {
+    is?: ChapterWhereInput | null
+    isNot?: ChapterWhereInput | null
+  }
+
+  export type SubjectNullableScalarRelationFilter = {
+    is?: SubjectWhereInput | null
+    isNot?: SubjectWhereInput | null
+  }
+
   export type RapidRecallCardListRelationFilter = {
     every?: RapidRecallCardWhereInput
     some?: RapidRecallCardWhereInput
@@ -57766,6 +57766,7 @@ export namespace Prisma {
     id?: SortOrder
     courseId?: SortOrder
     courseTypeId?: SortOrder
+    chapterId?: SortOrder
     subjectId?: SortOrder
     lessonId?: SortOrder
     title?: SortOrder
@@ -57783,6 +57784,7 @@ export namespace Prisma {
     id?: SortOrder
     courseId?: SortOrder
     courseTypeId?: SortOrder
+    chapterId?: SortOrder
     subjectId?: SortOrder
     lessonId?: SortOrder
     displayOrder?: SortOrder
@@ -57792,6 +57794,7 @@ export namespace Prisma {
     id?: SortOrder
     courseId?: SortOrder
     courseTypeId?: SortOrder
+    chapterId?: SortOrder
     subjectId?: SortOrder
     lessonId?: SortOrder
     title?: SortOrder
@@ -57809,6 +57812,7 @@ export namespace Prisma {
     id?: SortOrder
     courseId?: SortOrder
     courseTypeId?: SortOrder
+    chapterId?: SortOrder
     subjectId?: SortOrder
     lessonId?: SortOrder
     title?: SortOrder
@@ -57826,6 +57830,7 @@ export namespace Prisma {
     id?: SortOrder
     courseId?: SortOrder
     courseTypeId?: SortOrder
+    chapterId?: SortOrder
     subjectId?: SortOrder
     lessonId?: SortOrder
     displayOrder?: SortOrder
@@ -58671,13 +58676,6 @@ export namespace Prisma {
     connect?: CourseWhereUniqueInput | CourseWhereUniqueInput[]
   }
 
-  export type LessonCreateNestedManyWithoutSubjectInput = {
-    create?: XOR<LessonCreateWithoutSubjectInput, LessonUncheckedCreateWithoutSubjectInput> | LessonCreateWithoutSubjectInput[] | LessonUncheckedCreateWithoutSubjectInput[]
-    connectOrCreate?: LessonCreateOrConnectWithoutSubjectInput | LessonCreateOrConnectWithoutSubjectInput[]
-    createMany?: LessonCreateManySubjectInputEnvelope
-    connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-  }
-
   export type QuestionCreateNestedManyWithoutSubjectInput = {
     create?: XOR<QuestionCreateWithoutSubjectInput, QuestionUncheckedCreateWithoutSubjectInput> | QuestionCreateWithoutSubjectInput[] | QuestionUncheckedCreateWithoutSubjectInput[]
     connectOrCreate?: QuestionCreateOrConnectWithoutSubjectInput | QuestionCreateOrConnectWithoutSubjectInput[]
@@ -58710,13 +58708,6 @@ export namespace Prisma {
     create?: XOR<CourseCreateWithoutSubjectsInput, CourseUncheckedCreateWithoutSubjectsInput> | CourseCreateWithoutSubjectsInput[] | CourseUncheckedCreateWithoutSubjectsInput[]
     connectOrCreate?: CourseCreateOrConnectWithoutSubjectsInput | CourseCreateOrConnectWithoutSubjectsInput[]
     connect?: CourseWhereUniqueInput | CourseWhereUniqueInput[]
-  }
-
-  export type LessonUncheckedCreateNestedManyWithoutSubjectInput = {
-    create?: XOR<LessonCreateWithoutSubjectInput, LessonUncheckedCreateWithoutSubjectInput> | LessonCreateWithoutSubjectInput[] | LessonUncheckedCreateWithoutSubjectInput[]
-    connectOrCreate?: LessonCreateOrConnectWithoutSubjectInput | LessonCreateOrConnectWithoutSubjectInput[]
-    createMany?: LessonCreateManySubjectInputEnvelope
-    connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
   }
 
   export type QuestionUncheckedCreateNestedManyWithoutSubjectInput = {
@@ -58769,20 +58760,6 @@ export namespace Prisma {
     update?: CourseUpdateWithWhereUniqueWithoutSubjectsInput | CourseUpdateWithWhereUniqueWithoutSubjectsInput[]
     updateMany?: CourseUpdateManyWithWhereWithoutSubjectsInput | CourseUpdateManyWithWhereWithoutSubjectsInput[]
     deleteMany?: CourseScalarWhereInput | CourseScalarWhereInput[]
-  }
-
-  export type LessonUpdateManyWithoutSubjectNestedInput = {
-    create?: XOR<LessonCreateWithoutSubjectInput, LessonUncheckedCreateWithoutSubjectInput> | LessonCreateWithoutSubjectInput[] | LessonUncheckedCreateWithoutSubjectInput[]
-    connectOrCreate?: LessonCreateOrConnectWithoutSubjectInput | LessonCreateOrConnectWithoutSubjectInput[]
-    upsert?: LessonUpsertWithWhereUniqueWithoutSubjectInput | LessonUpsertWithWhereUniqueWithoutSubjectInput[]
-    createMany?: LessonCreateManySubjectInputEnvelope
-    set?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    disconnect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    delete?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    update?: LessonUpdateWithWhereUniqueWithoutSubjectInput | LessonUpdateWithWhereUniqueWithoutSubjectInput[]
-    updateMany?: LessonUpdateManyWithWhereWithoutSubjectInput | LessonUpdateManyWithWhereWithoutSubjectInput[]
-    deleteMany?: LessonScalarWhereInput | LessonScalarWhereInput[]
   }
 
   export type QuestionUpdateManyWithoutSubjectNestedInput = {
@@ -58852,20 +58829,6 @@ export namespace Prisma {
     update?: CourseUpdateWithWhereUniqueWithoutSubjectsInput | CourseUpdateWithWhereUniqueWithoutSubjectsInput[]
     updateMany?: CourseUpdateManyWithWhereWithoutSubjectsInput | CourseUpdateManyWithWhereWithoutSubjectsInput[]
     deleteMany?: CourseScalarWhereInput | CourseScalarWhereInput[]
-  }
-
-  export type LessonUncheckedUpdateManyWithoutSubjectNestedInput = {
-    create?: XOR<LessonCreateWithoutSubjectInput, LessonUncheckedCreateWithoutSubjectInput> | LessonCreateWithoutSubjectInput[] | LessonUncheckedCreateWithoutSubjectInput[]
-    connectOrCreate?: LessonCreateOrConnectWithoutSubjectInput | LessonCreateOrConnectWithoutSubjectInput[]
-    upsert?: LessonUpsertWithWhereUniqueWithoutSubjectInput | LessonUpsertWithWhereUniqueWithoutSubjectInput[]
-    createMany?: LessonCreateManySubjectInputEnvelope
-    set?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    disconnect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    delete?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
-    update?: LessonUpdateWithWhereUniqueWithoutSubjectInput | LessonUpdateWithWhereUniqueWithoutSubjectInput[]
-    updateMany?: LessonUpdateManyWithWhereWithoutSubjectInput | LessonUpdateManyWithWhereWithoutSubjectInput[]
-    deleteMany?: LessonScalarWhereInput | LessonScalarWhereInput[]
   }
 
   export type QuestionUncheckedUpdateManyWithoutSubjectNestedInput = {
@@ -59621,11 +59584,25 @@ export namespace Prisma {
     connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
   }
 
+  export type RapidRecallCreateNestedManyWithoutChapterInput = {
+    create?: XOR<RapidRecallCreateWithoutChapterInput, RapidRecallUncheckedCreateWithoutChapterInput> | RapidRecallCreateWithoutChapterInput[] | RapidRecallUncheckedCreateWithoutChapterInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutChapterInput | RapidRecallCreateOrConnectWithoutChapterInput[]
+    createMany?: RapidRecallCreateManyChapterInputEnvelope
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+  }
+
   export type LessonUncheckedCreateNestedManyWithoutChapterInput = {
     create?: XOR<LessonCreateWithoutChapterInput, LessonUncheckedCreateWithoutChapterInput> | LessonCreateWithoutChapterInput[] | LessonUncheckedCreateWithoutChapterInput[]
     connectOrCreate?: LessonCreateOrConnectWithoutChapterInput | LessonCreateOrConnectWithoutChapterInput[]
     createMany?: LessonCreateManyChapterInputEnvelope
     connect?: LessonWhereUniqueInput | LessonWhereUniqueInput[]
+  }
+
+  export type RapidRecallUncheckedCreateNestedManyWithoutChapterInput = {
+    create?: XOR<RapidRecallCreateWithoutChapterInput, RapidRecallUncheckedCreateWithoutChapterInput> | RapidRecallCreateWithoutChapterInput[] | RapidRecallUncheckedCreateWithoutChapterInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutChapterInput | RapidRecallCreateOrConnectWithoutChapterInput[]
+    createMany?: RapidRecallCreateManyChapterInputEnvelope
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
   }
 
   export type CourseUpdateOneWithoutChaptersNestedInput = {
@@ -59662,6 +59639,20 @@ export namespace Prisma {
     deleteMany?: LessonScalarWhereInput | LessonScalarWhereInput[]
   }
 
+  export type RapidRecallUpdateManyWithoutChapterNestedInput = {
+    create?: XOR<RapidRecallCreateWithoutChapterInput, RapidRecallUncheckedCreateWithoutChapterInput> | RapidRecallCreateWithoutChapterInput[] | RapidRecallUncheckedCreateWithoutChapterInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutChapterInput | RapidRecallCreateOrConnectWithoutChapterInput[]
+    upsert?: RapidRecallUpsertWithWhereUniqueWithoutChapterInput | RapidRecallUpsertWithWhereUniqueWithoutChapterInput[]
+    createMany?: RapidRecallCreateManyChapterInputEnvelope
+    set?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    disconnect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    delete?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    update?: RapidRecallUpdateWithWhereUniqueWithoutChapterInput | RapidRecallUpdateWithWhereUniqueWithoutChapterInput[]
+    updateMany?: RapidRecallUpdateManyWithWhereWithoutChapterInput | RapidRecallUpdateManyWithWhereWithoutChapterInput[]
+    deleteMany?: RapidRecallScalarWhereInput | RapidRecallScalarWhereInput[]
+  }
+
   export type LessonUncheckedUpdateManyWithoutChapterNestedInput = {
     create?: XOR<LessonCreateWithoutChapterInput, LessonUncheckedCreateWithoutChapterInput> | LessonCreateWithoutChapterInput[] | LessonUncheckedCreateWithoutChapterInput[]
     connectOrCreate?: LessonCreateOrConnectWithoutChapterInput | LessonCreateOrConnectWithoutChapterInput[]
@@ -59676,6 +59667,20 @@ export namespace Prisma {
     deleteMany?: LessonScalarWhereInput | LessonScalarWhereInput[]
   }
 
+  export type RapidRecallUncheckedUpdateManyWithoutChapterNestedInput = {
+    create?: XOR<RapidRecallCreateWithoutChapterInput, RapidRecallUncheckedCreateWithoutChapterInput> | RapidRecallCreateWithoutChapterInput[] | RapidRecallUncheckedCreateWithoutChapterInput[]
+    connectOrCreate?: RapidRecallCreateOrConnectWithoutChapterInput | RapidRecallCreateOrConnectWithoutChapterInput[]
+    upsert?: RapidRecallUpsertWithWhereUniqueWithoutChapterInput | RapidRecallUpsertWithWhereUniqueWithoutChapterInput[]
+    createMany?: RapidRecallCreateManyChapterInputEnvelope
+    set?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    disconnect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    delete?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+    update?: RapidRecallUpdateWithWhereUniqueWithoutChapterInput | RapidRecallUpdateWithWhereUniqueWithoutChapterInput[]
+    updateMany?: RapidRecallUpdateManyWithWhereWithoutChapterInput | RapidRecallUpdateManyWithWhereWithoutChapterInput[]
+    deleteMany?: RapidRecallScalarWhereInput | RapidRecallScalarWhereInput[]
+  }
+
   export type ChapterCreateNestedOneWithoutLessonsInput = {
     create?: XOR<ChapterCreateWithoutLessonsInput, ChapterUncheckedCreateWithoutLessonsInput>
     connectOrCreate?: ChapterCreateOrConnectWithoutLessonsInput
@@ -59686,12 +59691,6 @@ export namespace Prisma {
     create?: XOR<QuizCreateWithoutLessonInput, QuizUncheckedCreateWithoutLessonInput>
     connectOrCreate?: QuizCreateOrConnectWithoutLessonInput
     connect?: QuizWhereUniqueInput
-  }
-
-  export type SubjectCreateNestedOneWithoutLessonsInput = {
-    create?: XOR<SubjectCreateWithoutLessonsInput, SubjectUncheckedCreateWithoutLessonsInput>
-    connectOrCreate?: SubjectCreateOrConnectWithoutLessonsInput
-    connect?: SubjectWhereUniqueInput
   }
 
   export type LessonPlanCreateNestedManyWithoutLessonInput = {
@@ -59784,16 +59783,6 @@ export namespace Prisma {
     delete?: QuizWhereInput | boolean
     connect?: QuizWhereUniqueInput
     update?: XOR<XOR<QuizUpdateToOneWithWhereWithoutLessonInput, QuizUpdateWithoutLessonInput>, QuizUncheckedUpdateWithoutLessonInput>
-  }
-
-  export type SubjectUpdateOneWithoutLessonsNestedInput = {
-    create?: XOR<SubjectCreateWithoutLessonsInput, SubjectUncheckedCreateWithoutLessonsInput>
-    connectOrCreate?: SubjectCreateOrConnectWithoutLessonsInput
-    upsert?: SubjectUpsertWithoutLessonsInput
-    disconnect?: SubjectWhereInput | boolean
-    delete?: SubjectWhereInput | boolean
-    connect?: SubjectWhereUniqueInput
-    update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutLessonsInput, SubjectUpdateWithoutLessonsInput>, SubjectUncheckedUpdateWithoutLessonsInput>
   }
 
   export type LessonPlanUpdateManyWithoutLessonNestedInput = {
@@ -61386,6 +61375,12 @@ export namespace Prisma {
     connect?: CourseTypeWhereUniqueInput
   }
 
+  export type ChapterCreateNestedOneWithoutRapidRecallsInput = {
+    create?: XOR<ChapterCreateWithoutRapidRecallsInput, ChapterUncheckedCreateWithoutRapidRecallsInput>
+    connectOrCreate?: ChapterCreateOrConnectWithoutRapidRecallsInput
+    connect?: ChapterWhereUniqueInput
+  }
+
   export type SubjectCreateNestedOneWithoutRapidRecallsInput = {
     create?: XOR<SubjectCreateWithoutRapidRecallsInput, SubjectUncheckedCreateWithoutRapidRecallsInput>
     connectOrCreate?: SubjectCreateOrConnectWithoutRapidRecallsInput
@@ -61428,6 +61423,16 @@ export namespace Prisma {
     delete?: CourseTypeWhereInput | boolean
     connect?: CourseTypeWhereUniqueInput
     update?: XOR<XOR<CourseTypeUpdateToOneWithWhereWithoutRapidRecallsInput, CourseTypeUpdateWithoutRapidRecallsInput>, CourseTypeUncheckedUpdateWithoutRapidRecallsInput>
+  }
+
+  export type ChapterUpdateOneWithoutRapidRecallsNestedInput = {
+    create?: XOR<ChapterCreateWithoutRapidRecallsInput, ChapterUncheckedCreateWithoutRapidRecallsInput>
+    connectOrCreate?: ChapterCreateOrConnectWithoutRapidRecallsInput
+    upsert?: ChapterUpsertWithoutRapidRecallsInput
+    disconnect?: ChapterWhereInput | boolean
+    delete?: ChapterWhereInput | boolean
+    connect?: ChapterWhereUniqueInput
+    update?: XOR<XOR<ChapterUpdateToOneWithWhereWithoutRapidRecallsInput, ChapterUpdateWithoutRapidRecallsInput>, ChapterUncheckedUpdateWithoutRapidRecallsInput>
   }
 
   export type SubjectUpdateOneWithoutRapidRecallsNestedInput = {
@@ -62964,75 +62969,6 @@ export namespace Prisma {
     create: XOR<CourseCreateWithoutSubjectsInput, CourseUncheckedCreateWithoutSubjectsInput>
   }
 
-  export type LessonCreateWithoutSubjectInput = {
-    title: string
-    description?: string | null
-    type: $Enums.LessonType
-    videoUrl?: string | null
-    videoPublicId?: string | null
-    thumbnailUrl?: string | null
-    thumbnailPublicId?: string | null
-    noteUrl?: string | null
-    notePublicId?: string | null
-    noteFileType?: string | null
-    durationSeconds?: number | null
-    content?: string | null
-    displayOrder?: number
-    isFreePreview?: boolean
-    accessType?: $Enums.AccessType
-    status?: $Enums.CourseStatus
-    commentsEnabled?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    chapter: ChapterCreateNestedOneWithoutLessonsInput
-    quiz?: QuizCreateNestedOneWithoutLessonInput
-    lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
-    savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
-    progress?: LessonProgressCreateNestedManyWithoutLessonInput
-    comments?: LessonCommentCreateNestedManyWithoutLessonInput
-    rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
-  }
-
-  export type LessonUncheckedCreateWithoutSubjectInput = {
-    id?: number
-    chapterId: number
-    title: string
-    description?: string | null
-    type: $Enums.LessonType
-    videoUrl?: string | null
-    videoPublicId?: string | null
-    thumbnailUrl?: string | null
-    thumbnailPublicId?: string | null
-    noteUrl?: string | null
-    notePublicId?: string | null
-    noteFileType?: string | null
-    durationSeconds?: number | null
-    content?: string | null
-    displayOrder?: number
-    isFreePreview?: boolean
-    accessType?: $Enums.AccessType
-    status?: $Enums.CourseStatus
-    quizId?: number | null
-    commentsEnabled?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
-    savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
-    progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
-    comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
-    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
-  }
-
-  export type LessonCreateOrConnectWithoutSubjectInput = {
-    where: LessonWhereUniqueInput
-    create: XOR<LessonCreateWithoutSubjectInput, LessonUncheckedCreateWithoutSubjectInput>
-  }
-
-  export type LessonCreateManySubjectInputEnvelope = {
-    data: LessonCreateManySubjectInput | LessonCreateManySubjectInput[]
-    skipDuplicates?: boolean
-  }
-
   export type QuestionCreateWithoutSubjectInput = {
     questionText: string
     questionImageUrl?: string | null
@@ -63127,6 +63063,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutRapidRecallsInput
     courseType?: CourseTypeCreateNestedOneWithoutRapidRecallsInput
+    chapter?: ChapterCreateNestedOneWithoutRapidRecallsInput
     lesson?: LessonCreateNestedOneWithoutRapidRecallsInput
     cards?: RapidRecallCardCreateNestedManyWithoutRecallInput
   }
@@ -63135,6 +63072,7 @@ export namespace Prisma {
     id?: number
     courseId: number
     courseTypeId?: number | null
+    chapterId?: number | null
     lessonId?: number | null
     title: string
     description?: string | null
@@ -63201,51 +63139,6 @@ export namespace Prisma {
   export type CourseUpdateManyWithWhereWithoutSubjectsInput = {
     where: CourseScalarWhereInput
     data: XOR<CourseUpdateManyMutationInput, CourseUncheckedUpdateManyWithoutSubjectsInput>
-  }
-
-  export type LessonUpsertWithWhereUniqueWithoutSubjectInput = {
-    where: LessonWhereUniqueInput
-    update: XOR<LessonUpdateWithoutSubjectInput, LessonUncheckedUpdateWithoutSubjectInput>
-    create: XOR<LessonCreateWithoutSubjectInput, LessonUncheckedCreateWithoutSubjectInput>
-  }
-
-  export type LessonUpdateWithWhereUniqueWithoutSubjectInput = {
-    where: LessonWhereUniqueInput
-    data: XOR<LessonUpdateWithoutSubjectInput, LessonUncheckedUpdateWithoutSubjectInput>
-  }
-
-  export type LessonUpdateManyWithWhereWithoutSubjectInput = {
-    where: LessonScalarWhereInput
-    data: XOR<LessonUpdateManyMutationInput, LessonUncheckedUpdateManyWithoutSubjectInput>
-  }
-
-  export type LessonScalarWhereInput = {
-    AND?: LessonScalarWhereInput | LessonScalarWhereInput[]
-    OR?: LessonScalarWhereInput[]
-    NOT?: LessonScalarWhereInput | LessonScalarWhereInput[]
-    id?: IntFilter<"Lesson"> | number
-    chapterId?: IntFilter<"Lesson"> | number
-    title?: StringFilter<"Lesson"> | string
-    description?: StringNullableFilter<"Lesson"> | string | null
-    type?: EnumLessonTypeFilter<"Lesson"> | $Enums.LessonType
-    videoUrl?: StringNullableFilter<"Lesson"> | string | null
-    videoPublicId?: StringNullableFilter<"Lesson"> | string | null
-    thumbnailUrl?: StringNullableFilter<"Lesson"> | string | null
-    thumbnailPublicId?: StringNullableFilter<"Lesson"> | string | null
-    noteUrl?: StringNullableFilter<"Lesson"> | string | null
-    notePublicId?: StringNullableFilter<"Lesson"> | string | null
-    noteFileType?: StringNullableFilter<"Lesson"> | string | null
-    durationSeconds?: IntNullableFilter<"Lesson"> | number | null
-    content?: StringNullableFilter<"Lesson"> | string | null
-    displayOrder?: IntFilter<"Lesson"> | number
-    isFreePreview?: BoolFilter<"Lesson"> | boolean
-    accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
-    status?: EnumCourseStatusFilter<"Lesson"> | $Enums.CourseStatus
-    subjectId?: IntNullableFilter<"Lesson"> | number | null
-    quizId?: IntNullableFilter<"Lesson"> | number | null
-    commentsEnabled?: BoolFilter<"Lesson"> | boolean
-    createdAt?: DateTimeFilter<"Lesson"> | Date | string
-    updatedAt?: DateTimeFilter<"Lesson"> | Date | string
   }
 
   export type QuestionUpsertWithWhereUniqueWithoutSubjectInput = {
@@ -63336,6 +63229,7 @@ export namespace Prisma {
     id?: IntFilter<"RapidRecall"> | number
     courseId?: IntFilter<"RapidRecall"> | number
     courseTypeId?: IntNullableFilter<"RapidRecall"> | number | null
+    chapterId?: IntNullableFilter<"RapidRecall"> | number | null
     subjectId?: IntNullableFilter<"RapidRecall"> | number | null
     lessonId?: IntNullableFilter<"RapidRecall"> | number | null
     title?: StringFilter<"RapidRecall"> | string
@@ -63356,7 +63250,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     courses?: CourseCreateNestedManyWithoutSubjectsInput
-    lessons?: LessonCreateNestedManyWithoutSubjectInput
     questions?: QuestionCreateNestedManyWithoutSubjectInput
     quizzes?: QuizCreateNestedManyWithoutSubjectInput
     rapidRecalls?: RapidRecallCreateNestedManyWithoutSubjectInput
@@ -63370,7 +63263,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
-    lessons?: LessonUncheckedCreateNestedManyWithoutSubjectInput
     questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
     quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
     rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutSubjectInput
@@ -63481,7 +63373,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     courses?: CourseUpdateManyWithoutSubjectsNestedInput
-    lessons?: LessonUpdateManyWithoutSubjectNestedInput
     questions?: QuestionUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUpdateManyWithoutSubjectNestedInput
     rapidRecalls?: RapidRecallUpdateManyWithoutSubjectNestedInput
@@ -63495,7 +63386,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
-    lessons?: LessonUncheckedUpdateManyWithoutSubjectNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
     rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutSubjectNestedInput
@@ -63662,7 +63552,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     topics?: TopicCreateNestedManyWithoutSubjectInput
-    lessons?: LessonCreateNestedManyWithoutSubjectInput
     questions?: QuestionCreateNestedManyWithoutSubjectInput
     quizzes?: QuizCreateNestedManyWithoutSubjectInput
     rapidRecalls?: RapidRecallCreateNestedManyWithoutSubjectInput
@@ -63676,7 +63565,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     topics?: TopicUncheckedCreateNestedManyWithoutSubjectInput
-    lessons?: LessonUncheckedCreateNestedManyWithoutSubjectInput
     questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
     quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
     rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutSubjectInput
@@ -63722,6 +63610,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     courseType?: CourseTypeCreateNestedOneWithoutChaptersInput
     lessons?: LessonCreateNestedManyWithoutChapterInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutChapterInput
   }
 
   export type ChapterUncheckedCreateWithoutCourseInput = {
@@ -63732,6 +63621,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lessons?: LessonUncheckedCreateNestedManyWithoutChapterInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutChapterInput
   }
 
   export type ChapterCreateOrConnectWithoutCourseInput = {
@@ -64009,6 +63899,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     courseType?: CourseTypeCreateNestedOneWithoutRapidRecallsInput
+    chapter?: ChapterCreateNestedOneWithoutRapidRecallsInput
     subject?: SubjectCreateNestedOneWithoutRapidRecallsInput
     lesson?: LessonCreateNestedOneWithoutRapidRecallsInput
     cards?: RapidRecallCardCreateNestedManyWithoutRecallInput
@@ -64017,6 +63908,7 @@ export namespace Prisma {
   export type RapidRecallUncheckedCreateWithoutCourseInput = {
     id?: number
     courseTypeId?: number | null
+    chapterId?: number | null
     subjectId?: number | null
     lessonId?: number | null
     title: string
@@ -64376,6 +64268,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     course?: CourseCreateNestedOneWithoutChaptersInput
     lessons?: LessonCreateNestedManyWithoutChapterInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutChapterInput
   }
 
   export type ChapterUncheckedCreateWithoutCourseTypeInput = {
@@ -64386,6 +64279,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     lessons?: LessonUncheckedCreateNestedManyWithoutChapterInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutChapterInput
   }
 
   export type ChapterCreateOrConnectWithoutCourseTypeInput = {
@@ -64519,6 +64413,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutRapidRecallsInput
+    chapter?: ChapterCreateNestedOneWithoutRapidRecallsInput
     subject?: SubjectCreateNestedOneWithoutRapidRecallsInput
     lesson?: LessonCreateNestedOneWithoutRapidRecallsInput
     cards?: RapidRecallCardCreateNestedManyWithoutRecallInput
@@ -64527,6 +64422,7 @@ export namespace Prisma {
   export type RapidRecallUncheckedCreateWithoutCourseTypeInput = {
     id?: number
     courseId: number
+    chapterId?: number | null
     subjectId?: number | null
     lessonId?: number | null
     title: string
@@ -64776,7 +64672,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     quiz?: QuizCreateNestedOneWithoutLessonInput
-    subject?: SubjectCreateNestedOneWithoutLessonsInput
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
@@ -64802,7 +64697,6 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
-    subjectId?: number | null
     quizId?: number | null
     commentsEnabled?: boolean
     createdAt?: Date | string
@@ -64821,6 +64715,51 @@ export namespace Prisma {
 
   export type LessonCreateManyChapterInputEnvelope = {
     data: LessonCreateManyChapterInput | LessonCreateManyChapterInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RapidRecallCreateWithoutChapterInput = {
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    course: CourseCreateNestedOneWithoutRapidRecallsInput
+    courseType?: CourseTypeCreateNestedOneWithoutRapidRecallsInput
+    subject?: SubjectCreateNestedOneWithoutRapidRecallsInput
+    lesson?: LessonCreateNestedOneWithoutRapidRecallsInput
+    cards?: RapidRecallCardCreateNestedManyWithoutRecallInput
+  }
+
+  export type RapidRecallUncheckedCreateWithoutChapterInput = {
+    id?: number
+    courseId: number
+    courseTypeId?: number | null
+    subjectId?: number | null
+    lessonId?: number | null
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cards?: RapidRecallCardUncheckedCreateNestedManyWithoutRecallInput
+  }
+
+  export type RapidRecallCreateOrConnectWithoutChapterInput = {
+    where: RapidRecallWhereUniqueInput
+    create: XOR<RapidRecallCreateWithoutChapterInput, RapidRecallUncheckedCreateWithoutChapterInput>
+  }
+
+  export type RapidRecallCreateManyChapterInputEnvelope = {
+    data: RapidRecallCreateManyChapterInput | RapidRecallCreateManyChapterInput[]
     skipDuplicates?: boolean
   }
 
@@ -64936,6 +64875,50 @@ export namespace Prisma {
     data: XOR<LessonUpdateManyMutationInput, LessonUncheckedUpdateManyWithoutChapterInput>
   }
 
+  export type LessonScalarWhereInput = {
+    AND?: LessonScalarWhereInput | LessonScalarWhereInput[]
+    OR?: LessonScalarWhereInput[]
+    NOT?: LessonScalarWhereInput | LessonScalarWhereInput[]
+    id?: IntFilter<"Lesson"> | number
+    chapterId?: IntFilter<"Lesson"> | number
+    title?: StringFilter<"Lesson"> | string
+    description?: StringNullableFilter<"Lesson"> | string | null
+    type?: EnumLessonTypeFilter<"Lesson"> | $Enums.LessonType
+    videoUrl?: StringNullableFilter<"Lesson"> | string | null
+    videoPublicId?: StringNullableFilter<"Lesson"> | string | null
+    thumbnailUrl?: StringNullableFilter<"Lesson"> | string | null
+    thumbnailPublicId?: StringNullableFilter<"Lesson"> | string | null
+    noteUrl?: StringNullableFilter<"Lesson"> | string | null
+    notePublicId?: StringNullableFilter<"Lesson"> | string | null
+    noteFileType?: StringNullableFilter<"Lesson"> | string | null
+    durationSeconds?: IntNullableFilter<"Lesson"> | number | null
+    content?: StringNullableFilter<"Lesson"> | string | null
+    displayOrder?: IntFilter<"Lesson"> | number
+    isFreePreview?: BoolFilter<"Lesson"> | boolean
+    accessType?: EnumAccessTypeFilter<"Lesson"> | $Enums.AccessType
+    status?: EnumCourseStatusFilter<"Lesson"> | $Enums.CourseStatus
+    quizId?: IntNullableFilter<"Lesson"> | number | null
+    commentsEnabled?: BoolFilter<"Lesson"> | boolean
+    createdAt?: DateTimeFilter<"Lesson"> | Date | string
+    updatedAt?: DateTimeFilter<"Lesson"> | Date | string
+  }
+
+  export type RapidRecallUpsertWithWhereUniqueWithoutChapterInput = {
+    where: RapidRecallWhereUniqueInput
+    update: XOR<RapidRecallUpdateWithoutChapterInput, RapidRecallUncheckedUpdateWithoutChapterInput>
+    create: XOR<RapidRecallCreateWithoutChapterInput, RapidRecallUncheckedCreateWithoutChapterInput>
+  }
+
+  export type RapidRecallUpdateWithWhereUniqueWithoutChapterInput = {
+    where: RapidRecallWhereUniqueInput
+    data: XOR<RapidRecallUpdateWithoutChapterInput, RapidRecallUncheckedUpdateWithoutChapterInput>
+  }
+
+  export type RapidRecallUpdateManyWithWhereWithoutChapterInput = {
+    where: RapidRecallScalarWhereInput
+    data: XOR<RapidRecallUpdateManyMutationInput, RapidRecallUncheckedUpdateManyWithoutChapterInput>
+  }
+
   export type ChapterCreateWithoutLessonsInput = {
     title: string
     displayOrder?: number
@@ -64943,6 +64926,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     course?: CourseCreateNestedOneWithoutChaptersInput
     courseType?: CourseTypeCreateNestedOneWithoutChaptersInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutChapterInput
   }
 
   export type ChapterUncheckedCreateWithoutLessonsInput = {
@@ -64953,6 +64937,7 @@ export namespace Prisma {
     displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutChapterInput
   }
 
   export type ChapterCreateOrConnectWithoutLessonsInput = {
@@ -64990,38 +64975,6 @@ export namespace Prisma {
   export type QuizCreateOrConnectWithoutLessonInput = {
     where: QuizWhereUniqueInput
     create: XOR<QuizCreateWithoutLessonInput, QuizUncheckedCreateWithoutLessonInput>
-  }
-
-  export type SubjectCreateWithoutLessonsInput = {
-    name: string
-    isActive?: boolean
-    displayOrder?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    topics?: TopicCreateNestedManyWithoutSubjectInput
-    courses?: CourseCreateNestedManyWithoutSubjectsInput
-    questions?: QuestionCreateNestedManyWithoutSubjectInput
-    quizzes?: QuizCreateNestedManyWithoutSubjectInput
-    rapidRecalls?: RapidRecallCreateNestedManyWithoutSubjectInput
-  }
-
-  export type SubjectUncheckedCreateWithoutLessonsInput = {
-    id?: number
-    name: string
-    isActive?: boolean
-    displayOrder?: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    topics?: TopicUncheckedCreateNestedManyWithoutSubjectInput
-    courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
-    questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
-    quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
-    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutSubjectInput
-  }
-
-  export type SubjectCreateOrConnectWithoutLessonsInput = {
-    where: SubjectWhereUniqueInput
-    create: XOR<SubjectCreateWithoutLessonsInput, SubjectUncheckedCreateWithoutLessonsInput>
   }
 
   export type LessonPlanCreateWithoutLessonInput = {
@@ -65135,6 +65088,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutRapidRecallsInput
     courseType?: CourseTypeCreateNestedOneWithoutRapidRecallsInput
+    chapter?: ChapterCreateNestedOneWithoutRapidRecallsInput
     subject?: SubjectCreateNestedOneWithoutRapidRecallsInput
     cards?: RapidRecallCardCreateNestedManyWithoutRecallInput
   }
@@ -65143,6 +65097,7 @@ export namespace Prisma {
     id?: number
     courseId: number
     courseTypeId?: number | null
+    chapterId?: number | null
     subjectId?: number | null
     title: string
     description?: string | null
@@ -65184,6 +65139,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneWithoutChaptersNestedInput
     courseType?: CourseTypeUpdateOneWithoutChaptersNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutChapterNestedInput
   }
 
   export type ChapterUncheckedUpdateWithoutLessonsInput = {
@@ -65194,6 +65150,7 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutChapterNestedInput
   }
 
   export type QuizUpsertWithoutLessonInput = {
@@ -65232,44 +65189,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quizQuestions?: QuizQuestionUncheckedUpdateManyWithoutQuizNestedInput
     attempts?: QuizAttemptUncheckedUpdateManyWithoutQuizNestedInput
-  }
-
-  export type SubjectUpsertWithoutLessonsInput = {
-    update: XOR<SubjectUpdateWithoutLessonsInput, SubjectUncheckedUpdateWithoutLessonsInput>
-    create: XOR<SubjectCreateWithoutLessonsInput, SubjectUncheckedCreateWithoutLessonsInput>
-    where?: SubjectWhereInput
-  }
-
-  export type SubjectUpdateToOneWithWhereWithoutLessonsInput = {
-    where?: SubjectWhereInput
-    data: XOR<SubjectUpdateWithoutLessonsInput, SubjectUncheckedUpdateWithoutLessonsInput>
-  }
-
-  export type SubjectUpdateWithoutLessonsInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    displayOrder?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    topics?: TopicUpdateManyWithoutSubjectNestedInput
-    courses?: CourseUpdateManyWithoutSubjectsNestedInput
-    questions?: QuestionUpdateManyWithoutSubjectNestedInput
-    quizzes?: QuizUpdateManyWithoutSubjectNestedInput
-    rapidRecalls?: RapidRecallUpdateManyWithoutSubjectNestedInput
-  }
-
-  export type SubjectUncheckedUpdateWithoutLessonsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    displayOrder?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    topics?: TopicUncheckedUpdateManyWithoutSubjectNestedInput
-    courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
-    questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
-    quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
-    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type LessonPlanUpsertWithWhereUniqueWithoutLessonInput = {
@@ -65382,7 +65301,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
     quiz?: QuizCreateNestedOneWithoutLessonInput
-    subject?: SubjectCreateNestedOneWithoutLessonsInput
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
@@ -65408,7 +65326,6 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
-    subjectId?: number | null
     quizId?: number | null
     commentsEnabled?: boolean
     createdAt?: Date | string
@@ -65499,7 +65416,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
     quiz?: QuizUpdateOneWithoutLessonNestedInput
-    subject?: SubjectUpdateOneWithoutLessonsNestedInput
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
@@ -65525,7 +65441,6 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
     commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -66095,7 +66010,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     topics?: TopicCreateNestedManyWithoutSubjectInput
     courses?: CourseCreateNestedManyWithoutSubjectsInput
-    lessons?: LessonCreateNestedManyWithoutSubjectInput
     quizzes?: QuizCreateNestedManyWithoutSubjectInput
     rapidRecalls?: RapidRecallCreateNestedManyWithoutSubjectInput
   }
@@ -66109,7 +66023,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     topics?: TopicUncheckedCreateNestedManyWithoutSubjectInput
     courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
-    lessons?: LessonUncheckedCreateNestedManyWithoutSubjectInput
     quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
     rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutSubjectInput
   }
@@ -66247,7 +66160,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUpdateManyWithoutSubjectNestedInput
     courses?: CourseUpdateManyWithoutSubjectsNestedInput
-    lessons?: LessonUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUpdateManyWithoutSubjectNestedInput
     rapidRecalls?: RapidRecallUpdateManyWithoutSubjectNestedInput
   }
@@ -66261,7 +66173,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUncheckedUpdateManyWithoutSubjectNestedInput
     courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
-    lessons?: LessonUncheckedUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
     rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutSubjectNestedInput
   }
@@ -66485,7 +66396,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     topics?: TopicCreateNestedManyWithoutSubjectInput
     courses?: CourseCreateNestedManyWithoutSubjectsInput
-    lessons?: LessonCreateNestedManyWithoutSubjectInput
     questions?: QuestionCreateNestedManyWithoutSubjectInput
     rapidRecalls?: RapidRecallCreateNestedManyWithoutSubjectInput
   }
@@ -66499,7 +66409,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     topics?: TopicUncheckedCreateNestedManyWithoutSubjectInput
     courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
-    lessons?: LessonUncheckedCreateNestedManyWithoutSubjectInput
     questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
     rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutSubjectInput
   }
@@ -66556,7 +66465,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
-    subject?: SubjectCreateNestedOneWithoutLessonsInput
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
@@ -66583,7 +66491,6 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
-    subjectId?: number | null
     commentsEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -66667,7 +66574,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUpdateManyWithoutSubjectNestedInput
     courses?: CourseUpdateManyWithoutSubjectsNestedInput
-    lessons?: LessonUpdateManyWithoutSubjectNestedInput
     questions?: QuestionUpdateManyWithoutSubjectNestedInput
     rapidRecalls?: RapidRecallUpdateManyWithoutSubjectNestedInput
   }
@@ -66681,7 +66587,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUncheckedUpdateManyWithoutSubjectNestedInput
     courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
-    lessons?: LessonUncheckedUpdateManyWithoutSubjectNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
     rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutSubjectNestedInput
   }
@@ -66750,7 +66655,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
-    subject?: SubjectUpdateOneWithoutLessonsNestedInput
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
@@ -66777,7 +66681,6 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -67718,7 +67621,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
     quiz?: QuizCreateNestedOneWithoutLessonInput
-    subject?: SubjectCreateNestedOneWithoutLessonsInput
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
@@ -67744,7 +67646,6 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
-    subjectId?: number | null
     quizId?: number | null
     commentsEnabled?: boolean
     createdAt?: Date | string
@@ -67857,7 +67758,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
     quiz?: QuizUpdateOneWithoutLessonNestedInput
-    subject?: SubjectUpdateOneWithoutLessonsNestedInput
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
@@ -67883,7 +67783,6 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
     commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -67974,7 +67873,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
     quiz?: QuizCreateNestedOneWithoutLessonInput
-    subject?: SubjectCreateNestedOneWithoutLessonsInput
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
@@ -68000,7 +67898,6 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
-    subjectId?: number | null
     quizId?: number | null
     commentsEnabled?: boolean
     createdAt?: Date | string
@@ -68113,7 +68010,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
     quiz?: QuizUpdateOneWithoutLessonNestedInput
-    subject?: SubjectUpdateOneWithoutLessonsNestedInput
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
@@ -68139,7 +68035,6 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
     commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -69178,7 +69073,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
     quiz?: QuizCreateNestedOneWithoutLessonInput
-    subject?: SubjectCreateNestedOneWithoutLessonsInput
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
@@ -69204,7 +69098,6 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
-    subjectId?: number | null
     quizId?: number | null
     commentsEnabled?: boolean
     createdAt?: Date | string
@@ -69433,7 +69326,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
     quiz?: QuizUpdateOneWithoutLessonNestedInput
-    subject?: SubjectUpdateOneWithoutLessonsNestedInput
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
@@ -69459,7 +69351,6 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
     commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -70250,6 +70141,32 @@ export namespace Prisma {
     create: XOR<CourseTypeCreateWithoutRapidRecallsInput, CourseTypeUncheckedCreateWithoutRapidRecallsInput>
   }
 
+  export type ChapterCreateWithoutRapidRecallsInput = {
+    title: string
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    course?: CourseCreateNestedOneWithoutChaptersInput
+    courseType?: CourseTypeCreateNestedOneWithoutChaptersInput
+    lessons?: LessonCreateNestedManyWithoutChapterInput
+  }
+
+  export type ChapterUncheckedCreateWithoutRapidRecallsInput = {
+    id?: number
+    courseId?: number | null
+    courseTypeId?: number | null
+    title: string
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lessons?: LessonUncheckedCreateNestedManyWithoutChapterInput
+  }
+
+  export type ChapterCreateOrConnectWithoutRapidRecallsInput = {
+    where: ChapterWhereUniqueInput
+    create: XOR<ChapterCreateWithoutRapidRecallsInput, ChapterUncheckedCreateWithoutRapidRecallsInput>
+  }
+
   export type SubjectCreateWithoutRapidRecallsInput = {
     name: string
     isActive?: boolean
@@ -70258,7 +70175,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     topics?: TopicCreateNestedManyWithoutSubjectInput
     courses?: CourseCreateNestedManyWithoutSubjectsInput
-    lessons?: LessonCreateNestedManyWithoutSubjectInput
     questions?: QuestionCreateNestedManyWithoutSubjectInput
     quizzes?: QuizCreateNestedManyWithoutSubjectInput
   }
@@ -70272,7 +70188,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     topics?: TopicUncheckedCreateNestedManyWithoutSubjectInput
     courses?: CourseUncheckedCreateNestedManyWithoutSubjectsInput
-    lessons?: LessonUncheckedCreateNestedManyWithoutSubjectInput
     questions?: QuestionUncheckedCreateNestedManyWithoutSubjectInput
     quizzes?: QuizUncheckedCreateNestedManyWithoutSubjectInput
   }
@@ -70304,7 +70219,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     chapter: ChapterCreateNestedOneWithoutLessonsInput
     quiz?: QuizCreateNestedOneWithoutLessonInput
-    subject?: SubjectCreateNestedOneWithoutLessonsInput
     lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
@@ -70330,7 +70244,6 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
-    subjectId?: number | null
     quizId?: number | null
     commentsEnabled?: boolean
     createdAt?: Date | string
@@ -70465,6 +70378,38 @@ export namespace Prisma {
     tests?: TestUncheckedUpdateManyWithoutCourseTypeNestedInput
   }
 
+  export type ChapterUpsertWithoutRapidRecallsInput = {
+    update: XOR<ChapterUpdateWithoutRapidRecallsInput, ChapterUncheckedUpdateWithoutRapidRecallsInput>
+    create: XOR<ChapterCreateWithoutRapidRecallsInput, ChapterUncheckedCreateWithoutRapidRecallsInput>
+    where?: ChapterWhereInput
+  }
+
+  export type ChapterUpdateToOneWithWhereWithoutRapidRecallsInput = {
+    where?: ChapterWhereInput
+    data: XOR<ChapterUpdateWithoutRapidRecallsInput, ChapterUncheckedUpdateWithoutRapidRecallsInput>
+  }
+
+  export type ChapterUpdateWithoutRapidRecallsInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    course?: CourseUpdateOneWithoutChaptersNestedInput
+    courseType?: CourseTypeUpdateOneWithoutChaptersNestedInput
+    lessons?: LessonUpdateManyWithoutChapterNestedInput
+  }
+
+  export type ChapterUncheckedUpdateWithoutRapidRecallsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: NullableIntFieldUpdateOperationsInput | number | null
+    courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lessons?: LessonUncheckedUpdateManyWithoutChapterNestedInput
+  }
+
   export type SubjectUpsertWithoutRapidRecallsInput = {
     update: XOR<SubjectUpdateWithoutRapidRecallsInput, SubjectUncheckedUpdateWithoutRapidRecallsInput>
     create: XOR<SubjectCreateWithoutRapidRecallsInput, SubjectUncheckedCreateWithoutRapidRecallsInput>
@@ -70484,7 +70429,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUpdateManyWithoutSubjectNestedInput
     courses?: CourseUpdateManyWithoutSubjectsNestedInput
-    lessons?: LessonUpdateManyWithoutSubjectNestedInput
     questions?: QuestionUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUpdateManyWithoutSubjectNestedInput
   }
@@ -70498,7 +70442,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUncheckedUpdateManyWithoutSubjectNestedInput
     courses?: CourseUncheckedUpdateManyWithoutSubjectsNestedInput
-    lessons?: LessonUncheckedUpdateManyWithoutSubjectNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
   }
@@ -70536,7 +70479,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
     quiz?: QuizUpdateOneWithoutLessonNestedInput
-    subject?: SubjectUpdateOneWithoutLessonsNestedInput
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
@@ -70562,7 +70504,6 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
     commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -70612,6 +70553,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     course: CourseCreateNestedOneWithoutRapidRecallsInput
     courseType?: CourseTypeCreateNestedOneWithoutRapidRecallsInput
+    chapter?: ChapterCreateNestedOneWithoutRapidRecallsInput
     subject?: SubjectCreateNestedOneWithoutRapidRecallsInput
     lesson?: LessonCreateNestedOneWithoutRapidRecallsInput
   }
@@ -70620,6 +70562,7 @@ export namespace Prisma {
     id?: number
     courseId: number
     courseTypeId?: number | null
+    chapterId?: number | null
     subjectId?: number | null
     lessonId?: number | null
     title: string
@@ -70661,6 +70604,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutRapidRecallsNestedInput
     courseType?: CourseTypeUpdateOneWithoutRapidRecallsNestedInput
+    chapter?: ChapterUpdateOneWithoutRapidRecallsNestedInput
     subject?: SubjectUpdateOneWithoutRapidRecallsNestedInput
     lesson?: LessonUpdateOneWithoutRapidRecallsNestedInput
   }
@@ -70669,6 +70613,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     courseId?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    chapterId?: NullableIntFieldUpdateOperationsInput | number | null
     subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     lessonId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
@@ -71464,31 +71409,6 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type LessonCreateManySubjectInput = {
-    id?: number
-    chapterId: number
-    title: string
-    description?: string | null
-    type: $Enums.LessonType
-    videoUrl?: string | null
-    videoPublicId?: string | null
-    thumbnailUrl?: string | null
-    thumbnailPublicId?: string | null
-    noteUrl?: string | null
-    notePublicId?: string | null
-    noteFileType?: string | null
-    durationSeconds?: number | null
-    content?: string | null
-    displayOrder?: number
-    isFreePreview?: boolean
-    accessType?: $Enums.AccessType
-    status?: $Enums.CourseStatus
-    quizId?: number | null
-    commentsEnabled?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
   export type QuestionCreateManySubjectInput = {
     id?: number
     topicId: number
@@ -71518,6 +71438,7 @@ export namespace Prisma {
     id?: number
     courseId: number
     courseTypeId?: number | null
+    chapterId?: number | null
     lessonId?: number | null
     title: string
     description?: string | null
@@ -71616,90 +71537,6 @@ export namespace Prisma {
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     displayOrder?: IntFieldUpdateOperationsInput | number
     createdBy?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type LessonUpdateWithoutSubjectInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
-    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
-    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
-    content?: NullableStringFieldUpdateOperationsInput | string | null
-    displayOrder?: IntFieldUpdateOperationsInput | number
-    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
-    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
-    quiz?: QuizUpdateOneWithoutLessonNestedInput
-    lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
-    savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
-    progress?: LessonProgressUpdateManyWithoutLessonNestedInput
-    comments?: LessonCommentUpdateManyWithoutLessonNestedInput
-    rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
-  }
-
-  export type LessonUncheckedUpdateWithoutSubjectInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    chapterId?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
-    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
-    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
-    content?: NullableStringFieldUpdateOperationsInput | string | null
-    displayOrder?: IntFieldUpdateOperationsInput | number
-    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
-    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    quizId?: NullableIntFieldUpdateOperationsInput | number | null
-    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
-    savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
-    progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
-    comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
-    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
-  }
-
-  export type LessonUncheckedUpdateManyWithoutSubjectInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    chapterId?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
-    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
-    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
-    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
-    content?: NullableStringFieldUpdateOperationsInput | string | null
-    displayOrder?: IntFieldUpdateOperationsInput | number
-    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
-    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
-    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    quizId?: NullableIntFieldUpdateOperationsInput | number | null
-    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -71803,6 +71640,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutRapidRecallsNestedInput
     courseType?: CourseTypeUpdateOneWithoutRapidRecallsNestedInput
+    chapter?: ChapterUpdateOneWithoutRapidRecallsNestedInput
     lesson?: LessonUpdateOneWithoutRapidRecallsNestedInput
     cards?: RapidRecallCardUpdateManyWithoutRecallNestedInput
   }
@@ -71811,6 +71649,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     courseId?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    chapterId?: NullableIntFieldUpdateOperationsInput | number | null
     lessonId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -71828,6 +71667,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     courseId?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    chapterId?: NullableIntFieldUpdateOperationsInput | number | null
     lessonId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -72042,6 +71882,7 @@ export namespace Prisma {
   export type RapidRecallCreateManyCourseInput = {
     id?: number
     courseTypeId?: number | null
+    chapterId?: number | null
     subjectId?: number | null
     lessonId?: number | null
     title: string
@@ -72062,7 +71903,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUpdateManyWithoutSubjectNestedInput
-    lessons?: LessonUpdateManyWithoutSubjectNestedInput
     questions?: QuestionUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUpdateManyWithoutSubjectNestedInput
     rapidRecalls?: RapidRecallUpdateManyWithoutSubjectNestedInput
@@ -72076,7 +71916,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topics?: TopicUncheckedUpdateManyWithoutSubjectNestedInput
-    lessons?: LessonUncheckedUpdateManyWithoutSubjectNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutSubjectNestedInput
     quizzes?: QuizUncheckedUpdateManyWithoutSubjectNestedInput
     rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutSubjectNestedInput
@@ -72098,6 +71937,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     courseType?: CourseTypeUpdateOneWithoutChaptersNestedInput
     lessons?: LessonUpdateManyWithoutChapterNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutChapterNestedInput
   }
 
   export type ChapterUncheckedUpdateWithoutCourseInput = {
@@ -72108,6 +71948,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lessons?: LessonUncheckedUpdateManyWithoutChapterNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutChapterNestedInput
   }
 
   export type ChapterUncheckedUpdateManyWithoutCourseInput = {
@@ -72402,6 +72243,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     courseType?: CourseTypeUpdateOneWithoutRapidRecallsNestedInput
+    chapter?: ChapterUpdateOneWithoutRapidRecallsNestedInput
     subject?: SubjectUpdateOneWithoutRapidRecallsNestedInput
     lesson?: LessonUpdateOneWithoutRapidRecallsNestedInput
     cards?: RapidRecallCardUpdateManyWithoutRecallNestedInput
@@ -72410,6 +72252,7 @@ export namespace Prisma {
   export type RapidRecallUncheckedUpdateWithoutCourseInput = {
     id?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    chapterId?: NullableIntFieldUpdateOperationsInput | number | null
     subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     lessonId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
@@ -72427,6 +72270,7 @@ export namespace Prisma {
   export type RapidRecallUncheckedUpdateManyWithoutCourseInput = {
     id?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    chapterId?: NullableIntFieldUpdateOperationsInput | number | null
     subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     lessonId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
@@ -72483,6 +72327,7 @@ export namespace Prisma {
   export type RapidRecallCreateManyCourseTypeInput = {
     id?: number
     courseId: number
+    chapterId?: number | null
     subjectId?: number | null
     lessonId?: number | null
     title: string
@@ -72503,6 +72348,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneWithoutChaptersNestedInput
     lessons?: LessonUpdateManyWithoutChapterNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutChapterNestedInput
   }
 
   export type ChapterUncheckedUpdateWithoutCourseTypeInput = {
@@ -72513,6 +72359,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lessons?: LessonUncheckedUpdateManyWithoutChapterNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutChapterNestedInput
   }
 
   export type ChapterUncheckedUpdateManyWithoutCourseTypeInput = {
@@ -72656,6 +72503,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutRapidRecallsNestedInput
+    chapter?: ChapterUpdateOneWithoutRapidRecallsNestedInput
     subject?: SubjectUpdateOneWithoutRapidRecallsNestedInput
     lesson?: LessonUpdateOneWithoutRapidRecallsNestedInput
     cards?: RapidRecallCardUpdateManyWithoutRecallNestedInput
@@ -72664,6 +72512,7 @@ export namespace Prisma {
   export type RapidRecallUncheckedUpdateWithoutCourseTypeInput = {
     id?: IntFieldUpdateOperationsInput | number
     courseId?: IntFieldUpdateOperationsInput | number
+    chapterId?: NullableIntFieldUpdateOperationsInput | number | null
     subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     lessonId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
@@ -72681,6 +72530,7 @@ export namespace Prisma {
   export type RapidRecallUncheckedUpdateManyWithoutCourseTypeInput = {
     id?: IntFieldUpdateOperationsInput | number
     courseId?: IntFieldUpdateOperationsInput | number
+    chapterId?: NullableIntFieldUpdateOperationsInput | number | null
     subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     lessonId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
@@ -72712,9 +72562,25 @@ export namespace Prisma {
     isFreePreview?: boolean
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
-    subjectId?: number | null
     quizId?: number | null
     commentsEnabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RapidRecallCreateManyChapterInput = {
+    id?: number
+    courseId: number
+    courseTypeId?: number | null
+    subjectId?: number | null
+    lessonId?: number | null
+    title: string
+    description?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    status?: $Enums.CourseStatus
+    displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -72740,7 +72606,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     quiz?: QuizUpdateOneWithoutLessonNestedInput
-    subject?: SubjectUpdateOneWithoutLessonsNestedInput
     lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
@@ -72766,7 +72631,6 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
     commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -72796,9 +72660,60 @@ export namespace Prisma {
     isFreePreview?: BoolFieldUpdateOperationsInput | boolean
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
-    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
     commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RapidRecallUpdateWithoutChapterInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    course?: CourseUpdateOneRequiredWithoutRapidRecallsNestedInput
+    courseType?: CourseTypeUpdateOneWithoutRapidRecallsNestedInput
+    subject?: SubjectUpdateOneWithoutRapidRecallsNestedInput
+    lesson?: LessonUpdateOneWithoutRapidRecallsNestedInput
+    cards?: RapidRecallCardUpdateManyWithoutRecallNestedInput
+  }
+
+  export type RapidRecallUncheckedUpdateWithoutChapterInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cards?: RapidRecallCardUncheckedUpdateManyWithoutRecallNestedInput
+  }
+
+  export type RapidRecallUncheckedUpdateManyWithoutChapterInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    courseId?: IntFieldUpdateOperationsInput | number
+    courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    subjectId?: NullableIntFieldUpdateOperationsInput | number | null
+    lessonId?: NullableIntFieldUpdateOperationsInput | number | null
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -72835,6 +72750,7 @@ export namespace Prisma {
     id?: number
     courseId: number
     courseTypeId?: number | null
+    chapterId?: number | null
     subjectId?: number | null
     title: string
     description?: string | null
@@ -72946,6 +72862,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     course?: CourseUpdateOneRequiredWithoutRapidRecallsNestedInput
     courseType?: CourseTypeUpdateOneWithoutRapidRecallsNestedInput
+    chapter?: ChapterUpdateOneWithoutRapidRecallsNestedInput
     subject?: SubjectUpdateOneWithoutRapidRecallsNestedInput
     cards?: RapidRecallCardUpdateManyWithoutRecallNestedInput
   }
@@ -72954,6 +72871,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     courseId?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    chapterId?: NullableIntFieldUpdateOperationsInput | number | null
     subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -72971,6 +72889,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     courseId?: IntFieldUpdateOperationsInput | number
     courseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    chapterId?: NullableIntFieldUpdateOperationsInput | number | null
     subjectId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null

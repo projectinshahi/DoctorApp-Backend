@@ -11,7 +11,6 @@ const VALID_STATUSES = ['draft', 'published', 'archived'];
 const LESSON_SELECT = {
   id: true,
   chapterId: true,
-  subjectId: true,
   title: true,
   description: true,
   type: true,
@@ -186,11 +185,6 @@ async function createLesson(req, res) {
       return res.status(400).json({ error: { message: 'Invalid chapter id' } });
     }
 
-    const subjectSelection = await readSubjectId(req.body);
-    if (subjectSelection.error) {
-      return res.status(400).json({ error: { message: subjectSelection.error } });
-    }
-
     const chapter = await prisma.chapter.findUnique({ where: { id: chapterId } });
     if (!chapter) {
       return res.status(404).json({ error: { message: 'Chapter not found' } });
@@ -250,7 +244,6 @@ async function createLesson(req, res) {
         // A quiz lesson's questions come from its Quiz, never from `content`.
         content: type === 'quiz' ? null : (content ?? null),
         quizId: quizSelection.id,
-        subjectId: subjectSelection.id,
         displayOrder: displayOrder !== undefined ? Number(displayOrder) : 0,
         isFreePreview: Boolean(isFreePreview) || false,
         accessType: accessType ?? 'free',
@@ -289,40 +282,20 @@ function announceLesson(lesson, previousStatus, body) {
 }
 
 /**
- * GET /api/lessons?courseId=&courseTypeId=&subjectId=&search=
+ * GET /api/lessons?courseId=&courseTypeId=&chapterId=&search=
  *
- * The picker behind the Rapid Recall form's lesson dropdown: choose a course,
- * an exam type and a subject, and this is the list of lessons to offer.
+ * The lesson dropdown behind the Rapid Recall form. A course is built as
+ * course -> exam type -> chapter -> lesson, and an admin calls the chapter the
+ * subject ("Internal Medicine", "General Surgery"), so filtering by chapterId
+ * is filtering by subject.
  *
  * Chapters carry a courseTypeId and leave courseId null — all of them, in live
  * data — so a course is matched through its exam types as well as directly.
- *
- * A lesson's subject is optional, and a quiz lesson can borrow its quiz's
- * subject. Either way the list holds only lessons of the subject asked for:
- * a dropdown that says "Internal Med" must not offer a Dermatology lesson.
- * `fallback=true` asks for the whole list when nothing matches, for a caller
- * that would rather show something than nothing.
  */
-/**
- * The lesson's subject, when one is sent.
- *
- * Null clears it. The subject has to exist: a dangling id would leave the
- * lesson invisible to the Rapid Recall filter with nothing to show why.
- */
-async function readSubjectId(body) {
-  if (body.subjectId === undefined) return { provided: false, id: null };
-  if (body.subjectId === null || body.subjectId === '') return { provided: true, id: null };
-  const id = Number(body.subjectId);
-  if (!Number.isInteger(id)) return { provided: true, id: null, error: 'subjectId must be an integer or null' };
-  const subject = await prisma.subject.findUnique({ where: { id }, select: { id: true } });
-  if (!subject) return { provided: true, id: null, error: `Subject ${id} not found` };
-  return { provided: true, id };
-}
-
 async function listLessons(req, res) {
   try {
     const ids = {};
-    for (const key of ['courseId', 'courseTypeId', 'subjectId']) {
+    for (const key of ['courseId', 'courseTypeId', 'chapterId']) {
       if (req.query[key] === undefined || req.query[key] === '') continue;
       const value = Number(req.query[key]);
       if (!Number.isInteger(value)) {
@@ -332,7 +305,9 @@ async function listLessons(req, res) {
     }
 
     const where = {};
-    if (ids.courseTypeId !== undefined) {
+    if (ids.chapterId !== undefined) {
+      where.chapterId = ids.chapterId;
+    } else if (ids.courseTypeId !== undefined) {
       where.chapter = { courseTypeId: ids.courseTypeId };
     } else if (ids.courseId !== undefined) {
       where.chapter = {
@@ -343,48 +318,16 @@ async function listLessons(req, res) {
     const search = (req.query.search ?? '').trim();
     if (search !== '') where.title = { contains: search, mode: 'insensitive' };
 
-    const select = {
-      id: true, title: true, type: true, status: true, displayOrder: true,
-      subjectId: true,
-      subject: { select: { id: true, name: true } },
-      quiz: { select: { id: true, subjectId: true } },
-      chapter: { select: { id: true, title: true, courseTypeId: true } },
-    };
-    const orderBy = [{ chapterId: 'asc' }, { displayOrder: 'asc' }];
-
-    let fallback = false;
-    let lessons = [];
-
-    if (ids.subjectId !== undefined) {
-      lessons = await prisma.lesson.findMany({
-        where: {
-          ...where,
-          OR: [{ subjectId: ids.subjectId }, { quiz: { subjectId: ids.subjectId } }],
-        },
-        select, orderBy,
-      });
-
-      // Opt-in only. Widening a subject filter to "everything" on its own puts
-      // other subjects' lessons in a dropdown that says it is showing one
-      // subject, which is worse than showing nothing.
-      if (lessons.length === 0 && req.query.fallback === 'true') {
-        lessons = await prisma.lesson.findMany({ where, select, orderBy });
-        fallback = true;
-      }
-    } else {
-      lessons = await prisma.lesson.findMany({ where, select, orderBy });
-    }
-
-    return res.status(200).json({
-      lessons: lessons.map(({ quiz, ...rest }) => ({
-        ...rest,
-        // Where the subject came from, so the panel can show a quiz lesson's
-        // borrowed subject differently from one an admin set.
-        subjectFromQuiz: rest.subjectId === null && quiz?.subjectId ? quiz.subjectId : null,
-      })),
-      fallback,
-      count: lessons.length,
+    const lessons = await prisma.lesson.findMany({
+      where,
+      select: {
+        id: true, title: true, type: true, status: true, displayOrder: true,
+        chapter: { select: { id: true, title: true, courseTypeId: true } },
+      },
+      orderBy: [{ chapterId: 'asc' }, { displayOrder: 'asc' }],
     });
+
+    return res.status(200).json({ lessons, count: lessons.length });
   } catch (error) {
     console.error('listLessons error:', error);
     return res.status(500).json({ error: { message: 'Failed to list the lessons' } });
@@ -497,12 +440,6 @@ async function updateLesson(req, res) {
     } = req.body;
 
     const data = {};
-
-    const subjectChoice = await readSubjectId(req.body);
-    if (subjectChoice.error) {
-      return res.status(400).json({ error: { message: subjectChoice.error } });
-    }
-    if (subjectChoice.provided) data.subjectId = subjectChoice.id;
 
     if (title !== undefined) {
       if (typeof title !== 'string' || title.trim().length === 0) {
