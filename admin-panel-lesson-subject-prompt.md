@@ -55,23 +55,41 @@ All three parameters are optional and narrow the list:
 ```
 
 - `subject` — the subject an admin set, or null.
-- `subjectFromQuiz` — the subject id borrowed from the lesson's quiz, when no
-  subject was set. Worth showing as "from quiz" so an admin can see which
-  lessons still need tagging.
-- **`fallback: true` means the subject matched nothing**, and the list is every
-  lesson in that course/exam instead. Show a line above the dropdown: *"No
-  lesson is tagged with this subject yet — showing all lessons."* Do not hide
-  the list; an empty dropdown is how this screen failed before.
+- `subjectFromQuiz` — the subject id borrowed from the lesson's quiz. Useful
+  when managing lessons; **not something to show in this dropdown**.
+- `fallback` — always `false` unless you ask for it (see below).
+
+**Show the lesson title alone.** No chapter prefix, no "from quiz" label, no
+id. The dropdown says which subject it is filtered by; repeating it on every
+row is noise:
+
+```
+testing
+cardilogy based test
+```
+
+not
+
+```
+Internal Medicine › testing · from quiz
+```
+
+**An empty list stays empty.** If no lesson carries the chosen subject, show
+*"No lesson for this subject"* in the dropdown. Adding `&fallback=true` returns
+every lesson in the course with `fallback: true`, but don't use it here: a
+dropdown labelled "Internal Med" must not offer a Dermatology lesson.
 
 Call it again whenever course, exam type or subject changes, and clear the
 selected lesson when the list no longer contains it.
 
-## Order and labels
+## Order and duplicates
 
-Lessons come back grouped by chapter, in the order they appear in the course.
-Show the chapter name under or beside the lesson title — two chapters commonly
-hold a lesson of the same name ("Obstetrics" exists as both a video and a text
-lesson today), and the id alone tells an admin nothing.
+Lessons come back in the order they appear in the course, grouped by chapter.
+
+Two lessons can share a title — "Obstetrics" exists today as both a video and a
+text lesson. When two rows in the list have the same title, and only then, add
+the type after it (`Obstetrics (video)`) so they can be told apart. Don't label
+every row for the sake of the rare pair.
 
 ## Errors
 

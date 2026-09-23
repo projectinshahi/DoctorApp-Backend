@@ -298,9 +298,10 @@ function announceLesson(lesson, previousStatus, body) {
  * data — so a course is matched through its exam types as well as directly.
  *
  * A lesson's subject is optional, and a quiz lesson can borrow its quiz's
- * subject. When the filter matches nothing at all, the whole list comes back
- * with `fallback: true` rather than an empty dropdown: an empty one looks
- * broken and leaves the admin with nothing to pick.
+ * subject. Either way the list holds only lessons of the subject asked for:
+ * a dropdown that says "Internal Med" must not offer a Dermatology lesson.
+ * `fallback=true` asks for the whole list when nothing matches, for a caller
+ * that would rather show something than nothing.
  */
 /**
  * The lesson's subject, when one is sent.
@@ -362,9 +363,11 @@ async function listLessons(req, res) {
         },
         select, orderBy,
       });
-      if (lessons.length === 0) {
-        // Nothing carries this subject yet. Offer everything in scope and say
-        // so, the way the subject dropdown already does.
+
+      // Opt-in only. Widening a subject filter to "everything" on its own puts
+      // other subjects' lessons in a dropdown that says it is showing one
+      // subject, which is worse than showing nothing.
+      if (lessons.length === 0 && req.query.fallback === 'true') {
         lessons = await prisma.lesson.findMany({ where, select, orderBy });
         fallback = true;
       }
