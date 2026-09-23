@@ -130,6 +130,11 @@ async function createRapidRecall(req, res) {
       select: RECALL_SELECT,
     });
 
+    // A deck created straight as published is news; a draft is not.
+    if (recall.status === 'published') {
+      require('../services/push.service').notifyRapidRecallPublished(recall).catch(() => {});
+    }
+
     return res.status(201).json({ rapidRecall: shapeRecall(recall) });
   } catch (error) {
     console.error('createRapidRecall error:', error);
@@ -206,7 +211,7 @@ async function updateRapidRecall(req, res) {
 
     const existing = await prisma.rapidRecall.findUnique({
       where: { id },
-      select: { id: true, courseId: true, courseTypeId: true, subjectId: true, lessonId: true },
+      select: { id: true, courseId: true, courseTypeId: true, subjectId: true, lessonId: true, status: true },
     });
     if (!existing) return res.status(404).json({ error: { message: 'Rapid recall not found' } });
 
@@ -254,6 +259,12 @@ async function updateRapidRecall(req, res) {
     }
 
     const updated = await prisma.rapidRecall.update({ where: { id }, data, select: RECALL_SELECT });
+
+    // Only draft -> published. Editing a live deck must not announce it again.
+    if (updated.status === 'published' && existing.status !== 'published') {
+      require('../services/push.service').notifyRapidRecallPublished(updated).catch(() => {});
+    }
+
     return res.status(200).json({ rapidRecall: shapeRecall(updated) });
   } catch (error) {
     console.error('updateRapidRecall error:', error);

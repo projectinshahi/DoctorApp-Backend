@@ -7,6 +7,7 @@ delete process.env.FIREBASE_SERVICE_ACCOUNT;
 const {
   becamePublished, newCourseMessage, notifyCoursePublished, TOPIC,
   studentMessage, isDeadToken, NEW_COURSE_CHANNEL, COURSE_UPDATES_CHANNEL,
+  testPublishedPayload, rapidRecallPayload, quizLessonPayload,
   _messagingClient, _resetForTests,
 } = require('./push.service');
 
@@ -63,6 +64,36 @@ assert.strictEqual(joined.topic, undefined, 'a message to a device must not carr
 assert.strictEqual(joined.data.courseId, '22');
 for (const [k, v] of Object.entries(joined.data)) {
   assert.strictEqual(typeof v, 'string', `data.${k} must be a string`);
+}
+
+// ── new content in a course ──
+
+const contentCases = [
+  ['test (grand)', testPublishedPayload({ id: 9, name: 'DHA Grand Test 3', type: 'grand', courseId: 22 }), 'new_test', 'New grand test', 'DHA Grand Test 3'],
+  ['test (mock)', testPublishedPayload({ id: 9, name: 'Mock 1', type: 'mock', courseId: 22 }), 'new_test', 'New mock test', 'Mock 1'],
+  ['rapid recall', rapidRecallPayload({ id: 4, title: 'Cardiology cards', courseId: 22 }), 'new_rapid_recall', 'New rapid recall', 'Cardiology cards'],
+  ['quiz lesson', quizLessonPayload({ id: 77, title: 'Anatomy quiz', courseId: 22 }), 'new_quiz', 'New quiz', 'Anatomy quiz'],
+];
+
+for (const [label, payload, type, title, body] of contentCases) {
+  assert.strictEqual(payload.title, title, label);
+  assert.strictEqual(payload.body, body, label);
+  assert.strictEqual(payload.data.type, type, label);
+
+  // These are about a course the student already has, not a new course, so
+  // they belong on the channel dr_app created for that.
+  assert.strictEqual(payload.channelId, COURSE_UPDATES_CHANNEL, label);
+
+  // The app needs the course id to decide whether the tap is worth following.
+  assert.strictEqual(payload.data.courseId, 22, label);
+
+  // Built through studentMessage, every value ends up a string — FCM rejects
+  // the whole message otherwise.
+  const built = studentMessage(payload);
+  for (const [k, v] of Object.entries(built.data)) {
+    assert.strictEqual(typeof v, 'string', `${label}: data.${k} must be a string`);
+  }
+  assert.strictEqual(built.topic, undefined, `${label}: a device message carries no topic`);
 }
 
 // ── which failures mean "forget this device" ──

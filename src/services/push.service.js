@@ -184,26 +184,134 @@ async function notifyStudent(userId, payload) {
     return { sent: 0, reason: 'not configured' };
   }
 
-  const tokens = rows.map((r) => r.token);
-  try {
-    const result = await client.sendEachForMulticast({ ...message, tokens });
+  return sendToTokens(rows.map((r) => r.token), message, `student ${userId}`);
+}
 
-    const dead = [];
-    result.responses.forEach((r, i) => {
-      if (!r.success && isDeadToken(r.error && r.error.code)) dead.push(tokens[i]);
-    });
-    if (dead.length > 0) {
-      // Left in place, a dead token makes every future send to this student
-      // report a failure that nobody can act on.
-      await prisma.fcmToken.deleteMany({ where: { token: { in: dead } } });
+// FCM refuses a multicast with more than this many tokens, so a popular
+// course has to go out in several calls.
+const FCM_BATCH = 500;
+
+/**
+ * Delivers one message to many devices, and forgets the dead ones.
+ *
+ * Shared by the per-student and per-course senders: the batching and the
+ * pruning are the same work either way.
+ */
+async function sendToTokens(tokens, message, label) {
+  const prisma = require('../db');
+  const client = getMessaging();
+  const dead = [];
+  let sent = 0;
+  let failed = 0;
+
+  for (let i = 0; i < tokens.length; i += FCM_BATCH) {
+    const batch = tokens.slice(i, i + FCM_BATCH);
+    try {
+      const result = await client.sendEachForMulticast({ ...message, tokens: batch });
+      sent += result.successCount;
+      failed += result.failureCount;
+      result.responses.forEach((r, j) => {
+        if (!r.success && isDeadToken(r.error && r.error.code)) dead.push(batch[j]);
+      });
+    } catch (error) {
+      console.error(`[push] failed to notify ${label}:`, error.message);
+      return { sent, failed: tokens.length - sent, reason: error.message };
     }
-
-    console.log(`[push] student ${userId}: ${result.successCount}/${tokens.length} delivered, ${dead.length} stale token(s) removed`);
-    return { sent: result.successCount, failed: result.failureCount, pruned: dead.length };
-  } catch (error) {
-    console.error(`[push] failed to notify student ${userId}:`, error.message);
-    return { sent: 0, reason: error.message };
   }
+
+  if (dead.length > 0) {
+    // Left in place, a dead token makes every future send report a failure
+    // that nobody can act on.
+    await prisma.fcmToken.deleteMany({ where: { token: { in: dead } } });
+  }
+
+  console.log(`[push] ${label}: ${sent}/${tokens.length} delivered, ${dead.length} stale token(s) removed`);
+  return { sent, failed, pruned: dead.length };
+}
+
+// ── messages to everyone studying one course ───────────────────────────────
+//
+// "Studying" means the course the student has selected. A test or a deck
+// scoped to one exam (courseTypeId) goes only to the students on that exam;
+// DHA and MOHAP share a course, and the other exam's students would find the
+// content missing when they opened it.
+
+async function notifyCourseStudents({ courseId, courseTypeId }, payload) {
+  const prisma = require('../db');
+  const user = { selectedCourseId: courseId };
+  if (courseTypeId !== null && courseTypeId !== undefined) {
+    user.selectedCourseTypeId = courseTypeId;
+  }
+
+  const rows = await prisma.fcmToken.findMany({ where: { user }, select: { token: true } });
+  const message = studentMessage(payload);
+  const label = `course ${courseId}${user.selectedCourseTypeId ? `/type ${user.selectedCourseTypeId}` : ''}`;
+
+  if (rows.length === 0) return { sent: 0, reason: 'no devices registered' };
+
+  if (!getMessaging()) {
+    console.log(`[push] would notify ${label} (${rows.length} device(s)):`, JSON.stringify({ ...message.notification, ...message.data }));
+    return { sent: 0, reason: 'not configured' };
+  }
+
+  return sendToTokens(rows.map((r) => r.token), message, label);
+}
+
+// The payloads, kept pure so the tests can check them without a database.
+
+function testPublishedPayload(test) {
+  return {
+    title: test.type === 'grand' ? 'New grand test' : 'New mock test',
+    body: test.name,
+    data: { type: 'new_test', testId: test.id, courseId: test.courseId },
+    channelId: COURSE_UPDATES_CHANNEL,
+  };
+}
+
+function rapidRecallPayload(recall) {
+  return {
+    title: 'New rapid recall',
+    body: recall.title,
+    data: { type: 'new_rapid_recall', rapidRecallId: recall.id, courseId: recall.courseId },
+    channelId: COURSE_UPDATES_CHANNEL,
+  };
+}
+
+function quizLessonPayload(lesson) {
+  return {
+    title: 'New quiz',
+    body: lesson.title,
+    data: { type: 'new_quiz', lessonId: lesson.id, courseId: lesson.courseId },
+    channelId: COURSE_UPDATES_CHANNEL,
+  };
+}
+
+/** A published test, announced to the students sitting that exam. */
+async function notifyTestPublished(test) {
+  return notifyCourseStudents(test, testPublishedPayload(test));
+}
+
+/** A published rapid recall deck. */
+async function notifyRapidRecallPublished(recall) {
+  return notifyCourseStudents(recall, rapidRecallPayload(recall));
+}
+
+/**
+ * A quiz lesson that just went live.
+ *
+ * A lesson only knows its chapter, so the course is looked up here rather
+ * than in every controller that publishes one.
+ */
+async function notifyQuizLessonPublished(lesson) {
+  const prisma = require('../db');
+  const chapter = await prisma.chapter.findUnique({
+    where: { id: lesson.chapterId },
+    select: { courseId: true, courseTypeId: true },
+  });
+  // Chapters may sit outside any course; there is nobody to tell.
+  if (!chapter || chapter.courseId === null) return { sent: 0, reason: 'lesson is not under a course' };
+
+  return notifyCourseStudents(chapter, quizLessonPayload({ ...lesson, courseId: chapter.courseId }));
 }
 
 /**
@@ -223,9 +331,11 @@ async function notifyCourseJoined(userId, course) {
 
 module.exports = {
   notifyCoursePublished, notifyStudent, notifyCourseJoined,
+  notifyCourseStudents, notifyTestPublished, notifyRapidRecallPublished, notifyQuizLessonPublished,
   // Exported for push.test.js.
   becamePublished, newCourseMessage, TOPIC, NEW_COURSE_CHANNEL, COURSE_UPDATES_CHANNEL,
   studentMessage, isDeadToken,
+  testPublishedPayload, rapidRecallPayload, quizLessonPayload,
   _messagingClient: getMessaging,
   _resetForTests() { messaging = null; initialised = false; },
 };

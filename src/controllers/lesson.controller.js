@@ -253,6 +253,8 @@ async function createLesson(req, res) {
       select: LESSON_SELECT,
     });
 
+    announceQuizLesson(lesson, null);
+
     return res.status(201).json({ lesson: shapeLesson(lesson) });
   } catch (error) {
     console.error('Create lesson error:', error);
@@ -261,6 +263,19 @@ async function createLesson(req, res) {
 }
 
 
+
+/**
+ * Announces a quiz lesson the moment students can see it.
+ *
+ * Only quiz lessons, only on the draft -> published step, and never awaited.
+ * Publishing is the deliberate act; a lesson saved repeatedly while being
+ * built would otherwise notify the whole course each time.
+ */
+function announceQuizLesson(lesson, previousStatus) {
+  if (lesson.type !== 'quiz' || lesson.quizId === null) return;
+  if (lesson.status !== 'published' || previousStatus === 'published') return;
+  require('../services/push.service').notifyQuizLessonPublished(lesson).catch(() => {});
+}
 
 async function getLesson(req, res) {
   try {
@@ -496,6 +511,8 @@ async function updateLesson(req, res) {
       data,
       select: LESSON_SELECT,
     });
+
+    announceQuizLesson(lesson, existing.status);
 
     return res.status(200).json({ lesson: shapeLesson(lesson) });
   } catch (error) {

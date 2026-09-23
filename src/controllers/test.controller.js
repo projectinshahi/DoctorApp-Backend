@@ -582,6 +582,13 @@ async function publishTest(req, res) {
       where: { id: testId }, data: { isPublished }, select: TEST_SELECT,
     });
 
+    // Only the moment it goes live, and never awaited: republishing after a
+    // typo fix would announce the same paper twice, and a slow or failing
+    // Firebase must not fail the admin's publish.
+    if (isPublished && !test.isPublished) {
+      require('../services/push.service').notifyTestPublished(updated).catch(() => {});
+    }
+
     return res.status(200).json({ test: shapeTest(updated) });
   } catch (error) {
     console.error('publishTest error:', error);
