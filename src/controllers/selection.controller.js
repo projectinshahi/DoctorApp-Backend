@@ -7,6 +7,13 @@ async function selectCourse(req, res) {
     const userId = req.user.userId;
     const { courseId, courseTypeId } = req.body;
 
+    // Read before the write: the update returns the new course, not the old
+    // one, and re-selecting the same course must not say "you joined" again.
+    const before = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { selectedCourseId: true },
+    });
+
     if (!courseId && !courseTypeId) {
       return res.status(400).json({
         error: { message: 'At least one of courseId or courseTypeId is required' },
@@ -56,6 +63,15 @@ async function selectCourse(req, res) {
         selectedCourseType: true,
       },
     });
+
+    // Only when the course actually changed, and never awaited: a student
+    // should not wait on Firebase to finish choosing a course, and a failed
+    // notification must not fail the request.
+    if (updatedUser.selectedCourse && before?.selectedCourseId !== updatedUser.selectedCourseId) {
+      require('../services/push.service')
+        .notifyCourseJoined(userId, updatedUser.selectedCourse)
+        .catch(() => {});
+    }
 
     return res.status(200).json({
       selectedCourse: updatedUser.selectedCourse,

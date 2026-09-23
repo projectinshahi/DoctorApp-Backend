@@ -19,6 +19,7 @@ const {
 const {
   listStudentRapidRecalls, getStudentRapidRecall,
 } = require('../controllers/rapidRecall.controller');
+const { registerFcmToken, deleteFcmToken } = require('../controllers/fcmToken.controller');
 const {
   listTests: listStudentTests, startTestAttempt, answerTestQuestion,
   clearTestAnswer, submitTestAttempt, getTestResult, getTestLeaderboard,
@@ -88,5 +89,11 @@ router.get('/courses/:courseId/daily-quiz/history', authenticateStudent, dailyQu
 // Rapid Recall — revision cards for the student's selected course.
 router.get('/rapid-recalls', authenticateStudent, listStudentRapidRecalls);
 router.get('/rapid-recalls/:id', authenticateStudent, getStudentRapidRecall);
+
+// Push notification devices. The student comes from the auth token, never the
+// URL — an id in the path would let anyone register a phone against someone
+// else's account and receive their notifications.
+router.post('/fcm-token', authenticateStudent, registerFcmToken);
+router.delete('/fcm-token', authenticateStudent, deleteFcmToken);
 
 module.exports = router;

@@ -499,6 +499,15 @@ exports.Prisma.RapidRecallCardScalarFieldEnum = {
   displayOrder: 'displayOrder'
 };
 
+exports.Prisma.FcmTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  platform: 'platform',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -584,7 +593,8 @@ exports.Prisma.ModelName = {
   DailyQuizAttempt: 'DailyQuizAttempt',
   DailyQuizAnswer: 'DailyQuizAnswer',
   RapidRecall: 'RapidRecall',
-  RapidRecallCard: 'RapidRecallCard'
+  RapidRecallCard: 'RapidRecallCard',
+  FcmToken: 'FcmToken'
 };
 
 /**

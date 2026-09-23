@@ -38,6 +38,7 @@ model User {
   comments       LessonComment[]
   commentReports CommentReport[]
   dailyQuizzes   DailyQuizAttempt[]
+  fcmTokens      FcmToken[]
 
   selectedCourseId     Int?
   selectedCourseTypeId Int?
@@ -862,4 +863,27 @@ model RapidRecallCard {
 
   @@index([recallId, displayOrder])
   @@map("rapid_recall_cards")
+}
+
+
+/// A device that can receive push notifications for a student.
+///
+/// The token is unique on its own, not per student. A registration token
+/// belongs to an app INSTALL, not a person — so when a phone changes hands and
+/// someone else signs in, the token has to move to them. Keyed per student
+/// instead, the row would linger and the previous student's notifications
+/// would keep arriving on a phone they no longer own.
+model FcmToken {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  token     String   @unique
+  // "android" | "ios". Null when the app did not say.
+  platform  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("fcm_tokens")
 }

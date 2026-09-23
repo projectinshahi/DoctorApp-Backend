@@ -6,6 +6,7 @@ delete process.env.FIREBASE_SERVICE_ACCOUNT;
 
 const {
   becamePublished, newCourseMessage, notifyCoursePublished, TOPIC,
+  studentMessage, isDeadToken, NEW_COURSE_CHANNEL, COURSE_UPDATES_CHANNEL,
   _messagingClient, _resetForTests,
 } = require('./push.service');
 
@@ -37,6 +38,48 @@ for (const [key, value] of Object.entries(msg.data)) {
 }
 assert.strictEqual(msg.data.courseId, '22');
 assert.strictEqual(msg.data.type, 'new_course');
+
+
+// ── messages to one student ──
+
+const joined = studentMessage({
+  title: 'You joined a new course!',
+  body: 'Welcome to GP License Exam',
+  data: { type: 'course_join', courseId: 22 },
+  channelId: COURSE_UPDATES_CHANNEL,
+});
+
+assert.strictEqual(joined.notification.title, 'You joined a new course!');
+
+// dr_app files course_join on course_updates. A channel id the app never
+// created falls back to Android's default, and the same notification would
+// land on two channels depending on whether the app was open.
+assert.strictEqual(joined.android.notification.channelId, 'course_updates');
+assert.strictEqual(studentMessage({ title: 'x', body: 'y' }).android.notification.channelId, NEW_COURSE_CHANNEL);
+assert.strictEqual(joined.topic, undefined, 'a message to a device must not carry a topic');
+
+// FCM rejects the whole message if any data value is not a string, and a
+// numeric course id is the easiest way to hit that.
+assert.strictEqual(joined.data.courseId, '22');
+for (const [k, v] of Object.entries(joined.data)) {
+  assert.strictEqual(typeof v, 'string', `data.${k} must be a string`);
+}
+
+// ── which failures mean "forget this device" ──
+
+assert.strictEqual(isDeadToken('messaging/registration-token-not-registered'), true);
+assert.strictEqual(isDeadToken('messaging/invalid-registration-token'), true);
+
+// A malformed message reports invalid-argument against every token. Treating
+// that as a dead device would delete every working phone the student owns the
+// first time a bad payload went out.
+assert.strictEqual(isDeadToken('messaging/invalid-argument'), false);
+
+// Transient failures keep the token.
+assert.strictEqual(isDeadToken('messaging/server-unavailable'), false);
+assert.strictEqual(isDeadToken('messaging/internal-error'), false);
+assert.strictEqual(isDeadToken(undefined), false);
+assert.strictEqual(isDeadToken(null), false);
 
 
 // ── never throws, even unconfigured ──
