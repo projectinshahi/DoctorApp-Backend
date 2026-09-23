@@ -62,6 +62,7 @@ app.use('/admin', adminRoutes);
 app.use('/api/admin', testRoutes);
 app.use('/api/admin', rapidRecallRoutes);
 app.use('/api/admin', require('./routes/push.routes'));
+app.use('/api/admin', require('./routes/webUser.routes'));
 app.use('/api', planRoutes);
 app.use('/api/users/me/subscription-status', subscriptionRoutes);
 app.use('/api/users/me/subscribe', subscribeRoutes);
