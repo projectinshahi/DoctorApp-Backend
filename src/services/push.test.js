@@ -7,7 +7,7 @@ delete process.env.FIREBASE_SERVICE_ACCOUNT;
 const {
   becamePublished, newCourseMessage, notifyCoursePublished, TOPIC,
   studentMessage, isDeadToken, NEW_COURSE_CHANNEL, COURSE_UPDATES_CHANNEL,
-  testPublishedPayload, rapidRecallPayload, quizLessonPayload,
+  testPublishedPayload, rapidRecallPayload, quizLessonPayload, subjectQuestionsPayload,
   _messagingClient, _resetForTests,
 } = require('./push.service');
 
@@ -94,6 +94,21 @@ for (const [label, payload, type, title, body] of contentCases) {
     assert.strictEqual(typeof v, 'string', `${label}: data.${k} must be a string`);
   }
   assert.strictEqual(built.topic, undefined, `${label}: a device message carries no topic`);
+}
+
+// ── new questions in a subject ──
+
+const many = subjectQuestionsPayload({ id: 3, name: 'Anatomy' }, 25);
+assert.strictEqual(many.title, 'New questions in Anatomy');
+assert.strictEqual(many.body, '25 new practice questions added');
+assert.strictEqual(many.data.type, 'new_questions');
+assert.strictEqual(many.channelId, COURSE_UPDATES_CHANNEL);
+
+// An import of one must not read "1 new practice questions added".
+assert.strictEqual(subjectQuestionsPayload({ id: 3, name: 'Anatomy' }, 1).body, '1 new practice question added');
+
+for (const [k, v] of Object.entries(studentMessage(many).data)) {
+  assert.strictEqual(typeof v, 'string', `data.${k} must be a string`);
 }
 
 // ── which failures mean "forget this device" ──

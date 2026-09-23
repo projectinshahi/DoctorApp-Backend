@@ -329,13 +329,76 @@ async function notifyCourseJoined(userId, course) {
   });
 }
 
+
+// ── new questions in a subject ─────────────────────────────────────────────
+//
+// A question belongs to a subject, not to a course, so the students to tell
+// are the ones whose course uses that subject. A course can use one in two
+// ways: it lists the subject itself, or one of its lessons carries a quiz
+// drawn from that subject.
+
+async function coursesUsingSubject(subjectId) {
+  const prisma = require('../db');
+  const [listed, viaQuizzes] = await Promise.all([
+    prisma.course.findMany({ where: { subjects: { some: { id: subjectId } } }, select: { id: true } }),
+    prisma.chapter.findMany({
+      where: { courseId: { not: null }, lessons: { some: { quiz: { subjectId } } } },
+      select: { courseId: true },
+    }),
+  ]);
+  return [...new Set([...listed.map((c) => c.id), ...viaQuizzes.map((c) => c.courseId)])];
+}
+
+function subjectQuestionsPayload(subject, count) {
+  return {
+    title: `New questions in ${subject.name}`,
+    body: count === 1 ? '1 new practice question added' : `${count} new practice questions added`,
+    data: { type: 'new_questions', subjectId: subject.id, count },
+    channelId: COURSE_UPDATES_CHANNEL,
+  };
+}
+
+/**
+ * Announces a batch of new questions to everyone whose course uses the subject.
+ *
+ * Silent when nothing links the subject to a course: sending it to everyone
+ * instead would tell DHA students about questions they will never see.
+ */
+async function notifySubjectQuestions(subjectId, count) {
+  const prisma = require('../db');
+  const subject = await prisma.subject.findUnique({ where: { id: subjectId }, select: { id: true, name: true } });
+  if (!subject) return { sent: 0, reason: 'subject not found' };
+
+  const courseIds = await coursesUsingSubject(subjectId);
+  if (courseIds.length === 0) {
+    console.log(`[push] ${subject.name}: no course uses this subject yet, nothing sent`);
+    return { sent: 0, reason: 'subject is not linked to any course' };
+  }
+
+  const rows = await prisma.fcmToken.findMany({
+    where: { user: { selectedCourseId: { in: courseIds } } },
+    select: { token: true },
+  });
+  if (rows.length === 0) return { sent: 0, reason: 'no devices registered' };
+
+  const message = studentMessage(subjectQuestionsPayload(subject, count));
+  const label = `subject ${subject.name} (course ${courseIds.join(', ')})`;
+  if (!getMessaging()) {
+    console.log(`[push] would notify ${label} (${rows.length} device(s)):`, JSON.stringify({ ...message.notification, ...message.data }));
+    return { sent: 0, reason: 'not configured' };
+  }
+
+  return sendToTokens(rows.map((r) => r.token), message, label);
+}
+
 module.exports = {
   notifyCoursePublished, notifyStudent, notifyCourseJoined,
   notifyCourseStudents, notifyTestPublished, notifyRapidRecallPublished, notifyQuizLessonPublished,
+  notifySubjectQuestions, coursesUsingSubject,
   // Exported for push.test.js.
   becamePublished, newCourseMessage, TOPIC, NEW_COURSE_CHANNEL, COURSE_UPDATES_CHANNEL,
   studentMessage, isDeadToken,
-  testPublishedPayload, rapidRecallPayload, quizLessonPayload,
+  testPublishedPayload, rapidRecallPayload, quizLessonPayload, subjectQuestionsPayload,
   _messagingClient: getMessaging,
   _resetForTests() { messaging = null; initialised = false; },
 };

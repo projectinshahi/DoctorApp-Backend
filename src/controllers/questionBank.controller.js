@@ -464,6 +464,18 @@ async function bulkCreateQuestions(req, res) {
       rows.map((data) => prisma.question.create({ data, select: QUESTION_SELECT })),
     );
 
+    // One notification per subject, never one per question: an import lands
+    // in hundreds. `notify: false` silences it while a course is being
+    // loaded, which is most imports.
+    if (req.body?.notify !== false) {
+      const countBySubject = new Map();
+      for (const q of created) countBySubject.set(q.subjectId, (countBySubject.get(q.subjectId) ?? 0) + 1);
+      const push = require('../services/push.service');
+      for (const [subjectId, count] of countBySubject) {
+        push.notifySubjectQuestions(subjectId, count).catch(() => {});
+      }
+    }
+
     return res.status(201).json({
       created: created.length,
       questions: created.map(shapeQuestion),
