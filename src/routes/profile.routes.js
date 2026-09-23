@@ -91,6 +91,10 @@ router.get('/courses/:courseId/daily-quiz/history', authenticateStudent, dailyQu
 router.get('/rapid-recalls', authenticateStudent, listStudentRapidRecalls);
 router.get('/rapid-recalls/:id', authenticateStudent, getStudentRapidRecall);
 
+// The pricing cards for the course this student has selected, with what they
+// already hold — the subscribe screen needs both to know what to draw.
+router.get('/plans', authenticateStudent, require('../controllers/plan.controller').getMyCoursePlans);
+
 // The notifications screen. Scoped to the course the student has selected
 // now, so switching course switches the list.
 router.get('/notifications', authenticateStudent, listNotifications);

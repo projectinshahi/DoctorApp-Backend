@@ -118,6 +118,41 @@ the easiest way to fill a "filter by plan" dropdown.
 `features` is sales copy for the card. `entitlements` are access codes the app
 checks. They are separate on purpose; don't show entitlements to anyone.
 
+### The signed-in student's own course — **student token**
+
+`GET /api/users/me/plans`
+
+Everything the subscribe screen needs in one call: the selected course, its
+active plans with features and duration, and what the student already holds.
+
+```json
+{ "hasCourseSelected": true,
+  "isPremiumCourse": true,
+  "course": { "id": 22, "title": "GP GULF LICENSING EXAM", "description": "...", "accessType": "premium" },
+  "plans": [
+    { "id": 15, "title": "Plan B", "description": "...",
+      "price": 85, "currency": "USD",
+      "durationDays": 45, "durationLabel": "45 days access",
+      "features": ["Mock Test", "Rapid Recalls"],
+      "accentColor": "#0EA5E9", "displayOrder": 1,
+      "isCurrent": false }
+  ],
+  "currentSubscription": {
+    "id": 5, "planId": 7, "plan": { "id": 7, "title": "Onam offere price" },
+    "startDate": "...", "endDate": "...", "daysLeft": 14 } }
+```
+
+- `hasCourseSelected: false` means they have not chosen a course yet — send
+  them to the course picker, not to an empty pricing screen.
+- `isCurrent` marks the card they are on, so it reads "Your plan" instead of a
+  Buy button.
+- `currentSubscription` can name a plan that is **not** in `plans`: a student
+  keeps a plan that has since been taken off sale. Draw the banner from
+  `currentSubscription`, not by looking the plan up in the list.
+- `daysLeft` is how many days remain; use it for "14 days left".
+- `entitlements` are deliberately absent. They are the codes the server checks
+  to unlock content, and access is decided there, never on the phone.
+
 ### One course's plans — **public, no token**
 
 `GET /api/courses/:courseId/plans` → `{ "plans": [ ... ] }`

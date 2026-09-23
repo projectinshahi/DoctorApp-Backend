@@ -246,6 +246,74 @@ async function getPricing(req, res) {
   }
 }
 
+/**
+ * GET /api/users/me/plans
+ *
+ * The pricing cards for the course this student has selected, plus what they
+ * already hold. One call, because the app cannot draw the screen without both:
+ * a student with a live subscription must see "your plan", not a Buy button.
+ *
+ * Entitlements are left out. They are the codes the server checks to unlock
+ * content, and a client that reads them invites the temptation to decide
+ * access on the phone.
+ */
+async function getMyCoursePlans(req, res) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.userId },
+      select: {
+        selectedCourseId: true,
+        selectedCourse: {
+          select: { id: true, title: true, description: true, accessType: true },
+        },
+      },
+    });
+
+    if (!user?.selectedCourseId) {
+      return res.status(200).json({
+        hasCourseSelected: false, course: null, plans: [], currentSubscription: null,
+      });
+    }
+
+    const now = new Date();
+    const [plans, subscription] = await Promise.all([
+      prisma.plan.findMany({
+        where: { courseId: user.selectedCourseId, isActive: true },
+        orderBy: [{ displayOrder: 'asc' }, { price: 'asc' }],
+      }),
+      // Their live one, if any. Same test the access check uses: the stored
+      // isActive flag is never cleared when a plan runs out.
+      prisma.subscription.findFirst({
+        where: { userId: req.user.userId, courseId: user.selectedCourseId, isActive: true, endDate: { gte: now } },
+        orderBy: { endDate: 'desc' },
+        select: { id: true, planId: true, startDate: true, endDate: true, plan: { select: { id: true, title: true } } },
+      }),
+    ]);
+
+    return res.status(200).json({
+      hasCourseSelected: true,
+      course: user.selectedCourse,
+      // A free course still lists its plans, if it has any; the app decides
+      // whether to show the section from this flag rather than from an empty
+      // list, which would also mean "nothing is on sale yet".
+      isPremiumCourse: user.selectedCourse.accessType === 'premium',
+      plans: plans.map((plan) => {
+        const { entitlements, ...rest } = shapePlan(plan);
+        return { ...rest, isCurrent: subscription?.planId === plan.id };
+      }),
+      currentSubscription: subscription
+        ? {
+            ...subscription,
+            daysLeft: Math.ceil((subscription.endDate.getTime() - now.getTime()) / 86400000),
+          }
+        : null,
+    });
+  } catch (error) {
+    console.error('getMyCoursePlans error:', error);
+    return res.status(500).json({ error: { message: 'Failed to load the plans for your course' } });
+  }
+}
+
 // DELETE /api/plans/:id
 async function deletePlan(req, res) {
   try {
@@ -287,6 +355,7 @@ async function deletePlan(req, res) {
 
 module.exports = {
   createPlan, getPlansForCourse, getPlanById, updatePlan, deletePlan, getPricing,
+  getMyCoursePlans,
   // Shared with course.controller.js so plans written during course creation
   // land in the same shape the plan editor produces.
   readPlanFields, shapePlan, VALID_ENTITLEMENTS, derivedDurationLabel,
