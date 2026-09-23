@@ -92,10 +92,19 @@ nothing to remove — signing out twice is not an error.
 
 ## What the backend sends
 
-| When | Sent to | `data.type` | Android channel |
-|---|---|---|---|
-| A course is published | the `all-students` topic | `new_course` | `new_courses` |
-| The student picks a course | that student's devices | `course_join` | `course_updates` |
+| When | Sent to | `data.type` | Extra data | Android channel |
+|---|---|---|---|---|
+| A course is published | the `all-students` topic | `new_course` | `courseId` | `new_courses` |
+| The student picks a course | that student's devices | `course_join` | `courseId` | `course_updates` |
+| A test is published | devices of students on that course (and that exam type) | `new_test` | `testId`, `courseId` | `course_updates` |
+| A rapid recall deck is published | same | `new_rapid_recall` | `rapidRecallId`, `courseId` | `course_updates` |
+| A quiz lesson is published | same | `new_quiz` | `lessonId`, `courseId` | `course_updates` |
+
+The last three are new. `onOpen` should route them the way `course_join`
+already routes: `new_test` to the tests list (or straight to `testId`),
+`new_rapid_recall` to rapid recall, `new_quiz` to the lesson. An unknown
+`type` must keep doing what it does today — open the app and nothing else —
+so an older build never crashes on a type added later.
 
 `course_join` carries `{"type": "course_join", "courseId": "22"}` — all values
 are strings, because FCM rejects a message with a numeric one. The channels
