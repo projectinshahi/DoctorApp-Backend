@@ -7,7 +7,7 @@ delete process.env.FIREBASE_SERVICE_ACCOUNT;
 const {
   becamePublished, newCourseMessage, notifyCoursePublished, TOPIC,
   studentMessage, isDeadToken, NEW_COURSE_CHANNEL, COURSE_UPDATES_CHANNEL,
-  testPublishedPayload, rapidRecallPayload, quizLessonPayload, subjectQuestionsPayload,
+  testPublishedPayload, rapidRecallPayload, lessonPayload, subjectQuestionsPayload,
   _messagingClient, _resetForTests,
 } = require('./push.service');
 
@@ -72,7 +72,10 @@ const contentCases = [
   ['test (grand)', testPublishedPayload({ id: 9, name: 'DHA Grand Test 3', type: 'grand', courseId: 22 }), 'new_test', 'New grand test', 'DHA Grand Test 3'],
   ['test (mock)', testPublishedPayload({ id: 9, name: 'Mock 1', type: 'mock', courseId: 22 }), 'new_test', 'New mock test', 'Mock 1'],
   ['rapid recall', rapidRecallPayload({ id: 4, title: 'Cardiology cards', courseId: 22 }), 'new_rapid_recall', 'New rapid recall', 'Cardiology cards'],
-  ['quiz lesson', quizLessonPayload({ id: 77, title: 'Anatomy quiz', courseId: 22 }), 'new_quiz', 'New quiz', 'Anatomy quiz'],
+  ['quiz lesson', lessonPayload({ id: 77, title: 'Anatomy quiz', type: 'quiz', courseId: 22 }), 'new_quiz', 'New quiz', 'Anatomy quiz'],
+  ['video lesson', lessonPayload({ id: 78, title: 'The heart', type: 'video', courseId: 22 }), 'new_lesson', 'New video lesson', 'The heart'],
+  ['note lesson', lessonPayload({ id: 79, title: 'Renal notes', type: 'note', courseId: 22 }), 'new_lesson', 'New notes', 'Renal notes'],
+  ['other lesson', lessonPayload({ id: 80, title: 'Intro', type: 'text', courseId: 22 }), 'new_lesson', 'New lesson', 'Intro'],
 ];
 
 for (const [label, payload, type, title, body] of contentCases) {

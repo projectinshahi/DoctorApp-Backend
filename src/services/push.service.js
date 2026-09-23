@@ -277,11 +277,21 @@ function rapidRecallPayload(recall) {
   };
 }
 
-function quizLessonPayload(lesson) {
+// What a lesson is called in the notification. The type is the useful part:
+// "New video" tells a student whether they have twenty minutes for this.
+const LESSON_TITLES = { quiz: 'New quiz', video: 'New video lesson', note: 'New notes' };
+
+function lessonPayload(lesson) {
   return {
-    title: 'New quiz',
+    title: LESSON_TITLES[lesson.type] ?? 'New lesson',
     body: lesson.title,
-    data: { type: 'new_quiz', lessonId: lesson.id, courseId: lesson.courseId },
+    data: {
+      // Quiz lessons keep their own type: the app already routes it, and a
+      // quiz opens somewhere different from a video.
+      type: lesson.type === 'quiz' ? 'new_quiz' : 'new_lesson',
+      lessonId: lesson.id,
+      courseId: lesson.courseId,
+    },
     channelId: COURSE_UPDATES_CHANNEL,
   };
 }
@@ -297,12 +307,12 @@ async function notifyRapidRecallPublished(recall) {
 }
 
 /**
- * A quiz lesson that just went live.
+ * A lesson that just went live.
  *
  * A lesson only knows its chapter, so the course is looked up here rather
  * than in every controller that publishes one.
  */
-async function notifyQuizLessonPublished(lesson) {
+async function notifyLessonPublished(lesson) {
   const prisma = require('../db');
   const chapter = await prisma.chapter.findUnique({
     where: { id: lesson.chapterId },
@@ -311,7 +321,7 @@ async function notifyQuizLessonPublished(lesson) {
   // Chapters may sit outside any course; there is nobody to tell.
   if (!chapter || chapter.courseId === null) return { sent: 0, reason: 'lesson is not under a course' };
 
-  return notifyCourseStudents(chapter, quizLessonPayload({ ...lesson, courseId: chapter.courseId }));
+  return notifyCourseStudents(chapter, lessonPayload({ ...lesson, courseId: chapter.courseId }));
 }
 
 /**
@@ -393,12 +403,12 @@ async function notifySubjectQuestions(subjectId, count) {
 
 module.exports = {
   notifyCoursePublished, notifyStudent, notifyCourseJoined,
-  notifyCourseStudents, notifyTestPublished, notifyRapidRecallPublished, notifyQuizLessonPublished,
+  notifyCourseStudents, notifyTestPublished, notifyRapidRecallPublished, notifyLessonPublished,
   notifySubjectQuestions, coursesUsingSubject,
   // Exported for push.test.js.
   becamePublished, newCourseMessage, TOPIC, NEW_COURSE_CHANNEL, COURSE_UPDATES_CHANNEL,
   studentMessage, isDeadToken,
-  testPublishedPayload, rapidRecallPayload, quizLessonPayload, subjectQuestionsPayload,
+  testPublishedPayload, rapidRecallPayload, lessonPayload, subjectQuestionsPayload,
   _messagingClient: getMessaging,
   _resetForTests() { messaging = null; initialised = false; },
 };

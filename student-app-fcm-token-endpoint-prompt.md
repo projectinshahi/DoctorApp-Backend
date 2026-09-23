@@ -99,12 +99,18 @@ nothing to remove — signing out twice is not an error.
 | A test is published | devices of students on that course (and that exam type) | `new_test` | `testId`, `courseId` | `course_updates` |
 | A rapid recall deck is published | same | `new_rapid_recall` | `rapidRecallId`, `courseId` | `course_updates` |
 | A quiz lesson is published | same | `new_quiz` | `lessonId`, `courseId` | `course_updates` |
+| Any other lesson is published | same | `new_lesson` | `lessonId`, `courseId` | `course_updates` |
+| Questions are imported | students whose course uses that subject | `new_questions` | `subjectId`, `count` | `course_updates` |
 
-The last three are new. `onOpen` should route them the way `course_join`
-already routes: `new_test` to the tests list (or straight to `testId`),
-`new_rapid_recall` to rapid recall, `new_quiz` to the lesson. An unknown
-`type` must keep doing what it does today — open the app and nothing else —
-so an older build never crashes on a type added later.
+Everything below `course_join` is new. `onOpen` should route them the way
+`course_join` already routes: `new_test` to the tests list (or straight to
+`testId`), `new_rapid_recall` to rapid recall, `new_quiz` and `new_lesson` to
+the lesson, `new_questions` to the question bank or the subject. An unknown
+`type` must keep doing what it does today — open the app and nothing else — so
+an older build never crashes on a type added later.
+
+The titles vary by lesson type: "New quiz", "New video lesson", "New notes",
+or "New lesson", with the lesson's own title as the body.
 
 `course_join` carries `{"type": "course_join", "courseId": "22"}` — all values
 are strings, because FCM rejects a message with a numeric one. The channels

@@ -253,7 +253,7 @@ async function createLesson(req, res) {
       select: LESSON_SELECT,
     });
 
-    announceQuizLesson(lesson, null);
+    announceLesson(lesson, null, req.body);
 
     return res.status(201).json({ lesson: shapeLesson(lesson) });
   } catch (error) {
@@ -265,16 +265,20 @@ async function createLesson(req, res) {
 
 
 /**
- * Announces a quiz lesson the moment students can see it.
+ * Announces a lesson the moment students can see it.
  *
- * Only quiz lessons, only on the draft -> published step, and never awaited.
- * Publishing is the deliberate act; a lesson saved repeatedly while being
- * built would otherwise notify the whole course each time.
+ * Only on the draft -> published step, and never awaited. Publishing is the
+ * deliberate act; a lesson saved repeatedly while being written would
+ * otherwise notify the whole course on every save.
+ *
+ * ponytail: publishing a chapter's worth of lessons in one sitting sends one
+ * notification each. If that becomes a complaint, the lazy fix is the
+ * `notify: false` flag below, set by default in the panel's bulk publish.
  */
-function announceQuizLesson(lesson, previousStatus) {
-  if (lesson.type !== 'quiz' || lesson.quizId === null) return;
+function announceLesson(lesson, previousStatus, body) {
+  if (body?.notify === false) return;
   if (lesson.status !== 'published' || previousStatus === 'published') return;
-  require('../services/push.service').notifyQuizLessonPublished(lesson).catch(() => {});
+  require('../services/push.service').notifyLessonPublished(lesson).catch(() => {});
 }
 
 async function getLesson(req, res) {
@@ -512,7 +516,7 @@ async function updateLesson(req, res) {
       select: LESSON_SELECT,
     });
 
-    announceQuizLesson(lesson, existing.status);
+    announceLesson(lesson, existing.status, req.body);
 
     return res.status(200).json({ lesson: shapeLesson(lesson) });
   } catch (error) {
