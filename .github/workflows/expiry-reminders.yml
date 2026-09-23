@@ -1,0 +1,30 @@
+# Twice a day, tell students whose plan ends within ten days.
+#
+# The clock lives here rather than in the server: Render's free instance sleeps
+# when idle, so a timer inside the app would stop exactly when nobody is using
+# it. GitHub runs this on time whether or not anyone is awake.
+name: Subscription expiry reminders
+
+on:
+  schedule:
+    # 09:00 and 20:00 Gulf time (UTC+4). GitHub cron is always UTC.
+    - cron: '0 5 * * *'
+    - cron: '0 16 * * *'
+  # So it can be run by hand from the Actions tab.
+  workflow_dispatch:
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send reminders
+        run: |
+          # The free instance may be asleep; the first request can take about a
+          # minute to wake it, and --retry covers a cold start that times out.
+          curl --fail-with-body --silent --show-error \
+            --max-time 120 --retry 3 --retry-delay 30 --retry-connrefused \
+            -X POST \
+            -H "Content-Type: application/json" \
+            -H "x-cron-key: ${{ secrets.CRON_SECRET }}" \
+            -d '{}' \
+            https://doctorapp-backend-cl2h.onrender.com/api/admin/notifications/expiry-reminders
