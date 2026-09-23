@@ -53,13 +53,18 @@ async function registerFcmToken(req, res) {
   }
 }
 
-// DELETE /api/users/me/fcm-token   { token }
+// DELETE /api/users/me/fcm-token?token=...   (or { token } in the body)
 //
 // Called on logout. Without it, the next person to use a shared phone keeps
 // receiving the previous student's notifications.
+//
+// The query parameter is accepted because dr_app's ApiClient.delete() sends no
+// body, and giving every other DELETE in the app a body to carry this one call
+// is the wrong trade.
 async function deleteFcmToken(req, res) {
   try {
-    const token = typeof req.body?.token === 'string' ? req.body.token.trim() : '';
+    const raw = req.body?.token ?? req.query?.token;
+    const token = typeof raw === 'string' ? raw.trim() : '';
     if (token === '') {
       return res.status(400).json({ error: { message: 'token is required' } });
     }
