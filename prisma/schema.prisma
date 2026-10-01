@@ -620,6 +620,13 @@ model TestQuestion {
   optionCImageUrl  String?
   optionD          String?
   optionDImageUrl  String?
+  // E and F are optional. A–D are required by the API; these two exist for
+  // papers that run to six answers, and a question without them is a normal
+  // four-option question, not a broken six-option one.
+  optionE          String?
+  optionEImageUrl  String?
+  optionF          String?
+  optionFImageUrl  String?
   correctOption    String
   explanation      String?
   // Which part of the paper this question belongs to — "Part A", "Anatomy".

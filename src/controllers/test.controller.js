@@ -9,7 +9,11 @@ const prisma = require('../db');
 const { parseCsv, toObject } = require('../utils/csv');
 const cloudinary = require('../config/cloudinary');
 
-const VALID_OPTIONS = ['A', 'B', 'C', 'D'];
+// A–D are required on every question. E and F are optional, for papers that
+// run to six answers.
+const REQUIRED_OPTIONS = ['A', 'B', 'C', 'D'];
+const OPTIONAL_OPTIONS = ['E', 'F'];
+const VALID_OPTIONS = [...REQUIRED_OPTIONS, ...OPTIONAL_OPTIONS];
 const TEST_TYPES = ['GRAND_TEST'];
 // Only correct_option is unconditionally required now. Every other field can
 // be satisfied by text OR an image, which the row validator checks as a pair.
@@ -162,19 +166,44 @@ async function listTests(req, res) {
  * importer allows an image-only stem, and an editor that quietly did not would
  * be unable to edit the very questions the importer accepted.
  */
+function hasOption(q, letter) {
+  return Boolean(q[`option${letter}`] || q[`option${letter}ImageUrl`]);
+}
+
 function questionProblems(q, rawCorrect) {
   const problems = [];
   if (!q.questionText && !q.questionImageUrl) {
     problems.push({ field: 'question_text', message: 'Question needs text or an image' });
   }
-  for (const letter of VALID_OPTIONS) {
-    if (!q[`option${letter}`] && !q[`option${letter}ImageUrl`]) {
+
+  for (const letter of REQUIRED_OPTIONS) {
+    if (!hasOption(q, letter)) {
       problems.push({ field: `option_${letter.toLowerCase()}`, message: `Option ${letter} needs text or an image` });
     }
   }
-  if (!VALID_OPTIONS.includes(q.correctOption)) {
-    problems.push({ field: 'correct_option', message: `"${rawCorrect ?? ''}" must be one of A, B, C, D` });
+
+  // E and F are optional, but not skippable. F without E is almost always a
+  // column typed into the wrong place; shifting it up silently would renumber
+  // the answers under an answer key written against the original letters.
+  if (hasOption(q, 'F') && !hasOption(q, 'E')) {
+    problems.push({ field: 'option_e', message: 'Option F is filled but Option E is empty — fill E, or move F into E' });
   }
+
+  if (!VALID_OPTIONS.includes(q.correctOption)) {
+    problems.push({
+      field: 'correct_option',
+      message: `"${rawCorrect ?? ''}" must be one of ${VALID_OPTIONS.join(', ')}`,
+    });
+  } else if (!hasOption(q, q.correctOption)) {
+    // Only reachable for E and F, which may legitimately be absent. A–D are
+    // already required above, so pointing at an empty one reports twice —
+    // once as the missing option, once here — and both are true.
+    problems.push({
+      field: 'correct_option',
+      message: `correct_option is ${q.correctOption} but option ${q.correctOption} is empty`,
+    });
+  }
+
   return problems;
 }
 
@@ -364,6 +393,8 @@ function validateRows(header, rows, test, images = null, { allowMissingImages = 
       optionB: optionValues.B.text || null, optionBImageUrl: optionValues.B.imageUrl || null,
       optionC: optionValues.C.text || null, optionCImageUrl: optionValues.C.imageUrl || null,
       optionD: optionValues.D.text || null, optionDImageUrl: optionValues.D.imageUrl || null,
+      optionE: optionValues.E.text || null, optionEImageUrl: optionValues.E.imageUrl || null,
+      optionF: optionValues.F.text || null, optionFImageUrl: optionValues.F.imageUrl || null,
       correctOption: correct,
     }, r.correct_option)) {
       at(problem.field, problem.message);
@@ -394,6 +425,10 @@ function validateRows(header, rows, test, images = null, { allowMissingImages = 
       optionCImageUrl: optionValues.C.imageUrl || null,
       optionD: optionValues.D.text || null,
       optionDImageUrl: optionValues.D.imageUrl || null,
+      optionE: optionValues.E.text || null,
+      optionEImageUrl: optionValues.E.imageUrl || null,
+      optionF: optionValues.F.text || null,
+      optionFImageUrl: optionValues.F.imageUrl || null,
       correctOption: correct,
       explanation: r.explanation || null,
       subject: r.subject || null,
@@ -1355,6 +1390,7 @@ const QUESTION_TEXT_FIELDS = [
   'questionText', 'questionImageUrl',
   'optionA', 'optionAImageUrl', 'optionB', 'optionBImageUrl',
   'optionC', 'optionCImageUrl', 'optionD', 'optionDImageUrl',
+  'optionE', 'optionEImageUrl', 'optionF', 'optionFImageUrl',
   'explanation', 'subject', 'topic', 'section',
 ];
 

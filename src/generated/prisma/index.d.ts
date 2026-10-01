@@ -34585,6 +34585,10 @@ export namespace Prisma {
     optionCImageUrl: string | null
     optionD: string | null
     optionDImageUrl: string | null
+    optionE: string | null
+    optionEImageUrl: string | null
+    optionF: string | null
+    optionFImageUrl: string | null
     correctOption: string | null
     explanation: string | null
     section: string | null
@@ -34606,6 +34610,10 @@ export namespace Prisma {
     optionCImageUrl: string | null
     optionD: string | null
     optionDImageUrl: string | null
+    optionE: string | null
+    optionEImageUrl: string | null
+    optionF: string | null
+    optionFImageUrl: string | null
     correctOption: string | null
     explanation: string | null
     section: string | null
@@ -34627,6 +34635,10 @@ export namespace Prisma {
     optionCImageUrl: number
     optionD: number
     optionDImageUrl: number
+    optionE: number
+    optionEImageUrl: number
+    optionF: number
+    optionFImageUrl: number
     correctOption: number
     explanation: number
     section: number
@@ -34662,6 +34674,10 @@ export namespace Prisma {
     optionCImageUrl?: true
     optionD?: true
     optionDImageUrl?: true
+    optionE?: true
+    optionEImageUrl?: true
+    optionF?: true
+    optionFImageUrl?: true
     correctOption?: true
     explanation?: true
     section?: true
@@ -34683,6 +34699,10 @@ export namespace Prisma {
     optionCImageUrl?: true
     optionD?: true
     optionDImageUrl?: true
+    optionE?: true
+    optionEImageUrl?: true
+    optionF?: true
+    optionFImageUrl?: true
     correctOption?: true
     explanation?: true
     section?: true
@@ -34704,6 +34724,10 @@ export namespace Prisma {
     optionCImageUrl?: true
     optionD?: true
     optionDImageUrl?: true
+    optionE?: true
+    optionEImageUrl?: true
+    optionF?: true
+    optionFImageUrl?: true
     correctOption?: true
     explanation?: true
     section?: true
@@ -34812,6 +34836,10 @@ export namespace Prisma {
     optionCImageUrl: string | null
     optionD: string | null
     optionDImageUrl: string | null
+    optionE: string | null
+    optionEImageUrl: string | null
+    optionF: string | null
+    optionFImageUrl: string | null
     correctOption: string
     explanation: string | null
     section: string | null
@@ -34852,6 +34880,10 @@ export namespace Prisma {
     optionCImageUrl?: boolean
     optionD?: boolean
     optionDImageUrl?: boolean
+    optionE?: boolean
+    optionEImageUrl?: boolean
+    optionF?: boolean
+    optionFImageUrl?: boolean
     correctOption?: boolean
     explanation?: boolean
     section?: boolean
@@ -34876,6 +34908,10 @@ export namespace Prisma {
     optionCImageUrl?: boolean
     optionD?: boolean
     optionDImageUrl?: boolean
+    optionE?: boolean
+    optionEImageUrl?: boolean
+    optionF?: boolean
+    optionFImageUrl?: boolean
     correctOption?: boolean
     explanation?: boolean
     section?: boolean
@@ -34898,6 +34934,10 @@ export namespace Prisma {
     optionCImageUrl?: boolean
     optionD?: boolean
     optionDImageUrl?: boolean
+    optionE?: boolean
+    optionEImageUrl?: boolean
+    optionF?: boolean
+    optionFImageUrl?: boolean
     correctOption?: boolean
     explanation?: boolean
     section?: boolean
@@ -34920,6 +34960,10 @@ export namespace Prisma {
     optionCImageUrl?: boolean
     optionD?: boolean
     optionDImageUrl?: boolean
+    optionE?: boolean
+    optionEImageUrl?: boolean
+    optionF?: boolean
+    optionFImageUrl?: boolean
     correctOption?: boolean
     explanation?: boolean
     section?: boolean
@@ -34927,7 +34971,7 @@ export namespace Prisma {
     topic?: boolean
   }
 
-  export type TestQuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "testId" | "questionOrder" | "questionText" | "questionImageUrl" | "optionA" | "optionAImageUrl" | "optionB" | "optionBImageUrl" | "optionC" | "optionCImageUrl" | "optionD" | "optionDImageUrl" | "correctOption" | "explanation" | "section" | "subject" | "topic", ExtArgs["result"]["testQuestion"]>
+  export type TestQuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "testId" | "questionOrder" | "questionText" | "questionImageUrl" | "optionA" | "optionAImageUrl" | "optionB" | "optionBImageUrl" | "optionC" | "optionCImageUrl" | "optionD" | "optionDImageUrl" | "optionE" | "optionEImageUrl" | "optionF" | "optionFImageUrl" | "correctOption" | "explanation" | "section" | "subject" | "topic", ExtArgs["result"]["testQuestion"]>
   export type TestQuestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     test?: boolean | TestDefaultArgs<ExtArgs>
     answers?: boolean | TestQuestion$answersArgs<ExtArgs>
@@ -34960,6 +35004,10 @@ export namespace Prisma {
       optionCImageUrl: string | null
       optionD: string | null
       optionDImageUrl: string | null
+      optionE: string | null
+      optionEImageUrl: string | null
+      optionF: string | null
+      optionFImageUrl: string | null
       correctOption: string
       explanation: string | null
       section: string | null
@@ -35403,6 +35451,10 @@ export namespace Prisma {
     readonly optionCImageUrl: FieldRef<"TestQuestion", 'String'>
     readonly optionD: FieldRef<"TestQuestion", 'String'>
     readonly optionDImageUrl: FieldRef<"TestQuestion", 'String'>
+    readonly optionE: FieldRef<"TestQuestion", 'String'>
+    readonly optionEImageUrl: FieldRef<"TestQuestion", 'String'>
+    readonly optionF: FieldRef<"TestQuestion", 'String'>
+    readonly optionFImageUrl: FieldRef<"TestQuestion", 'String'>
     readonly correctOption: FieldRef<"TestQuestion", 'String'>
     readonly explanation: FieldRef<"TestQuestion", 'String'>
     readonly section: FieldRef<"TestQuestion", 'String'>
@@ -49276,6 +49328,10 @@ export namespace Prisma {
     optionCImageUrl: 'optionCImageUrl',
     optionD: 'optionD',
     optionDImageUrl: 'optionDImageUrl',
+    optionE: 'optionE',
+    optionEImageUrl: 'optionEImageUrl',
+    optionF: 'optionF',
+    optionFImageUrl: 'optionFImageUrl',
     correctOption: 'correctOption',
     explanation: 'explanation',
     section: 'section',
@@ -51593,6 +51649,10 @@ export namespace Prisma {
     optionCImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
     optionD?: StringNullableFilter<"TestQuestion"> | string | null
     optionDImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionE?: StringNullableFilter<"TestQuestion"> | string | null
+    optionEImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionF?: StringNullableFilter<"TestQuestion"> | string | null
+    optionFImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
     correctOption?: StringFilter<"TestQuestion"> | string
     explanation?: StringNullableFilter<"TestQuestion"> | string | null
     section?: StringNullableFilter<"TestQuestion"> | string | null
@@ -51616,6 +51676,10 @@ export namespace Prisma {
     optionCImageUrl?: SortOrderInput | SortOrder
     optionD?: SortOrderInput | SortOrder
     optionDImageUrl?: SortOrderInput | SortOrder
+    optionE?: SortOrderInput | SortOrder
+    optionEImageUrl?: SortOrderInput | SortOrder
+    optionF?: SortOrderInput | SortOrder
+    optionFImageUrl?: SortOrderInput | SortOrder
     correctOption?: SortOrder
     explanation?: SortOrderInput | SortOrder
     section?: SortOrderInput | SortOrder
@@ -51643,6 +51707,10 @@ export namespace Prisma {
     optionCImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
     optionD?: StringNullableFilter<"TestQuestion"> | string | null
     optionDImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionE?: StringNullableFilter<"TestQuestion"> | string | null
+    optionEImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionF?: StringNullableFilter<"TestQuestion"> | string | null
+    optionFImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
     correctOption?: StringFilter<"TestQuestion"> | string
     explanation?: StringNullableFilter<"TestQuestion"> | string | null
     section?: StringNullableFilter<"TestQuestion"> | string | null
@@ -51666,6 +51734,10 @@ export namespace Prisma {
     optionCImageUrl?: SortOrderInput | SortOrder
     optionD?: SortOrderInput | SortOrder
     optionDImageUrl?: SortOrderInput | SortOrder
+    optionE?: SortOrderInput | SortOrder
+    optionEImageUrl?: SortOrderInput | SortOrder
+    optionF?: SortOrderInput | SortOrder
+    optionFImageUrl?: SortOrderInput | SortOrder
     correctOption?: SortOrder
     explanation?: SortOrderInput | SortOrder
     section?: SortOrderInput | SortOrder
@@ -51695,6 +51767,10 @@ export namespace Prisma {
     optionCImageUrl?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
     optionD?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
     optionDImageUrl?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+    optionE?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+    optionEImageUrl?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+    optionF?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
+    optionFImageUrl?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
     correctOption?: StringWithAggregatesFilter<"TestQuestion"> | string
     explanation?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
     section?: StringNullableWithAggregatesFilter<"TestQuestion"> | string | null
@@ -54488,6 +54564,10 @@ export namespace Prisma {
     optionCImageUrl?: string | null
     optionD?: string | null
     optionDImageUrl?: string | null
+    optionE?: string | null
+    optionEImageUrl?: string | null
+    optionF?: string | null
+    optionFImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     section?: string | null
@@ -54511,6 +54591,10 @@ export namespace Prisma {
     optionCImageUrl?: string | null
     optionD?: string | null
     optionDImageUrl?: string | null
+    optionE?: string | null
+    optionEImageUrl?: string | null
+    optionF?: string | null
+    optionFImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     section?: string | null
@@ -54531,6 +54615,10 @@ export namespace Prisma {
     optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     optionD?: NullableStringFieldUpdateOperationsInput | string | null
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionE?: NullableStringFieldUpdateOperationsInput | string | null
+    optionEImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionF?: NullableStringFieldUpdateOperationsInput | string | null
+    optionFImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     section?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54554,6 +54642,10 @@ export namespace Prisma {
     optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     optionD?: NullableStringFieldUpdateOperationsInput | string | null
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionE?: NullableStringFieldUpdateOperationsInput | string | null
+    optionEImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionF?: NullableStringFieldUpdateOperationsInput | string | null
+    optionFImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     section?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54576,6 +54668,10 @@ export namespace Prisma {
     optionCImageUrl?: string | null
     optionD?: string | null
     optionDImageUrl?: string | null
+    optionE?: string | null
+    optionEImageUrl?: string | null
+    optionF?: string | null
+    optionFImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     section?: string | null
@@ -54595,6 +54691,10 @@ export namespace Prisma {
     optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     optionD?: NullableStringFieldUpdateOperationsInput | string | null
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionE?: NullableStringFieldUpdateOperationsInput | string | null
+    optionEImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionF?: NullableStringFieldUpdateOperationsInput | string | null
+    optionFImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     section?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54616,6 +54716,10 @@ export namespace Prisma {
     optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     optionD?: NullableStringFieldUpdateOperationsInput | string | null
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionE?: NullableStringFieldUpdateOperationsInput | string | null
+    optionEImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionF?: NullableStringFieldUpdateOperationsInput | string | null
+    optionFImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     section?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57277,6 +57381,10 @@ export namespace Prisma {
     optionCImageUrl?: SortOrder
     optionD?: SortOrder
     optionDImageUrl?: SortOrder
+    optionE?: SortOrder
+    optionEImageUrl?: SortOrder
+    optionF?: SortOrder
+    optionFImageUrl?: SortOrder
     correctOption?: SortOrder
     explanation?: SortOrder
     section?: SortOrder
@@ -57304,6 +57412,10 @@ export namespace Prisma {
     optionCImageUrl?: SortOrder
     optionD?: SortOrder
     optionDImageUrl?: SortOrder
+    optionE?: SortOrder
+    optionEImageUrl?: SortOrder
+    optionF?: SortOrder
+    optionFImageUrl?: SortOrder
     correctOption?: SortOrder
     explanation?: SortOrder
     section?: SortOrder
@@ -57325,6 +57437,10 @@ export namespace Prisma {
     optionCImageUrl?: SortOrder
     optionD?: SortOrder
     optionDImageUrl?: SortOrder
+    optionE?: SortOrder
+    optionEImageUrl?: SortOrder
+    optionF?: SortOrder
+    optionFImageUrl?: SortOrder
     correctOption?: SortOrder
     explanation?: SortOrder
     section?: SortOrder
@@ -68141,6 +68257,10 @@ export namespace Prisma {
     optionCImageUrl?: string | null
     optionD?: string | null
     optionDImageUrl?: string | null
+    optionE?: string | null
+    optionEImageUrl?: string | null
+    optionF?: string | null
+    optionFImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     section?: string | null
@@ -68162,6 +68282,10 @@ export namespace Prisma {
     optionCImageUrl?: string | null
     optionD?: string | null
     optionDImageUrl?: string | null
+    optionE?: string | null
+    optionEImageUrl?: string | null
+    optionF?: string | null
+    optionFImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     section?: string | null
@@ -68363,6 +68487,10 @@ export namespace Prisma {
     optionCImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
     optionD?: StringNullableFilter<"TestQuestion"> | string | null
     optionDImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionE?: StringNullableFilter<"TestQuestion"> | string | null
+    optionEImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
+    optionF?: StringNullableFilter<"TestQuestion"> | string | null
+    optionFImageUrl?: StringNullableFilter<"TestQuestion"> | string | null
     correctOption?: StringFilter<"TestQuestion"> | string
     explanation?: StringNullableFilter<"TestQuestion"> | string | null
     section?: StringNullableFilter<"TestQuestion"> | string | null
@@ -68937,6 +69065,10 @@ export namespace Prisma {
     optionCImageUrl?: string | null
     optionD?: string | null
     optionDImageUrl?: string | null
+    optionE?: string | null
+    optionEImageUrl?: string | null
+    optionF?: string | null
+    optionFImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     section?: string | null
@@ -68959,6 +69091,10 @@ export namespace Prisma {
     optionCImageUrl?: string | null
     optionD?: string | null
     optionDImageUrl?: string | null
+    optionE?: string | null
+    optionEImageUrl?: string | null
+    optionF?: string | null
+    optionFImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     section?: string | null
@@ -69022,6 +69158,10 @@ export namespace Prisma {
     optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     optionD?: NullableStringFieldUpdateOperationsInput | string | null
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionE?: NullableStringFieldUpdateOperationsInput | string | null
+    optionEImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionF?: NullableStringFieldUpdateOperationsInput | string | null
+    optionFImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     section?: NullableStringFieldUpdateOperationsInput | string | null
@@ -69044,6 +69184,10 @@ export namespace Prisma {
     optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     optionD?: NullableStringFieldUpdateOperationsInput | string | null
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionE?: NullableStringFieldUpdateOperationsInput | string | null
+    optionEImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionF?: NullableStringFieldUpdateOperationsInput | string | null
+    optionFImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     section?: NullableStringFieldUpdateOperationsInput | string | null
@@ -73162,6 +73306,10 @@ export namespace Prisma {
     optionCImageUrl?: string | null
     optionD?: string | null
     optionDImageUrl?: string | null
+    optionE?: string | null
+    optionEImageUrl?: string | null
+    optionF?: string | null
+    optionFImageUrl?: string | null
     correctOption: string
     explanation?: string | null
     section?: string | null
@@ -73198,6 +73346,10 @@ export namespace Prisma {
     optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     optionD?: NullableStringFieldUpdateOperationsInput | string | null
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionE?: NullableStringFieldUpdateOperationsInput | string | null
+    optionEImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionF?: NullableStringFieldUpdateOperationsInput | string | null
+    optionFImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     section?: NullableStringFieldUpdateOperationsInput | string | null
@@ -73219,6 +73371,10 @@ export namespace Prisma {
     optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     optionD?: NullableStringFieldUpdateOperationsInput | string | null
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionE?: NullableStringFieldUpdateOperationsInput | string | null
+    optionEImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionF?: NullableStringFieldUpdateOperationsInput | string | null
+    optionFImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     section?: NullableStringFieldUpdateOperationsInput | string | null
@@ -73240,6 +73396,10 @@ export namespace Prisma {
     optionCImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     optionD?: NullableStringFieldUpdateOperationsInput | string | null
     optionDImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionE?: NullableStringFieldUpdateOperationsInput | string | null
+    optionEImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    optionF?: NullableStringFieldUpdateOperationsInput | string | null
+    optionFImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     correctOption?: StringFieldUpdateOperationsInput | string
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     section?: NullableStringFieldUpdateOperationsInput | string | null

@@ -282,4 +282,79 @@ assert.strictEqual(questionProblems({ ...full, questionText: null }, 'A')[0].fie
 assert.strictEqual(questionProblems({ ...full, correctOption: 'E' }, 'E')[0].field, 'correct_option');
 assert.strictEqual(questionProblems({ ...full, correctOption: null }, '')[0].field, 'correct_option');
 
+
+// ── five and six options ────────────────────────────────────────────────────
+
+const six = {
+  questionText: 'Q', questionImageUrl: null,
+  optionA: 'a', optionAImageUrl: null, optionB: 'b', optionBImageUrl: null,
+  optionC: 'c', optionCImageUrl: null, optionD: 'd', optionDImageUrl: null,
+  optionE: 'e', optionEImageUrl: null, optionF: 'f', optionFImageUrl: null,
+  correctOption: 'F',
+};
+assert.deepStrictEqual(questionProblems(six, 'F'), [], 'six filled options with correct F is valid');
+assert.deepStrictEqual(questionProblems({ ...six, correctOption: 'E' }, 'E'), []);
+
+// Five is valid: E filled, F absent.
+const five = { ...six, optionF: null, optionFImageUrl: null, correctOption: 'E' };
+assert.deepStrictEqual(questionProblems(five, 'E'), []);
+
+// Four is still valid, and still the normal case.
+const four = { ...six, optionE: null, optionEImageUrl: null, optionF: null, optionFImageUrl: null, correctOption: 'D' };
+assert.deepStrictEqual(questionProblems(four, 'D'), [], 'a four-option paper must be unaffected');
+
+// E and F may be an image with no text, exactly like A–D.
+assert.deepStrictEqual(
+  questionProblems({ ...six, optionF: null, optionFImageUrl: 'https://x/f.png' }, 'F'), []);
+
+// correct_option must address an option that is actually there. This is the
+// case that could not arise while all four were required.
+const pointsAtNothing = questionProblems({ ...four, correctOption: 'F' }, 'F');
+assert.strictEqual(pointsAtNothing.length, 1);
+assert.strictEqual(pointsAtNothing[0].field, 'correct_option');
+assert(pointsAtNothing[0].message.includes('option F is empty'), pointsAtNothing[0].message);
+
+// Out of range now runs to F, and the message says so.
+assert(questionProblems({ ...six, correctOption: 'G' }, 'G')[0].message.includes('A, B, C, D, E, F'));
+
+// A hole is an error, not a silent shift: renumbering F into E would move the
+// answers out from under an answer key written against the original letters.
+const hole = questionProblems({ ...six, optionE: null, optionEImageUrl: null, correctOption: 'F' }, 'F');
+assert(hole.some((p) => p.field === 'option_e' && p.message.includes('Option F is filled')), JSON.stringify(hole));
+
+// A–D stay required — an absent C is still an error even now that E and F are not.
+assert(questionProblems({ ...six, optionC: null, optionCImageUrl: null }, 'F')
+  .some((p) => p.field === 'option_c'));
+
+
+// ── six options through the CSV ─────────────────────────────────────────────
+
+const SHEAD = 'question_order,question_text,option_a,option_b,option_c,option_d,'
+  + 'option_e,option_f,correct_option';
+
+const sixCsv = run(`${SHEAD}\n1,Q,a,b,c,d,e,f,F\n`);
+assert.deepStrictEqual(sixCsv.errors.filter((e) => e.severity !== 'warning'), []);
+assert.strictEqual(sixCsv.questions[0].optionE, 'e');
+assert.strictEqual(sixCsv.questions[0].optionF, 'f');
+assert.strictEqual(sixCsv.questions[0].correctOption, 'F');
+
+// Blank E/F columns import as a four-option question, not as empty options.
+const blankEf = run(`${SHEAD}\n1,Q,a,b,c,d,,,A\n`);
+assert.deepStrictEqual(blankEf.errors.filter((e) => e.severity !== 'warning'), []);
+assert.strictEqual(blankEf.questions[0].optionE, null, 'a blank column is no option, not an empty one');
+assert.strictEqual(blankEf.questions[0].optionF, null);
+
+// A file with no E/F columns at all is unchanged.
+const noEf = run(`${IHEAD}\n1,Q,,A,,B,C,D,A\n`);
+assert.deepStrictEqual(noEf.errors.filter((e) => e.severity !== 'warning'), []);
+assert.strictEqual(noEf.questions[0].optionE, null);
+
+// correct_option F on a row with no F is an error on that row.
+const csvNoF = run(`${SHEAD}\n1,Q,a,b,c,d,,,F\n`);
+assert(csvNoF.errors.some((e) => e.field === 'correct_option' && e.severity !== 'warning'));
+
+// And the hole is caught in the file too.
+const csvHole = run(`${SHEAD}\n1,Q,a,b,c,d,,f,F\n`);
+assert(csvHole.errors.some((e) => e.field === 'option_e'));
+
 console.log('test.test.js: all assertions passed');

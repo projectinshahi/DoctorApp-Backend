@@ -6,7 +6,9 @@
 
 const prisma = require('../db');
 
-const VALID_OPTIONS = ['A', 'B', 'C', 'D'];
+// Must match test.controller.js. A student who cannot submit E or F sees a
+// six-option question they are unable to answer.
+const VALID_OPTIONS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
 /** Questions as a student may see them: no answer, no explanation. */
 const STUDENT_QUESTION_SELECT = {
@@ -15,6 +17,8 @@ const STUDENT_QUESTION_SELECT = {
   optionB: true, optionBImageUrl: true,
   optionC: true, optionCImageUrl: true,
   optionD: true, optionDImageUrl: true,
+  optionE: true, optionEImageUrl: true,
+  optionF: true, optionFImageUrl: true,
   section: true,
 };
 
@@ -286,7 +290,9 @@ async function answerTestQuestion(req, res) {
 
     const selected = String(req.body?.selectedOption ?? '').toUpperCase();
     if (!VALID_OPTIONS.includes(selected)) {
-      return res.status(400).json({ error: { message: 'selectedOption must be one of: A, B, C, D' } });
+      return res.status(400).json({
+        error: { message: `selectedOption must be one of: ${VALID_OPTIONS.join(', ')}` },
+      });
     }
 
     const question = await prisma.testQuestion.findUnique({ where: { id: testQuestionId } });
@@ -391,6 +397,8 @@ async function buildResult(attemptId, attempt, test) {
       optionB: q.optionB, optionBImageUrl: q.optionBImageUrl,
       optionC: q.optionC, optionCImageUrl: q.optionCImageUrl,
       optionD: q.optionD, optionDImageUrl: q.optionDImageUrl,
+      optionE: q.optionE, optionEImageUrl: q.optionEImageUrl,
+      optionF: q.optionF, optionFImageUrl: q.optionFImageUrl,
       selectedOption: answer ? answer.selectedOption : null,
       correctOption: q.correctOption,
       // Absence of a row is what "skipped" means, so it is neither correct nor
