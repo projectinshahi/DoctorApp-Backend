@@ -9,6 +9,7 @@ const {
   studentMessage, isDeadToken, NEW_COURSE_CHANNEL, COURSE_UPDATES_CHANNEL,
   testPublishedPayload, rapidRecallPayload, lessonPayload, subjectQuestionsPayload,
   _messagingClient, _resetForTests,
+  NOTIFICATION_TITLE_MAX, NOTIFICATION_BODY_MAX,
 } = require('./push.service');
 
 // ── only the moment a course goes live ──
@@ -69,13 +70,51 @@ for (const [k, v] of Object.entries(joined.data)) {
 // ── new content in a course ──
 
 const contentCases = [
-  ['test (grand)', testPublishedPayload({ id: 9, name: 'DHA Grand Test 3', type: 'grand', courseId: 22 }), 'new_test', 'New grand test', 'DHA Grand Test 3'],
-  ['test (mock)', testPublishedPayload({ id: 9, name: 'Mock 1', type: 'mock', courseId: 22 }), 'new_test', 'New mock test', 'Mock 1'],
+  ['test (grand)', testPublishedPayload({ id: 9, name: 'DHA Grand Test 3', type: 'grand', courseId: 22, totalQuestions: 180, durationMinutes: 210, courseType: { title: 'DHA (Dubai) Exam' } }), 'new_test', 'New grand test · DHA (Dubai) Exam', '180 questions, 210 minutes. Tap to start when you are ready.'],
+  ['test (mock)', testPublishedPayload({ id: 9, name: 'Mock 1', type: 'mock', courseId: 22, totalQuestions: 40, durationMinutes: 60 }), 'new_test', 'New mock test', '40 questions, 60 minutes. Tap to start when you are ready.'],
   ['rapid recall', rapidRecallPayload({ id: 4, title: 'Cardiology cards', courseId: 22 }), 'new_rapid_recall', 'New rapid recall', 'Cardiology cards'],
   ['quiz lesson', lessonPayload({ id: 77, title: 'Anatomy quiz', type: 'quiz', courseId: 22 }), 'new_quiz', 'New quiz', 'Anatomy quiz'],
   ['video lesson', lessonPayload({ id: 78, title: 'The heart', type: 'video', courseId: 22 }), 'new_lesson', 'New video lesson', 'The heart'],
   ['text lesson', lessonPayload({ id: 79, title: 'Renal notes', type: 'text', courseId: 22 }), 'new_lesson', 'New lesson', 'Renal notes'],
 ];
+
+// The admin's internal name must never be the announcement. "testing" and
+// "1-14 mock" are what admins type while building a paper, and both went out
+// to every student on the course.
+const draftNamed = testPublishedPayload({
+  id: 9, name: 'testing', type: 'mock', courseId: 22,
+  totalQuestions: 148, durationMinutes: 300, courseType: { title: 'Kuwait Prometric Exam' },
+});
+assert.strictEqual(draftNamed.title, 'New mock test · Kuwait Prometric Exam');
+assert(!draftNamed.body.includes('testing'), 'the test name must not reach a student');
+assert(!draftNamed.title.includes('testing'));
+
+// Admin-supplied text wins over the default.
+const custom = testPublishedPayload(
+  { id: 9, name: 'testing', type: 'mock', courseId: 22, totalQuestions: 148, durationMinutes: 300 },
+  { title: 'Kuwait Prometric — Mock 3', body: '148 questions · 300 minutes.' });
+assert.strictEqual(custom.title, 'Kuwait Prometric — Mock 3');
+assert.strictEqual(custom.body, '148 questions · 300 minutes.');
+
+// Blank or whitespace-only custom text falls back rather than sending an
+// empty notification.
+const blank = testPublishedPayload(
+  { id: 9, name: 'x', type: 'mock', courseId: 22, totalQuestions: 10, durationMinutes: 20 },
+  { title: '   ', body: '' });
+assert.strictEqual(blank.title, 'New mock test');
+assert(blank.body.startsWith('10 questions'));
+
+// A course with no exam type gets the plain title, not a dangling separator.
+const noType = testPublishedPayload({ id: 9, name: 'x', type: 'mock', courseId: 22, totalQuestions: 10, durationMinutes: 20 });
+assert.strictEqual(noType.title, 'New mock test');
+
+// Long text is capped here, because a phone truncates mid-word.
+const long = testPublishedPayload(
+  { id: 9, name: 'x', type: 'mock', courseId: 22, totalQuestions: 10, durationMinutes: 20 },
+  { title: 'T'.repeat(200), body: 'B'.repeat(400) });
+assert.strictEqual(long.title.length, NOTIFICATION_TITLE_MAX);
+assert.strictEqual(long.body.length, NOTIFICATION_BODY_MAX);
+assert(long.title.endsWith('…'));
 
 for (const [label, payload, type, title, body] of contentCases) {
   assert.strictEqual(payload.title, title, label);

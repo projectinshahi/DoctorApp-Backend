@@ -380,6 +380,7 @@ exports.Prisma.TestScalarFieldEnum = {
   marksCorrect: 'marksCorrect',
   marksIncorrect: 'marksIncorrect',
   isPublished: 'isPublished',
+  notifiedAt: 'notifiedAt',
   isLocked: 'isLocked',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

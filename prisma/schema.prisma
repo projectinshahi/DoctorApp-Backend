@@ -585,6 +585,9 @@ model Test {
   marksCorrect    Float    @default(1)
   marksIncorrect  Float    @default(0)
   isPublished     Boolean  @default(false)
+  // When students were told about this paper. Set once, so unpublishing to fix
+  // question 38 and publishing again does not announce the same test twice.
+  notifiedAt      DateTime?
   // Set on the first submitted attempt. Editing the paper after someone has sat
   // it would rewrite their score, so the questions freeze instead.
   isLocked        Boolean  @default(false)

@@ -293,10 +293,37 @@ async function notifyCourseStudents({ courseId, courseTypeId }, payload) {
 
 // The payloads, kept pure so the tests can check them without a database.
 
-function testPublishedPayload(test) {
+// A phone truncates a long notification mid-word, so the text is capped here
+// rather than left to the device to mangle.
+const NOTIFICATION_TITLE_MAX = 60;
+const NOTIFICATION_BODY_MAX = 160;
+
+function clamp(text, max) {
+  const trimmed = String(text ?? '').trim().replace(/\s+/g, ' ');
+  if (trimmed === '') return '';
+  return trimmed.length <= max ? trimmed : `${trimmed.slice(0, max - 1).trimEnd()}…`;
+}
+
+/**
+ * What students see when a test goes live.
+ *
+ * `custom` wins when given. The default is composed from what the test knows,
+ * because the fallback used to be the test's own name — and admins name tests
+ * for themselves. "testing" and "1-14 mock" went out as announcements.
+ */
+function testPublishedPayload(test, custom = {}) {
+  const kind = test.type === 'grand' ? 'New grand test' : 'New mock test';
+  const exam = test.courseType?.title ?? null;
+
+  const title = clamp(custom.title, NOTIFICATION_TITLE_MAX)
+    || (exam ? `${kind} · ${exam}` : kind);
+
+  const body = clamp(custom.body, NOTIFICATION_BODY_MAX)
+    || `${test.totalQuestions} questions, ${test.durationMinutes} minutes. Tap to start when you are ready.`;
+
   return {
-    title: test.type === 'grand' ? 'New grand test' : 'New mock test',
-    body: test.name,
+    title,
+    body,
     data: { type: 'new_test', testId: test.id, courseId: test.courseId },
     channelId: COURSE_UPDATES_CHANNEL,
   };
@@ -331,8 +358,8 @@ function lessonPayload(lesson) {
 }
 
 /** A published test, announced to the students sitting that exam. */
-async function notifyTestPublished(test) {
-  return notifyCourseStudents(test, testPublishedPayload(test));
+async function notifyTestPublished(test, custom = {}) {
+  return notifyCourseStudents(test, testPublishedPayload(test, custom));
 }
 
 /** A published rapid recall deck. */
@@ -498,6 +525,7 @@ module.exports = {
   becamePublished, newCourseMessage, TOPIC, NEW_COURSE_CHANNEL, COURSE_UPDATES_CHANNEL,
   studentMessage, isDeadToken,
   testPublishedPayload, rapidRecallPayload, lessonPayload, subjectQuestionsPayload,
+  clamp, NOTIFICATION_TITLE_MAX, NOTIFICATION_BODY_MAX,
   _messagingClient: getMessaging,
   _resetForTests() { messaging = null; initialised = false; },
 };

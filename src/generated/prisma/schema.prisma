@@ -567,7 +567,7 @@ model LessonProgress {
 // resolving a subject/topic filter the way a Quiz does. Nothing here is shared
 // with the quiz tables.
 model Test {
-  id              Int      @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   courseId        Int
   // Which exam under that course this paper belongs to. Null means it applies
   // to the whole course. Chapters already scope this way, and without it a DHA
@@ -577,19 +577,22 @@ model Test {
   // Shown to the student before they start, and to the admin who wrote them.
   // Free text: rules, marking, calculator policy — whatever this paper needs.
   instructions    String?
-  type            TestType @default(GRAND_TEST)
+  type            TestType  @default(GRAND_TEST)
   // Declared up front and checked against the CSV at import, so a paper that
   // says 200 questions cannot quietly serve 198.
   totalQuestions  Int
   durationMinutes Int
-  marksCorrect    Float    @default(1)
-  marksIncorrect  Float    @default(0)
-  isPublished     Boolean  @default(false)
+  marksCorrect    Float     @default(1)
+  marksIncorrect  Float     @default(0)
+  isPublished     Boolean   @default(false)
+  // When students were told about this paper. Set once, so unpublishing to fix
+  // question 38 and publishing again does not announce the same test twice.
+  notifiedAt      DateTime?
   // Set on the first submitted attempt. Editing the paper after someone has sat
   // it would rewrite their score, so the questions freeze instead.
-  isLocked        Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  isLocked        Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   course     Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseType CourseType?    @relation(fields: [courseTypeId], references: [id], onDelete: Cascade)

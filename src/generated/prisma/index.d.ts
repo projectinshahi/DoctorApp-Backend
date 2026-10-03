@@ -33231,6 +33231,7 @@ export namespace Prisma {
     marksCorrect: number | null
     marksIncorrect: number | null
     isPublished: boolean | null
+    notifiedAt: Date | null
     isLocked: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -33248,6 +33249,7 @@ export namespace Prisma {
     marksCorrect: number | null
     marksIncorrect: number | null
     isPublished: boolean | null
+    notifiedAt: Date | null
     isLocked: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -33265,6 +33267,7 @@ export namespace Prisma {
     marksCorrect: number
     marksIncorrect: number
     isPublished: number
+    notifiedAt: number
     isLocked: number
     createdAt: number
     updatedAt: number
@@ -33304,6 +33307,7 @@ export namespace Prisma {
     marksCorrect?: true
     marksIncorrect?: true
     isPublished?: true
+    notifiedAt?: true
     isLocked?: true
     createdAt?: true
     updatedAt?: true
@@ -33321,6 +33325,7 @@ export namespace Prisma {
     marksCorrect?: true
     marksIncorrect?: true
     isPublished?: true
+    notifiedAt?: true
     isLocked?: true
     createdAt?: true
     updatedAt?: true
@@ -33338,6 +33343,7 @@ export namespace Prisma {
     marksCorrect?: true
     marksIncorrect?: true
     isPublished?: true
+    notifiedAt?: true
     isLocked?: true
     createdAt?: true
     updatedAt?: true
@@ -33442,6 +33448,7 @@ export namespace Prisma {
     marksCorrect: number
     marksIncorrect: number
     isPublished: boolean
+    notifiedAt: Date | null
     isLocked: boolean
     createdAt: Date
     updatedAt: Date
@@ -33478,6 +33485,7 @@ export namespace Prisma {
     marksCorrect?: boolean
     marksIncorrect?: boolean
     isPublished?: boolean
+    notifiedAt?: boolean
     isLocked?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -33501,6 +33509,7 @@ export namespace Prisma {
     marksCorrect?: boolean
     marksIncorrect?: boolean
     isPublished?: boolean
+    notifiedAt?: boolean
     isLocked?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -33520,6 +33529,7 @@ export namespace Prisma {
     marksCorrect?: boolean
     marksIncorrect?: boolean
     isPublished?: boolean
+    notifiedAt?: boolean
     isLocked?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -33539,12 +33549,13 @@ export namespace Prisma {
     marksCorrect?: boolean
     marksIncorrect?: boolean
     isPublished?: boolean
+    notifiedAt?: boolean
     isLocked?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "courseTypeId" | "name" | "instructions" | "type" | "totalQuestions" | "durationMinutes" | "marksCorrect" | "marksIncorrect" | "isPublished" | "isLocked" | "createdAt" | "updatedAt", ExtArgs["result"]["test"]>
+  export type TestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "courseTypeId" | "name" | "instructions" | "type" | "totalQuestions" | "durationMinutes" | "marksCorrect" | "marksIncorrect" | "isPublished" | "notifiedAt" | "isLocked" | "createdAt" | "updatedAt", ExtArgs["result"]["test"]>
   export type TestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     course?: boolean | CourseDefaultArgs<ExtArgs>
     courseType?: boolean | Test$courseTypeArgs<ExtArgs>
@@ -33583,6 +33594,7 @@ export namespace Prisma {
       marksCorrect: number
       marksIncorrect: number
       isPublished: boolean
+      notifiedAt: Date | null
       isLocked: boolean
       createdAt: Date
       updatedAt: Date
@@ -34025,6 +34037,7 @@ export namespace Prisma {
     readonly marksCorrect: FieldRef<"Test", 'Float'>
     readonly marksIncorrect: FieldRef<"Test", 'Float'>
     readonly isPublished: FieldRef<"Test", 'Boolean'>
+    readonly notifiedAt: FieldRef<"Test", 'DateTime'>
     readonly isLocked: FieldRef<"Test", 'Boolean'>
     readonly createdAt: FieldRef<"Test", 'DateTime'>
     readonly updatedAt: FieldRef<"Test", 'DateTime'>
@@ -49306,6 +49319,7 @@ export namespace Prisma {
     marksCorrect: 'marksCorrect',
     marksIncorrect: 'marksIncorrect',
     isPublished: 'isPublished',
+    notifiedAt: 'notifiedAt',
     isLocked: 'isLocked',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -51533,6 +51547,7 @@ export namespace Prisma {
     marksCorrect?: FloatFilter<"Test"> | number
     marksIncorrect?: FloatFilter<"Test"> | number
     isPublished?: BoolFilter<"Test"> | boolean
+    notifiedAt?: DateTimeNullableFilter<"Test"> | Date | string | null
     isLocked?: BoolFilter<"Test"> | boolean
     createdAt?: DateTimeFilter<"Test"> | Date | string
     updatedAt?: DateTimeFilter<"Test"> | Date | string
@@ -51555,6 +51570,7 @@ export namespace Prisma {
     marksCorrect?: SortOrder
     marksIncorrect?: SortOrder
     isPublished?: SortOrder
+    notifiedAt?: SortOrderInput | SortOrder
     isLocked?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -51580,6 +51596,7 @@ export namespace Prisma {
     marksCorrect?: FloatFilter<"Test"> | number
     marksIncorrect?: FloatFilter<"Test"> | number
     isPublished?: BoolFilter<"Test"> | boolean
+    notifiedAt?: DateTimeNullableFilter<"Test"> | Date | string | null
     isLocked?: BoolFilter<"Test"> | boolean
     createdAt?: DateTimeFilter<"Test"> | Date | string
     updatedAt?: DateTimeFilter<"Test"> | Date | string
@@ -51602,6 +51619,7 @@ export namespace Prisma {
     marksCorrect?: SortOrder
     marksIncorrect?: SortOrder
     isPublished?: SortOrder
+    notifiedAt?: SortOrderInput | SortOrder
     isLocked?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -51627,6 +51645,7 @@ export namespace Prisma {
     marksCorrect?: FloatWithAggregatesFilter<"Test"> | number
     marksIncorrect?: FloatWithAggregatesFilter<"Test"> | number
     isPublished?: BoolWithAggregatesFilter<"Test"> | boolean
+    notifiedAt?: DateTimeNullableWithAggregatesFilter<"Test"> | Date | string | null
     isLocked?: BoolWithAggregatesFilter<"Test"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Test"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Test"> | Date | string
@@ -54435,6 +54454,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -54457,6 +54477,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -54474,6 +54495,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54496,6 +54518,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54516,6 +54539,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -54530,6 +54554,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -54547,6 +54572,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -57278,6 +57304,7 @@ export namespace Prisma {
     marksCorrect?: SortOrder
     marksIncorrect?: SortOrder
     isPublished?: SortOrder
+    notifiedAt?: SortOrder
     isLocked?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -57305,6 +57332,7 @@ export namespace Prisma {
     marksCorrect?: SortOrder
     marksIncorrect?: SortOrder
     isPublished?: SortOrder
+    notifiedAt?: SortOrder
     isLocked?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -57322,6 +57350,7 @@ export namespace Prisma {
     marksCorrect?: SortOrder
     marksIncorrect?: SortOrder
     isPublished?: SortOrder
+    notifiedAt?: SortOrder
     isLocked?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -63937,6 +63966,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -63957,6 +63987,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -64290,6 +64321,7 @@ export namespace Prisma {
     marksCorrect?: FloatFilter<"Test"> | number
     marksIncorrect?: FloatFilter<"Test"> | number
     isPublished?: BoolFilter<"Test"> | boolean
+    notifiedAt?: DateTimeNullableFilter<"Test"> | Date | string | null
     isLocked?: BoolFilter<"Test"> | boolean
     createdAt?: DateTimeFilter<"Test"> | Date | string
     updatedAt?: DateTimeFilter<"Test"> | Date | string
@@ -64480,6 +64512,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -64500,6 +64533,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68552,6 +68586,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68573,6 +68608,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68631,6 +68667,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68652,6 +68689,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68696,6 +68734,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68717,6 +68756,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68749,6 +68789,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68770,6 +68811,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68844,6 +68886,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68865,6 +68908,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -68987,6 +69031,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -69008,6 +69053,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -72009,6 +72055,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -72304,6 +72351,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -72324,6 +72372,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -72343,6 +72392,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -72463,6 +72513,7 @@ export namespace Prisma {
     marksCorrect?: number
     marksIncorrect?: number
     isPublished?: boolean
+    notifiedAt?: Date | string | null
     isLocked?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -72592,6 +72643,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -72612,6 +72664,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -72631,6 +72684,7 @@ export namespace Prisma {
     marksCorrect?: FloatFieldUpdateOperationsInput | number
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     isPublished?: BoolFieldUpdateOperationsInput | boolean
+    notifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isLocked?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -29,7 +29,7 @@ const TEST_SELECT = {
   courseType: { select: { id: true, title: true } },
   totalQuestions: true, durationMinutes: true,
   marksCorrect: true, marksIncorrect: true,
-  isPublished: true, isLocked: true, createdAt: true, updatedAt: true,
+  isPublished: true, isLocked: true, notifiedAt: true, createdAt: true, updatedAt: true,
   _count: { select: { questions: true, attempts: true } },
 };
 
@@ -613,18 +613,42 @@ async function publishTest(req, res) {
       });
     }
 
+    // notify absent means "announce it if it has never been announced".
+    // Explicit true re-announces on purpose; explicit false publishes silently,
+    // which is what a paper being republished after a fix needs.
+    const notifyRequested = req.body?.notify;
+    if (notifyRequested !== undefined && typeof notifyRequested !== 'boolean') {
+      return res.status(400).json({ error: { message: 'notify must be true or false' } });
+    }
+    const shouldNotify = isPublished
+      && notifyRequested !== false
+      && (notifyRequested === true || test.notifiedAt === null);
+
     const updated = await prisma.test.update({
-      where: { id: testId }, data: { isPublished }, select: TEST_SELECT,
+      where: { id: testId },
+      data: { isPublished, ...(shouldNotify ? { notifiedAt: new Date() } : {}) },
+      select: TEST_SELECT,
     });
 
-    // Only the moment it goes live, and never awaited: republishing after a
-    // typo fix would announce the same paper twice, and a slow or failing
-    // Firebase must not fail the admin's publish.
-    if (isPublished && !test.isPublished) {
-      require('../services/push.service').notifyTestPublished(updated).catch(() => {});
+    // Awaited, so the panel can report how many students it reached — but the
+    // failure is swallowed: a slow or misconfigured Firebase must not turn a
+    // successful publish into an error the admin cannot act on.
+    let notified = null;
+    if (shouldNotify) {
+      const result = await require('../services/push.service')
+        .notifyTestPublished(updated, {
+          title: req.body?.notificationTitle,
+          body: req.body?.notificationBody,
+        })
+        .catch((e) => ({ sent: 0, reason: e.message }));
+      notified = result?.sent ?? 0;
     }
 
-    return res.status(200).json({ test: shapeTest(updated) });
+    return res.status(200).json({
+      test: shapeTest(updated),
+      // null means nothing was sent — already announced, or notify: false.
+      notified,
+    });
   } catch (error) {
     console.error('publishTest error:', error);
     return res.status(500).json({ error: { message: 'Failed to publish the test' } });
