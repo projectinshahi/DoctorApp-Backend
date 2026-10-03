@@ -3,7 +3,9 @@ const prisma = require('../db');
 
 const VALID_DIFFICULTIES = ['easy', 'medium', 'hard'];
 const VALID_QUESTION_STATUSES = ['active', 'inactive'];
-const MIN_OPTIONS = 2;
+// Four, to match test questions — a two-option question is a true/false in a
+// bank built for MCQs, and the same student sees both.
+const MIN_OPTIONS = 4;
 const MAX_OPTIONS = 6;
 
 const QUESTION_SELECT = {

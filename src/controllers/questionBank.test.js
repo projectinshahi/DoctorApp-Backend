@@ -3,27 +3,38 @@ const assert = require('assert');
 const { readOptions, readTagNames, shapeQuestion } = require('./questionBank.controller');
 
 const opt = (text, isCorrect) => ({ optionText: text, isCorrect });
+/** n options, the first correct — the shape most of these assertions want. */
+const set = (n) => Array.from({ length: n }, (_, i) => opt(`o${i}`, i === 0));
 
 // Exactly one correct answer — 0 or 2+ is rejected.
-assert(readOptions({ options: [opt('a', false), opt('b', false)] }).error, 'zero correct must fail');
-assert(readOptions({ options: [opt('a', true), opt('b', true)] }).error, 'two correct must fail');
-assert(!readOptions({ options: [opt('a', true), opt('b', false)] }).error);
+assert(readOptions({ options: set(4).map((o) => ({ ...o, isCorrect: false })) }).error,
+  'zero correct must fail');
+assert(readOptions({ options: set(4).map((o) => ({ ...o, isCorrect: true })) }).error,
+  'four correct must fail');
+assert(!readOptions({ options: set(4) }).error);
 
-// 2 to 6 options.
-assert(readOptions({ options: [opt('a', true)] }).error, 'one option must fail');
-assert(readOptions({ options: Array.from({ length: 7 }, (_, i) => opt(`o${i}`, i === 0)) }).error, 'seven options must fail');
-assert(!readOptions({ options: Array.from({ length: 6 }, (_, i) => opt(`o${i}`, i === 0)) }).error);
+// 4 to 6 options, matching test questions — a student sees both banks, and a
+// two-option question is a true/false in a bank built for MCQs.
+assert(readOptions({ options: set(1) }).error, 'one option must fail');
+assert(readOptions({ options: set(2) }).error, 'two options must fail');
+assert(readOptions({ options: set(3) }).error, 'three options must fail');
+assert(!readOptions({ options: set(4) }).error);
+assert(!readOptions({ options: set(5) }).error);
+assert(!readOptions({ options: set(6) }).error);
+assert(readOptions({ options: set(7) }).error, 'seven options must fail');
 
-// Blank option text is not an option.
-assert(readOptions({ options: [opt('   ', true), opt('b', false)] }).error);
+// Blank option text is not an option — and padding to four with blanks is the
+// obvious way round the minimum, so it has to fail on the text, not the count.
+assert(readOptions({ options: [opt('   ', true), ...set(3).slice(1)] }).error);
+assert(readOptions({ options: [opt('a', true), opt('b', false), opt('c', false), opt('  ', false)] }).error);
 
 // Omitting options entirely is "leave them alone", not an error.
 assert.strictEqual(readOptions({}).provided, false);
 assert.strictEqual(readOptions({}).error, undefined);
 
 // displayOrder defaults to array position, text is trimmed.
-const parsed = readOptions({ options: [opt(' a ', true), opt('b', false)] }).options;
-assert.deepStrictEqual(parsed.map((o) => o.displayOrder), [0, 1]);
+const parsed = readOptions({ options: [opt(' a ', true), ...set(4).slice(1)] }).options;
+assert.deepStrictEqual(parsed.map((o) => o.displayOrder), [0, 1, 2, 3]);
 assert.strictEqual(parsed[0].optionText, 'a');
 
 // Tags: dedup, trim, null clears, non-strings rejected.
