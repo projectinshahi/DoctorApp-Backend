@@ -160,11 +160,26 @@ function isDeadToken(code) {
  * `data` values are forced to strings because FCM rejects the entire message
  * if any of them is a number — and an id is the easiest way to get that wrong.
  */
+// How long FCM holds a message for a phone that is off. Three days for
+// content; a renewal reminder that lands after the plan has already lapsed is
+// worse than none, so it expires in four hours.
+const TTL_DEFAULT_MS = 3 * 24 * 60 * 60 * 1000;
+const TTL_EXPIRY_MS = 4 * 60 * 60 * 1000;
+
 function studentMessage({ title, body, data = {}, channelId = NEW_COURSE_CHANNEL }) {
+  const type = data.type ?? 'message';
   return {
     notification: { title, body },
     data: Object.fromEntries(Object.entries(data).map(([k, v]) => [k, String(v)])),
-    android: { priority: 'high', notification: { channelId } },
+    android: {
+      priority: 'high',
+      // One banner per type. A student offline for a week comes back to the
+      // latest of each, not twenty stacked notifications they swipe away
+      // without reading.
+      collapseKey: type,
+      ttl: type === 'subscription_expiring' ? TTL_EXPIRY_MS : TTL_DEFAULT_MS,
+      notification: { channelId },
+    },
   };
 }
 
@@ -528,6 +543,7 @@ module.exports = {
   studentMessage, isDeadToken,
   testPublishedPayload, rapidRecallPayload, lessonPayload, subjectQuestionsPayload,
   clamp, NOTIFICATION_TITLE_MAX, NOTIFICATION_BODY_MAX,
+  TTL_DEFAULT_MS, TTL_EXPIRY_MS,
   _messagingClient: getMessaging,
   _resetForTests() { messaging = null; initialised = false; },
 };

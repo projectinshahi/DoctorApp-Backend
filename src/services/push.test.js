@@ -9,7 +9,7 @@ const {
   studentMessage, isDeadToken, NEW_COURSE_CHANNEL, COURSE_UPDATES_CHANNEL,
   testPublishedPayload, rapidRecallPayload, lessonPayload, subjectQuestionsPayload,
   _messagingClient, _resetForTests,
-  NOTIFICATION_TITLE_MAX, NOTIFICATION_BODY_MAX,
+  NOTIFICATION_TITLE_MAX, NOTIFICATION_BODY_MAX, TTL_DEFAULT_MS, TTL_EXPIRY_MS,
 } = require('./push.service');
 
 // ── only the moment a course goes live ──
@@ -208,5 +208,27 @@ assert.strictEqual(isDeadToken(null), false);
   assert(client, 'a well-formed key must produce a messaging client, not null');
   assert.strictEqual(typeof client.send, 'function');
 
-  console.log('push.test.js: all assertions passed');
+  
+// ── FCM delivery settings ──
+
+// Every value in data must be a string: FCM rejects a message carrying a
+// number, and the failure is the whole send, not one field.
+const msg = studentMessage({ title: 't', body: 'b', data: { type: 'new_test', testId: 9, courseId: 22 } });
+assert(Object.values(msg.data).every((v) => typeof v === 'string'), 'every data value must be a string');
+assert.strictEqual(msg.data.testId, '9');
+
+// One banner per type, so a week offline does not produce twenty.
+assert.strictEqual(msg.android.collapseKey, 'new_test');
+assert.strictEqual(msg.android.ttl, TTL_DEFAULT_MS);
+
+// A renewal reminder that arrives after the plan lapsed is worse than none.
+const expiry = studentMessage({ title: 't', body: 'b', data: { type: 'subscription_expiring', daysLeft: 3 } });
+assert.strictEqual(expiry.android.ttl, TTL_EXPIRY_MS);
+assert(TTL_EXPIRY_MS < TTL_DEFAULT_MS);
+
+// A payload with no type still sends rather than throwing — it just collapses
+// under a generic key.
+assert.strictEqual(studentMessage({ title: 't', body: 'b' }).android.collapseKey, 'message');
+
+console.log('push.test.js: all assertions passed');
 })().catch((e) => { console.error(e); process.exit(1); });

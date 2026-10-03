@@ -286,7 +286,12 @@ async function getMyCoursePlans(req, res) {
       prisma.subscription.findFirst({
         where: { userId: req.user.userId, courseId: user.selectedCourseId, isActive: true, endDate: { gte: now } },
         orderBy: { endDate: 'desc' },
-        select: { id: true, planId: true, startDate: true, endDate: true, plan: { select: { id: true, title: true } } },
+        select: {
+          id: true, planId: true, startDate: true, endDate: true,
+          // entitlements is what the app locks tabs on, so the live plan has
+          // to carry it — not just the catalogue entries beside it.
+          plan: { select: { id: true, title: true, features: true, entitlements: true } },
+        },
       }),
     ]);
 
@@ -297,10 +302,14 @@ async function getMyCoursePlans(req, res) {
       // whether to show the section from this flag rather than from an empty
       // list, which would also mean "nothing is on sale yet".
       isPremiumCourse: user.selectedCourse.accessType === 'premium',
-      plans: plans.map((plan) => {
-        const { entitlements, ...rest } = shapePlan(plan);
-        return { ...rest, isCurrent: subscription?.planId === plan.id };
-      }),
+      // entitlements stay in. They were stripped as "admin detail", which left
+      // the app deciding which tabs to lock by reading the marketing bullets —
+      // so rewording a bullet silently changed who could open the question
+      // bank. features is the copy; entitlements is the contract.
+      plans: plans.map((plan) => ({
+        ...shapePlan(plan),
+        isCurrent: subscription?.planId === plan.id,
+      })),
       currentSubscription: subscription
         ? {
             ...subscription,
