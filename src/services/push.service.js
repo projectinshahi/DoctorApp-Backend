@@ -298,6 +298,8 @@ async function notifyCourseStudents({ courseId, courseTypeId }, payload) {
 const NOTIFICATION_TITLE_MAX = 60;
 const NOTIFICATION_BODY_MAX = 160;
 
+const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`;
+
 function clamp(text, max) {
   const trimmed = String(text ?? '').trim().replace(/\s+/g, ' ');
   if (trimmed === '') return '';
@@ -319,7 +321,7 @@ function testPublishedPayload(test, custom = {}) {
     || (exam ? `${kind} · ${exam}` : kind);
 
   const body = clamp(custom.body, NOTIFICATION_BODY_MAX)
-    || `${test.totalQuestions} questions, ${test.durationMinutes} minutes. Tap to start when you are ready.`;
+    || `${plural(test.totalQuestions, 'question')}, ${plural(test.durationMinutes, 'minute')}. Tap to start when you are ready.`;
 
   return {
     title,

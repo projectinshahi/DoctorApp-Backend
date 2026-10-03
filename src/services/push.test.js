@@ -104,6 +104,10 @@ const blank = testPublishedPayload(
 assert.strictEqual(blank.title, 'New mock test');
 assert(blank.body.startsWith('10 questions'));
 
+// A one-question paper must not read "1 questions".
+const single = testPublishedPayload({ id: 9, name: 'x', type: 'mock', courseId: 22, totalQuestions: 1, durationMinutes: 1 });
+assert.strictEqual(single.body, '1 question, 1 minute. Tap to start when you are ready.');
+
 // A course with no exam type gets the plain title, not a dangling separator.
 const noType = testPublishedPayload({ id: 9, name: 'x', type: 'mock', courseId: 22, totalQuestions: 10, durationMinutes: 20 });
 assert.strictEqual(noType.title, 'New mock test');
