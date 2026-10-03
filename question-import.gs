@@ -2,7 +2,7 @@
  * Question Bank importer — Google Sheet -> doctor-app backend.
  *
  * SETUP (once): Project Settings -> Script Properties
- *   API_BASE_URL    e.g. https://doctorapp-backend-30gd.onrender.com
+ *   API_BASE_URL    e.g. https://doctorapp-backend-cl2h.onrender.com
  *   ADMIN_EMAIL     admin@yourapp.com
  *   ADMIN_PASSWORD  your admin password
  *

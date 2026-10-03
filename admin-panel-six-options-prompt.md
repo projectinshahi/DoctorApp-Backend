@@ -2,7 +2,7 @@
 
 Paste this into Claude inside the **admin panel repo**.
 
-Base URL: `https://doctorapp-backend-30gd.onrender.com`
+Base URL: `https://doctorapp-backend-cl2h.onrender.com`
 Auth: `Authorization: Bearer <admin token>`.
 
 Both question banks now take **4 options minimum, 6 maximum**. E and F are new

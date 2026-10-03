@@ -2,7 +2,7 @@
 
 Paste this into Claude inside the **student app repo**.
 
-Base URL: `https://doctorapp-backend-30gd.onrender.com`
+Base URL: `https://doctorapp-backend-cl2h.onrender.com`
 Auth: `Authorization: Bearer <student access token>`.
 
 Grand Test questions can now carry **up to six options**. The payload already

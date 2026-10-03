@@ -10,7 +10,7 @@
 require('dotenv').config({ quiet: true });
 const jwt = require('jsonwebtoken');
 
-const BASE = process.argv[2] || 'https://doctorapp-backend-30gd.onrender.com';
+const BASE = process.argv[2] || 'https://doctorapp-backend-cl2h.onrender.com';
 const RUNS = 6;
 
 const admin = jwt.sign({ adminId: 1, role: 'admin' }, process.env.ADMIN_JWT_SECRET, { expiresIn: '10m' });
