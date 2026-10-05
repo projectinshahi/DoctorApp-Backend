@@ -6,6 +6,9 @@ const SUBJECT_SELECT = {
   name: true,
   isActive: true,
   displayOrder: true,
+  // Which courses this subject belongs to. Empty means shared — it shows
+  // under every course, which is what every subject written before this was.
+  courses: { select: { id: true, title: true } },
   createdAt: true,
   updatedAt: true,
 };
@@ -37,12 +40,36 @@ async function listSubjects(req, res) {
       return res.status(400).json({ error: { message: filter.error } });
     }
 
+    const where = filter.value === undefined ? {} : { isActive: filter.value };
+
+    // ?courseId= narrows to that course's subjects plus the shared ones. A
+    // subject with no course attached belongs to everybody — filtering it out
+    // would empty every screen, since that is what every subject is until an
+    // admin attaches it.
+    if (req.query.courseId !== undefined) {
+      const courseId = Number(req.query.courseId);
+      if (!Number.isInteger(courseId)) {
+        return res.status(400).json({ error: { message: 'courseId must be an integer' } });
+      }
+      where.OR = [
+        { courses: { some: { id: courseId } } },
+        { courses: { none: {} } },
+      ];
+    }
+
     const subjects = await prisma.subject.findMany({
-      where: filter.value === undefined ? {} : { isActive: filter.value },
+      where,
       orderBy: [{ displayOrder: 'asc' }, { name: 'asc' }],
       select: SUBJECT_SELECT,
     });
-    return res.status(200).json({ subjects });
+
+    return res.status(200).json({
+      subjects: subjects.map((s) => ({
+        ...s,
+        // So the panel can show "shared" rather than an empty course list.
+        isShared: s.courses.length === 0,
+      })),
+    });
   } catch (error) {
     console.error('List subjects error:', error);
     return res.status(500).json({
@@ -52,9 +79,37 @@ async function listSubjects(req, res) {
 }
 
 // POST /api/subjects
+/**
+ * Resolves and validates a `courseIds` body field.
+ *
+ * A subject with no course attached is treated as shared — it shows under
+ * every course. That is what every existing subject is, so filtering can ship
+ * without emptying a single screen; an admin narrows a subject by attaching
+ * it, rather than having to attach all of them before anything works again.
+ */
+async function readCourseIds(raw) {
+  if (raw === undefined) return { ids: null };
+  if (raw === null) return { ids: [] };
+  if (!Array.isArray(raw)) return { error: 'courseIds must be an array of course ids' };
+
+  const ids = [...new Set(raw.map(Number))];
+  if (ids.some((id) => !Number.isInteger(id))) {
+    return { error: 'courseIds must contain integers' };
+  }
+  if (ids.length === 0) return { ids: [] };
+
+  const found = await prisma.course.findMany({ where: { id: { in: ids } }, select: { id: true } });
+  const missing = ids.filter((id) => !found.some((c) => c.id === id));
+  if (missing.length > 0) {
+    return { error: `Course not found: ${missing.join(', ')}` };
+  }
+  return { ids };
+}
+
+
 async function createSubject(req, res) {
   try {
-    const { name, isActive, displayOrder } = req.body;
+    const { name, isActive, displayOrder, courseIds } = req.body;
 
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return res.status(400).json({
@@ -66,11 +121,15 @@ async function createSubject(req, res) {
       return res.status(400).json({ error: { message: 'displayOrder must be an integer' } });
     }
 
+    const courses = await readCourseIds(courseIds);
+    if (courses.error) return res.status(400).json({ error: { message: courses.error } });
+
     const subject = await prisma.subject.create({
       data: {
         name: name.trim(),
         isActive: isActive !== undefined ? Boolean(isActive) : true,
         displayOrder: displayOrder !== undefined ? Number(displayOrder) : 0,
+        ...(courses.ids?.length ? { courses: { connect: courses.ids.map((id) => ({ id })) } } : {}),
       },
       select: SUBJECT_SELECT,
     });
@@ -102,7 +161,7 @@ async function updateSubject(req, res) {
       return res.status(404).json({ error: { message: 'Subject not found' } });
     }
 
-    const { name, isActive, displayOrder } = req.body;
+    const { name, isActive, displayOrder, courseIds } = req.body;
     const data = {};
 
     if (name !== undefined) {
@@ -126,13 +185,28 @@ async function updateSubject(req, res) {
       data.displayOrder = Number(displayOrder);
     }
 
+    // `set` rather than `connect`: sending the list replaces it, so removing a
+    // course is the same call as adding one. [] detaches everything, which
+    // makes the subject shared again.
+    const courses = await readCourseIds(courseIds);
+    if (courses.error) return res.status(400).json({ error: { message: courses.error } });
+    if (courses.ids !== null) {
+      data.courses = { set: courses.ids.map((id) => ({ id })) };
+    }
+
+    if (Object.keys(data).length === 0) {
+      return res.status(400).json({ error: { message: 'Nothing to update' } });
+    }
+
     const subject = await prisma.subject.update({
       where: { id: subjectId },
       data,
       select: SUBJECT_SELECT,
     });
 
-    return res.status(200).json({ subject });
+    return res.status(200).json({
+      subject: { ...subject, isShared: subject.courses.length === 0 },
+    });
   } catch (error) {
     if (error.code === 'P2002') {
       return res.status(409).json({ error: { message: 'A subject with this name already exists' } });
@@ -186,7 +260,7 @@ async function createTopic(req, res) {
       return res.status(404).json({ error: { message: 'Subject not found' } });
     }
 
-    const { name, isActive, displayOrder } = req.body;
+    const { name, isActive, displayOrder, courseIds } = req.body;
 
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return res.status(400).json({ error: { message: 'Topic name is required' } });
@@ -229,7 +303,7 @@ async function updateTopic(req, res) {
       return res.status(404).json({ error: { message: 'Topic not found' } });
     }
 
-    const { name, isActive, displayOrder } = req.body;
+    const { name, isActive, displayOrder, courseIds } = req.body;
     const data = {};
 
     if (name !== undefined) {
