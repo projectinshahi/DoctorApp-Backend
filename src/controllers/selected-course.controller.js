@@ -25,23 +25,74 @@ function lessonDone(lesson, progress, attempt) {
 // plans needs *one of* them; one with no plans accepts any active subscription
 // for the course. Exported so the decision table is testable.
 /**
+ * What a lesson type needs the student to have bought.
+ *
+ * Straight off the pricing table: Plan B sells the question bank but not the
+ * video lectures, so a video needs video_lecture and a quiz needs mcq. Notes
+ * are not sold separately and are not listed on any plan, so they need only a
+ * subscription.
+ */
+const LESSON_ENTITLEMENT = { video: 'video_lecture', quiz: 'mcq' };
+
+/**
  * Whether this student may open this lesson.
  *
- * `courseAccessType` makes a premium COURSE lock its lessons. Without it,
- * marking a course premium changed a banner and nothing else — every lesson
- * had to be marked premium by hand, and one missed lesson silently gave the
- * whole thing away. A free preview still opens either way, which is the only
- * way to sample a paid course.
+ * `access` is what they have bought: `{ planIds, entitlements }`.
+ *
+ * A premium lesson needs a live subscription, and — where the type maps to one
+ * — the matching entitlement. That is the whole rule: access follows the
+ * feature the plan sells, not a list of lessons attached to a plan.
+ *
+ * A plan with no entitlements recorded unlocks everything. Most plans are in
+ * that state, and treating an empty list as "buys nothing" would lock out
+ * every student who has already paid.
+ *
+ * `courseAccessType` makes a premium COURSE lock its lessons, whatever the
+ * lesson says. A free preview still opens either way — it is the only way to
+ * sample a paid course.
  */
-function isLessonUnlocked(lesson, paidPlanIds, courseAccessType = null) {
+function isLessonUnlocked(lesson, access, courseAccessType = null) {
   if (lesson.isFreePreview) return true;
+
   const premium = lesson.accessType === 'premium' || courseAccessType === 'premium';
   if (!premium) return true;
-  const planIds = lessonPlanIds(lesson);
-  if (planIds.length > 0) {
-    return planIds.some((id) => paidPlanIds.has(id));
-  }
-  return paidPlanIds.size > 0;
+
+  // Accepts the old Set of plan ids as well as the richer object, so a caller
+  // that has not been updated still behaves exactly as it did.
+  const planIds = access instanceof Set ? access : (access?.planIds ?? new Set());
+  const entitlements = access instanceof Set ? null : (access?.entitlements ?? null);
+
+  if (planIds.size === 0) return false;
+
+  // A lesson pinned to specific plans keeps that rule. No rows exist today,
+  // but an admin who sets one means it.
+  const pinned = lessonPlanIds(lesson);
+  if (pinned.length > 0) return pinned.some((id) => planIds.has(id));
+
+  const needed = LESSON_ENTITLEMENT[lesson.type];
+  if (!needed || entitlements === null) return true;
+  // null means no plan declared anything — legacy plans unlock everything.
+  if (entitlements === 'all') return true;
+
+  return entitlements.has(needed);
+}
+
+
+/**
+ * Collapses a student's live subscriptions into what they can open.
+ *
+ * `entitlements` is 'all' when any of their plans records none, because an
+ * empty list means "nobody has filled this in yet", not "this plan buys
+ * nothing".
+ */
+function accessFrom(activeSubs) {
+  const planIds = new Set(activeSubs.map((s) => s.planId));
+  const anyUndeclared = activeSubs.some((s) => (s.plan?.entitlements ?? []).length === 0);
+  if (anyUndeclared) return { planIds, entitlements: 'all' };
+  return {
+    planIds,
+    entitlements: new Set(activeSubs.flatMap((s) => s.plan.entitlements)),
+  };
 }
 
 // Accepts either a shaped lesson (`planIds`) or a raw Prisma row
@@ -82,13 +133,13 @@ async function getSelectedCourseContent(req, res) {
         isActive: true,
         endDate: { gte: new Date() },
       },
-      select: { planId: true },
+      select: { planId: true, plan: { select: { entitlements: true } } },
     });
-    const paidPlanIds = new Set(activeSubs.map((s) => s.planId));
+    const paidPlanIds = accessFrom(activeSubs);
 
     // Course-level flag for the UI banner. A free course needs no purchase.
     const hasPaid =
-      user.selectedCourse.accessType !== 'premium' || paidPlanIds.size > 0;
+      user.selectedCourse.accessType !== 'premium' || paidPlanIds.planIds.size > 0;
 
     const courseType = user.selectedCourseTypeId
       ? await prisma.courseType.findUnique({
@@ -281,9 +332,9 @@ async function getStudentLesson(req, res) {
         isActive: true,
         endDate: { gte: new Date() },
       },
-      select: { planId: true },
+      select: { planId: true, plan: { select: { entitlements: true } } },
     });
-    const paidPlanIds = new Set(activeSubs.map((s) => s.planId));
+    const paidPlanIds = accessFrom(activeSubs);
 
     const unlocked = isLessonUnlocked(lesson, paidPlanIds, user.selectedCourse?.accessType);
     const { status, lessonPlans = [], ...rest } = lesson;
@@ -395,10 +446,10 @@ async function loadStudentQuiz(userId, lessonId) {
 
   const activeSubs = await prisma.subscription.findMany({
     where: { userId, courseId: user.selectedCourseId, isActive: true, endDate: { gte: new Date() } },
-    select: { planId: true },
+    select: { planId: true, plan: { select: { entitlements: true } } },
   });
 
-  if (!isLessonUnlocked(lesson, new Set(activeSubs.map((sub) => sub.planId)), user.selectedCourse?.accessType)) {
+  if (!isLessonUnlocked(lesson, accessFrom(activeSubs), user.selectedCourse?.accessType)) {
     return deny(403, 'This lesson is locked. Subscribe to unlock it.', {
       requiredPlans: lesson.lessonPlans.map((lp) => lp.plan),
     });
@@ -559,6 +610,7 @@ async function submitStudentQuiz(req, res) {
 }
 
 module.exports = {
+  accessFrom, LESSON_ENTITLEMENT,
   lessonDone,
   getSelectedCourseContent,
   getStudentLesson,

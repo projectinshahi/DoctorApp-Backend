@@ -220,16 +220,18 @@ async function getStudentById(req, res) {
           select: {
             id: true, courseId: true, planId: true, startDate: true,
             endDate: true, isActive: true,
-            plan: { select: { id: true, title: true, price: true, durationDays: true, isActive: true } },
+            // entitlements: the access gate reads them, so this screen must
+            // load them or it reports every lesson as unlocked.
+            plan: { select: { id: true, title: true, price: true, durationDays: true, isActive: true, entitlements: true } },
           },
         })
       : [];
 
     const now = new Date();
-    const paidPlanIds = new Set(
-      subscriptions
-        .filter((s) => s.isActive && s.endDate >= now && s.courseId === user.selectedCourseId)
-        .map((s) => s.planId)
+    // Same shape the student gate uses, so this screen reports what the student
+    // actually sees rather than a looser approximation of it.
+    const paidPlanIds = require('./selected-course.controller').accessFrom(
+      subscriptions.filter((s) => s.isActive && s.endDate >= now && s.courseId === user.selectedCourseId),
     );
 
     // Same either/or resolution the student feed uses.

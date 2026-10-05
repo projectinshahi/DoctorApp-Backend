@@ -93,14 +93,15 @@ async function readableLesson(userId, lessonId) {
   const [activeSubs, course] = await Promise.all([
     courseId === null ? [] : prisma.subscription.findMany({
       where: { userId, courseId, isActive: true, endDate: { gte: new Date() } },
-      select: { planId: true },
+      select: { planId: true, plan: { select: { entitlements: true } } },
     }),
     courseId === null ? null : prisma.course.findUnique({
       where: { id: courseId }, select: { accessType: true },
     }),
   ]);
 
-  if (!isLessonUnlocked(lesson, new Set(activeSubs.map((s) => s.planId)), course?.accessType)) {
+  const { accessFrom } = require('./selected-course.controller');
+  if (!isLessonUnlocked(lesson, accessFrom(activeSubs), course?.accessType)) {
     return { error: { status: 403, message: 'This lesson is locked. Subscribe to join the discussion.' } };
   }
   return { lesson };

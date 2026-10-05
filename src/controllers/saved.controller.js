@@ -281,10 +281,10 @@ async function fetchSavedLessons(userId, type = null) {
     const activeSubs = user?.selectedCourseId
       ? await prisma.subscription.findMany({
           where: { userId, courseId: user.selectedCourseId, isActive: true, endDate: { gte: new Date() } },
-          select: { planId: true },
+          select: { planId: true, plan: { select: { entitlements: true } } },
         })
       : [];
-    const paidPlanIds = new Set(activeSubs.map((sub) => sub.planId));
+    const paidPlanIds = require('./selected-course.controller').accessFrom(activeSubs);
     const progressByLesson = new Map(progressRows.map((p) => [p.lessonId, p]));
 
   return rows.map((row) => {

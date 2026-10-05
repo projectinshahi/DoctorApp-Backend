@@ -100,14 +100,14 @@ async function getHome(req, res) {
         : null,
       prisma.subscription.findMany({
         where: { userId, courseId: user.selectedCourseId, isActive: true, endDate: { gte: new Date() } },
-        select: { planId: true },
+        select: { planId: true, plan: { select: { entitlements: true } } },
       }),
       courseLessons(user),
       require('./dailyQuiz.controller').dailyQuizSummary(userId, user.selectedCourseId),
     ]);
 
-    const paidPlanIds = new Set(activeSubs.map((s) => s.planId));
-    const hasPaid = user.selectedCourse.accessType !== 'premium' || paidPlanIds.size > 0;
+    const paidPlanIds = require('./selected-course.controller').accessFrom(activeSubs);
+    const hasPaid = user.selectedCourse.accessType !== 'premium' || paidPlanIds.planIds.size > 0;
 
     const videoLessons = lessons.filter((l) => l.type === 'video');
     // 'text' is the enum value; note lessons are text lessons carrying a

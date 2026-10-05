@@ -1,6 +1,6 @@
 // Lock decision table for premium lessons. Run: node src/controllers/selected-course.test.js
 const assert = require('assert');
-const { isLessonUnlocked } = require('./selected-course.controller');
+const { accessFrom, isLessonUnlocked } = require('./selected-course.controller');
 
 const free = { accessType: 'free', isFreePreview: false, planIds: [] };
 const preview = { accessType: 'premium', isFreePreview: true, planIds: [5] };
@@ -74,6 +74,51 @@ assert(isLessonUnlocked(plan5, bought5, 'premium'));
 assert(isLessonUnlocked(plainLesson, none));
 assert(isLessonUnlocked(plainLesson, none, null));
 assert(isLessonUnlocked(plainLesson, none, undefined));
+
+
+// ── a premium lesson follows the FEATURE the plan sells ──
+//
+// Straight off the pricing table: Plan B buys the question bank but not the
+// video lectures, so the same subscription opens a quiz and not a video.
+const planB = accessFrom([{ planId: 15, plan: { entitlements: ['mcq', 'mock', 'rapid_recall'] } }]);
+const planC = accessFrom([{ planId: 16, plan: { entitlements: ['mcq', 'mock', 'rapid_recall', 'video_lecture'] } }]);
+
+const premiumVideo = { type: 'video', accessType: 'premium', isFreePreview: false, planIds: [] };
+const premiumQuiz  = { type: 'quiz',  accessType: 'premium', isFreePreview: false, planIds: [] };
+const premiumNote  = { type: 'text',  accessType: 'premium', isFreePreview: false, planIds: [] };
+
+assert(!isLessonUnlocked(premiumVideo, planB), 'Plan B does not buy video lectures');
+assert(isLessonUnlocked(premiumQuiz, planB), 'Plan B does buy the question bank');
+assert(isLessonUnlocked(premiumVideo, planC), 'Plan C adds video lectures');
+
+// Notes are on no plan, so any live subscription opens them.
+assert(isLessonUnlocked(premiumNote, planB));
+
+// No subscription at all opens nothing premium, whatever the plan would buy.
+const nothing = accessFrom([]);
+assert(!isLessonUnlocked(premiumQuiz, nothing));
+assert(!isLessonUnlocked(premiumVideo, nothing));
+assert(isLessonUnlocked({ ...premiumVideo, isFreePreview: true }, nothing), 'a preview still opens');
+
+// A plan with no entitlements recorded unlocks everything. Most plans are in
+// that state, and reading an empty list as "buys nothing" would lock out every
+// student who has already paid.
+const legacy = accessFrom([{ planId: 6, plan: { entitlements: [] } }]);
+assert(isLessonUnlocked(premiumVideo, legacy), 'a legacy plan must not lock a paying student out');
+assert(isLessonUnlocked(premiumQuiz, legacy));
+
+// One legacy plan alongside a declared one still unlocks everything — the
+// student paid for something nobody has described yet.
+const mixed = accessFrom([
+  { planId: 15, plan: { entitlements: ['mcq'] } },
+  { planId: 6, plan: { entitlements: [] } },
+]);
+assert(isLessonUnlocked(premiumVideo, mixed));
+
+// A lesson pinned to specific plans keeps its own rule.
+const pinnedToC = { type: 'video', accessType: 'premium', isFreePreview: false, planIds: [16] };
+assert(!isLessonUnlocked(pinnedToC, planB), 'the wrong plan still fails');
+assert(isLessonUnlocked(pinnedToC, planC));
 
 console.log('lesson lock rules OK');
 
