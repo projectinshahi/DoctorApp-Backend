@@ -3,6 +3,7 @@ const prisma = require('../db');
 
 const VALID_DIFFICULTIES = ['easy', 'medium', 'hard'];
 const VALID_QUESTION_STATUSES = ['active', 'inactive'];
+const VALID_ACCESS_TYPES = ['free', 'premium'];
 // Four, to match test questions — a two-option question is a true/false in a
 // bank built for MCQs, and the same student sees both.
 const MIN_OPTIONS = 4;
@@ -19,6 +20,7 @@ const QUESTION_SELECT = {
   marksIncorrect: true,
   explanation: true,
   status: true,
+  accessType: true,
   subject: { select: { id: true, name: true } },
   topic: { select: { id: true, name: true } },
   options: {
@@ -224,7 +226,7 @@ function tagCreatePayload(names) {
 async function buildQuestionCreateData(body) {
   const {
     subjectId, topicId, questionText, questionImageUrl,
-    difficulty, marksCorrect, marksIncorrect, explanation, status,
+    difficulty, marksCorrect, marksIncorrect, explanation, status, accessType,
   } = body;
 
   if (!questionText || typeof questionText !== 'string' || questionText.trim().length === 0) {
@@ -241,6 +243,10 @@ async function buildQuestionCreateData(body) {
 
   if (status !== undefined && !VALID_QUESTION_STATUSES.includes(status)) {
     return { error: `status must be one of: ${VALID_QUESTION_STATUSES.join(', ')}` };
+  }
+
+  if (accessType !== undefined && !VALID_ACCESS_TYPES.includes(accessType)) {
+    return { error: `accessType must be one of: ${VALID_ACCESS_TYPES.join(', ')}` };
   }
 
   if (explanation !== undefined && explanation !== null && typeof explanation !== 'string') {
@@ -274,6 +280,7 @@ async function buildQuestionCreateData(body) {
       marksIncorrect: incorrect.skip ? 0 : incorrect.value,
       explanation: explanation !== undefined ? explanation : null,
       status: status ?? 'active',
+      accessType: accessType ?? 'free',
       options: { create: optionSelection.options },
       tags: { create: tagCreatePayload(tagSelection.names) },
     },
@@ -507,7 +514,7 @@ async function updateQuestion(req, res) {
 
     const {
       subjectId, topicId, questionText, questionImageUrl,
-      difficulty, marksCorrect, marksIncorrect, explanation, status,
+      difficulty, marksCorrect, marksIncorrect, explanation, status, accessType,
     } = req.body;
 
     const data = {};
@@ -538,6 +545,15 @@ async function updateQuestion(req, res) {
         return res.status(400).json({ error: { message: `status must be one of: ${VALID_QUESTION_STATUSES.join(', ')}` } });
       }
       data.status = status;
+    }
+
+    if (accessType !== undefined) {
+      if (!VALID_ACCESS_TYPES.includes(accessType)) {
+        return res.status(400).json({
+          error: { message: `accessType must be one of: ${VALID_ACCESS_TYPES.join(', ')}` },
+        });
+      }
+      data.accessType = accessType;
     }
 
     if (explanation !== undefined) {

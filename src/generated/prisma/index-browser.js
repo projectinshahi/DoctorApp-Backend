@@ -288,6 +288,7 @@ exports.Prisma.QuestionScalarFieldEnum = {
   marksIncorrect: 'marksIncorrect',
   explanation: 'explanation',
   status: 'status',
+  accessType: 'accessType',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

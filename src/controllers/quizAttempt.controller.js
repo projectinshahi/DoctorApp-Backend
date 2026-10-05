@@ -183,7 +183,10 @@ async function startAttempt(req, res) {
     // includeAnswers, because publicQuestion now serves the key for practice.
     // It is the gate that decides what reaches the student, so the fetch has
     // to hand it the answers to gate.
-    const questions = await resolveQuizQuestions(lesson.quiz, { includeAnswers: true });
+    const questions = await resolveQuizQuestions(lesson.quiz, {
+      includeAnswers: true,
+      freeOnly: !gate.hasSubscription,
+    });
     if (questions.length === 0) {
       return res.status(409).json({ error: { message: 'This quiz has no questions yet' } });
     }

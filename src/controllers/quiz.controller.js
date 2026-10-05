@@ -331,11 +331,24 @@ const ADMIN_QUESTION_SELECT = {
  * additive: an existing quiz keeps behaving identically until someone picks
  * questions for it.
  */
-async function resolveQuizQuestions(quiz, { includeAnswers = false } = {}) {
+/**
+ * Resolves the questions a quiz serves.
+ *
+ * `freeOnly` drops premium questions, the same free/premium choice a lesson
+ * has. It is passed by the student paths when the student has no live
+ * subscription; admin previews never set it, so the panel always sees the
+ * whole paper.
+ *
+ * Dropping rather than locking: a quiz is answered end to end, and a locked
+ * question sitting at number 7 of 20 stops a student finishing a paper they
+ * were entitled to take.
+ */
+async function resolveQuizQuestions(quiz, { includeAnswers = false, freeOnly = false } = {}) {
   const select = includeAnswers ? ADMIN_QUESTION_SELECT : PUBLIC_QUESTION_SELECT;
+  const accessWhere = freeOnly ? { accessType: 'free' } : {};
 
   const pinned = await prisma.quizQuestion.findMany({
-    where: { quizId: quiz.id, question: { status: 'active' } },
+    where: { quizId: quiz.id, question: { status: 'active', ...accessWhere } },
     orderBy: [{ displayOrder: 'asc' }, { questionId: 'asc' }],
     select: { question: { select } },
   });
@@ -347,7 +360,7 @@ async function resolveQuizQuestions(quiz, { includeAnswers = false } = {}) {
     return quiz.questionCount ? questions.slice(0, quiz.questionCount) : questions;
   }
 
-  const poolWhere = questionPoolWhere(quiz);
+  const poolWhere = { ...questionPoolWhere(quiz), ...accessWhere };
 
   // A count-capped quiz samples ids first; an uncapped one takes the whole
   // pool in a stable order.
@@ -373,17 +386,22 @@ async function resolveQuizQuestions(quiz, { includeAnswers = false } = {}) {
  * Ids outside the quiz's pinned set or filter are dropped, so a student cannot
  * smuggle in a question from another quiz to get its answer key back.
  */
-async function fetchEligibleQuestions(quiz, ids) {
+// `freeOnly` mirrors resolveQuizQuestions. Without it the serve-side filter is
+// only advice: a student served free questions could still submit a premium
+// id and be scored on a question they were never shown.
+async function fetchEligibleQuestions(quiz, ids, { freeOnly = false } = {}) {
   if (ids.length === 0) return [];
 
+  const accessWhere = freeOnly ? { accessType: 'free' } : {};
+
   const pinnedIds = (await prisma.quizQuestion.findMany({
-    where: { quizId: quiz.id, question: { status: 'active' } },
+    where: { quizId: quiz.id, question: { status: 'active', ...accessWhere } },
     select: { questionId: true },
   })).map((row) => row.questionId);
 
   const where = pinnedIds.length > 0
-    ? { id: { in: ids.filter((id) => pinnedIds.includes(id)) }, status: 'active' }
-    : { ...questionPoolWhere(quiz), id: { in: ids } };
+    ? { id: { in: ids.filter((id) => pinnedIds.includes(id)) }, status: 'active', ...accessWhere }
+    : { ...questionPoolWhere(quiz), ...accessWhere, id: { in: ids } };
 
   return prisma.question.findMany({
     where,

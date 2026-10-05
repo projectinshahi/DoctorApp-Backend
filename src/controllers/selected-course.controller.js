@@ -407,7 +407,10 @@ async function loadStudentQuiz(userId, lessonId) {
   if (!lesson.quiz) return deny(409, 'This lesson has no quiz linked');
   if (lesson.quiz.status !== 'active') return deny(409, 'The quiz linked to this lesson is inactive');
 
-  return { lesson };
+  // Handed back so callers do not repeat the subscription query to work out
+  // whether premium questions may be served. A free lesson inside a paid
+  // course can still hold premium questions.
+  return { lesson, hasSubscription: activeSubs.length > 0 };
 }
 
 
@@ -423,7 +426,7 @@ async function getStudentQuizQuestions(req, res) {
 
     // includeAnswers stays false — the answer key never reaches a student
     // before they submit. It comes back from the submit response instead.
-    const questions = await resolveQuizQuestions(lesson.quiz);
+    const questions = await resolveQuizQuestions(lesson.quiz, { freeOnly: !gate.hasSubscription });
 
     return res.status(200).json({
       lessonId: lesson.id,
@@ -518,7 +521,9 @@ async function submitStudentQuiz(req, res) {
       return res.status(400).json({ error: { message: 'questionIds must be integers' } });
     }
 
-    const questions = await fetchEligibleQuestions(lesson.quiz, [...new Set(servedIds)]);
+    const questions = await fetchEligibleQuestions(lesson.quiz, [...new Set(servedIds)], {
+      freeOnly: !gate.hasSubscription,
+    });
 
     // Anything dropped was not part of this quiz. Saying so beats silently
     // scoring it as zero and leaving the app to wonder why the total is short.

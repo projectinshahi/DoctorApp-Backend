@@ -365,6 +365,10 @@ model Question {
   marksIncorrect   Float          @default(0)
   explanation      String?
   status           QuestionStatus @default(active)
+  // Free questions are served to everyone; premium ones only to students with
+  // a live subscription, the same rule a lesson uses. Defaults to free so
+  // every question written before this stays visible.
+  accessType       AccessType     @default(free)
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
 
@@ -379,7 +383,7 @@ model Question {
   quizQuestions QuizQuestion[]
   savedBy       SavedQuestion[]
 
-  @@index([subjectId, topicId, status])
+  @@index([subjectId, topicId, status, accessType])
   @@map("questions")
 }
 

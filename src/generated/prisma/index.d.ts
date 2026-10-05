@@ -20632,6 +20632,7 @@ export namespace Prisma {
     marksIncorrect: number | null
     explanation: string | null
     status: $Enums.QuestionStatus | null
+    accessType: $Enums.AccessType | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -20647,6 +20648,7 @@ export namespace Prisma {
     marksIncorrect: number | null
     explanation: string | null
     status: $Enums.QuestionStatus | null
+    accessType: $Enums.AccessType | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -20662,6 +20664,7 @@ export namespace Prisma {
     marksIncorrect: number
     explanation: number
     status: number
+    accessType: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -20695,6 +20698,7 @@ export namespace Prisma {
     marksIncorrect?: true
     explanation?: true
     status?: true
+    accessType?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -20710,6 +20714,7 @@ export namespace Prisma {
     marksIncorrect?: true
     explanation?: true
     status?: true
+    accessType?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -20725,6 +20730,7 @@ export namespace Prisma {
     marksIncorrect?: true
     explanation?: true
     status?: true
+    accessType?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -20827,6 +20833,7 @@ export namespace Prisma {
     marksIncorrect: number
     explanation: string | null
     status: $Enums.QuestionStatus
+    accessType: $Enums.AccessType
     createdAt: Date
     updatedAt: Date
     _count: QuestionCountAggregateOutputType | null
@@ -20861,6 +20868,7 @@ export namespace Prisma {
     marksIncorrect?: boolean
     explanation?: boolean
     status?: boolean
+    accessType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
@@ -20883,6 +20891,7 @@ export namespace Prisma {
     marksIncorrect?: boolean
     explanation?: boolean
     status?: boolean
+    accessType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
@@ -20900,6 +20909,7 @@ export namespace Prisma {
     marksIncorrect?: boolean
     explanation?: boolean
     status?: boolean
+    accessType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
@@ -20917,11 +20927,12 @@ export namespace Prisma {
     marksIncorrect?: boolean
     explanation?: boolean
     status?: boolean
+    accessType?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type QuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subjectId" | "topicId" | "questionText" | "questionImageUrl" | "difficulty" | "marksCorrect" | "marksIncorrect" | "explanation" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["question"]>
+  export type QuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "subjectId" | "topicId" | "questionText" | "questionImageUrl" | "difficulty" | "marksCorrect" | "marksIncorrect" | "explanation" | "status" | "accessType" | "createdAt" | "updatedAt", ExtArgs["result"]["question"]>
   export type QuestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     subject?: boolean | SubjectDefaultArgs<ExtArgs>
     topic?: boolean | TopicDefaultArgs<ExtArgs>
@@ -20961,6 +20972,7 @@ export namespace Prisma {
       marksIncorrect: number
       explanation: string | null
       status: $Enums.QuestionStatus
+      accessType: $Enums.AccessType
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["question"]>
@@ -21402,6 +21414,7 @@ export namespace Prisma {
     readonly marksIncorrect: FieldRef<"Question", 'Float'>
     readonly explanation: FieldRef<"Question", 'String'>
     readonly status: FieldRef<"Question", 'QuestionStatus'>
+    readonly accessType: FieldRef<"Question", 'AccessType'>
     readonly createdAt: FieldRef<"Question", 'DateTime'>
     readonly updatedAt: FieldRef<"Question", 'DateTime'>
   }
@@ -49194,6 +49207,7 @@ export namespace Prisma {
     marksIncorrect: 'marksIncorrect',
     explanation: 'explanation',
     status: 'status',
+    accessType: 'accessType',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -50850,6 +50864,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFilter<"Question"> | number
     explanation?: StringNullableFilter<"Question"> | string | null
     status?: EnumQuestionStatusFilter<"Question"> | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFilter<"Question"> | $Enums.AccessType
     createdAt?: DateTimeFilter<"Question"> | Date | string
     updatedAt?: DateTimeFilter<"Question"> | Date | string
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
@@ -50871,6 +50886,7 @@ export namespace Prisma {
     marksIncorrect?: SortOrder
     explanation?: SortOrderInput | SortOrder
     status?: SortOrder
+    accessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     subject?: SubjectOrderByWithRelationInput
@@ -50895,6 +50911,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFilter<"Question"> | number
     explanation?: StringNullableFilter<"Question"> | string | null
     status?: EnumQuestionStatusFilter<"Question"> | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFilter<"Question"> | $Enums.AccessType
     createdAt?: DateTimeFilter<"Question"> | Date | string
     updatedAt?: DateTimeFilter<"Question"> | Date | string
     subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
@@ -50916,6 +50933,7 @@ export namespace Prisma {
     marksIncorrect?: SortOrder
     explanation?: SortOrderInput | SortOrder
     status?: SortOrder
+    accessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: QuestionCountOrderByAggregateInput
@@ -50939,6 +50957,7 @@ export namespace Prisma {
     marksIncorrect?: FloatWithAggregatesFilter<"Question"> | number
     explanation?: StringNullableWithAggregatesFilter<"Question"> | string | null
     status?: EnumQuestionStatusWithAggregatesFilter<"Question"> | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeWithAggregatesFilter<"Question"> | $Enums.AccessType
     createdAt?: DateTimeWithAggregatesFilter<"Question"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Question"> | Date | string
   }
@@ -53812,6 +53831,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     subject: SubjectCreateNestedOneWithoutQuestionsInput
@@ -53833,6 +53853,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
@@ -53849,6 +53870,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subject?: SubjectUpdateOneRequiredWithoutQuestionsNestedInput
@@ -53870,6 +53892,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
@@ -53889,6 +53912,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -53901,6 +53925,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -53916,6 +53941,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -56778,6 +56804,7 @@ export namespace Prisma {
     marksIncorrect?: SortOrder
     explanation?: SortOrder
     status?: SortOrder
+    accessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -56801,6 +56828,7 @@ export namespace Prisma {
     marksIncorrect?: SortOrder
     explanation?: SortOrder
     status?: SortOrder
+    accessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -56816,6 +56844,7 @@ export namespace Prisma {
     marksIncorrect?: SortOrder
     explanation?: SortOrder
     status?: SortOrder
+    accessType?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -63122,6 +63151,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     topic: TopicCreateNestedOneWithoutQuestionsInput
@@ -63141,6 +63171,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
@@ -63316,6 +63347,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFilter<"Question"> | number
     explanation?: StringNullableFilter<"Question"> | string | null
     status?: EnumQuestionStatusFilter<"Question"> | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFilter<"Question"> | $Enums.AccessType
     createdAt?: DateTimeFilter<"Question"> | Date | string
     updatedAt?: DateTimeFilter<"Question"> | Date | string
   }
@@ -63426,6 +63458,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     subject: SubjectCreateNestedOneWithoutQuestionsInput
@@ -63445,6 +63478,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
@@ -66460,6 +66494,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     subject: SubjectCreateNestedOneWithoutQuestionsInput
@@ -66480,6 +66515,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     tags?: QuestionTagUncheckedCreateNestedManyWithoutQuestionInput
@@ -66511,6 +66547,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subject?: SubjectUpdateOneRequiredWithoutQuestionsNestedInput
@@ -66531,6 +66568,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tags?: QuestionTagUncheckedUpdateManyWithoutQuestionNestedInput
@@ -66913,6 +66951,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     subject: SubjectCreateNestedOneWithoutQuestionsInput
@@ -66933,6 +66972,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
@@ -67002,6 +67042,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subject?: SubjectUpdateOneRequiredWithoutQuestionsNestedInput
@@ -67022,6 +67063,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
@@ -67071,6 +67113,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     subject: SubjectCreateNestedOneWithoutQuestionsInput
@@ -67091,6 +67134,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
@@ -67136,6 +67180,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subject?: SubjectUpdateOneRequiredWithoutQuestionsNestedInput
@@ -67156,6 +67201,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
@@ -67549,6 +67595,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     subject: SubjectCreateNestedOneWithoutQuestionsInput
@@ -67569,6 +67616,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
     options?: QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
@@ -67664,6 +67712,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subject?: SubjectUpdateOneRequiredWithoutQuestionsNestedInput
@@ -67684,6 +67733,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
@@ -71609,6 +71659,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -71739,6 +71790,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     topic?: TopicUpdateOneRequiredWithoutQuestionsNestedInput
@@ -71758,6 +71810,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
@@ -71776,6 +71829,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -71880,6 +71934,7 @@ export namespace Prisma {
     marksIncorrect?: number
     explanation?: string | null
     status?: $Enums.QuestionStatus
+    accessType?: $Enums.AccessType
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -71903,6 +71958,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subject?: SubjectUpdateOneRequiredWithoutQuestionsNestedInput
@@ -71922,6 +71978,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     options?: QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
@@ -71940,6 +71997,7 @@ export namespace Prisma {
     marksIncorrect?: FloatFieldUpdateOperationsInput | number
     explanation?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
