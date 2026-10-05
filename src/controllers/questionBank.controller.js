@@ -340,6 +340,15 @@ async function listQuestions(req, res) {
       where.topicId = topicId;
     }
 
+    if (req.query.accessType !== undefined) {
+      if (!VALID_ACCESS_TYPES.includes(req.query.accessType)) {
+        return res.status(400).json({
+          error: { message: `accessType must be one of: ${VALID_ACCESS_TYPES.join(', ')}` },
+        });
+      }
+      where.accessType = req.query.accessType;
+    }
+
     if (req.query.difficulty !== undefined) {
       if (!VALID_DIFFICULTIES.includes(req.query.difficulty)) {
         return res.status(400).json({ error: { message: `difficulty must be one of: ${VALID_DIFFICULTIES.join(', ')}` } });
