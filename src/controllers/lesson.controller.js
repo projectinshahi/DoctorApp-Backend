@@ -343,28 +343,53 @@ async function getLesson(req, res) {
 
     const includeChapter = req.query.includeChapter === 'true';
 
+    // The chapter is always joined, even when the caller did not ask for it,
+    // because the course's accessType rides on it. Without that the lesson
+    // editor cannot tell whether ticking "free" needs isFreePreview — and a
+    // panel that guesses will quietly open or close a lesson.
+    //
+    // A chapter hangs off a course directly or off a course type; both are in
+    // use, so both paths are read and whichever answers wins.
     const lesson = await prisma.lesson.findUnique({
       where: { id: lessonId },
-      select: includeChapter
-        ? {
-            ...LESSON_SELECT,
-            chapter: {
-              select: {
-                id: true,
-                title: true,
-                courseId: true,
-                courseTypeId: true,
-              },
+      select: {
+        ...LESSON_SELECT,
+        chapter: {
+          select: {
+            id: true,
+            title: true,
+            courseId: true,
+            courseTypeId: true,
+            course: { select: { id: true, title: true, accessType: true } },
+            courseType: {
+              select: { id: true, title: true, course: { select: { id: true, title: true, accessType: true } } },
             },
-          }
-        : LESSON_SELECT,
+          },
+        },
+      },
     });
 
     if (!lesson) {
       return res.status(404).json({ error: { message: 'Lesson not found' } });
     }
 
-    const shaped = shapeLesson(lesson);
+    const { chapter, ...lessonRow } = lesson;
+    const course = chapter?.course ?? chapter?.courseType?.course ?? null;
+
+    const shaped = shapeLesson(lessonRow);
+
+    // Flat, because the editor needs one answer and not two paths to walk.
+    // Null only when a chapter hangs off neither — which should not happen,
+    // and which the panel must read as "leave the preview flag alone" rather
+    // than as "not premium".
+    shaped.courseAccessType = course?.accessType ?? null;
+    shaped.course = course;
+    if (includeChapter) {
+      shaped.chapter = {
+        id: chapter.id, title: chapter.title,
+        courseId: chapter.courseId, courseTypeId: chapter.courseTypeId,
+      };
+    }
 
     // A quiz lesson's screen needs to know how many questions the filter
     // actually matches — otherwise the admin has to guess whether the quiz is
