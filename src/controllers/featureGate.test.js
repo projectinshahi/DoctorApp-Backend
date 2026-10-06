@@ -3,8 +3,9 @@
 const assert = require('assert');
 const { accessFrom } = require('./selected-course.controller');
 
-// hasCourseFeature reads the course and the subscriptions, so its decision is
-// exercised here through accessFrom — the part that turns rows into a verdict.
+// hasCourseFeature reads only the subscriptions now — a mock and a Rapid
+// Recall deck are paid content wherever they live, so there is no free-course
+// escape to test. Its verdict is accessFrom's, exercised here.
 const subs = (...entitlementSets) =>
   entitlementSets.map((e, i) => ({ planId: i + 1, plan: { entitlements: e } }));
 
@@ -40,5 +41,10 @@ assert.strictEqual(mixed.entitlements, 'all');
 const none = accessFrom([]);
 assert.strictEqual(can(none, 'mock'), false);
 assert.strictEqual(none.planIds.size, 0);
+
+// No subscription on a course means no feature, whatever the course's own
+// tier says. hasCourseFeature does not read accessType at all — a free course
+// with a mock under it is simply unsittable, which is the stated rule.
+assert.strictEqual(can(accessFrom([]), 'rapid_recall'), false);
 
 console.log('featureGate.test.js: all assertions passed');

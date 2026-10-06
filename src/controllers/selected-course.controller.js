@@ -98,22 +98,23 @@ function courseAccessOf(user) {
 /**
  * Whether this student's live subscriptions open `feature` on this course.
  *
- * The same rule lessons use, lifted out so a mock test and a Rapid Recall deck
- * are gated by the one piece of code rather than three that drift. A free
- * course is open — premium is what makes anything cost money, here as
- * everywhere else.
+ * Mock tests and Rapid Recall are sold, always. There is deliberately no
+ * free-course escape here and no per-item free flag: a paper or a deck is
+ * subscription content wherever it lives, which is the rule asked for and the
+ * one an admin cannot accidentally undo by leaving a tier unset.
  *
- * `feature` is one of the plan entitlement codes: mock · rapid_recall · mcq ·
+ * The consequence worth knowing: a mock or a deck created under a FREE course
+ * can never be opened, because a free course has no plans to buy. Put them
+ * under a premium course.
+ *
+ * Lessons do not come through here — they keep their own free/premium rule in
+ * isLessonUnlocked, where a free course is genuinely free.
+ *
+ * `feature` is a plan entitlement code: mock · rapid_recall · mcq ·
  * video_lecture · live_class · ai_patient.
  */
 async function hasCourseFeature(userId, courseId, feature) {
   if (!Number.isInteger(courseId)) return false;
-
-  const course = await prisma.course.findUnique({
-    where: { id: courseId }, select: { accessType: true },
-  });
-  if (!course) return false;
-  if (course.accessType !== 'premium') return true;
 
   const activeSubs = await prisma.subscription.findMany({
     where: { userId, courseId, isActive: true, endDate: { gte: new Date() } },
@@ -122,8 +123,8 @@ async function hasCourseFeature(userId, courseId, feature) {
   if (activeSubs.length === 0) return false;
 
   const { entitlements } = accessFrom(activeSubs);
-  // 'all' is a plan that declared nothing — legacy rows, which buy everything
-  // rather than nothing.
+  // 'all' is a plan that declared nothing — a legacy row, which buys
+  // everything rather than nothing.
   return entitlements === 'all' || entitlements.has(feature);
 }
 
