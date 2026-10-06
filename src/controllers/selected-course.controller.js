@@ -85,6 +85,16 @@ function isLessonUnlocked(lesson, access, courseAccessType = null) {
  * empty list means "nobody has filled this in yet", not "this plan buys
  * nothing".
  */
+// Reads the selected course's tier for the gate below. Throws on a missing
+// relation rather than returning undefined: undefined reads as "not premium",
+// which silently unlocks every paid lesson in a premium course.
+function courseAccessOf(user) {
+  if (!user.selectedCourse) {
+    throw new Error('selectedCourse was not selected — the lesson gate would silently unlock premium lessons');
+  }
+  return user.selectedCourse.accessType;
+}
+
 function accessFrom(activeSubs) {
   const planIds = new Set(activeSubs.map((s) => s.planId));
   const anyUndeclared = activeSubs.some((s) => (s.plan?.entitlements ?? []).length === 0);
@@ -209,7 +219,7 @@ async function getSelectedCourseContent(req, res) {
 
     const shaped = chapters.map((ch) => {
       const lessons = ch.lessons.map((l) => {
-        const unlocked = isLessonUnlocked(l, paidPlanIds, user.selectedCourse?.accessType);
+        const unlocked = isLessonUnlocked(l, paidPlanIds, courseAccessOf(user));
         const { lessonPlans = [], ...rest } = l;
         const plans = lessonPlans.map((lp) => lp.plan);
         // null, not omitted: the app can tell "no attempt yet" from "not a
@@ -279,7 +289,13 @@ async function getStudentLesson(req, res) {
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { selectedCourseId: true, selectedCourseTypeId: true },
+      select: {
+        selectedCourseId: true,
+        selectedCourseTypeId: true,
+        // Needed by isLessonUnlocked: without it a premium course's free
+        // lessons read as unlocked here and hand over videoUrl.
+        selectedCourse: { select: { accessType: true } },
+      },
     });
 
     if (!user?.selectedCourseId) {
@@ -336,7 +352,7 @@ async function getStudentLesson(req, res) {
     });
     const paidPlanIds = accessFrom(activeSubs);
 
-    const unlocked = isLessonUnlocked(lesson, paidPlanIds, user.selectedCourse?.accessType);
+    const unlocked = isLessonUnlocked(lesson, paidPlanIds, courseAccessOf(user));
     const { status, lessonPlans = [], ...rest } = lesson;
     const requiredPlans = lessonPlans.map((lp) => lp.plan);
 
@@ -449,7 +465,7 @@ async function loadStudentQuiz(userId, lessonId) {
     select: { planId: true, plan: { select: { entitlements: true } } },
   });
 
-  if (!isLessonUnlocked(lesson, accessFrom(activeSubs), user.selectedCourse?.accessType)) {
+  if (!isLessonUnlocked(lesson, accessFrom(activeSubs), courseAccessOf(user))) {
     return deny(403, 'This lesson is locked. Subscribe to unlock it.', {
       requiredPlans: lesson.lessonPlans.map((lp) => lp.plan),
     });
@@ -610,6 +626,7 @@ async function submitStudentQuiz(req, res) {
 }
 
 module.exports = {
+  courseAccessOf,
   accessFrom, LESSON_ENTITLEMENT,
   lessonDone,
   getSelectedCourseContent,

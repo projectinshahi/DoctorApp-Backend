@@ -143,3 +143,18 @@ assert(lessonDone(quiz, undefined, { completed: true }));
 assert(!lessonDone(quiz, { completed: true }, null), 'quiz needs an attempt, not a flag');
 
 console.log('progress rollup OK');
+
+// --- a missing selectedCourse select must crash, not silently unlock -------
+// This is the bug that shipped: getStudentLesson passed the course tier to the
+// gate but never selected it, so `undefined` read as "not premium" and the
+// detail endpoint handed a premium course's free lessons over with their
+// videoUrl to students who had paid nothing.
+const { courseAccessOf } = require('./selected-course.controller');
+
+assert.throws(
+  () => courseAccessOf({ selectedCourseId: 22, selectedCourseTypeId: 36 }),
+  /selectedCourse was not selected/,
+  'forgetting the selectedCourse select must throw, not return undefined',
+);
+assert.strictEqual(courseAccessOf({ selectedCourse: { accessType: 'premium' } }), 'premium');
+assert.strictEqual(courseAccessOf({ selectedCourse: { accessType: 'free' } }), 'free');
