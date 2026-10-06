@@ -1,120 +1,99 @@
-# Task: render 5- and 6-option test questions
+# Task: show option E and F on a test question
 
-Paste this into Claude inside the **student app repo**.
+Paste this into Claude inside the **student app repo** (`dr_app`).
 
-Base URL: `https://doctorapp-backend-cl2h.onrender.com`
-Auth: `Authorization: Bearer <student access token>`.
-
-Grand Test questions can now carry **up to six options**. The payload already
-includes them — the app is the only part that still assumes four.
-
-This is the **Grand Test** screens only. The QBank serves a list of options and
-needs no change.
+The backend stores and serves six options on test questions. The app parses
+four. **Until this lands, do not publish a six-option paper to students.**
 
 ---
 
-## What changed in the payload
+## What goes wrong today
 
-`POST /api/users/me/tests/:testId/attempts` — each question now has:
-
-```json
-{ "id": 642, "questionOrder": 1, "section": "Part A",
-  "questionText": "Which organism most commonly causes community-acquired pneumonia?",
-  "questionImageUrl": null,
-  "optionA": "Streptococcus pneumoniae", "optionAImageUrl": null,
-  "optionB": "Mycobacterium tuberculosis", "optionBImageUrl": null,
-  "optionC": "Pseudomonas aeruginosa",     "optionCImageUrl": null,
-  "optionD": "Aspergillus fumigatus",      "optionDImageUrl": null,
-  "optionE": "Klebsiella pneumoniae",      "optionEImageUrl": null,
-  "optionF": "Legionella pneumophila",     "optionFImageUrl": null }
-```
-
-**E and F are nullable.** A four-option question returns them as `null`, and
-most questions will. A five-option question has E and a null F.
-
-`GET /test-attempts/:attemptId/result` carries the same two fields per
-question, so the review screen needs the same change.
-
----
-
-## Build the list, do not hardcode four
-
-Replace whatever renders A, B, C, D one by one:
+`lib/models/test_model.dart`, `TestQuestion`:
 
 ```dart
-/// The options this question actually has, in order, skipping the empty ones.
-List<TestOption> optionsOf(TestQuestion q) => const ['A', 'B', 'C', 'D', 'E', 'F']
-    .map((l) => TestOption(
-          letter: l,
-          text: q.optionText(l),          // optionA … optionF
-          imageUrl: q.optionImageUrl(l),  // optionAImageUrl … optionFImageUrl
-        ))
-    .where((o) => (o.text?.trim().isNotEmpty ?? false) || o.imageUrl != null)
-    .toList();
+final String? optionA;  final String? optionAImageUrl;
+final String? optionB;  final String? optionBImageUrl;
+final String? optionC;  final String? optionCImageUrl;
+final String? optionD;  final String? optionDImageUrl;
 ```
 
-**An option counts as present if it has text *or* an image.** An image-only
-option is valid — a question can ask which radiograph is which — so testing
-`text != null` alone would drop it.
+`optionE` and `optionF` appear nowhere in `lib/`, so they are dropped on parse.
+A six-option question renders as four.
 
-The list is never ragged: the API refuses F filled with E empty, so a present
-option is never followed by a gap. You can rely on the order.
+Worse, in the same class:
 
-### Model
-
-Add `optionE`, `optionEImageUrl`, `optionF`, `optionFImageUrl` to the test
-question model and to the result-screen model, **all nullable**. If any of the
-four parse as non-nullable, a four-option question crashes the screen.
-
----
-
-## Submitting
-
-```
-PATCH /api/users/me/test-attempts/:attemptId/answers/:testQuestionId
-{ "selectedOption": "E" }
+```dart
+String? textFor(String letter) => switch (letter) {
+      'A' => optionA,
+      'B' => optionB,
+      'C' => optionC,
+      _  => optionD,        // ← E and F both resolve to D
+    };
 ```
 
-`selectedOption` now accepts `A` through `F`. Rejected values say so:
+If the correct answer is E or F the student cannot answer the question. Nothing
+errors; they score zero on a question with no right option on screen.
 
-```json
-400 { "error": { "message": "selectedOption must be one of: A, B, C, D, E, F" } }
+## The change — one file, three edits
+
+**1. Fields and `fromJson`.** Add `optionE`, `optionEImageUrl`, `optionF`,
+`optionFImageUrl` beside the others, read with the same `_text()` helper, which
+already turns `""` into null — that matters, because the server sends an empty
+string for an option that is not there.
+
+**2. `letters`.** Two more lines, same shape:
+
+```dart
+List<String> get letters => [
+      if (optionA != null || optionAImageUrl != null) 'A',
+      if (optionB != null || optionBImageUrl != null) 'B',
+      if (optionC != null || optionCImageUrl != null) 'C',
+      if (optionD != null || optionDImageUrl != null) 'D',
+      if (optionE != null || optionEImageUrl != null) 'E',
+      if (optionF != null || optionFImageUrl != null) 'F',
+    ];
 ```
 
-Nothing else about answering, clearing, the timer or submit changes.
+**3. `textFor` and `imageFor` — the real bug.** Make every letter explicit and
+let the fallback be `null`, never `optionD`:
 
----
+```dart
+String? textFor(String letter) => switch (letter) {
+      'A' => optionA, 'B' => optionB, 'C' => optionC,
+      'D' => optionD, 'E' => optionE, 'F' => optionF,
+      _ => null,
+    };
+```
 
-## Layout
+Same for `imageFor`. A letter the app does not know must render as nothing, not
+as the last option in the list — that is how E silently became D.
 
-Six options is roughly half again the height of four, with medical option text
-that already wraps to two or three lines.
+## Nothing else needs touching
 
-- Let the option list **scroll independently** of the question stem, or a
-  six-option question with a stem image pushes the last option off-screen with
-  no hint it is there.
-- If options sit in a fixed-height card, that height has to come from the
-  content, not a constant sized for four.
-- Check the **jump-to-question grid** still fits, and the review screen, where
-  each row shows the student's pick against the correct one.
+`test_attempt_screen.dart` already drives everything off `question.letters`
+(lines 175 and 407), so E and F appear as soon as the list includes them.
 
-Worth testing at phone width with six options of two lines each — that is the
-case the current layout has never seen.
+`TestQuestionResult` carries `correctOption` as a letter and no option text, so
+the review screen prints "F" correctly with no change.
 
----
+## How to check it
 
-## What to change
+The backend already serves this. Import `six-option-sample.csv` from the
+backend repo — three rows: six options, four options, and five with F blank —
+publish the test, and sit it:
 
-- Question model and result model: four new nullable fields.
-- Option rendering: build from the present letters, not a hardcoded four.
-- Presence test: text **or** image.
-- Submit: allow `E` and `F`.
-- Review screen: the same list builder.
-- Layout: option list scrolls; no fixed height assuming four.
+| row | expect |
+|---|---|
+| 1 | six choices, correct **A** |
+| 2 | four choices, unchanged behaviour |
+| 3 | five choices, no sixth, correct **B** |
+
+Submitting E or F returns 200; `G` is rejected by the server with
+`selectedOption must be one of: A, B, C, D, E, F`.
 
 ## Constraints
 
-- All four new fields are nullable — most questions have them null.
-- An image-only option is a real option.
-- Do not reorder or relabel; the letter is the answer key.
-- QBank screens are unaffected.
+- `_text()` on every new field — an empty string is not an option.
+- `_ => null` in both switches, not `optionD`.
+- Do not touch `TestQuestionResult` or the attempt screen.
