@@ -148,9 +148,15 @@ async function listTests(req, res) {
       },
     });
 
+    // A mock is premium content. Papers stay listed so a student can see what
+    // a subscription buys; `locked` is what stops them opening one.
+    const { hasCourseFeature } = require('./selected-course.controller');
+    const unlocked = await hasCourseFeature(req.user.userId, courseId, 'mock');
+
     return res.status(200).json({
       tests: tests.map(({ attempts, ...test }) => ({
         ...test,
+        locked: !unlocked,
         // Enough for the card to say Start / Resume / View result without a
         // second call per test.
         attemptCount: attempts.length,
@@ -183,6 +189,24 @@ async function startTestAttempt(req, res) {
     const test = await prisma.test.findUnique({ where: { id: testId } });
     if (!test || !test.isPublished) {
       return res.status(404).json({ error: { message: 'Test not found' } });
+    }
+
+    // Checked before the attempt is created, not at submit: a student who sat
+    // a 90-minute paper and was refused the score at the end would be right to
+    // be furious.
+    //
+    // Only new attempts are gated. One already running when a subscription
+    // lapses is allowed to finish, because stranding someone mid-exam is a
+    // worse answer than honouring the last few minutes.
+    const { hasCourseFeature } = require('./selected-course.controller');
+    if (!(await hasCourseFeature(req.user.userId, test.courseId, 'mock'))) {
+      return res.status(403).json({
+        error: {
+          code: 'SUBSCRIPTION_REQUIRED',
+          message: 'Mock tests are part of a subscription. Subscribe to sit this paper.',
+          feature: 'mock',
+        },
+      });
     }
 
     const open = await prisma.testAttempt.findFirst({

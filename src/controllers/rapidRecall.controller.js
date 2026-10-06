@@ -459,6 +459,12 @@ async function listStudentRapidRecalls(req, res) {
     const { where, error } = studentWhere(user, req.query);
     if (error) return res.status(400).json({ error: { message: error } });
 
+    // Rapid Recall is premium content, gated by the same helper mock tests
+    // use. Decks stay listed without their cards so the student can see what a
+    // subscription buys.
+    const { hasCourseFeature } = require('./selected-course.controller');
+    const unlocked = await hasCourseFeature(req.user.userId, user.selectedCourseId, 'rapid_recall');
+
     const recalls = await prisma.rapidRecall.findMany({
       where,
       orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }],
@@ -466,7 +472,15 @@ async function listStudentRapidRecalls(req, res) {
     });
 
     return res.status(200).json({
-      rapidRecalls: recalls.map(({ _count, ...r }) => ({ ...r, cardCount: _count.cards })),
+      locked: !unlocked,
+      rapidRecalls: recalls.map(({ _count, ...r }) => ({
+        ...r,
+        cardCount: _count.cards,
+        locked: !unlocked,
+        // The handout is the content. Withheld with the cards, or the paywall
+        // is one PDF link away from being pointless.
+        noteUrl: unlocked ? r.noteUrl : null,
+      })),
     });
   } catch (error) {
     console.error('listStudentRapidRecalls error:', error);
@@ -500,6 +514,17 @@ async function getStudentRapidRecall(req, res) {
       && (recall.courseTypeId === null
         || recall.courseTypeId === user?.selectedCourseTypeId);
     if (!visible) return res.status(404).json({ error: { message: 'Rapid recall not found' } });
+
+    const { hasCourseFeature } = require('./selected-course.controller');
+    if (!(await hasCourseFeature(req.user.userId, recall.courseId, 'rapid_recall'))) {
+      return res.status(403).json({
+        error: {
+          code: 'SUBSCRIPTION_REQUIRED',
+          message: 'Rapid Recall is part of a subscription. Subscribe to open this deck.',
+          feature: 'rapid_recall',
+        },
+      });
+    }
 
     const { _count, courseId, status, cards, ...rest } = recall;
     return res.status(200).json({ rapidRecall: { ...rest, cardCount: _count.cards, cards } });

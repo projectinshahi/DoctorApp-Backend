@@ -95,6 +95,39 @@ function courseAccessOf(user) {
   return user.selectedCourse.accessType;
 }
 
+/**
+ * Whether this student's live subscriptions open `feature` on this course.
+ *
+ * The same rule lessons use, lifted out so a mock test and a Rapid Recall deck
+ * are gated by the one piece of code rather than three that drift. A free
+ * course is open — premium is what makes anything cost money, here as
+ * everywhere else.
+ *
+ * `feature` is one of the plan entitlement codes: mock · rapid_recall · mcq ·
+ * video_lecture · live_class · ai_patient.
+ */
+async function hasCourseFeature(userId, courseId, feature) {
+  if (!Number.isInteger(courseId)) return false;
+
+  const course = await prisma.course.findUnique({
+    where: { id: courseId }, select: { accessType: true },
+  });
+  if (!course) return false;
+  if (course.accessType !== 'premium') return true;
+
+  const activeSubs = await prisma.subscription.findMany({
+    where: { userId, courseId, isActive: true, endDate: { gte: new Date() } },
+    select: { planId: true, plan: { select: { entitlements: true } } },
+  });
+  if (activeSubs.length === 0) return false;
+
+  const { entitlements } = accessFrom(activeSubs);
+  // 'all' is a plan that declared nothing — legacy rows, which buy everything
+  // rather than nothing.
+  return entitlements === 'all' || entitlements.has(feature);
+}
+
+
 function accessFrom(activeSubs) {
   const planIds = new Set(activeSubs.map((s) => s.planId));
   const anyUndeclared = activeSubs.some((s) => (s.plan?.entitlements ?? []).length === 0);
@@ -627,7 +660,7 @@ async function submitStudentQuiz(req, res) {
 
 module.exports = {
   courseAccessOf,
-  accessFrom, LESSON_ENTITLEMENT,
+  accessFrom, LESSON_ENTITLEMENT, hasCourseFeature,
   lessonDone,
   getSelectedCourseContent,
   getStudentLesson,
