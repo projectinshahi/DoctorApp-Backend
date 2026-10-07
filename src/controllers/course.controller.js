@@ -296,14 +296,18 @@ async function getCourseDetails(req, res) {
         courseTypes: {
           include: {
             chapters: {
-              include: { lessons: true },
+              // The counts, not the rows: the tree draws "3 videos · 1 deck" on a
+              // lesson row and never the videos themselves.
+              include: { lessons: { include: { _count: { select: { videos: true, rapidRecalls: true } } } } },
               orderBy: { displayOrder: 'asc' },
             },
           },
           orderBy: { displayOrder: 'asc' },
         },
         chapters: {
-          include: { lessons: true },
+          // The counts, not the rows: the tree draws "3 videos · 1 deck" on a
+              // lesson row and never the videos themselves.
+              include: { lessons: { include: { _count: { select: { videos: true, rapidRecalls: true } } } } },
           orderBy: { displayOrder: 'asc' },
         },
       },
