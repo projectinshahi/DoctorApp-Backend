@@ -59,6 +59,11 @@ export type Chapter = $Result.DefaultSelection<Prisma.$ChapterPayload>
  */
 export type Lesson = $Result.DefaultSelection<Prisma.$LessonPayload>
 /**
+ * Model LessonVideo
+ * 
+ */
+export type LessonVideo = $Result.DefaultSelection<Prisma.$LessonVideoPayload>
+/**
  * Model LessonPlan
  * 
  */
@@ -521,6 +526,16 @@ export class PrismaClient<
     * ```
     */
   get lesson(): Prisma.LessonDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.lessonVideo`: Exposes CRUD operations for the **LessonVideo** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LessonVideos
+    * const lessonVideos = await prisma.lessonVideo.findMany()
+    * ```
+    */
+  get lessonVideo(): Prisma.LessonVideoDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.lessonPlan`: Exposes CRUD operations for the **LessonPlan** model.
@@ -1247,6 +1262,7 @@ export namespace Prisma {
     CourseType: 'CourseType',
     Chapter: 'Chapter',
     Lesson: 'Lesson',
+    LessonVideo: 'LessonVideo',
     LessonPlan: 'LessonPlan',
     Plan: 'Plan',
     Subscription: 'Subscription',
@@ -1289,7 +1305,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "quizQuestion" | "tag" | "questionTag" | "quizAttempt" | "attemptAnswer" | "savedQuestion" | "savedLesson" | "lessonProgress" | "test" | "testQuestion" | "testImage" | "testAttempt" | "testAttemptAnswer" | "lessonComment" | "commentReport" | "dailyQuizAttempt" | "dailyQuizAnswer" | "rapidRecall" | "rapidRecallCard" | "fcmToken" | "notification"
+      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonVideo" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "quizQuestion" | "tag" | "questionTag" | "quizAttempt" | "attemptAnswer" | "savedQuestion" | "savedLesson" | "lessonProgress" | "test" | "testQuestion" | "testImage" | "testAttempt" | "testAttemptAnswer" | "lessonComment" | "commentReport" | "dailyQuizAttempt" | "dailyQuizAnswer" | "rapidRecall" | "rapidRecallCard" | "fcmToken" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1956,6 +1972,80 @@ export namespace Prisma {
           count: {
             args: Prisma.LessonCountArgs<ExtArgs>
             result: $Utils.Optional<LessonCountAggregateOutputType> | number
+          }
+        }
+      }
+      LessonVideo: {
+        payload: Prisma.$LessonVideoPayload<ExtArgs>
+        fields: Prisma.LessonVideoFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LessonVideoFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonVideoPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LessonVideoFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonVideoPayload>
+          }
+          findFirst: {
+            args: Prisma.LessonVideoFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonVideoPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LessonVideoFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonVideoPayload>
+          }
+          findMany: {
+            args: Prisma.LessonVideoFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonVideoPayload>[]
+          }
+          create: {
+            args: Prisma.LessonVideoCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonVideoPayload>
+          }
+          createMany: {
+            args: Prisma.LessonVideoCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LessonVideoCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonVideoPayload>[]
+          }
+          delete: {
+            args: Prisma.LessonVideoDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonVideoPayload>
+          }
+          update: {
+            args: Prisma.LessonVideoUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonVideoPayload>
+          }
+          deleteMany: {
+            args: Prisma.LessonVideoDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LessonVideoUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LessonVideoUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonVideoPayload>[]
+          }
+          upsert: {
+            args: Prisma.LessonVideoUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LessonVideoPayload>
+          }
+          aggregate: {
+            args: Prisma.LessonVideoAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLessonVideo>
+          }
+          groupBy: {
+            args: Prisma.LessonVideoGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LessonVideoGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LessonVideoCountArgs<ExtArgs>
+            result: $Utils.Optional<LessonVideoCountAggregateOutputType> | number
           }
         }
       }
@@ -4089,6 +4179,7 @@ export namespace Prisma {
     courseType?: CourseTypeOmit
     chapter?: ChapterOmit
     lesson?: LessonOmit
+    lessonVideo?: LessonVideoOmit
     lessonPlan?: LessonPlanOmit
     plan?: PlanOmit
     subscription?: SubscriptionOmit
@@ -4679,6 +4770,7 @@ export namespace Prisma {
     progress: number
     comments: number
     rapidRecalls: number
+    videos: number
   }
 
   export type LessonCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4687,6 +4779,7 @@ export namespace Prisma {
     progress?: boolean | LessonCountOutputTypeCountProgressArgs
     comments?: boolean | LessonCountOutputTypeCountCommentsArgs
     rapidRecalls?: boolean | LessonCountOutputTypeCountRapidRecallsArgs
+    videos?: boolean | LessonCountOutputTypeCountVideosArgs
   }
 
   // Custom InputTypes
@@ -4733,6 +4826,13 @@ export namespace Prisma {
    */
   export type LessonCountOutputTypeCountRapidRecallsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RapidRecallWhereInput
+  }
+
+  /**
+   * LessonCountOutputType without action
+   */
+  export type LessonCountOutputTypeCountVideosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LessonVideoWhereInput
   }
 
 
@@ -15884,6 +15984,7 @@ export namespace Prisma {
     progress?: boolean | Lesson$progressArgs<ExtArgs>
     comments?: boolean | Lesson$commentsArgs<ExtArgs>
     rapidRecalls?: boolean | Lesson$rapidRecallsArgs<ExtArgs>
+    videos?: boolean | Lesson$videosArgs<ExtArgs>
     _count?: boolean | LessonCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lesson"]>
 
@@ -15975,6 +16076,7 @@ export namespace Prisma {
     progress?: boolean | Lesson$progressArgs<ExtArgs>
     comments?: boolean | Lesson$commentsArgs<ExtArgs>
     rapidRecalls?: boolean | Lesson$rapidRecallsArgs<ExtArgs>
+    videos?: boolean | Lesson$videosArgs<ExtArgs>
     _count?: boolean | LessonCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LessonIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15996,6 +16098,7 @@ export namespace Prisma {
       progress: Prisma.$LessonProgressPayload<ExtArgs>[]
       comments: Prisma.$LessonCommentPayload<ExtArgs>[]
       rapidRecalls: Prisma.$RapidRecallPayload<ExtArgs>[]
+      videos: Prisma.$LessonVideoPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -16421,6 +16524,7 @@ export namespace Prisma {
     progress<T extends Lesson$progressArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$progressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends Lesson$commentsArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     rapidRecalls<T extends Lesson$rapidRecallsArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$rapidRecallsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RapidRecallPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    videos<T extends Lesson$videosArgs<ExtArgs> = {}>(args?: Subset<T, Lesson$videosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17021,6 +17125,30 @@ export namespace Prisma {
   }
 
   /**
+   * Lesson.videos
+   */
+  export type Lesson$videosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonVideo
+     */
+    select?: LessonVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonVideo
+     */
+    omit?: LessonVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonVideoInclude<ExtArgs> | null
+    where?: LessonVideoWhereInput
+    orderBy?: LessonVideoOrderByWithRelationInput | LessonVideoOrderByWithRelationInput[]
+    cursor?: LessonVideoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LessonVideoScalarFieldEnum | LessonVideoScalarFieldEnum[]
+  }
+
+  /**
    * Lesson without action
    */
   export type LessonDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -17036,6 +17164,1189 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: LessonInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model LessonVideo
+   */
+
+  export type AggregateLessonVideo = {
+    _count: LessonVideoCountAggregateOutputType | null
+    _avg: LessonVideoAvgAggregateOutputType | null
+    _sum: LessonVideoSumAggregateOutputType | null
+    _min: LessonVideoMinAggregateOutputType | null
+    _max: LessonVideoMaxAggregateOutputType | null
+  }
+
+  export type LessonVideoAvgAggregateOutputType = {
+    id: number | null
+    lessonId: number | null
+    durationSeconds: number | null
+    displayOrder: number | null
+  }
+
+  export type LessonVideoSumAggregateOutputType = {
+    id: number | null
+    lessonId: number | null
+    durationSeconds: number | null
+    displayOrder: number | null
+  }
+
+  export type LessonVideoMinAggregateOutputType = {
+    id: number | null
+    lessonId: number | null
+    title: string | null
+    videoUrl: string | null
+    videoPublicId: string | null
+    thumbnailUrl: string | null
+    durationSeconds: number | null
+    displayOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type LessonVideoMaxAggregateOutputType = {
+    id: number | null
+    lessonId: number | null
+    title: string | null
+    videoUrl: string | null
+    videoPublicId: string | null
+    thumbnailUrl: string | null
+    durationSeconds: number | null
+    displayOrder: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type LessonVideoCountAggregateOutputType = {
+    id: number
+    lessonId: number
+    title: number
+    videoUrl: number
+    videoPublicId: number
+    thumbnailUrl: number
+    durationSeconds: number
+    displayOrder: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type LessonVideoAvgAggregateInputType = {
+    id?: true
+    lessonId?: true
+    durationSeconds?: true
+    displayOrder?: true
+  }
+
+  export type LessonVideoSumAggregateInputType = {
+    id?: true
+    lessonId?: true
+    durationSeconds?: true
+    displayOrder?: true
+  }
+
+  export type LessonVideoMinAggregateInputType = {
+    id?: true
+    lessonId?: true
+    title?: true
+    videoUrl?: true
+    videoPublicId?: true
+    thumbnailUrl?: true
+    durationSeconds?: true
+    displayOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type LessonVideoMaxAggregateInputType = {
+    id?: true
+    lessonId?: true
+    title?: true
+    videoUrl?: true
+    videoPublicId?: true
+    thumbnailUrl?: true
+    durationSeconds?: true
+    displayOrder?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type LessonVideoCountAggregateInputType = {
+    id?: true
+    lessonId?: true
+    title?: true
+    videoUrl?: true
+    videoPublicId?: true
+    thumbnailUrl?: true
+    durationSeconds?: true
+    displayOrder?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type LessonVideoAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LessonVideo to aggregate.
+     */
+    where?: LessonVideoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LessonVideos to fetch.
+     */
+    orderBy?: LessonVideoOrderByWithRelationInput | LessonVideoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LessonVideoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LessonVideos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LessonVideos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LessonVideos
+    **/
+    _count?: true | LessonVideoCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LessonVideoAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LessonVideoSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LessonVideoMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LessonVideoMaxAggregateInputType
+  }
+
+  export type GetLessonVideoAggregateType<T extends LessonVideoAggregateArgs> = {
+        [P in keyof T & keyof AggregateLessonVideo]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLessonVideo[P]>
+      : GetScalarType<T[P], AggregateLessonVideo[P]>
+  }
+
+
+
+
+  export type LessonVideoGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LessonVideoWhereInput
+    orderBy?: LessonVideoOrderByWithAggregationInput | LessonVideoOrderByWithAggregationInput[]
+    by: LessonVideoScalarFieldEnum[] | LessonVideoScalarFieldEnum
+    having?: LessonVideoScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LessonVideoCountAggregateInputType | true
+    _avg?: LessonVideoAvgAggregateInputType
+    _sum?: LessonVideoSumAggregateInputType
+    _min?: LessonVideoMinAggregateInputType
+    _max?: LessonVideoMaxAggregateInputType
+  }
+
+  export type LessonVideoGroupByOutputType = {
+    id: number
+    lessonId: number
+    title: string | null
+    videoUrl: string
+    videoPublicId: string | null
+    thumbnailUrl: string | null
+    durationSeconds: number | null
+    displayOrder: number
+    createdAt: Date
+    updatedAt: Date
+    _count: LessonVideoCountAggregateOutputType | null
+    _avg: LessonVideoAvgAggregateOutputType | null
+    _sum: LessonVideoSumAggregateOutputType | null
+    _min: LessonVideoMinAggregateOutputType | null
+    _max: LessonVideoMaxAggregateOutputType | null
+  }
+
+  type GetLessonVideoGroupByPayload<T extends LessonVideoGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LessonVideoGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LessonVideoGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LessonVideoGroupByOutputType[P]>
+            : GetScalarType<T[P], LessonVideoGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LessonVideoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    lessonId?: boolean
+    title?: boolean
+    videoUrl?: boolean
+    videoPublicId?: boolean
+    thumbnailUrl?: boolean
+    durationSeconds?: boolean
+    displayOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lessonVideo"]>
+
+  export type LessonVideoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    lessonId?: boolean
+    title?: boolean
+    videoUrl?: boolean
+    videoPublicId?: boolean
+    thumbnailUrl?: boolean
+    durationSeconds?: boolean
+    displayOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lessonVideo"]>
+
+  export type LessonVideoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    lessonId?: boolean
+    title?: boolean
+    videoUrl?: boolean
+    videoPublicId?: boolean
+    thumbnailUrl?: boolean
+    durationSeconds?: boolean
+    displayOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lessonVideo"]>
+
+  export type LessonVideoSelectScalar = {
+    id?: boolean
+    lessonId?: boolean
+    title?: boolean
+    videoUrl?: boolean
+    videoPublicId?: boolean
+    thumbnailUrl?: boolean
+    durationSeconds?: boolean
+    displayOrder?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type LessonVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "lessonId" | "title" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "durationSeconds" | "displayOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["lessonVideo"]>
+  export type LessonVideoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+  }
+  export type LessonVideoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+  }
+  export type LessonVideoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lesson?: boolean | LessonDefaultArgs<ExtArgs>
+  }
+
+  export type $LessonVideoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LessonVideo"
+    objects: {
+      lesson: Prisma.$LessonPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      lessonId: number
+      title: string | null
+      videoUrl: string
+      videoPublicId: string | null
+      thumbnailUrl: string | null
+      durationSeconds: number | null
+      displayOrder: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["lessonVideo"]>
+    composites: {}
+  }
+
+  type LessonVideoGetPayload<S extends boolean | null | undefined | LessonVideoDefaultArgs> = $Result.GetResult<Prisma.$LessonVideoPayload, S>
+
+  type LessonVideoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LessonVideoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
+      select?: LessonVideoCountAggregateInputType | true
+    }
+
+  export interface LessonVideoDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LessonVideo'], meta: { name: 'LessonVideo' } }
+    /**
+     * Find zero or one LessonVideo that matches the filter.
+     * @param {LessonVideoFindUniqueArgs} args - Arguments to find a LessonVideo
+     * @example
+     * // Get one LessonVideo
+     * const lessonVideo = await prisma.lessonVideo.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LessonVideoFindUniqueArgs>(args: SelectSubset<T, LessonVideoFindUniqueArgs<ExtArgs>>): Prisma__LessonVideoClient<$Result.GetResult<Prisma.$LessonVideoPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LessonVideo that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LessonVideoFindUniqueOrThrowArgs} args - Arguments to find a LessonVideo
+     * @example
+     * // Get one LessonVideo
+     * const lessonVideo = await prisma.lessonVideo.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LessonVideoFindUniqueOrThrowArgs>(args: SelectSubset<T, LessonVideoFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LessonVideoClient<$Result.GetResult<Prisma.$LessonVideoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LessonVideo that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonVideoFindFirstArgs} args - Arguments to find a LessonVideo
+     * @example
+     * // Get one LessonVideo
+     * const lessonVideo = await prisma.lessonVideo.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LessonVideoFindFirstArgs>(args?: SelectSubset<T, LessonVideoFindFirstArgs<ExtArgs>>): Prisma__LessonVideoClient<$Result.GetResult<Prisma.$LessonVideoPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LessonVideo that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonVideoFindFirstOrThrowArgs} args - Arguments to find a LessonVideo
+     * @example
+     * // Get one LessonVideo
+     * const lessonVideo = await prisma.lessonVideo.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LessonVideoFindFirstOrThrowArgs>(args?: SelectSubset<T, LessonVideoFindFirstOrThrowArgs<ExtArgs>>): Prisma__LessonVideoClient<$Result.GetResult<Prisma.$LessonVideoPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LessonVideos that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonVideoFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LessonVideos
+     * const lessonVideos = await prisma.lessonVideo.findMany()
+     * 
+     * // Get first 10 LessonVideos
+     * const lessonVideos = await prisma.lessonVideo.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const lessonVideoWithIdOnly = await prisma.lessonVideo.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LessonVideoFindManyArgs>(args?: SelectSubset<T, LessonVideoFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LessonVideo.
+     * @param {LessonVideoCreateArgs} args - Arguments to create a LessonVideo.
+     * @example
+     * // Create one LessonVideo
+     * const LessonVideo = await prisma.lessonVideo.create({
+     *   data: {
+     *     // ... data to create a LessonVideo
+     *   }
+     * })
+     * 
+     */
+    create<T extends LessonVideoCreateArgs>(args: SelectSubset<T, LessonVideoCreateArgs<ExtArgs>>): Prisma__LessonVideoClient<$Result.GetResult<Prisma.$LessonVideoPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LessonVideos.
+     * @param {LessonVideoCreateManyArgs} args - Arguments to create many LessonVideos.
+     * @example
+     * // Create many LessonVideos
+     * const lessonVideo = await prisma.lessonVideo.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LessonVideoCreateManyArgs>(args?: SelectSubset<T, LessonVideoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LessonVideos and returns the data saved in the database.
+     * @param {LessonVideoCreateManyAndReturnArgs} args - Arguments to create many LessonVideos.
+     * @example
+     * // Create many LessonVideos
+     * const lessonVideo = await prisma.lessonVideo.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LessonVideos and only return the `id`
+     * const lessonVideoWithIdOnly = await prisma.lessonVideo.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LessonVideoCreateManyAndReturnArgs>(args?: SelectSubset<T, LessonVideoCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonVideoPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LessonVideo.
+     * @param {LessonVideoDeleteArgs} args - Arguments to delete one LessonVideo.
+     * @example
+     * // Delete one LessonVideo
+     * const LessonVideo = await prisma.lessonVideo.delete({
+     *   where: {
+     *     // ... filter to delete one LessonVideo
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LessonVideoDeleteArgs>(args: SelectSubset<T, LessonVideoDeleteArgs<ExtArgs>>): Prisma__LessonVideoClient<$Result.GetResult<Prisma.$LessonVideoPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LessonVideo.
+     * @param {LessonVideoUpdateArgs} args - Arguments to update one LessonVideo.
+     * @example
+     * // Update one LessonVideo
+     * const lessonVideo = await prisma.lessonVideo.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LessonVideoUpdateArgs>(args: SelectSubset<T, LessonVideoUpdateArgs<ExtArgs>>): Prisma__LessonVideoClient<$Result.GetResult<Prisma.$LessonVideoPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LessonVideos.
+     * @param {LessonVideoDeleteManyArgs} args - Arguments to filter LessonVideos to delete.
+     * @example
+     * // Delete a few LessonVideos
+     * const { count } = await prisma.lessonVideo.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LessonVideoDeleteManyArgs>(args?: SelectSubset<T, LessonVideoDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LessonVideos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonVideoUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LessonVideos
+     * const lessonVideo = await prisma.lessonVideo.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LessonVideoUpdateManyArgs>(args: SelectSubset<T, LessonVideoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LessonVideos and returns the data updated in the database.
+     * @param {LessonVideoUpdateManyAndReturnArgs} args - Arguments to update many LessonVideos.
+     * @example
+     * // Update many LessonVideos
+     * const lessonVideo = await prisma.lessonVideo.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LessonVideos and only return the `id`
+     * const lessonVideoWithIdOnly = await prisma.lessonVideo.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LessonVideoUpdateManyAndReturnArgs>(args: SelectSubset<T, LessonVideoUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonVideoPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LessonVideo.
+     * @param {LessonVideoUpsertArgs} args - Arguments to update or create a LessonVideo.
+     * @example
+     * // Update or create a LessonVideo
+     * const lessonVideo = await prisma.lessonVideo.upsert({
+     *   create: {
+     *     // ... data to create a LessonVideo
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LessonVideo we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LessonVideoUpsertArgs>(args: SelectSubset<T, LessonVideoUpsertArgs<ExtArgs>>): Prisma__LessonVideoClient<$Result.GetResult<Prisma.$LessonVideoPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LessonVideos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonVideoCountArgs} args - Arguments to filter LessonVideos to count.
+     * @example
+     * // Count the number of LessonVideos
+     * const count = await prisma.lessonVideo.count({
+     *   where: {
+     *     // ... the filter for the LessonVideos we want to count
+     *   }
+     * })
+    **/
+    count<T extends LessonVideoCountArgs>(
+      args?: Subset<T, LessonVideoCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LessonVideoCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LessonVideo.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonVideoAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LessonVideoAggregateArgs>(args: Subset<T, LessonVideoAggregateArgs>): Prisma.PrismaPromise<GetLessonVideoAggregateType<T>>
+
+    /**
+     * Group by LessonVideo.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LessonVideoGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LessonVideoGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LessonVideoGroupByArgs['orderBy'] }
+        : { orderBy?: LessonVideoGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LessonVideoGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLessonVideoGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LessonVideo model
+   */
+  readonly fields: LessonVideoFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LessonVideo.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LessonVideoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    lesson<T extends LessonDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LessonDefaultArgs<ExtArgs>>): Prisma__LessonClient<$Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LessonVideo model
+   */
+  interface LessonVideoFieldRefs {
+    readonly id: FieldRef<"LessonVideo", 'Int'>
+    readonly lessonId: FieldRef<"LessonVideo", 'Int'>
+    readonly title: FieldRef<"LessonVideo", 'String'>
+    readonly videoUrl: FieldRef<"LessonVideo", 'String'>
+    readonly videoPublicId: FieldRef<"LessonVideo", 'String'>
+    readonly thumbnailUrl: FieldRef<"LessonVideo", 'String'>
+    readonly durationSeconds: FieldRef<"LessonVideo", 'Int'>
+    readonly displayOrder: FieldRef<"LessonVideo", 'Int'>
+    readonly createdAt: FieldRef<"LessonVideo", 'DateTime'>
+    readonly updatedAt: FieldRef<"LessonVideo", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LessonVideo findUnique
+   */
+  export type LessonVideoFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonVideo
+     */
+    select?: LessonVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonVideo
+     */
+    omit?: LessonVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonVideoInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonVideo to fetch.
+     */
+    where: LessonVideoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * LessonVideo findUniqueOrThrow
+   */
+  export type LessonVideoFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonVideo
+     */
+    select?: LessonVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonVideo
+     */
+    omit?: LessonVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonVideoInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonVideo to fetch.
+     */
+    where: LessonVideoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * LessonVideo findFirst
+   */
+  export type LessonVideoFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonVideo
+     */
+    select?: LessonVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonVideo
+     */
+    omit?: LessonVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonVideoInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonVideo to fetch.
+     */
+    where?: LessonVideoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LessonVideos to fetch.
+     */
+    orderBy?: LessonVideoOrderByWithRelationInput | LessonVideoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LessonVideos.
+     */
+    cursor?: LessonVideoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LessonVideos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LessonVideos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LessonVideos.
+     */
+    distinct?: LessonVideoScalarFieldEnum | LessonVideoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * LessonVideo findFirstOrThrow
+   */
+  export type LessonVideoFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonVideo
+     */
+    select?: LessonVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonVideo
+     */
+    omit?: LessonVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonVideoInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonVideo to fetch.
+     */
+    where?: LessonVideoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LessonVideos to fetch.
+     */
+    orderBy?: LessonVideoOrderByWithRelationInput | LessonVideoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LessonVideos.
+     */
+    cursor?: LessonVideoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LessonVideos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LessonVideos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LessonVideos.
+     */
+    distinct?: LessonVideoScalarFieldEnum | LessonVideoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * LessonVideo findMany
+   */
+  export type LessonVideoFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonVideo
+     */
+    select?: LessonVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonVideo
+     */
+    omit?: LessonVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonVideoInclude<ExtArgs> | null
+    /**
+     * Filter, which LessonVideos to fetch.
+     */
+    where?: LessonVideoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LessonVideos to fetch.
+     */
+    orderBy?: LessonVideoOrderByWithRelationInput | LessonVideoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LessonVideos.
+     */
+    cursor?: LessonVideoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LessonVideos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LessonVideos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LessonVideos.
+     */
+    distinct?: LessonVideoScalarFieldEnum | LessonVideoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * LessonVideo create
+   */
+  export type LessonVideoCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonVideo
+     */
+    select?: LessonVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonVideo
+     */
+    omit?: LessonVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonVideoInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LessonVideo.
+     */
+    data: XOR<LessonVideoCreateInput, LessonVideoUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * LessonVideo createMany
+   */
+  export type LessonVideoCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LessonVideos.
+     */
+    data: LessonVideoCreateManyInput | LessonVideoCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LessonVideo createManyAndReturn
+   */
+  export type LessonVideoCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonVideo
+     */
+    select?: LessonVideoSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonVideo
+     */
+    omit?: LessonVideoOmit<ExtArgs> | null
+    /**
+     * The data used to create many LessonVideos.
+     */
+    data: LessonVideoCreateManyInput | LessonVideoCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonVideoIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LessonVideo update
+   */
+  export type LessonVideoUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonVideo
+     */
+    select?: LessonVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonVideo
+     */
+    omit?: LessonVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonVideoInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LessonVideo.
+     */
+    data: XOR<LessonVideoUpdateInput, LessonVideoUncheckedUpdateInput>
+    /**
+     * Choose, which LessonVideo to update.
+     */
+    where: LessonVideoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * LessonVideo updateMany
+   */
+  export type LessonVideoUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LessonVideos.
+     */
+    data: XOR<LessonVideoUpdateManyMutationInput, LessonVideoUncheckedUpdateManyInput>
+    /**
+     * Filter which LessonVideos to update
+     */
+    where?: LessonVideoWhereInput
+    /**
+     * Limit how many LessonVideos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LessonVideo updateManyAndReturn
+   */
+  export type LessonVideoUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonVideo
+     */
+    select?: LessonVideoSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonVideo
+     */
+    omit?: LessonVideoOmit<ExtArgs> | null
+    /**
+     * The data used to update LessonVideos.
+     */
+    data: XOR<LessonVideoUpdateManyMutationInput, LessonVideoUncheckedUpdateManyInput>
+    /**
+     * Filter which LessonVideos to update
+     */
+    where?: LessonVideoWhereInput
+    /**
+     * Limit how many LessonVideos to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonVideoIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LessonVideo upsert
+   */
+  export type LessonVideoUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonVideo
+     */
+    select?: LessonVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonVideo
+     */
+    omit?: LessonVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonVideoInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LessonVideo to update in case it exists.
+     */
+    where: LessonVideoWhereUniqueInput
+    /**
+     * In case the LessonVideo found by the `where` argument doesn't exist, create a new LessonVideo with this data.
+     */
+    create: XOR<LessonVideoCreateInput, LessonVideoUncheckedCreateInput>
+    /**
+     * In case the LessonVideo was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LessonVideoUpdateInput, LessonVideoUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * LessonVideo delete
+   */
+  export type LessonVideoDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonVideo
+     */
+    select?: LessonVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonVideo
+     */
+    omit?: LessonVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonVideoInclude<ExtArgs> | null
+    /**
+     * Filter which LessonVideo to delete.
+     */
+    where: LessonVideoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * LessonVideo deleteMany
+   */
+  export type LessonVideoDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LessonVideos to delete
+     */
+    where?: LessonVideoWhereInput
+    /**
+     * Limit how many LessonVideos to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LessonVideo without action
+   */
+  export type LessonVideoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonVideo
+     */
+    select?: LessonVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LessonVideo
+     */
+    omit?: LessonVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LessonVideoInclude<ExtArgs> | null
   }
 
 
@@ -49153,6 +50464,22 @@ export namespace Prisma {
   export type LessonScalarFieldEnum = (typeof LessonScalarFieldEnum)[keyof typeof LessonScalarFieldEnum]
 
 
+  export const LessonVideoScalarFieldEnum: {
+    id: 'id',
+    lessonId: 'lessonId',
+    title: 'title',
+    videoUrl: 'videoUrl',
+    videoPublicId: 'videoPublicId',
+    thumbnailUrl: 'thumbnailUrl',
+    durationSeconds: 'durationSeconds',
+    displayOrder: 'displayOrder',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type LessonVideoScalarFieldEnum = (typeof LessonVideoScalarFieldEnum)[keyof typeof LessonVideoScalarFieldEnum]
+
+
   export const LessonPlanScalarFieldEnum: {
     lessonId: 'lessonId',
     planId: 'planId'
@@ -50486,6 +51813,7 @@ export namespace Prisma {
     progress?: LessonProgressListRelationFilter
     comments?: LessonCommentListRelationFilter
     rapidRecalls?: RapidRecallListRelationFilter
+    videos?: LessonVideoListRelationFilter
   }
 
   export type LessonOrderByWithRelationInput = {
@@ -50518,6 +51846,7 @@ export namespace Prisma {
     progress?: LessonProgressOrderByRelationAggregateInput
     comments?: LessonCommentOrderByRelationAggregateInput
     rapidRecalls?: RapidRecallOrderByRelationAggregateInput
+    videos?: LessonVideoOrderByRelationAggregateInput
   }
 
   export type LessonWhereUniqueInput = Prisma.AtLeast<{
@@ -50553,6 +51882,7 @@ export namespace Prisma {
     progress?: LessonProgressListRelationFilter
     comments?: LessonCommentListRelationFilter
     rapidRecalls?: RapidRecallListRelationFilter
+    videos?: LessonVideoListRelationFilter
   }, "id" | "quizId">
 
   export type LessonOrderByWithAggregationInput = {
@@ -50611,6 +51941,88 @@ export namespace Prisma {
     commentsEnabled?: BoolWithAggregatesFilter<"Lesson"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Lesson"> | Date | string
+  }
+
+  export type LessonVideoWhereInput = {
+    AND?: LessonVideoWhereInput | LessonVideoWhereInput[]
+    OR?: LessonVideoWhereInput[]
+    NOT?: LessonVideoWhereInput | LessonVideoWhereInput[]
+    id?: IntFilter<"LessonVideo"> | number
+    lessonId?: IntFilter<"LessonVideo"> | number
+    title?: StringNullableFilter<"LessonVideo"> | string | null
+    videoUrl?: StringFilter<"LessonVideo"> | string
+    videoPublicId?: StringNullableFilter<"LessonVideo"> | string | null
+    thumbnailUrl?: StringNullableFilter<"LessonVideo"> | string | null
+    durationSeconds?: IntNullableFilter<"LessonVideo"> | number | null
+    displayOrder?: IntFilter<"LessonVideo"> | number
+    createdAt?: DateTimeFilter<"LessonVideo"> | Date | string
+    updatedAt?: DateTimeFilter<"LessonVideo"> | Date | string
+    lesson?: XOR<LessonScalarRelationFilter, LessonWhereInput>
+  }
+
+  export type LessonVideoOrderByWithRelationInput = {
+    id?: SortOrder
+    lessonId?: SortOrder
+    title?: SortOrderInput | SortOrder
+    videoUrl?: SortOrder
+    videoPublicId?: SortOrderInput | SortOrder
+    thumbnailUrl?: SortOrderInput | SortOrder
+    durationSeconds?: SortOrderInput | SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    lesson?: LessonOrderByWithRelationInput
+  }
+
+  export type LessonVideoWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: LessonVideoWhereInput | LessonVideoWhereInput[]
+    OR?: LessonVideoWhereInput[]
+    NOT?: LessonVideoWhereInput | LessonVideoWhereInput[]
+    lessonId?: IntFilter<"LessonVideo"> | number
+    title?: StringNullableFilter<"LessonVideo"> | string | null
+    videoUrl?: StringFilter<"LessonVideo"> | string
+    videoPublicId?: StringNullableFilter<"LessonVideo"> | string | null
+    thumbnailUrl?: StringNullableFilter<"LessonVideo"> | string | null
+    durationSeconds?: IntNullableFilter<"LessonVideo"> | number | null
+    displayOrder?: IntFilter<"LessonVideo"> | number
+    createdAt?: DateTimeFilter<"LessonVideo"> | Date | string
+    updatedAt?: DateTimeFilter<"LessonVideo"> | Date | string
+    lesson?: XOR<LessonScalarRelationFilter, LessonWhereInput>
+  }, "id">
+
+  export type LessonVideoOrderByWithAggregationInput = {
+    id?: SortOrder
+    lessonId?: SortOrder
+    title?: SortOrderInput | SortOrder
+    videoUrl?: SortOrder
+    videoPublicId?: SortOrderInput | SortOrder
+    thumbnailUrl?: SortOrderInput | SortOrder
+    durationSeconds?: SortOrderInput | SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: LessonVideoCountOrderByAggregateInput
+    _avg?: LessonVideoAvgOrderByAggregateInput
+    _max?: LessonVideoMaxOrderByAggregateInput
+    _min?: LessonVideoMinOrderByAggregateInput
+    _sum?: LessonVideoSumOrderByAggregateInput
+  }
+
+  export type LessonVideoScalarWhereWithAggregatesInput = {
+    AND?: LessonVideoScalarWhereWithAggregatesInput | LessonVideoScalarWhereWithAggregatesInput[]
+    OR?: LessonVideoScalarWhereWithAggregatesInput[]
+    NOT?: LessonVideoScalarWhereWithAggregatesInput | LessonVideoScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"LessonVideo"> | number
+    lessonId?: IntWithAggregatesFilter<"LessonVideo"> | number
+    title?: StringNullableWithAggregatesFilter<"LessonVideo"> | string | null
+    videoUrl?: StringWithAggregatesFilter<"LessonVideo"> | string
+    videoPublicId?: StringNullableWithAggregatesFilter<"LessonVideo"> | string | null
+    thumbnailUrl?: StringNullableWithAggregatesFilter<"LessonVideo"> | string | null
+    durationSeconds?: IntNullableWithAggregatesFilter<"LessonVideo"> | number | null
+    displayOrder?: IntWithAggregatesFilter<"LessonVideo"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"LessonVideo"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"LessonVideo"> | Date | string
   }
 
   export type LessonPlanWhereInput = {
@@ -53425,6 +54837,7 @@ export namespace Prisma {
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
     rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateInput = {
@@ -53455,6 +54868,7 @@ export namespace Prisma {
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
     rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUpdateInput = {
@@ -53484,6 +54898,7 @@ export namespace Prisma {
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateInput = {
@@ -53514,6 +54929,7 @@ export namespace Prisma {
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonCreateManyInput = {
@@ -53584,6 +55000,93 @@ export namespace Prisma {
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     quizId?: NullableIntFieldUpdateOperationsInput | number | null
     commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonVideoCreateInput = {
+    title?: string | null
+    videoUrl: string
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    durationSeconds?: number | null
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lesson: LessonCreateNestedOneWithoutVideosInput
+  }
+
+  export type LessonVideoUncheckedCreateInput = {
+    id?: number
+    lessonId: number
+    title?: string | null
+    videoUrl: string
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    durationSeconds?: number | null
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LessonVideoUpdateInput = {
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    videoUrl?: StringFieldUpdateOperationsInput | string
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lesson?: LessonUpdateOneRequiredWithoutVideosNestedInput
+  }
+
+  export type LessonVideoUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    videoUrl?: StringFieldUpdateOperationsInput | string
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonVideoCreateManyInput = {
+    id?: number
+    lessonId: number
+    title?: string | null
+    videoUrl: string
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    durationSeconds?: number | null
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LessonVideoUpdateManyMutationInput = {
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    videoUrl?: StringFieldUpdateOperationsInput | string
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonVideoUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    videoUrl?: StringFieldUpdateOperationsInput | string
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -56451,7 +57954,17 @@ export namespace Prisma {
     none?: LessonPlanWhereInput
   }
 
+  export type LessonVideoListRelationFilter = {
+    every?: LessonVideoWhereInput
+    some?: LessonVideoWhereInput
+    none?: LessonVideoWhereInput
+  }
+
   export type LessonPlanOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type LessonVideoOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -56559,6 +58072,59 @@ export namespace Prisma {
   export type LessonScalarRelationFilter = {
     is?: LessonWhereInput
     isNot?: LessonWhereInput
+  }
+
+  export type LessonVideoCountOrderByAggregateInput = {
+    id?: SortOrder
+    lessonId?: SortOrder
+    title?: SortOrder
+    videoUrl?: SortOrder
+    videoPublicId?: SortOrder
+    thumbnailUrl?: SortOrder
+    durationSeconds?: SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LessonVideoAvgOrderByAggregateInput = {
+    id?: SortOrder
+    lessonId?: SortOrder
+    durationSeconds?: SortOrder
+    displayOrder?: SortOrder
+  }
+
+  export type LessonVideoMaxOrderByAggregateInput = {
+    id?: SortOrder
+    lessonId?: SortOrder
+    title?: SortOrder
+    videoUrl?: SortOrder
+    videoPublicId?: SortOrder
+    thumbnailUrl?: SortOrder
+    durationSeconds?: SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LessonVideoMinOrderByAggregateInput = {
+    id?: SortOrder
+    lessonId?: SortOrder
+    title?: SortOrder
+    videoUrl?: SortOrder
+    videoPublicId?: SortOrder
+    thumbnailUrl?: SortOrder
+    durationSeconds?: SortOrder
+    displayOrder?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LessonVideoSumOrderByAggregateInput = {
+    id?: SortOrder
+    lessonId?: SortOrder
+    durationSeconds?: SortOrder
+    displayOrder?: SortOrder
   }
 
   export type PlanScalarRelationFilter = {
@@ -59902,6 +61468,13 @@ export namespace Prisma {
     connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
   }
 
+  export type LessonVideoCreateNestedManyWithoutLessonInput = {
+    create?: XOR<LessonVideoCreateWithoutLessonInput, LessonVideoUncheckedCreateWithoutLessonInput> | LessonVideoCreateWithoutLessonInput[] | LessonVideoUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: LessonVideoCreateOrConnectWithoutLessonInput | LessonVideoCreateOrConnectWithoutLessonInput[]
+    createMany?: LessonVideoCreateManyLessonInputEnvelope
+    connect?: LessonVideoWhereUniqueInput | LessonVideoWhereUniqueInput[]
+  }
+
   export type LessonPlanUncheckedCreateNestedManyWithoutLessonInput = {
     create?: XOR<LessonPlanCreateWithoutLessonInput, LessonPlanUncheckedCreateWithoutLessonInput> | LessonPlanCreateWithoutLessonInput[] | LessonPlanUncheckedCreateWithoutLessonInput[]
     connectOrCreate?: LessonPlanCreateOrConnectWithoutLessonInput | LessonPlanCreateOrConnectWithoutLessonInput[]
@@ -59935,6 +61508,13 @@ export namespace Prisma {
     connectOrCreate?: RapidRecallCreateOrConnectWithoutLessonInput | RapidRecallCreateOrConnectWithoutLessonInput[]
     createMany?: RapidRecallCreateManyLessonInputEnvelope
     connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
+  }
+
+  export type LessonVideoUncheckedCreateNestedManyWithoutLessonInput = {
+    create?: XOR<LessonVideoCreateWithoutLessonInput, LessonVideoUncheckedCreateWithoutLessonInput> | LessonVideoCreateWithoutLessonInput[] | LessonVideoUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: LessonVideoCreateOrConnectWithoutLessonInput | LessonVideoCreateOrConnectWithoutLessonInput[]
+    createMany?: LessonVideoCreateManyLessonInputEnvelope
+    connect?: LessonVideoWhereUniqueInput | LessonVideoWhereUniqueInput[]
   }
 
   export type EnumLessonTypeFieldUpdateOperationsInput = {
@@ -60029,6 +61609,20 @@ export namespace Prisma {
     deleteMany?: RapidRecallScalarWhereInput | RapidRecallScalarWhereInput[]
   }
 
+  export type LessonVideoUpdateManyWithoutLessonNestedInput = {
+    create?: XOR<LessonVideoCreateWithoutLessonInput, LessonVideoUncheckedCreateWithoutLessonInput> | LessonVideoCreateWithoutLessonInput[] | LessonVideoUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: LessonVideoCreateOrConnectWithoutLessonInput | LessonVideoCreateOrConnectWithoutLessonInput[]
+    upsert?: LessonVideoUpsertWithWhereUniqueWithoutLessonInput | LessonVideoUpsertWithWhereUniqueWithoutLessonInput[]
+    createMany?: LessonVideoCreateManyLessonInputEnvelope
+    set?: LessonVideoWhereUniqueInput | LessonVideoWhereUniqueInput[]
+    disconnect?: LessonVideoWhereUniqueInput | LessonVideoWhereUniqueInput[]
+    delete?: LessonVideoWhereUniqueInput | LessonVideoWhereUniqueInput[]
+    connect?: LessonVideoWhereUniqueInput | LessonVideoWhereUniqueInput[]
+    update?: LessonVideoUpdateWithWhereUniqueWithoutLessonInput | LessonVideoUpdateWithWhereUniqueWithoutLessonInput[]
+    updateMany?: LessonVideoUpdateManyWithWhereWithoutLessonInput | LessonVideoUpdateManyWithWhereWithoutLessonInput[]
+    deleteMany?: LessonVideoScalarWhereInput | LessonVideoScalarWhereInput[]
+  }
+
   export type LessonPlanUncheckedUpdateManyWithoutLessonNestedInput = {
     create?: XOR<LessonPlanCreateWithoutLessonInput, LessonPlanUncheckedCreateWithoutLessonInput> | LessonPlanCreateWithoutLessonInput[] | LessonPlanUncheckedCreateWithoutLessonInput[]
     connectOrCreate?: LessonPlanCreateOrConnectWithoutLessonInput | LessonPlanCreateOrConnectWithoutLessonInput[]
@@ -60097,6 +61691,34 @@ export namespace Prisma {
     update?: RapidRecallUpdateWithWhereUniqueWithoutLessonInput | RapidRecallUpdateWithWhereUniqueWithoutLessonInput[]
     updateMany?: RapidRecallUpdateManyWithWhereWithoutLessonInput | RapidRecallUpdateManyWithWhereWithoutLessonInput[]
     deleteMany?: RapidRecallScalarWhereInput | RapidRecallScalarWhereInput[]
+  }
+
+  export type LessonVideoUncheckedUpdateManyWithoutLessonNestedInput = {
+    create?: XOR<LessonVideoCreateWithoutLessonInput, LessonVideoUncheckedCreateWithoutLessonInput> | LessonVideoCreateWithoutLessonInput[] | LessonVideoUncheckedCreateWithoutLessonInput[]
+    connectOrCreate?: LessonVideoCreateOrConnectWithoutLessonInput | LessonVideoCreateOrConnectWithoutLessonInput[]
+    upsert?: LessonVideoUpsertWithWhereUniqueWithoutLessonInput | LessonVideoUpsertWithWhereUniqueWithoutLessonInput[]
+    createMany?: LessonVideoCreateManyLessonInputEnvelope
+    set?: LessonVideoWhereUniqueInput | LessonVideoWhereUniqueInput[]
+    disconnect?: LessonVideoWhereUniqueInput | LessonVideoWhereUniqueInput[]
+    delete?: LessonVideoWhereUniqueInput | LessonVideoWhereUniqueInput[]
+    connect?: LessonVideoWhereUniqueInput | LessonVideoWhereUniqueInput[]
+    update?: LessonVideoUpdateWithWhereUniqueWithoutLessonInput | LessonVideoUpdateWithWhereUniqueWithoutLessonInput[]
+    updateMany?: LessonVideoUpdateManyWithWhereWithoutLessonInput | LessonVideoUpdateManyWithWhereWithoutLessonInput[]
+    deleteMany?: LessonVideoScalarWhereInput | LessonVideoScalarWhereInput[]
+  }
+
+  export type LessonCreateNestedOneWithoutVideosInput = {
+    create?: XOR<LessonCreateWithoutVideosInput, LessonUncheckedCreateWithoutVideosInput>
+    connectOrCreate?: LessonCreateOrConnectWithoutVideosInput
+    connect?: LessonWhereUniqueInput
+  }
+
+  export type LessonUpdateOneRequiredWithoutVideosNestedInput = {
+    create?: XOR<LessonCreateWithoutVideosInput, LessonUncheckedCreateWithoutVideosInput>
+    connectOrCreate?: LessonCreateOrConnectWithoutVideosInput
+    upsert?: LessonUpsertWithoutVideosInput
+    connect?: LessonWhereUniqueInput
+    update?: XOR<XOR<LessonUpdateToOneWithWhereWithoutVideosInput, LessonUpdateWithoutVideosInput>, LessonUncheckedUpdateWithoutVideosInput>
   }
 
   export type LessonCreateNestedOneWithoutLessonPlansInput = {
@@ -64861,6 +66483,7 @@ export namespace Prisma {
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
     rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutChapterInput = {
@@ -64890,6 +66513,7 @@ export namespace Prisma {
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
     rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutChapterInput = {
@@ -65305,6 +66929,39 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type LessonVideoCreateWithoutLessonInput = {
+    title?: string | null
+    videoUrl: string
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    durationSeconds?: number | null
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LessonVideoUncheckedCreateWithoutLessonInput = {
+    id?: number
+    title?: string | null
+    videoUrl: string
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    durationSeconds?: number | null
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LessonVideoCreateOrConnectWithoutLessonInput = {
+    where: LessonVideoWhereUniqueInput
+    create: XOR<LessonVideoCreateWithoutLessonInput, LessonVideoUncheckedCreateWithoutLessonInput>
+  }
+
+  export type LessonVideoCreateManyLessonInputEnvelope = {
+    data: LessonVideoCreateManyLessonInput | LessonVideoCreateManyLessonInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ChapterUpsertWithoutLessonsInput = {
     update: XOR<ChapterUpdateWithoutLessonsInput, ChapterUncheckedUpdateWithoutLessonsInput>
     create: XOR<ChapterCreateWithoutLessonsInput, ChapterUncheckedCreateWithoutLessonsInput>
@@ -65463,6 +67120,172 @@ export namespace Prisma {
     data: XOR<RapidRecallUpdateManyMutationInput, RapidRecallUncheckedUpdateManyWithoutLessonInput>
   }
 
+  export type LessonVideoUpsertWithWhereUniqueWithoutLessonInput = {
+    where: LessonVideoWhereUniqueInput
+    update: XOR<LessonVideoUpdateWithoutLessonInput, LessonVideoUncheckedUpdateWithoutLessonInput>
+    create: XOR<LessonVideoCreateWithoutLessonInput, LessonVideoUncheckedCreateWithoutLessonInput>
+  }
+
+  export type LessonVideoUpdateWithWhereUniqueWithoutLessonInput = {
+    where: LessonVideoWhereUniqueInput
+    data: XOR<LessonVideoUpdateWithoutLessonInput, LessonVideoUncheckedUpdateWithoutLessonInput>
+  }
+
+  export type LessonVideoUpdateManyWithWhereWithoutLessonInput = {
+    where: LessonVideoScalarWhereInput
+    data: XOR<LessonVideoUpdateManyMutationInput, LessonVideoUncheckedUpdateManyWithoutLessonInput>
+  }
+
+  export type LessonVideoScalarWhereInput = {
+    AND?: LessonVideoScalarWhereInput | LessonVideoScalarWhereInput[]
+    OR?: LessonVideoScalarWhereInput[]
+    NOT?: LessonVideoScalarWhereInput | LessonVideoScalarWhereInput[]
+    id?: IntFilter<"LessonVideo"> | number
+    lessonId?: IntFilter<"LessonVideo"> | number
+    title?: StringNullableFilter<"LessonVideo"> | string | null
+    videoUrl?: StringFilter<"LessonVideo"> | string
+    videoPublicId?: StringNullableFilter<"LessonVideo"> | string | null
+    thumbnailUrl?: StringNullableFilter<"LessonVideo"> | string | null
+    durationSeconds?: IntNullableFilter<"LessonVideo"> | number | null
+    displayOrder?: IntFilter<"LessonVideo"> | number
+    createdAt?: DateTimeFilter<"LessonVideo"> | Date | string
+    updatedAt?: DateTimeFilter<"LessonVideo"> | Date | string
+  }
+
+  export type LessonCreateWithoutVideosInput = {
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    durationSeconds?: number | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    commentsEnabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    chapter: ChapterCreateNestedOneWithoutLessonsInput
+    quiz?: QuizCreateNestedOneWithoutLessonInput
+    lessonPlans?: LessonPlanCreateNestedManyWithoutLessonInput
+    savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
+    progress?: LessonProgressCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
+  }
+
+  export type LessonUncheckedCreateWithoutVideosInput = {
+    id?: number
+    chapterId: number
+    title: string
+    description?: string | null
+    type: $Enums.LessonType
+    videoUrl?: string | null
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    thumbnailPublicId?: string | null
+    noteUrl?: string | null
+    notePublicId?: string | null
+    noteFileType?: string | null
+    durationSeconds?: number | null
+    content?: string | null
+    displayOrder?: number
+    isFreePreview?: boolean
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    quizId?: number | null
+    commentsEnabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lessonPlans?: LessonPlanUncheckedCreateNestedManyWithoutLessonInput
+    savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
+    progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
+    rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
+  }
+
+  export type LessonCreateOrConnectWithoutVideosInput = {
+    where: LessonWhereUniqueInput
+    create: XOR<LessonCreateWithoutVideosInput, LessonUncheckedCreateWithoutVideosInput>
+  }
+
+  export type LessonUpsertWithoutVideosInput = {
+    update: XOR<LessonUpdateWithoutVideosInput, LessonUncheckedUpdateWithoutVideosInput>
+    create: XOR<LessonCreateWithoutVideosInput, LessonUncheckedCreateWithoutVideosInput>
+    where?: LessonWhereInput
+  }
+
+  export type LessonUpdateToOneWithWhereWithoutVideosInput = {
+    where?: LessonWhereInput
+    data: XOR<LessonUpdateWithoutVideosInput, LessonUncheckedUpdateWithoutVideosInput>
+  }
+
+  export type LessonUpdateWithoutVideosInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chapter?: ChapterUpdateOneRequiredWithoutLessonsNestedInput
+    quiz?: QuizUpdateOneWithoutLessonNestedInput
+    lessonPlans?: LessonPlanUpdateManyWithoutLessonNestedInput
+    savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
+    progress?: LessonProgressUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
+  }
+
+  export type LessonUncheckedUpdateWithoutVideosInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    chapterId?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumLessonTypeFieldUpdateOperationsInput | $Enums.LessonType
+    videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    isFreePreview?: BoolFieldUpdateOperationsInput | boolean
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    quizId?: NullableIntFieldUpdateOperationsInput | number | null
+    commentsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lessonPlans?: LessonPlanUncheckedUpdateManyWithoutLessonNestedInput
+    savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
+    progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
+    rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
+  }
+
   export type LessonCreateWithoutLessonPlansInput = {
     title: string
     description?: string | null
@@ -65489,6 +67312,7 @@ export namespace Prisma {
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
     rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutLessonPlansInput = {
@@ -65518,6 +67342,7 @@ export namespace Prisma {
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
     rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutLessonPlansInput = {
@@ -65604,6 +67429,7 @@ export namespace Prisma {
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutLessonPlansInput = {
@@ -65633,6 +67459,7 @@ export namespace Prisma {
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type PlanUpsertWithoutLessonPlansInput = {
@@ -66658,6 +68485,7 @@ export namespace Prisma {
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
     rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutQuizInput = {
@@ -66687,6 +68515,7 @@ export namespace Prisma {
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
     rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutQuizInput = {
@@ -66848,6 +68677,7 @@ export namespace Prisma {
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutQuizInput = {
@@ -66877,6 +68707,7 @@ export namespace Prisma {
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type QuizQuestionUpsertWithWhereUniqueWithoutQuizInput = {
@@ -67825,6 +69656,7 @@ export namespace Prisma {
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
     rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutSavedByInput = {
@@ -67854,6 +69686,7 @@ export namespace Prisma {
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
     rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutSavedByInput = {
@@ -67962,6 +69795,7 @@ export namespace Prisma {
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutSavedByInput = {
@@ -67991,6 +69825,7 @@ export namespace Prisma {
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type UserCreateWithoutLessonProgressInput = {
@@ -68077,6 +69912,7 @@ export namespace Prisma {
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
     rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutProgressInput = {
@@ -68106,6 +69942,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
     rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutProgressInput = {
@@ -68214,6 +70051,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutProgressInput = {
@@ -68243,6 +70081,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type CourseCreateWithoutTestsInput = {
@@ -69317,6 +71156,7 @@ export namespace Prisma {
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
     rapidRecalls?: RapidRecallCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutCommentsInput = {
@@ -69346,6 +71186,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
     rapidRecalls?: RapidRecallUncheckedCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutCommentsInput = {
@@ -69570,6 +71411,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutCommentsInput = {
@@ -69599,6 +71441,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type UserUpsertWithoutCommentsInput = {
@@ -70463,6 +72306,7 @@ export namespace Prisma {
     savedBy?: SavedLessonCreateNestedManyWithoutLessonInput
     progress?: LessonProgressCreateNestedManyWithoutLessonInput
     comments?: LessonCommentCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoCreateNestedManyWithoutLessonInput
   }
 
   export type LessonUncheckedCreateWithoutRapidRecallsInput = {
@@ -70492,6 +72336,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUncheckedCreateNestedManyWithoutLessonInput
     progress?: LessonProgressUncheckedCreateNestedManyWithoutLessonInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutLessonInput
+    videos?: LessonVideoUncheckedCreateNestedManyWithoutLessonInput
   }
 
   export type LessonCreateOrConnectWithoutRapidRecallsInput = {
@@ -70723,6 +72568,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutRapidRecallsInput = {
@@ -70752,6 +72598,7 @@ export namespace Prisma {
     savedBy?: SavedLessonUncheckedUpdateManyWithoutLessonNestedInput
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type RapidRecallCardUpsertWithWhereUniqueWithoutRecallInput = {
@@ -72867,6 +74714,7 @@ export namespace Prisma {
     progress?: LessonProgressUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateWithoutChapterInput = {
@@ -72896,6 +74744,7 @@ export namespace Prisma {
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
+    videos?: LessonVideoUncheckedUpdateManyWithoutLessonNestedInput
   }
 
   export type LessonUncheckedUpdateManyWithoutChapterInput = {
@@ -73014,6 +74863,18 @@ export namespace Prisma {
     notePublicId?: string | null
     noteFileType?: string | null
     status?: $Enums.CourseStatus
+    displayOrder?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LessonVideoCreateManyLessonInput = {
+    id?: number
+    title?: string | null
+    videoUrl: string
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    durationSeconds?: number | null
     displayOrder?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -73153,6 +75014,41 @@ export namespace Prisma {
     notePublicId?: NullableStringFieldUpdateOperationsInput | string | null
     noteFileType?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonVideoUpdateWithoutLessonInput = {
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    videoUrl?: StringFieldUpdateOperationsInput | string
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonVideoUncheckedUpdateWithoutLessonInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    videoUrl?: StringFieldUpdateOperationsInput | string
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LessonVideoUncheckedUpdateManyWithoutLessonInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    videoUrl?: StringFieldUpdateOperationsInput | string
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

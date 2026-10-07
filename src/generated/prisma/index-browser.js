@@ -243,6 +243,19 @@ exports.Prisma.LessonScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.LessonVideoScalarFieldEnum = {
+  id: 'id',
+  lessonId: 'lessonId',
+  title: 'title',
+  videoUrl: 'videoUrl',
+  videoPublicId: 'videoPublicId',
+  thumbnailUrl: 'thumbnailUrl',
+  durationSeconds: 'durationSeconds',
+  displayOrder: 'displayOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.LessonPlanScalarFieldEnum = {
   lessonId: 'lessonId',
   planId: 'planId'
@@ -600,6 +613,7 @@ exports.Prisma.ModelName = {
   CourseType: 'CourseType',
   Chapter: 'Chapter',
   Lesson: 'Lesson',
+  LessonVideo: 'LessonVideo',
   LessonPlan: 'LessonPlan',
   Plan: 'Plan',
   Subscription: 'Subscription',

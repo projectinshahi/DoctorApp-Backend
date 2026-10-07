@@ -8,6 +8,16 @@ const VALID_ACCESS_TYPES = ['free', 'premium'];
 const VALID_STATUSES = ['draft', 'published', 'archived'];
 
 
+const VIDEO_SELECT = {
+  id: true,
+  title: true,
+  videoUrl: true,
+  videoPublicId: true,
+  thumbnailUrl: true,
+  durationSeconds: true,
+  displayOrder: true,
+};
+
 const LESSON_SELECT = {
   id: true,
   chapterId: true,
@@ -21,10 +31,24 @@ const LESSON_SELECT = {
   noteUrl: true,
   notePublicId: true,
   noteFileType: true,
+  // Written from video 1, so the panel can show the lesson's length without
+  // re-reading the video list.
+  durationSeconds: true,
   content: true,
   quizId: true,
   quiz: {
     select: { id: true, title: true, subjectId: true, topicId: true, examTag: true, questionCount: true, status: true },
+  },
+  videos: {
+    select: VIDEO_SELECT,
+    orderBy: { displayOrder: 'asc' },
+  },
+  // The decks filed against this lesson. Read-only here — a deck is created
+  // and edited on the Rapid Recall screen, which already has a lesson
+  // picker. The panel only needs to show what is attached.
+  rapidRecalls: {
+    select: { id: true, title: true, status: true, displayOrder: true },
+    orderBy: { displayOrder: 'asc' },
   },
   displayOrder: true,
   isFreePreview: true,
@@ -137,6 +161,65 @@ async function validatePlansForLesson(planIds, effectiveAccessType, chapterId) {
 //   quizId: null -> unlink
 // `provided` is false when the body says nothing, so an update leaves the
 // existing link alone.
+// `videos` absent means "leave them alone"; `[]` or null means "remove them
+// all". Order is the array's own order, so the panel reorders by reordering
+// the list rather than sending an index per row.
+function readVideos(body) {
+  if (body.videos === undefined) return { provided: false, rows: [] };
+  if (body.videos === null) return { provided: true, rows: [] };
+  if (!Array.isArray(body.videos)) {
+    return { provided: true, rows: [], error: 'videos must be an array' };
+  }
+
+  const rows = [];
+  for (let i = 0; i < body.videos.length; i += 1) {
+    const raw = body.videos[i];
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+      return { provided: true, rows: [], error: `videos[${i}] must be an object` };
+    }
+
+    const url = typeof raw.videoUrl === 'string' ? raw.videoUrl.trim() : '';
+    if (!url) {
+      return { provided: true, rows: [], error: `videos[${i}].videoUrl is required` };
+    }
+
+    let durationSeconds = null;
+    if (raw.durationSeconds !== undefined && raw.durationSeconds !== null) {
+      const n = Number(raw.durationSeconds);
+      if (!Number.isFinite(n) || n < 0) {
+        return { provided: true, rows: [], error: `videos[${i}].durationSeconds must be a number` };
+      }
+      durationSeconds = Math.round(n);
+    }
+
+    const title = typeof raw.title === 'string' && raw.title.trim() ? raw.title.trim() : null;
+    rows.push({
+      title,
+      videoUrl: url,
+      videoPublicId: raw.videoPublicId ?? null,
+      thumbnailUrl: raw.thumbnailUrl ?? null,
+      durationSeconds,
+      displayOrder: i,
+    });
+  }
+  return { provided: true, rows };
+}
+
+// The lesson's own video columns track video 1. Everything already written
+// against them — the home feed, saved lessons, the course tree, the student
+// app's player — keeps reading one video and gets the right one.
+//
+// thumbnailUrl is deliberately not mirrored: that column is the lesson's
+// cover image, which the admin sets separately on the lesson form.
+function mirrorFirstVideo(rows) {
+  const first = rows[0] ?? null;
+  return {
+    videoUrl: first ? first.videoUrl : null,
+    videoPublicId: first ? first.videoPublicId : null,
+    durationSeconds: first ? first.durationSeconds : null,
+  };
+}
+
 function readQuizId(body) {
   if (body.quizId === undefined) return { provided: false, id: null };
   if (body.quizId === null) return { provided: true, id: null };
@@ -147,15 +230,15 @@ function readQuizId(body) {
   return { provided: true, id };
 }
 
-// A quiz only belongs on a quiz-type lesson, has to exist, has to be active,
-// and can only be served by one lesson (the column is unique — catch it here
-// rather than letting Prisma throw a raw constraint error).
-async function validateQuizForLesson(quizId, effectiveType, lessonId) {
+// A quiz has to exist, has to be active, and can only be served by one
+// lesson (the column is unique — catch it here rather than letting Prisma
+// throw a raw constraint error).
+//
+// It is NOT limited to a quiz-type lesson any more: a lesson is a container
+// that can hold videos and a quiz together, and `type` only says which of
+// them it leads with.
+async function validateQuizForLesson(quizId, lessonId) {
   if (quizId === null) return null;
-
-  if (effectiveType !== 'quiz') {
-    return "quizId can only be set when type is 'quiz'";
-  }
 
   const quiz = await prisma.quiz.findUnique({
     where: { id: quizId },
@@ -223,9 +306,14 @@ async function createLesson(req, res) {
     if (quizSelection.error) {
       return res.status(400).json({ error: { message: quizSelection.error } });
     }
-    const quizError = await validateQuizForLesson(quizSelection.id, type, null);
+    const quizError = await validateQuizForLesson(quizSelection.id, null);
     if (quizError) {
       return res.status(400).json({ error: { message: quizError } });
+    }
+
+    const videoSelection = readVideos(req.body);
+    if (videoSelection.error) {
+      return res.status(400).json({ error: { message: videoSelection.error } });
     }
 
     const lesson = await prisma.lesson.create({
@@ -234,8 +322,11 @@ async function createLesson(req, res) {
         title: title.trim(),
         description: description !== undefined ? description : null,
         type,
-        videoUrl: videoUrl ?? null,
-        videoPublicId: videoPublicId ?? null,
+        // A `videos` list wins over the single-video fields: a panel that
+        // sends both means the list.
+        ...(videoSelection.provided
+          ? mirrorFirstVideo(videoSelection.rows)
+          : { videoUrl: videoUrl ?? null, videoPublicId: videoPublicId ?? null }),
         thumbnailUrl: thumbnailUrl ?? null,
         thumbnailPublicId: thumbnailPublicId ?? null,
         noteUrl: noteUrl ?? null,
@@ -249,6 +340,7 @@ async function createLesson(req, res) {
         accessType: accessType ?? 'free',
         status: status ?? 'draft',
         lessonPlans: { create: selection.ids.map((id) => ({ planId: id })) },
+        videos: { create: videoSelection.rows },
       },
       select: LESSON_SELECT,
     });
@@ -531,7 +623,7 @@ async function updateLesson(req, res) {
     }
 
     if (quizSelection.provided) {
-      const quizError = await validateQuizForLesson(quizSelection.id, effectiveType, lessonId);
+      const quizError = await validateQuizForLesson(quizSelection.id, lessonId);
       if (quizError) {
         return res.status(400).json({ error: { message: quizError } });
       }
@@ -575,8 +667,19 @@ async function updateLesson(req, res) {
       }
     }
 
-    if (videoUrl !== undefined) data.videoUrl = videoUrl;
-    if (videoPublicId !== undefined) data.videoPublicId = videoPublicId;
+    const videoSelection = readVideos(req.body);
+    if (videoSelection.error) {
+      return res.status(400).json({ error: { message: videoSelection.error } });
+    }
+    if (videoSelection.provided) {
+      // Replace the whole list. The panel always sends the list it is showing,
+      // so a row the admin deleted is a row that is gone.
+      data.videos = { deleteMany: {}, create: videoSelection.rows };
+      Object.assign(data, mirrorFirstVideo(videoSelection.rows));
+    } else {
+      if (videoUrl !== undefined) data.videoUrl = videoUrl;
+      if (videoPublicId !== undefined) data.videoPublicId = videoPublicId;
+    }
     if (thumbnailUrl !== undefined) data.thumbnailUrl = thumbnailUrl;
     if (thumbnailPublicId !== undefined) data.thumbnailPublicId = thumbnailPublicId;
     if (noteUrl !== undefined) data.noteUrl = noteUrl;
@@ -769,4 +872,7 @@ module.exports = {
   deleteLesson,
   reorderLessons,
   getLessonPlans,
+  // Exported for lessonVideos.test.js.
+  readVideos,
+  mirrorFirstVideo,
 };

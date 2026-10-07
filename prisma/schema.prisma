@@ -261,9 +261,39 @@ model Lesson {
   progress    LessonProgress[]
   comments    LessonComment[]
   rapidRecalls RapidRecall[]
+  videos       LessonVideo[]
 
   @@index([chapterId, displayOrder])
   @@map("lessons")
+}
+
+// A lesson's videos. One lesson used to mean one video; a lesson is now the
+// container a client asked for — several videos, plus its quiz, plus its
+// Rapid Recall decks.
+//
+// The lesson's own videoUrl/videoPublicId/durationSeconds columns still hold
+// video 1 and are written from this table, so the home feed, saved lessons
+// and every client built against the single-video API keep working without
+// knowing this table exists.
+model LessonVideo {
+  id              Int     @id @default(autoincrement())
+  lessonId        Int
+  // "Part 2", "Case discussion". Null means the lesson title is enough,
+  // which it is for a lesson with one video.
+  title           String?
+  videoUrl        String
+  videoPublicId   String?
+  thumbnailUrl    String?
+  durationSeconds Int?
+  displayOrder    Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@index([lessonId, displayOrder])
+  @@map("lesson_videos")
 }
 
 // Which plans unlock which lessons. Explicit join so both sides can be

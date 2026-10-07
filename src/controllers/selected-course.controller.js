@@ -345,6 +345,21 @@ async function getStudentLesson(req, res) {
         videoUrl: true, thumbnailUrl: true, noteUrl: true, noteFileType: true,
         displayOrder: true, isFreePreview: true, accessType: true, status: true,
         durationSeconds: true,
+        // A lesson holds its videos, its quiz and its revision decks. videoUrl
+        // above is still video 1, so a client that only knows the old shape
+        // keeps playing the same thing it always did.
+        videos: {
+          select: {
+            id: true, title: true, videoUrl: true, thumbnailUrl: true,
+            durationSeconds: true, displayOrder: true,
+          },
+          orderBy: { displayOrder: 'asc' },
+        },
+        rapidRecalls: {
+          where: { status: 'published' },
+          select: { id: true, title: true, _count: { select: { cards: true } } },
+          orderBy: { displayOrder: 'asc' },
+        },
         quizId: true,
         quiz: { select: { id: true, title: true, questionCount: true, status: true } },
         lessonPlans: {
@@ -387,7 +402,11 @@ async function getStudentLesson(req, res) {
     const paidPlanIds = accessFrom(activeSubs);
 
     const unlocked = isLessonUnlocked(lesson, paidPlanIds, courseAccessOf(user));
-    const { status, lessonPlans = [], ...rest } = lesson;
+    const { status, lessonPlans = [], rapidRecalls = [], ...rest } = lesson;
+    rest.rapidRecalls = rapidRecalls.map(({ _count, ...deck }) => ({
+      ...deck,
+      cardCount: _count.cards,
+    }));
     const requiredPlans = lessonPlans.map((lp) => lp.plan);
 
     // The player seeks to this on open. The tree carries it too, but this is
@@ -427,6 +446,7 @@ async function getStudentLesson(req, res) {
         : {
             ...base,
             videoUrl: null,
+            videos: [],
             noteUrl: null,
             content: null,
             quiz: null,
