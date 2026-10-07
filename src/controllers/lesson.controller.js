@@ -614,7 +614,7 @@ async function updateLesson(req, res) {
       nextPlanIds = [];
     }
 
-    // Same deal as plans: resolve the quiz against the post-update type.
+    // The type after this update, for the `content` guard further down.
     const effectiveType = type !== undefined ? type : existing.type;
 
     const quizSelection = readQuizId(req.body);
@@ -628,10 +628,11 @@ async function updateLesson(req, res) {
         return res.status(400).json({ error: { message: quizError } });
       }
       data.quizId = quizSelection.id;
-    } else if (effectiveType !== 'quiz' && existing.quizId !== null) {
-      // Retyped away from quiz while still linked — drop the dangling link.
-      data.quizId = null;
     }
+    // No unlink-on-retype branch. A quiz is no longer exclusive to a
+    // quiz-type lesson, so a lesson switching from quiz to video keeps it —
+    // and, more to the point, a save that never mentions quizId must leave
+    // the link alone. Only an explicit `"quizId": null` unlinks.
 
     if (nextPlanIds !== null) {
       // Replace wholesale: the client always sends the full selection, so a
