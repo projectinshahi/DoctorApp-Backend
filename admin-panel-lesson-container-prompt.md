@@ -1,5 +1,10 @@
 # Admin panel: a lesson holds several videos, its quiz and its decks
 
+> **Implemented** in `admin_drapp` commit `9bac9a6`. Kept as the API
+> contract. Two things differ from §4 below, because the panel adds videos
+> by link and not by upload: the rows are link fields, not upload tiles,
+> and they reorder with up/down buttons rather than dragging.
+
 The backend changed. A lesson is no longer "one video **or** one quiz" — it is
 a container that can hold **several videos**, **a quiz**, and the **Rapid
 Recall decks** filed against it, all at once. The client asked for this.
