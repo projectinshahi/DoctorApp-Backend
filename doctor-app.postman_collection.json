@@ -1097,6 +1097,34 @@
             },
             "description": "Gated on published + belongs to selected course + unlocked. 403 with requiredPlans when locked."
           }
+        },
+        {
+          "name": "Delete my account",
+          "request": {
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{studentToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            },
+            "description": "Permanently deletes the signed-in student and everything stored against them: sessions, subscriptions, progress, attempts, saved items, comments, notifications and FCM tokens. Cannot be undone.\n\n200 -> {\"deleted\": true, \"deletedAt\": \"<ISO time>\"}. After a 200 the app clears its tokens and returns to sign-in; logout and DELETE /fcm-token will both 401, so do not call them.\n\nUse a TEST student token: this removes the account for real."
+          }
         }
       ]
     },
