@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Doctor App \u2014 Question Bank & Quiz",
-    "description": "Admin flows for the question bank, quizzes and lesson linking.\n\nSETUP:\n1. Pick the environment variable baseUrl (defaults to http://localhost:3000).\n2. Run 'Admin login' FIRST \u2014 it saves the token automatically, every other request inherits it.\n\nAll requests except login require an admin token.",
+    "description": "Admin flows for the question bank, quizzes, lesson containers, Rapid Recall decks and Grand Tests, plus student quiz and test flows.\n\nSETUP:\n1. Set baseUrl and the IDs for your own data.\n2. Run 'Admin login' FIRST \u2014 it saves the admin token automatically.\n3. Set studentToken to a valid student access token before running student requests.\n\nAdmin requests use the collection token. Student requests override it with studentToken.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -50,6 +50,26 @@
     {
       "key": "courseTypeId",
       "value": "15"
+    },
+    {
+      "key": "courseId",
+      "value": "1"
+    },
+    {
+      "key": "rapidRecallId",
+      "value": "1"
+    },
+    {
+      "key": "testId",
+      "value": "1"
+    },
+    {
+      "key": "testAttemptId",
+      "value": "1"
+    },
+    {
+      "key": "testQuestionId",
+      "value": "1"
     },
     {
       "key": "studentToken",
@@ -651,7 +671,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"DHA Cardiology Quiz\",\n  \"type\": \"quiz\",\n  \"quizId\": {{quizId}},\n  \"status\": \"published\"\n}"
+              "raw": "{\n  \"title\": \"DHA Cardiology Quiz\",\n  \"type\": \"quiz\",\n  \"quizId\": {{quizId}},\n  \"videos\": [\n    {\n      \"title\": \"Part 1\",\n      \"videoUrl\": \"https://example.com/lesson-video-1.mp4\",\n      \"durationSeconds\": 600\n    },\n    {\n      \"title\": \"Part 2\",\n      \"videoUrl\": \"https://example.com/lesson-video-2.mp4\",\n      \"durationSeconds\": 480\n    }\n  ],\n  \"accessType\": \"premium\",\n  \"isFreePreview\": false,\n  \"planIds\": [],\n  \"status\": \"published\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/chapters/{{chapterId}}/lessons",
@@ -700,7 +720,7 @@
                 "{{lessonId}}"
               ]
             },
-            "description": "Quiz-type lesson: quizId set, quiz object carries availableQuestions / servedQuestions / isUnderfilled. Non-quiz lesson: both are null."
+            "description": "The admin lesson response includes `videos` (ordered by displayOrder), `rapidRecalls`, `quiz`, `plans`, `planIds`, `planId`, `accessType`, `isFreePreview`, and `courseAccessType`. A lesson can contain multiple videos, one linked quiz, and multiple linked Rapid Recall decks. `courseAccessType` is the parent course's access setting."
           }
         },
         {
@@ -718,7 +738,7 @@
                 "20"
               ]
             },
-            "description": "Confirms the conditional: quizId=null and quiz=null on a non-quiz lesson."
+            "description": "Confirms the conditional: quizId=null and quiz=null on a non-quiz lesson. Lesson reads also return the ordered videos and any Rapid Recall decks linked to this lesson."
           }
         },
         {
@@ -786,7 +806,237 @@
       ]
     },
     {
-      "name": "5. Student app (needs a STUDENT token, not the admin one)",
+      "name": "5. Rapid Recall (admin)",
+      "description": "Admin endpoints use /api/admin. Scope a deck to a course and optionally narrow it to a course type, chapter, subject, or lesson. A lesson can have multiple decks; the lesson API reports the linked decks but this folder manages their cards.",
+      "item": [
+        {
+          "name": "List course subjects for Rapid Recall",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/admin/courses/{{courseId}}/subjects"
+          }
+        },
+        {
+          "name": "Create Rapid Recall deck",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"courseId\": {{courseId}},\n  \"courseTypeId\": {{courseTypeId}},\n  \"chapterId\": {{chapterId}},\n  \"lessonId\": {{lessonId}},\n  \"title\": \"Cardiology rapid revision\",\n  \"description\": \"High-yield image and note cards\",\n  \"status\": \"draft\",\n  \"displayOrder\": 0\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/rapid-recalls"
+          },
+          "description": "Use IDs from the same course. Omit unused scope fields or set them to null. A deck linked to a lesson is included in that lesson's `rapidRecalls` array."
+        },
+        {
+          "name": "List Rapid Recall decks",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/admin/rapid-recalls?courseId={{courseId}}"
+          }
+        },
+        {
+          "name": "Get deck with cards",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/admin/rapid-recalls/{{rapidRecallId}}"
+          }
+        },
+        {
+          "name": "Update deck",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Cardiology rapid revision (updated)\",\n  \"status\": \"published\",\n  \"displayOrder\": 0\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/rapid-recalls/{{rapidRecallId}}"
+          }
+        },
+        {
+          "name": "Replace deck cards",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cards\": [\n    { \"imageUrl\": \"https://example.com/card-1.png\", \"note\": \"Recognize the key finding\" },\n    { \"note\": \"A text-only card is also supported\" }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/rapid-recalls/{{rapidRecallId}}/cards"
+          },
+          "description": "Replaces the whole card list and order. Each card must contain an imageUrl, a note, or both."
+        },
+        {
+          "name": "Delete deck",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/admin/rapid-recalls/{{rapidRecallId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Grand Tests / Mock Tests",
+      "description": "Admin paper setup and student attempt flow. Mock tests require a course plan with the `mock` feature enabled; use a subscribed student to start an attempt.",
+      "item": [
+        {
+          "name": "Admin: list tests",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/admin/tests?courseId={{courseId}}"
+          }
+        },
+        {
+          "name": "Admin: create test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cardiology Mock Test\",\n  \"type\": \"GRAND_TEST\",\n  \"courseTypeId\": {{courseTypeId}},\n  \"totalQuestions\": 1,\n  \"durationMinutes\": 60,\n  \"marksCorrect\": 1,\n  \"marksIncorrect\": -0.25,\n  \"instructions\": \"Choose one answer for each question.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/courses/{{courseId}}/tests"
+          }
+        },
+        {
+          "name": "Admin: add a test question (supports A-F)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"questionText\": \"Which finding is most consistent with the diagnosis?\",\n  \"optionA\": \"Finding A\",\n  \"optionB\": \"Finding B\",\n  \"optionC\": \"Finding C\",\n  \"optionD\": \"Finding D\",\n  \"optionE\": \"Finding E\",\n  \"optionF\": \"Finding F\",\n  \"correctOption\": \"C\",\n  \"explanation\": \"Explanation shown after submission.\",\n  \"subject\": \"Cardiology\",\n  \"topic\": \"Diagnosis\",\n  \"section\": \"Part 1\"\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/tests/{{testId}}/questions"
+          },
+          "description": "A-D are required. E and F are optional, but F cannot be present without E. A question stem and each option may also use their corresponding image URL fields."
+        },
+        {
+          "name": "Admin: preview test",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/admin/tests/{{testId}}/preview"
+          }
+        },
+        {
+          "name": "Admin: publish test",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/admin/tests/{{testId}}/publish"
+          },
+          "description": "Publishing requires the test to contain exactly totalQuestions questions."
+        },
+        {
+          "name": "Student: list tests for course",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{studentToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": "{{baseUrl}}/api/users/me/courses/{{courseId}}/tests"
+          }
+        },
+        {
+          "name": "Student: start or resume test attempt",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{studentToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "url": "{{baseUrl}}/api/users/me/tests/{{testId}}/attempts"
+          },
+          "description": "The response supplies attemptId and question IDs. Starting again resumes an open attempt rather than resetting its timer. A student needs the `mock` course feature to start."
+        },
+        {
+          "name": "Student: save an answer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{studentToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"selectedOption\": \"C\"\n}"
+            },
+            "url": "{{baseUrl}}/api/users/me/test-attempts/{{testAttemptId}}/answers/{{testQuestionId}}"
+          },
+          "description": "Use the attemptId from start/resume and a question ID returned in that attempt. selectedOption accepts A-F; correctness is not returned until submission."
+        },
+        {
+          "name": "Student: submit test",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{studentToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "url": "{{baseUrl}}/api/users/me/test-attempts/{{testAttemptId}}/submit"
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Student app (needs a STUDENT token, not the admin one)",
       "item": [
         {
           "name": "Selected course content (published lessons only)",
@@ -851,7 +1101,7 @@
       ]
     },
     {
-      "name": "6. Student quiz flow (verified live)",
+      "name": "8. Student quiz flow (verified live)",
       "description": "Set {{studentToken}} first. A student token is NOT email/password \u2014 login is Google-only (POST /api/auth/google with a real Google idToken + deviceId), and the token must carry a sessionId matching a live row in the sessions table. Easiest path: sign in on the Flutter app and copy its access token.\n\nEvery response documented below was captured from the live backend.",
       "item": [
         {
