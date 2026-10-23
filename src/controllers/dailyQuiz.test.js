@@ -1,6 +1,6 @@
 // Daily set selection and streaks. Run: node src/controllers/dailyQuiz.test.js
 const assert = require('assert');
-const { pickDaily, streakFrom, appToday, shiftDays } = require('./dailyQuiz.controller');
+const { pickDaily, refreshDaily, streakFrom, appToday, shiftDays } = require('./dailyQuiz.controller');
 
 const pool = Array.from({ length: 30 }, (_, i) => i + 1);
 
@@ -52,6 +52,33 @@ for (let d = 1; d <= 28; d += 1) {
   pickDaily(pool, 22, `2026-09-${String(d).padStart(2, '0')}`).forEach((id) => seen.add(id));
 }
 assert(seen.size >= 25, `a month of sets should reach most of a 30-question pool, saw ${seen.size}`);
+
+
+// ── keeping the frozen set in step with the bank ──
+
+const D = '2026-09-01';
+const frozen = pickDaily(pool, 22, D);
+
+// Nothing changed: the set comes back exactly as it was.
+assert.deepStrictEqual(refreshDaily(frozen, [], pool, 22, D), frozen);
+
+// A removed question leaves the set and is replaced; the rest keep their place.
+const removed = frozen[3];
+const after = refreshDaily(frozen, [], pool.filter((id) => id !== removed), 22, D);
+assert(!after.includes(removed), 'a removed question must not reach the app');
+assert.strictEqual(after.length, 10);
+assert.deepStrictEqual(after.slice(0, 9), frozen.filter((id) => id !== removed));
+assert.strictEqual(new Set(after).size, 10, 'the refill must not repeat a question');
+
+// The refill is stable: refreshing again picks the same replacement.
+assert.deepStrictEqual(refreshDaily(after, [], pool.filter((id) => id !== removed), 22, D), after);
+
+// An answered question stays even once removed — it is the student's record.
+assert(refreshDaily(frozen, [removed], pool.filter((id) => id !== removed), 22, D).includes(removed));
+
+// A small pool that grows tops the set up; one that shrinks serves what is left.
+assert.deepStrictEqual(refreshDaily([1, 2, 3], [], [1, 2, 3, 4], 22, D).sort(), [1, 2, 3, 4]);
+assert.deepStrictEqual(refreshDaily([1, 2, 3], [], [1, 3], 22, D), [1, 3]);
 
 
 // ── streaks ──

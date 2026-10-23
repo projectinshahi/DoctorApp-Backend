@@ -81,6 +81,26 @@ function pickDaily(ids, courseId, ymd, count = DAILY_QUESTION_COUNT) {
 
 
 /**
+ * Today's frozen set, brought back in step with the bank.
+ *
+ * A question deactivated or deleted since the set froze is dropped, unless the
+ * student already answered it — that answer is their record. The gap, and any
+ * room a small pool left, is filled from the same seeded order, so a refill is
+ * as stable as the first pick and every student on the course gets the same
+ * replacement. Questions still live keep their place.
+ */
+function refreshDaily(questionIds, answeredIds, poolIds, courseId, ymd, count = DAILY_QUESTION_COUNT) {
+  const live = new Set(poolIds);
+  const answered = new Set(answeredIds);
+  const kept = questionIds.filter((id) => live.has(id) || answered.has(id));
+  const fill = pickDaily(poolIds, courseId, ymd, poolIds.length)
+    .filter((id) => !kept.includes(id))
+    .slice(0, Math.max(count - kept.length, 0));
+  return [...kept, ...fill];
+}
+
+
+/**
  * Consecutive days completed, counting back from today.
  *
  * Today not being done yet does not break the streak — it is not over. Looking
@@ -115,7 +135,9 @@ async function courseQuestionIds(courseId) {
     }),
     prisma.lesson.findMany({
       where: {
-        type: 'quiz', quizId: { not: null }, status: 'published',
+        // Any lesson with a quiz, not only type 'quiz': since a lesson became a
+        // container, a video lesson can carry the chapter's quiz too.
+        quizId: { not: null }, status: 'published',
         chapter: { OR: [{ courseId }, { courseType: { courseId } }] },
       },
       select: { quiz: { select: { subjectId: true } } },
@@ -169,8 +191,7 @@ async function getDailyQuiz(req, res) {
       });
     }
 
-    // Freeze on first open. Deriving it again later would change the paper
-    // under a student if an admin touched the bank mid-morning.
+    // Freeze on first open, so a reload does not reroll the paper.
     let attempt = await prisma.dailyQuizAttempt.findUnique({
       where: { userId_courseId_quizDate: { userId, courseId, quizDate: dateKey(today) } },
       include: { answers: true },
@@ -184,6 +205,20 @@ async function getDailyQuiz(req, res) {
         },
         include: { answers: true },
       });
+    } else if (!attempt.completedAt) {
+      // But not frozen against the bank: a question removed since the set was
+      // drawn must not keep reaching the app. A finished set is left as the
+      // record of what was sat.
+      const next = refreshDaily(
+        attempt.questionIds, attempt.answers.map((a) => a.questionId), ids, courseId, today,
+      );
+      if (next.join() !== attempt.questionIds.join()) {
+        attempt = await prisma.dailyQuizAttempt.update({
+          where: { id: attempt.id },
+          data: { questionIds: next },
+          include: { answers: true },
+        });
+      }
     }
 
     const questions = await prisma.question.findMany({
@@ -512,5 +547,5 @@ module.exports = {
   getDailyQuiz, answerDailyQuestion, finishDailyQuiz, dailyQuizHistory,
   dailyQuizSummary,
   // Exported for dailyQuiz.test.js — pure, no DB.
-  pickDaily, streakFrom, appToday, shiftDays,
+  pickDaily, refreshDaily, streakFrom, appToday, shiftDays,
 };
