@@ -174,4 +174,35 @@ async function updateProfile(req, res) {
   }
 }
 
-module.exports = { getProfile, updateProfile };
+// DELETE /api/users/me
+//
+// Removes the account and everything stored against it, as the App Store and
+// Play Store require. Progress, attempts, saved items, comments, reports,
+// notifications, FCM tokens and daily quizzes cascade from the user row;
+// sessions and subscriptions do not, so they are deleted first, in the same
+// transaction — a failure part way leaves the account untouched rather than
+// half-erased.
+//
+// Subscriptions go too: the student asked for every detail removed, and a
+// payment row keyed to their id is one. Signing in with Google again later
+// creates a new, empty account.
+async function deleteAccount(req, res) {
+  try {
+    const userId = req.user.userId;
+    const deletedAt = new Date();
+
+    await prisma.$transaction([
+      prisma.session.deleteMany({ where: { userId } }),
+      prisma.subscription.deleteMany({ where: { userId } }),
+      prisma.user.delete({ where: { id: userId } }),
+    ]);
+
+    console.log(`[account] user ${userId} deleted at ${deletedAt.toISOString()}`);
+    return res.status(200).json({ deleted: true, deletedAt });
+  } catch (error) {
+    console.error('deleteAccount error:', error);
+    return res.status(500).json({ error: { message: 'Failed to delete the account' } });
+  }
+}
+
+module.exports = { getProfile, updateProfile, deleteAccount };

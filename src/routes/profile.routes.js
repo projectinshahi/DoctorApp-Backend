@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getProfile, updateProfile } = require('../controllers/profile.controller');
+const { getProfile, updateProfile, deleteAccount } = require('../controllers/profile.controller');
 const { getStudentLesson, getStudentQuizQuestions, submitStudentQuiz } = require('../controllers/selected-course.controller');
 const {
   startAttempt, saveAnswer, finishAttempt, getAttempt, listAttempts, listInProgress,
@@ -29,6 +29,7 @@ const authenticateStudent = require('../middleware/authenticateStudent');
 
 router.get('/', authenticateStudent, getProfile);
 router.put('/', authenticateStudent, updateProfile);
+router.delete('/', authenticateStudent, deleteAccount);
 
 // Mounted under /api/users/me -> GET /api/users/me/lessons/:id
 // One call for the whole home screen: module counts plus the two continue rows.
