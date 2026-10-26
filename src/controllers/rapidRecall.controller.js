@@ -8,6 +8,7 @@
 const prisma = require('../db');
 
 const VALID_STATUSES = ['draft', 'published'];
+const VALID_ACCESS = ['free', 'premium'];
 
 const CARD_SELECT = { id: true, imageUrl: true, note: true, displayOrder: true };
 
@@ -15,7 +16,7 @@ const RECALL_SELECT = {
   id: true, courseId: true, courseTypeId: true, chapterId: true, subjectId: true, lessonId: true,
   title: true, description: true,
   noteUrl: true, notePublicId: true, noteFileType: true,
-  status: true, displayOrder: true, createdAt: true, updatedAt: true,
+  status: true, accessType: true, displayOrder: true, createdAt: true, updatedAt: true,
   course: { select: { id: true, title: true } },
   courseType: { select: { id: true, title: true } },
   chapter: { select: { id: true, title: true } },
@@ -154,6 +155,9 @@ async function createRapidRecall(req, res) {
     if (body.status !== undefined && !VALID_STATUSES.includes(body.status)) {
       return res.status(400).json({ error: { message: `status must be one of: ${VALID_STATUSES.join(', ')}` } });
     }
+    if (body.accessType !== undefined && !VALID_ACCESS.includes(body.accessType)) {
+      return res.status(400).json({ error: { message: `accessType must be one of: ${VALID_ACCESS.join(', ')}` } });
+    }
 
     const recall = await prisma.rapidRecall.create({
       data: {
@@ -165,6 +169,7 @@ async function createRapidRecall(req, res) {
         notePublicId: body.notePublicId || null,
         noteFileType: body.noteFileType || null,
         status: body.status ?? 'draft',
+        accessType: body.accessType ?? 'premium',
         displayOrder: Number.isInteger(Number(body.displayOrder)) ? Number(body.displayOrder) : 0,
       },
       select: RECALL_SELECT,
@@ -276,6 +281,13 @@ async function updateRapidRecall(req, res) {
         return res.status(400).json({ error: { message: `status must be one of: ${VALID_STATUSES.join(', ')}` } });
       }
       data.status = body.status;
+    }
+
+    if (body.accessType !== undefined) {
+      if (!VALID_ACCESS.includes(body.accessType)) {
+        return res.status(400).json({ error: { message: `accessType must be one of: ${VALID_ACCESS.join(', ')}` } });
+      }
+      data.accessType = body.accessType;
     }
 
     if (body.displayOrder !== undefined) {
@@ -406,6 +418,7 @@ const STUDENT_RECALL_SELECT = {
   id: true, title: true, description: true,
   noteUrl: true, noteFileType: true,
   courseTypeId: true, chapterId: true, subjectId: true, lessonId: true, displayOrder: true,
+  accessType: true,
   // The chapter is what a student sees as the subject heading.
   chapter: { select: { id: true, title: true } },
   subject: { select: { id: true, name: true } },
@@ -468,19 +481,37 @@ async function listStudentRapidRecalls(req, res) {
     const recalls = await prisma.rapidRecall.findMany({
       where,
       orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }],
-      select: STUDENT_RECALL_SELECT,
+      select: {
+        ...STUDENT_RECALL_SELECT,
+        // The first image only, as the row's cover. Sent for a locked deck
+        // too: a student is shown what a deck holds, not handed its cards.
+        cards: {
+          where: { imageUrl: { not: null } },
+          orderBy: { displayOrder: 'asc' },
+          take: 1,
+          select: { imageUrl: true },
+        },
+      },
+    });
+
+    // Per deck: a free deck opens for everyone, a premium one needs the plan.
+    const shaped = recalls.map(({ _count, cards, ...r }) => {
+      const locked = r.accessType === 'premium' && !unlocked;
+      return {
+        ...r,
+        cardCount: _count.cards,
+        coverImageUrl: cards[0]?.imageUrl ?? null,
+        locked,
+        // The handout is the content. Withheld with the cards, or the paywall
+        // is one PDF link away from being pointless.
+        noteUrl: locked ? null : r.noteUrl,
+      };
     });
 
     return res.status(200).json({
-      locked: !unlocked,
-      rapidRecalls: recalls.map(({ _count, ...r }) => ({
-        ...r,
-        cardCount: _count.cards,
-        locked: !unlocked,
-        // The handout is the content. Withheld with the cards, or the paywall
-        // is one PDF link away from being pointless.
-        noteUrl: unlocked ? r.noteUrl : null,
-      })),
+      // The feature is shut only when nothing in the list can be opened.
+      locked: shaped.length > 0 ? shaped.every((r) => r.locked) : !unlocked,
+      rapidRecalls: shaped,
     });
   } catch (error) {
     console.error('listStudentRapidRecalls error:', error);
@@ -516,7 +547,8 @@ async function getStudentRapidRecall(req, res) {
     if (!visible) return res.status(404).json({ error: { message: 'Rapid recall not found' } });
 
     const { hasCourseFeature } = require('./selected-course.controller');
-    if (!(await hasCourseFeature(req.user.userId, recall.courseId, 'rapid_recall'))) {
+    if (recall.accessType === 'premium'
+        && !(await hasCourseFeature(req.user.userId, recall.courseId, 'rapid_recall'))) {
       return res.status(403).json({
         error: {
           code: 'SUBSCRIPTION_REQUIRED',

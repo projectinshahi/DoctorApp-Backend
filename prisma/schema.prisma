@@ -889,6 +889,8 @@ model RapidRecall {
 
   status       CourseStatus @default(draft)
   displayOrder Int          @default(0)
+  // free opens for every student; premium needs the rapid_recall plan feature.
+  accessType   AccessType   @default(premium)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
