@@ -108,6 +108,7 @@
 const crypto = require('crypto');
 const {
   verifyGoogleToken,
+  verifyAppleToken,
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
@@ -182,7 +183,10 @@ function decideLogin(previous, deviceId, now = Date.now()) {
 }
 
 
-async function googleSignIn(req, res, next) {
+// One handler per provider; everything after the token check is shared.
+// `verify` turns the provider's idToken into { email, name }.
+function signInWith(verify, provider) {
+  return async function (req, res) {
   try {
     const { idToken, deviceId } = req.body;
 
@@ -198,10 +202,15 @@ async function googleSignIn(req, res, next) {
       });
     }
 
-    const googleUser = await verifyGoogleToken(idToken);
+    const profile = await verify(idToken);
+    if (!profile.email) {
+      return res.status(400).json({
+        error: { message: `${provider} did not share an email address`, status: 400 },
+      });
+    }
 
     let user = await prisma.user.findUnique({
-      where: { email: googleUser.email },
+      where: { email: profile.email },
     });
 
     let isNewUser = false;
@@ -209,8 +218,10 @@ async function googleSignIn(req, res, next) {
     if (!user) {
       user = await prisma.user.create({
         data: {
-          email: googleUser.email,
-          name: googleUser.name,
+          email: profile.email,
+          // Apple puts no name in its token and gives it to the app only on
+          // the very first sign-in, so the app forwards it in the body.
+          name: profile.name || req.body.name || null,
           status: 'verified',
           password: null,
         },
@@ -304,10 +315,14 @@ async function googleSignIn(req, res, next) {
   } catch (err) {
     console.error(err);
     return res.status(401).json({
-      error: { message: 'Invalid or expired Google token', status: 401 },
+      error: { message: `Invalid or expired ${provider} token`, status: 401 },
     });
   }
+  };
 }
+
+const googleSignIn = signInWith(verifyGoogleToken, 'Google');
+const appleSignIn = signInWith(verifyAppleToken, 'Apple');
 
 // NEW: refresh access token using a valid refresh token
 async function refreshAccessToken(req, res) {
@@ -412,7 +427,7 @@ async function logout(req, res) {
 }
 
 module.exports = {
-  googleSignIn, refreshAccessToken, logout,
+  googleSignIn, appleSignIn, refreshAccessToken, logout,
   // Exported for auth.test.js — pure, no DB.
   decideLogin, IDLE_RELEASE_MS,
 };
