@@ -5,7 +5,6 @@ const { OAuth2Client } = require('google-auth-library');
 
 // Short-lived: the app refreshes it through /auth/refresh.
 const ACCESS_TOKEN_EXPIRY = '15m';
-const EMAIL_TOKEN_EXPIRY = '24h';
 const REFRESH_TOKEN_EXPIRY = '7d';
 const SALT_ROUNDS = 12;
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -44,18 +43,21 @@ function verifyRefreshToken(token) {
   return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
 }
 
-// The verification link's token. Its own secret (derived, so no new env var)
-// means it can never pass as an access token, nor an access token as it.
-const emailSecret = () => `${process.env.JWT_ACCESS_SECRET}:verify-email`;
-
-function generateEmailToken(userId) {
-  return jwt.sign({ userId }, emailSecret(), { expiresIn: EMAIL_TOKEN_EXPIRY });
+// A 6-digit signup code. Stored only as an HMAC keyed by the server secret
+// and the user id, so a leaked row is not a usable code for anyone.
+function generateOtp() {
+  return String(crypto.randomInt(0, 1000000)).padStart(6, '0');
 }
 
-function verifyEmailToken(token) {
-  return jwt.verify(token, emailSecret());
+function hashOtp(userId, code) {
+  return crypto.createHmac('sha256', process.env.JWT_ACCESS_SECRET).update(`${userId}:${code}`).digest('hex');
 }
 
+function otpMatches(userId, code, storedHash) {
+  const given = Buffer.from(hashOtp(userId, String(code)));
+  const stored = Buffer.from(storedHash || '');
+  return given.length === stored.length && crypto.timingSafeEqual(given, stored);
+}
 
 async function verifyGoogleToken(idToken) {
   const ticket = await googleClient.verifyIdToken({
@@ -93,8 +95,9 @@ async function verifyAppleToken(idToken) {
 }
 
 module.exports = {
-  generateEmailToken,
-  verifyEmailToken,
+  generateOtp,
+  hashOtp,
+  otpMatches,
   verifyAppleToken,
   hashPassword,
   comparePassword,

@@ -111,14 +111,15 @@ const {
   verifyAppleToken,
   hashPassword,
   comparePassword,
-  generateEmailToken,
-  verifyEmailToken,
+  generateOtp,
+  hashOtp,
+  otpMatches,
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
 } = require('../services/auth.service');
 const { revokeActiveSessions, revokeSession } = require('../services/session.service');
-const { sendVerificationEmail } = require('../services/email.service');
+const { sendOtpEmail } = require('../services/email.service');
 
 const prisma = require('../db');
 
@@ -315,7 +316,7 @@ function signInWith(verify, provider) {
       // into the account the real owner is about to fill.
       user = await prisma.user.update({
         where: { id: user.id },
-        data: { status: 'verified', password: null },
+        data: { status: 'verified', password: null, emailOtpHash: null, emailOtpExpiresAt: null },
       });
     }
 
@@ -353,11 +354,23 @@ const MIN_PASSWORD = 8;
 // they are one inbox.
 const normaliseEmail = (email) => (typeof email === 'string' ? email.trim().toLowerCase() : '');
 
-// The link points back at this server, whatever host it is reached on.
-// Render terminates HTTPS in front of us, hence x-forwarded-proto.
-function verificationLink(req, userId) {
-  const proto = req.get('x-forwarded-proto') || req.protocol;
-  return `${proto}://${req.get('host')}/api/auth/verify-email?token=${generateEmailToken(userId)}`;
+const OTP_TTL_MS = 10 * 60 * 1000;
+const OTP_MAX_ATTEMPTS = 5;
+const OTP_RESEND_COOLDOWN_MS = 60 * 1000;
+
+// A fresh code replaces any earlier one and resets the guess count.
+async function issueOtp(user) {
+  const code = generateOtp();
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      emailOtpHash: hashOtp(user.id, code),
+      emailOtpExpiresAt: new Date(Date.now() + OTP_TTL_MS),
+      emailOtpAttempts: 0,
+      emailOtpSentAt: new Date(),
+    },
+  });
+  return sendOtpEmail(user.email, code);
 }
 
 // POST /api/auth/register  { email, password, name? }
@@ -409,13 +422,14 @@ async function register(req, res) {
       throw err;
     }
 
-    // A failed send does not undo the account: /resend-verification exists
-    // for exactly this.
-    const emailSent = await sendVerificationEmail(email, verificationLink(req, user.id));
+    // A failed send does not undo the account: /resend-otp exists for
+    // exactly this.
+    const emailSent = await issueOtp(user);
 
     return res.status(201).json({
-      message: 'Account created. Check your email to verify it before logging in.',
+      message: 'Account created. Enter the 6-digit code we emailed you.',
       emailSent,
+      otpExpiresInSeconds: OTP_TTL_MS / 1000,
       user,
     });
   } catch (err) {
@@ -454,7 +468,7 @@ async function login(req, res) {
       return res.status(403).json({
         error: {
           code: 'EMAIL_NOT_VERIFIED',
-          message: 'Please verify your email before logging in. Check your inbox for the link.',
+          message: 'Please verify your email before logging in. Enter the code we emailed you, or ask for a new one.',
           status: 403,
         },
       });
@@ -476,53 +490,95 @@ async function login(req, res) {
   }
 }
 
-// A page, not JSON: this is opened from an email, in a browser.
-function page(res, status, title, text) {
-  return res.status(status).type('html').send(
-    `<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1">` +
-    `<title>${title}</title><body style="font-family:system-ui;max-width:28rem;margin:4rem auto;padding:0 1rem">` +
-    `<h2>${title}</h2><p>${text}</p></body>`
-  );
-}
-
-// GET /api/auth/verify-email?token=...
-async function verifyEmail(req, res) {
-  let userId;
+// POST /api/auth/verify-otp  { email, code, deviceId? }
+// Right code: the account is verified and, given a deviceId, logged in.
+async function verifyOtp(req, res) {
   try {
-    ({ userId } = verifyEmailToken(String(req.query.token || '')));
-  } catch {
-    return page(res, 400, 'Link expired or invalid', 'Request a new verification email from the app and try again.');
-  }
+    const email = normaliseEmail(req.body.email);
+    const code = String(req.body.code ?? '').trim();
+    const { deviceId } = req.body;
 
-  try {
-    // Only unverified moves to verified. A blocked account must not be
-    // unblocked by an old link, and a second click is harmless.
-    await prisma.user.updateMany({ where: { id: userId, status: 'unverified' }, data: { status: 'verified' } });
-    return page(res, 200, 'Email verified', 'Your account is ready. Go back to the app and log in.');
+    if (!email || !/^\d{6}$/.test(code)) {
+      return res.status(400).json({
+        error: { code: 'INVALID_OTP', message: 'Enter the 6-digit code from the email', status: 400 },
+      });
+    }
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (user?.status === 'verified') {
+      return res.status(409).json({
+        error: { code: 'ALREADY_VERIFIED', message: 'This email is already verified. Please log in.', status: 409 },
+      });
+    }
+    if (user?.status === 'blocked') {
+      return res.status(403).json({
+        error: { code: 'ACCOUNT_DEACTIVATED', message: 'Your account has been deactivated. Please contact support.', status: 403 },
+      });
+    }
+    if (!user || !user.emailOtpHash || user.emailOtpExpiresAt < new Date()) {
+      return res.status(400).json({
+        error: { code: 'OTP_EXPIRED', message: 'This code has expired. Ask for a new one.', status: 400 },
+      });
+    }
+
+    // The guess is counted before it is checked, and only while under the
+    // limit, so parallel requests cannot squeeze in extra guesses.
+    const { count } = await prisma.user.updateMany({
+      where: { id: user.id, emailOtpAttempts: { lt: OTP_MAX_ATTEMPTS } },
+      data: { emailOtpAttempts: { increment: 1 } },
+    });
+    if (count === 0) {
+      return res.status(429).json({
+        error: { code: 'OTP_LOCKED', message: 'Too many wrong codes. Ask for a new one.', status: 429 },
+      });
+    }
+
+    if (!otpMatches(user.id, code, user.emailOtpHash)) {
+      const attemptsLeft = OTP_MAX_ATTEMPTS - user.emailOtpAttempts - 1;
+      return res.status(400).json({
+        error: { code: 'INVALID_OTP', message: 'That code is not right.', status: 400 },
+        attemptsLeft: Math.max(0, attemptsLeft),
+      });
+    }
+
+    const verified = await prisma.user.update({
+      where: { id: user.id },
+      data: { status: 'verified', emailOtpHash: null, emailOtpExpiresAt: null, emailOtpAttempts: 0 },
+    });
+
+    if (!deviceId) {
+      return res.status(200).json({ message: 'Email verified. Please log in.', verified: true });
+    }
+    // Straight in: they have just proved the address and they know the
+    // password, so asking for it again would only be friction.
+    return await startSession(res, verified, deviceId, true);
   } catch (err) {
-    console.error('verifyEmail error:', err);
-    return page(res, 500, 'Something went wrong', 'Please try the link again in a moment.');
+    console.error('verifyOtp error:', err);
+    return res.status(500).json({ error: { message: 'Could not verify the code', status: 500 } });
   }
 }
 
-// POST /api/auth/resend-verification  { email }
-async function resendVerification(req, res) {
+// POST /api/auth/resend-otp  { email }
+async function resendOtp(req, res) {
   try {
     const email = normaliseEmail(req.body.email);
     const user = email && await prisma.user.findUnique({
       where: { email },
-      select: { id: true, status: true, password: true },
+      select: { id: true, email: true, status: true, password: true, emailOtpSentAt: true },
     });
-    if (user && user.status === 'unverified' && user.password) {
-      await sendVerificationEmail(email, verificationLink(req, user.id));
+    const coolingDown = user?.emailOtpSentAt && Date.now() - user.emailOtpSentAt.getTime() < OTP_RESEND_COOLDOWN_MS;
+    if (user && user.status === 'unverified' && user.password && !coolingDown) {
+      await issueOtp(user);
     }
-    // The same reply either way, so this cannot be used to probe for accounts.
+    // The same reply either way, so this cannot be used to probe for
+    // accounts. The app runs its own 60-second timer on the button.
     return res.status(200).json({
-      message: 'If that account exists and is not yet verified, a new link has been sent.',
+      message: 'If that account is waiting for verification, a new code has been sent.',
+      resendAfterSeconds: OTP_RESEND_COOLDOWN_MS / 1000,
     });
   } catch (err) {
-    console.error('resendVerification error:', err);
-    return res.status(500).json({ error: { message: 'Could not send the email', status: 500 } });
+    console.error('resendOtp error:', err);
+    return res.status(500).json({ error: { message: 'Could not send the code', status: 500 } });
   }
 }
 
@@ -630,7 +686,7 @@ async function logout(req, res) {
 
 module.exports = {
   googleSignIn, appleSignIn, refreshAccessToken, logout,
-  register, login, verifyEmail, resendVerification,
+  register, login, verifyOtp, resendOtp,
   // Exported for auth.test.js — pure, no DB.
   decideLogin, IDLE_RELEASE_MS,
 };

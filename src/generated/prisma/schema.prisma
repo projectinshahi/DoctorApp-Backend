@@ -26,7 +26,14 @@ model User {
   role      String   @default("student")
   status    String   @default("unverified")
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  // The signup verification code. Only its hash is kept; it lives 10
+  // minutes, allows 5 guesses, and can be re-sent once a minute.
+  emailOtpHash      String?
+  emailOtpExpiresAt DateTime?
+  emailOtpAttempts  Int       @default(0)
+  emailOtpSentAt    DateTime?
+  updatedAt         DateTime  @updatedAt
 
   sessions            Session[]
   subscriptions       Subscription[]

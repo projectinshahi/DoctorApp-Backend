@@ -1,30 +1,35 @@
-// Transactional email, through Brevo's HTTP API.
+// Transactional email, through Resend's HTTP API.
 //
 // HTTP rather than SMTP because Render's free instances block the SMTP ports.
 // Like push.service, it never throws and works before it is configured:
-// without BREVO_API_KEY it logs what it would have sent, so signup can be
+// without RESEND_API_KEY it logs what it would have sent, so signup can be
 // tested end to end before an account exists.
+//
+// EMAIL_FROM must be an address on a domain verified in Resend. Until one is,
+// Resend's own onboarding@resend.dev works, but only delivers to the email
+// the Resend account was opened with.
 
-async function sendEmail({ to, subject, html }) {
-  const apiKey = process.env.BREVO_API_KEY;
+async function sendEmail({ to, subject, html, text }) {
+  const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.log(`[email] BREVO_API_KEY not set — would send "${subject}" to ${to}:\n${html}`);
+    console.log(`[email] RESEND_API_KEY not set — would send "${subject}" to ${to}: ${text}`);
     return false;
   }
 
   try {
-    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: { 'api-key': apiKey, 'content-type': 'application/json' },
+      headers: { authorization: `Bearer ${apiKey}`, 'content-type': 'application/json' },
       body: JSON.stringify({
-        sender: { email: process.env.EMAIL_FROM, name: process.env.EMAIL_FROM_NAME || "Dr. SKM's Academy" },
-        to: [{ email: to }],
+        from: process.env.EMAIL_FROM || "Dr. SKM's Academy <onboarding@resend.dev>",
+        to: [to],
         subject,
-        htmlContent: html,
+        html,
+        text,
       }),
     });
     if (!res.ok) {
-      console.error(`[email] Brevo refused (${res.status}):`, await res.text());
+      console.error(`[email] Resend refused (${res.status}):`, await res.text());
       return false;
     }
     return true;
@@ -34,14 +39,15 @@ async function sendEmail({ to, subject, html }) {
   }
 }
 
-function sendVerificationEmail(to, link) {
+function sendOtpEmail(to, code) {
   return sendEmail({
     to,
-    subject: 'Verify your email',
-    html: `<p>Welcome! Confirm your email address to finish creating your account:</p>
-<p><a href="${link}">Verify my email</a></p>
-<p>This link works for 24 hours. If you did not sign up, ignore this email.</p>`,
+    subject: `${code} is your verification code`,
+    text: `Your verification code is ${code}. It expires in 10 minutes. If you did not sign up, ignore this email.`,
+    html: `<p>Your verification code is:</p>
+<p style="font-size:28px;font-weight:bold;letter-spacing:6px">${code}</p>
+<p>It expires in 10 minutes. If you did not sign up, ignore this email.</p>`,
   });
 }
 
-module.exports = { sendVerificationEmail };
+module.exports = { sendOtpEmail };
