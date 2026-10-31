@@ -3,8 +3,9 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const { OAuth2Client } = require('google-auth-library');
 
-const ACCESS_TOKEN_EXPIRY='1d';
-//'15m';
+// Short-lived: the app refreshes it through /auth/refresh.
+const ACCESS_TOKEN_EXPIRY = '15m';
+const EMAIL_TOKEN_EXPIRY = '24h';
 const REFRESH_TOKEN_EXPIRY = '7d';
 const SALT_ROUNDS = 12;
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -41,6 +42,18 @@ function verifyAccessToken(token) {
 
 function verifyRefreshToken(token) {
   return jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+}
+
+// The verification link's token. Its own secret (derived, so no new env var)
+// means it can never pass as an access token, nor an access token as it.
+const emailSecret = () => `${process.env.JWT_ACCESS_SECRET}:verify-email`;
+
+function generateEmailToken(userId) {
+  return jwt.sign({ userId }, emailSecret(), { expiresIn: EMAIL_TOKEN_EXPIRY });
+}
+
+function verifyEmailToken(token) {
+  return jwt.verify(token, emailSecret());
 }
 
 
@@ -80,6 +93,8 @@ async function verifyAppleToken(idToken) {
 }
 
 module.exports = {
+  generateEmailToken,
+  verifyEmailToken,
   verifyAppleToken,
   hashPassword,
   comparePassword,

@@ -1,10 +1,17 @@
 
 const express = require('express');
 const router = express.Router();
-const { googleSignIn, appleSignIn, refreshAccessToken, logout } = require('../controllers/auth.controller');
+const {
+  googleSignIn, appleSignIn, refreshAccessToken, logout,
+  register, login, verifyEmail, resendVerification,
+} = require('../controllers/auth.controller');
 const { adminLogin } = require('../controllers/adminAuth.controller');
 const authenticateStudent = require('../middleware/authenticateStudent'); // adjust path
 
+router.post('/register', register);
+router.post('/login', login);
+router.get('/verify-email', verifyEmail);
+router.post('/resend-verification', resendVerification);
 router.post('/google', googleSignIn);
 router.post('/apple', appleSignIn);
 // Android's Apple sign-in runs in a browser. Apple form-posts the result
