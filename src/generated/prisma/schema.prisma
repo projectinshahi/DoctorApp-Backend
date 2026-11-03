@@ -283,16 +283,23 @@ model Lesson {
 // and every client built against the single-video API keep working without
 // knowing this table exists.
 model LessonVideo {
-  id              Int     @id @default(autoincrement())
+  id              Int        @id @default(autoincrement())
   lessonId        Int
   // "Part 2", "Case discussion". Null means the lesson title is enough,
   // which it is for a lesson with one video.
   title           String?
+  // A line about this part, shown under its title.
+  description     String?
   videoUrl        String
   videoPublicId   String?
   thumbnailUrl    String?
   durationSeconds Int?
-  displayOrder    Int     @default(0)
+  displayOrder    Int        @default(0)
+  // Free or premium per video, so one lesson can mix free samples with paid
+  // classes. A premium video opens to the same subscriptions a premium video
+  // lesson does. The lesson's own accessType now covers its quiz, notes and
+  // text only.
+  accessType      AccessType @default(free)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

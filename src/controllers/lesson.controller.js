@@ -11,11 +11,13 @@ const VALID_STATUSES = ['draft', 'published', 'archived'];
 const VIDEO_SELECT = {
   id: true,
   title: true,
+  description: true,
   videoUrl: true,
   videoPublicId: true,
   thumbnailUrl: true,
   durationSeconds: true,
   displayOrder: true,
+  accessType: true,
 };
 
 const LESSON_SELECT = {
@@ -164,7 +166,12 @@ async function validatePlansForLesson(planIds, effectiveAccessType, chapterId) {
 // `videos` absent means "leave them alone"; `[]` or null means "remove them
 // all". Order is the array's own order, so the panel reorders by reordering
 // the list rather than sending an index per row.
-function readVideos(body) {
+//
+// Each row is free or premium. A row that does not say keeps what the video
+// with that link already had (`previous`: videoUrl -> accessType), and a new
+// one is premium — so a panel built before per-video access can re-save a
+// lesson without opening a paid video, and nothing opens itself by default.
+function readVideos(body, previous = new Map()) {
   if (body.videos === undefined) return { provided: false, rows: [] };
   if (body.videos === null) return { provided: true, rows: [] };
   if (!Array.isArray(body.videos)) {
@@ -192,14 +199,23 @@ function readVideos(body) {
       durationSeconds = Math.round(n);
     }
 
+    if (raw.accessType !== undefined && raw.accessType !== null && !VALID_ACCESS_TYPES.includes(raw.accessType)) {
+      return { provided: true, rows: [], error: `videos[${i}].accessType must be 'free' or 'premium'` };
+    }
+
     const title = typeof raw.title === 'string' && raw.title.trim() ? raw.title.trim() : null;
+    const description = typeof raw.description === 'string' && raw.description.trim()
+      ? raw.description.trim()
+      : null;
     rows.push({
       title,
+      description,
       videoUrl: url,
       videoPublicId: raw.videoPublicId ?? null,
       thumbnailUrl: raw.thumbnailUrl ?? null,
       durationSeconds,
       displayOrder: i,
+      accessType: raw.accessType ?? previous.get(url) ?? 'premium',
     });
   }
   return { provided: true, rows };
@@ -544,7 +560,10 @@ async function updateLesson(req, res) {
       return res.status(400).json({ error: { message: 'Invalid lesson id' } });
     }
 
-    const existing = await prisma.lesson.findUnique({ where: { id: lessonId } });
+    const existing = await prisma.lesson.findUnique({
+      where: { id: lessonId },
+      include: { videos: { select: { videoUrl: true, accessType: true } } },
+    });
     if (!existing) {
       return res.status(404).json({ error: { message: 'Lesson not found' } });
     }
@@ -668,7 +687,7 @@ async function updateLesson(req, res) {
       }
     }
 
-    const videoSelection = readVideos(req.body);
+    const videoSelection = readVideos(req.body, new Map(existing.videos.map((v) => [v.videoUrl, v.accessType])));
     if (videoSelection.error) {
       return res.status(400).json({ error: { message: videoSelection.error } });
     }

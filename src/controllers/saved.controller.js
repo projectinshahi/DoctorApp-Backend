@@ -13,7 +13,8 @@ const prisma = require('../db');
 // one filter out — 'note' matches nothing.
 const LESSON_TYPES = ['video', 'text', 'quiz'];
 
-const isLessonUnlocked = (...args) => require('./selected-course.controller').isLessonUnlocked(...args);
+const lessonAccess = (...args) => require('./selected-course.controller').lessonAccess(...args);
+const stripLockedContent = (...args) => require('./selected-course.controller').stripLockedContent(...args);
 const lessonDone = (...args) => require('./selected-course.controller').lessonDone(...args);
 const attemptStatusByLesson = (...args) => require('./quizAttempt.controller').attemptStatusByLesson(...args);
 
@@ -250,6 +251,8 @@ async function fetchSavedLessons(userId, type = null) {
             id: true, title: true, description: true, type: true,
             videoUrl: true, noteUrl: true, noteFileType: true,
             thumbnailUrl: true, accessType: true, isFreePreview: true, quizId: true,
+            // Free / premium is per video, so the padlock needs the rows.
+            videos: { select: { id: true, title: true, accessType: true }, orderBy: { displayOrder: 'asc' } },
             chapter: { select: { id: true, title: true } },
             lessonPlans: {
               select: { plan: { select: { id: true, title: true, price: true, durationDays: true } } },
@@ -290,7 +293,7 @@ async function fetchSavedLessons(userId, type = null) {
   return rows.map((row) => {
         const { lessonPlans = [], ...lesson } = row.lesson;
         const plans = lessonPlans.map((lp) => lp.plan);
-        const unlocked = isLessonUnlocked(row.lesson, paidPlanIds, user?.selectedCourse?.accessType);
+        const gate = lessonAccess(row.lesson, paidPlanIds, user?.selectedCourse?.accessType);
         const progress = progressByLesson.get(lesson.id);
         const attempt = lesson.type === 'quiz' ? attemptByLesson.get(lesson.id) ?? null : null;
 
@@ -307,9 +310,7 @@ async function fetchSavedLessons(userId, type = null) {
           isSaved: true,
         };
 
-        return unlocked
-          ? { ...base, locked: false }
-          : { ...base, videoUrl: null, noteUrl: null, locked: true };
+        return stripLockedContent(base, gate);
   });
 }
 

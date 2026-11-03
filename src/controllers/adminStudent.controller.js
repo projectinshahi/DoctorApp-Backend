@@ -1,6 +1,6 @@
 
 const { revokeActiveSessions } = require('../services/session.service');
-const { isLessonUnlocked, lessonDone } = require('./selected-course.controller');
+const { lessonAccess, lessonDone } = require('./selected-course.controller');
 const { percent } = require('./home.controller');
 const { attemptStatusByLesson } = require('./quizAttempt.controller');
 const { buildLeaderboard } = require('./testAttempt.controller');
@@ -249,6 +249,8 @@ async function getStudentById(req, res) {
                 id: true, title: true, type: true, status: true,
                 accessType: true, isFreePreview: true, displayOrder: true,
                 videoUrl: true, noteUrl: true, thumbnailUrl: true, noteFileType: true,
+                quizId: true, content: true,
+                videos: { select: { id: true, accessType: true }, orderBy: { displayOrder: 'asc' } },
                 lessonPlans: {
                   select: {
                     plan: { select: { id: true, title: true, price: true, durationDays: true, isActive: true } },
@@ -301,15 +303,17 @@ async function getStudentById(req, res) {
         const plans = lessonPlans.map((lp) => lp.plan);
         const prog = progressByLesson.get(l.id);
         const attempt = l.type === 'quiz' ? attemptByLesson.get(l.id) ?? null : null;
+        // "Unlocked" = something inside opens for this student. Free / premium
+        // is per video now, so a part-free lesson counts as open.
+        const open = !lessonAccess(l, paidPlanIds, user.selectedCourse?.accessType).locked;
         return {
           ...rest,
           plans,
           planIds: plans.map((p) => p.id),
           // What this specific student sees. Draft lessons never reach them,
           // however their subscription looks.
-          visibleToStudent: l.status === 'published'
-            && isLessonUnlocked(l, paidPlanIds, user.selectedCourse?.accessType),
-          unlockedByPlan: isLessonUnlocked(l, paidPlanIds, user.selectedCourse?.accessType),
+          visibleToStudent: l.status === 'published' && open,
+          unlockedByPlan: open,
           completed: lessonDone(l, prog, attempt),
           lastPositionSeconds: prog?.lastPositionSeconds ?? 0,
           lastActivityAt: prog?.updatedAt ?? attempt?.startedAt ?? null,

@@ -79,6 +79,59 @@ function isLessonUnlocked(lesson, access, courseAccessType = null) {
 
 
 /**
+ * What a student can open inside one lesson.
+ *
+ * Videos are free or premium one by one, so a lesson can mix free samples
+ * with paid classes. A premium video opens to exactly the plans a premium
+ * video lesson does: pinned plans if there are any, otherwise any plan that
+ * sells video_lecture. The lesson's own accessType / isFreePreview now cover
+ * the rest of it — the quiz, the notes, the text.
+ *
+ * `locked` is true only when nothing inside opens. That is what a padlock on
+ * the row has to mean once a lesson can be part free.
+ *
+ * `lesson.videos` needs `accessType` on each row. A lesson saved through the
+ * old single-video fields has no rows; its video follows the lesson, as it
+ * always did.
+ */
+function lessonAccess(lesson, access, courseAccessType = null) {
+  const contentOpen = isLessonUnlocked(lesson, access, courseAccessType);
+  const paidVideosOpen = isLessonUnlocked(
+    { ...lesson, type: 'video', accessType: 'premium', isFreePreview: false }, access, null);
+  const videoOpen = (video) => video.accessType === 'free' || paidVideosOpen;
+
+  const videos = lesson.videos ?? [];
+  const hasVideo = videos.length > 0 || Boolean(lesson.videoUrl);
+  const firstVideoOpen = videos.length > 0 ? videoOpen(videos[0]) : contentOpen;
+  const anyVideoOpen = videos.length > 0 ? videos.some(videoOpen) : hasVideo && contentOpen;
+  const hasOther = Boolean(lesson.quizId || lesson.noteUrl || lesson.content);
+
+  const locked = hasVideo || hasOther
+    ? !(anyVideoOpen || (contentOpen && hasOther))
+    : !contentOpen;
+
+  return { contentOpen, firstVideoOpen, videoOpen, locked };
+}
+
+// Applies lessonAccess to a lesson row: locked videos lose their URL, a
+// locked quiz / notes / text lose theirs, and the flags the app draws from
+// are added. Only keys the row already has are blanked.
+function stripLockedContent(lesson, gate) {
+  const out = { ...lesson, locked: gate.locked, contentLocked: !gate.contentOpen };
+  if ('videoUrl' in lesson && !gate.firstVideoOpen) out.videoUrl = null;
+  if (Array.isArray(lesson.videos)) {
+    out.videos = lesson.videos.map((v) => (gate.videoOpen(v)
+      ? { ...v, locked: false }
+      : { ...v, videoUrl: null, locked: true }));
+  }
+  if (!gate.contentOpen) {
+    for (const key of ['noteUrl', 'content', 'quiz']) if (key in lesson) out[key] = null;
+  }
+  return out;
+}
+
+
+/**
  * Collapses a student's live subscriptions into what they can open.
  *
  * `entitlements` is 'all' when any of their plans records none, because an
@@ -219,6 +272,12 @@ async function getSelectedCourseContent(req, res) {
             displayOrder: true,
             isFreePreview: true,
             accessType: true,
+            // Per-video free / premium decides what opens, so the tree needs
+            // the rows to draw a padlock that tells the truth.
+            videos: {
+              select: { id: true, title: true, videoUrl: true, durationSeconds: true, accessType: true, displayOrder: true },
+              orderBy: { displayOrder: 'asc' },
+            },
             quizId: true,
             quiz: { select: { id: true, title: true, questionCount: true, status: true } },
             lessonPlans: {
@@ -253,7 +312,7 @@ async function getSelectedCourseContent(req, res) {
 
     const shaped = chapters.map((ch) => {
       const lessons = ch.lessons.map((l) => {
-        const unlocked = isLessonUnlocked(l, paidPlanIds, courseAccessOf(user));
+        const gate = lessonAccess(l, paidPlanIds, courseAccessOf(user));
         const { lessonPlans = [], ...rest } = l;
         const plans = lessonPlans.map((lp) => lp.plan);
         // null, not omitted: the app can tell "no attempt yet" from "not a
@@ -276,9 +335,7 @@ async function getSelectedCourseContent(req, res) {
             : null,
           isSaved: savedLessonIds.has(l.id),
         };
-        return unlocked
-          ? { ...base, locked: false }
-          : { ...base, videoUrl: null, noteUrl: null, content: null, quiz: null, locked: true };
+        return stripLockedContent(base, gate);
       });
 
       // Locked lessons stay in the denominator. A free student seeing 2/10 is
@@ -350,8 +407,8 @@ async function getStudentLesson(req, res) {
         // keeps playing the same thing it always did.
         videos: {
           select: {
-            id: true, title: true, videoUrl: true, thumbnailUrl: true,
-            durationSeconds: true, displayOrder: true,
+            id: true, title: true, description: true, videoUrl: true, thumbnailUrl: true,
+            durationSeconds: true, displayOrder: true, accessType: true,
           },
           orderBy: { displayOrder: 'asc' },
         },
@@ -401,7 +458,10 @@ async function getStudentLesson(req, res) {
     });
     const paidPlanIds = accessFrom(activeSubs);
 
-    const unlocked = isLessonUnlocked(lesson, paidPlanIds, courseAccessOf(user));
+    const gate = lessonAccess(lesson, paidPlanIds, courseAccessOf(user));
+    // "Unlocked" for the paywall below: everything inside opens. A lesson that
+    // is part free still offers the plans for the part that is not.
+    const unlocked = !gate.locked && gate.contentOpen && (lesson.videos ?? []).every(gate.videoOpen);
     const { status, lessonPlans = [], rapidRecalls = [], ...rest } = lesson;
     rest.rapidRecalls = rapidRecalls.map(({ _count, ...deck }) => ({
       ...deck,
@@ -441,17 +501,10 @@ async function getStudentLesson(req, res) {
     };
 
     return res.status(200).json({
-      lesson: unlocked
-        ? { ...base, locked: false }
-        : {
-            ...base,
-            videoUrl: null,
-            videos: [],
-            noteUrl: null,
-            content: null,
-            quiz: null,
-            locked: true,
-          },
+      // Each video carries its own `locked`; a locked one keeps its title so
+      // the list can show it behind a padlock. `contentLocked` covers the
+      // quiz, notes and text.
+      lesson: stripLockedContent(base, gate),
       // What to offer in the paywall: the plans that unlock this lesson, or
       // all course plans when it accepts any subscription.
       requiredPlans: unlocked ? [] : requiredPlans,
@@ -690,6 +743,8 @@ module.exports = {
   // Reused by quizAttempt.controller.js so the attempt flow runs the same gates.
   loadStudentQuiz,
   isLessonUnlocked,
+  lessonAccess,
+  stripLockedContent,
   // Exported for quiz.test.js — pure, no DB.
   scoreSubmission,
 };

@@ -13,7 +13,7 @@
 
 const prisma = require('../db');
 
-const { isLessonUnlocked } = require('./selected-course.controller');
+const { lessonAccess } = require('./selected-course.controller');
 
 const MAX_BODY = 2000;
 
@@ -81,6 +81,10 @@ async function readableLesson(userId, lessonId) {
     select: {
       id: true, title: true, type: true, status: true, accessType: true,
       isFreePreview: true, commentsEnabled: true,
+      // What is inside decides whether anything opens: a lesson with one free
+      // video is readable, so its discussion is too.
+      videoUrl: true, noteUrl: true, content: true, quizId: true,
+      videos: { select: { accessType: true } },
       lessonPlans: { select: { planId: true } },
       chapter: { select: { courseId: true, courseType: { select: { courseId: true } } } },
     },
@@ -101,7 +105,7 @@ async function readableLesson(userId, lessonId) {
   ]);
 
   const { accessFrom } = require('./selected-course.controller');
-  if (!isLessonUnlocked(lesson, accessFrom(activeSubs), course?.accessType)) {
+  if (lessonAccess(lesson, accessFrom(activeSubs), course?.accessType).locked) {
     return { error: { status: 403, message: 'This lesson is locked. Subscribe to join the discussion.' } };
   }
   return { lesson };

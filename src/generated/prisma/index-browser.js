@@ -251,11 +251,13 @@ exports.Prisma.LessonVideoScalarFieldEnum = {
   id: 'id',
   lessonId: 'lessonId',
   title: 'title',
+  description: 'description',
   videoUrl: 'videoUrl',
   videoPublicId: 'videoPublicId',
   thumbnailUrl: 'thumbnailUrl',
   durationSeconds: 'durationSeconds',
   displayOrder: 'displayOrder',
+  accessType: 'accessType',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

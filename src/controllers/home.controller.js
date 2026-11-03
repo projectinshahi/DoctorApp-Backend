@@ -7,7 +7,7 @@
 
 const prisma = require('../db');
 
-const { isLessonUnlocked } = require('./selected-course.controller');
+const { lessonAccess } = require('./selected-course.controller');
 
 /**
  * completed / total as a whole percent.
@@ -43,6 +43,9 @@ async function courseLessons(user) {
       // Needed to start playback straight from the home card instead of
       // bouncing through GET /lessons/:id first.
       videoUrl: true, durationSeconds: true,
+      // Video 1's free / premium decides whether its resume card plays —
+      // progress is per lesson and always against video 1.
+      videos: { select: { accessType: true }, orderBy: { displayOrder: 'asc' }, take: 1 },
       lessonPlans: { select: { planId: true } },
       quiz: { select: { id: true, title: true, subjectId: true, topicId: true, examTag: true } },
       chapter: { select: { id: true, title: true } },
@@ -186,7 +189,7 @@ async function getHome(req, res) {
       .filter(({ lesson }) => lesson && lesson.type === 'video')
       .slice(0, 10)
       .map(({ p, lesson }) => {
-        const unlocked = isLessonUnlocked(lesson, paidPlanIds, user.selectedCourse.accessType);
+        const unlocked = lessonAccess(lesson, paidPlanIds, user.selectedCourse.accessType).firstVideoOpen;
         return {
           lessonId: lesson.id,
           title: lesson.title,
@@ -259,8 +262,10 @@ async function getHome(req, res) {
             lastPositionSeconds: lastTouched.lastPositionSeconds,
             durationSeconds: continueLesson.durationSeconds,
             watchedPercent: watchedState(lastTouched.lastPositionSeconds, continueLesson.durationSeconds).watchedPercent,
-            videoUrl: isLessonUnlocked(continueLesson, paidPlanIds, user.selectedCourse.accessType) ? continueLesson.videoUrl : null,
-            locked: !isLessonUnlocked(continueLesson, paidPlanIds, user.selectedCourse.accessType),
+            ...(() => {
+              const open = lessonAccess(continueLesson, paidPlanIds, user.selectedCourse.accessType).firstVideoOpen;
+              return { videoUrl: open ? continueLesson.videoUrl : null, locked: !open };
+            })(),
           }
         : null,
       // The full row. `continueWatching` stays as the first of these so an
