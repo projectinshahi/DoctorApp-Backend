@@ -147,9 +147,41 @@ const server = app.listen(0, async () => {
     assert.strictEqual(claims(ok.body.accessToken).exp - claims(ok.body.accessToken).iat, 15 * 60);
     assert.strictEqual(claims(ok.body.refreshToken).exp - claims(ok.body.refreshToken).iat, 7 * 24 * 60 * 60);
 
+    // Forgot password: a Google account (no password) can set one.
+    users.push({ id: users.length + 1, role: 'student', email: 'gita@example.com', password: null, status: 'verified', emailOtpAttempts: 0 });
+    const gita = users[users.length - 1];
+    const sentBeforeForgot = sends;
+    const forgot = await post('/forgot-password', { email: 'Gita@Example.com' });
+    assert.strictEqual(forgot.status, 200);
+    assert.strictEqual(sends, sentBeforeForgot + 1);
+    // Unknown email: same reply, nothing sent.
+    assert.deepStrictEqual((await post('/forgot-password', { email: 'ghost@example.com' })).body, forgot.body);
+    assert.strictEqual(sends, sentBeforeForgot + 1);
+
+    const resetCode = lastCode;
+    assert.strictEqual((await post('/reset-password', { email: 'gita@example.com', code: resetCode, password: 'short' })).body.error.code, 'WEAK_PASSWORD');
+    const badReset = await post('/reset-password', { email: 'gita@example.com', code: wrongOf(resetCode), password: 'newpass123' });
+    assert.strictEqual(badReset.body.error.code, 'INVALID_OTP');
+    assert.strictEqual(gita.password, null);
+
+    const reset = await post('/reset-password', { email: 'gita@example.com', code: resetCode, password: 'newpass123', deviceId: 'D2' });
+    assert.strictEqual(reset.status, 200);
+    assert.ok(reset.body.accessToken && reset.body.refreshToken);
+    assert.ok(gita.password.startsWith('$2'));
+    // The code is spent, and the new password logs in.
+    assert.strictEqual((await post('/reset-password', { email: 'gita@example.com', code: resetCode, password: 'other1234' })).body.error.code, 'OTP_EXPIRED');
+    assert.strictEqual((await post('/login', { email: 'gita@example.com', password: 'newpass123', deviceId: 'D2' })).status, 200);
+
+    // Resetting an existing password: the old one stops working.
+    users[0].emailOtpSentAt = new Date(Date.now() - 61 * 1000);
+    await post('/forgot-password', { email: 'asha@example.com' });
+    assert.strictEqual((await post('/reset-password', { email: 'asha@example.com', code: lastCode, password: 'changed123' })).status, 200);
+    assert.strictEqual((await post('/login', { email: 'asha@example.com', password: 'secret123', deviceId: 'D1' })).status, 401);
+    assert.strictEqual((await post('/login', { email: 'asha@example.com', password: 'changed123', deviceId: 'D1' })).status, 200);
+
     // T-012.3 — deactivated login blocked with its own code.
     users[0].status = 'blocked';
-    const off = await post('/login', { email: 'asha@example.com', password: 'secret123', deviceId: 'D1' });
+    const off = await post('/login', { email: 'asha@example.com', password: 'changed123', deviceId: 'D1' });
     assert.strictEqual(off.status, 403);
     assert.strictEqual(off.body.error.code, 'ACCOUNT_DEACTIVATED');
 
