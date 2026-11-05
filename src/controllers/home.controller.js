@@ -45,7 +45,7 @@ async function courseLessons(user) {
       videoUrl: true, durationSeconds: true,
       // Video 1's free / premium decides whether its resume card plays —
       // progress is per lesson and always against video 1.
-      videos: { select: { accessType: true }, orderBy: { displayOrder: 'asc' }, take: 1 },
+      videos: { where: { status: 'published' }, select: { accessType: true }, orderBy: { displayOrder: 'asc' }, take: 1 },
       lessonPlans: { select: { planId: true } },
       quiz: { select: { id: true, title: true, subjectId: true, topicId: true, examTag: true } },
       chapter: { select: { id: true, title: true } },

@@ -17260,6 +17260,7 @@ export namespace Prisma {
     durationSeconds: number | null
     displayOrder: number | null
     accessType: $Enums.AccessType | null
+    status: $Enums.CourseStatus | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -17275,6 +17276,7 @@ export namespace Prisma {
     durationSeconds: number | null
     displayOrder: number | null
     accessType: $Enums.AccessType | null
+    status: $Enums.CourseStatus | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -17290,6 +17292,7 @@ export namespace Prisma {
     durationSeconds: number
     displayOrder: number
     accessType: number
+    status: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -17321,6 +17324,7 @@ export namespace Prisma {
     durationSeconds?: true
     displayOrder?: true
     accessType?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -17336,6 +17340,7 @@ export namespace Prisma {
     durationSeconds?: true
     displayOrder?: true
     accessType?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -17351,6 +17356,7 @@ export namespace Prisma {
     durationSeconds?: true
     displayOrder?: true
     accessType?: true
+    status?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -17453,6 +17459,7 @@ export namespace Prisma {
     durationSeconds: number | null
     displayOrder: number
     accessType: $Enums.AccessType
+    status: $Enums.CourseStatus
     createdAt: Date
     updatedAt: Date
     _count: LessonVideoCountAggregateOutputType | null
@@ -17487,6 +17494,7 @@ export namespace Prisma {
     durationSeconds?: boolean
     displayOrder?: boolean
     accessType?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
@@ -17503,6 +17511,7 @@ export namespace Prisma {
     durationSeconds?: boolean
     displayOrder?: boolean
     accessType?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
@@ -17519,6 +17528,7 @@ export namespace Prisma {
     durationSeconds?: boolean
     displayOrder?: boolean
     accessType?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
@@ -17535,11 +17545,12 @@ export namespace Prisma {
     durationSeconds?: boolean
     displayOrder?: boolean
     accessType?: boolean
+    status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type LessonVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "lessonId" | "title" | "description" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "durationSeconds" | "displayOrder" | "accessType" | "createdAt" | "updatedAt", ExtArgs["result"]["lessonVideo"]>
+  export type LessonVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "lessonId" | "title" | "description" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "durationSeconds" | "displayOrder" | "accessType" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["lessonVideo"]>
   export type LessonVideoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
   }
@@ -17566,6 +17577,7 @@ export namespace Prisma {
       durationSeconds: number | null
       displayOrder: number
       accessType: $Enums.AccessType
+      status: $Enums.CourseStatus
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["lessonVideo"]>
@@ -18002,6 +18014,7 @@ export namespace Prisma {
     readonly durationSeconds: FieldRef<"LessonVideo", 'Int'>
     readonly displayOrder: FieldRef<"LessonVideo", 'Int'>
     readonly accessType: FieldRef<"LessonVideo", 'AccessType'>
+    readonly status: FieldRef<"LessonVideo", 'CourseStatus'>
     readonly createdAt: FieldRef<"LessonVideo", 'DateTime'>
     readonly updatedAt: FieldRef<"LessonVideo", 'DateTime'>
   }
@@ -50561,6 +50574,7 @@ export namespace Prisma {
     durationSeconds: 'durationSeconds',
     displayOrder: 'displayOrder',
     accessType: 'accessType',
+    status: 'status',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -52065,6 +52079,7 @@ export namespace Prisma {
     durationSeconds?: IntNullableFilter<"LessonVideo"> | number | null
     displayOrder?: IntFilter<"LessonVideo"> | number
     accessType?: EnumAccessTypeFilter<"LessonVideo"> | $Enums.AccessType
+    status?: EnumCourseStatusFilter<"LessonVideo"> | $Enums.CourseStatus
     createdAt?: DateTimeFilter<"LessonVideo"> | Date | string
     updatedAt?: DateTimeFilter<"LessonVideo"> | Date | string
     lesson?: XOR<LessonScalarRelationFilter, LessonWhereInput>
@@ -52081,6 +52096,7 @@ export namespace Prisma {
     durationSeconds?: SortOrderInput | SortOrder
     displayOrder?: SortOrder
     accessType?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     lesson?: LessonOrderByWithRelationInput
@@ -52100,6 +52116,7 @@ export namespace Prisma {
     durationSeconds?: IntNullableFilter<"LessonVideo"> | number | null
     displayOrder?: IntFilter<"LessonVideo"> | number
     accessType?: EnumAccessTypeFilter<"LessonVideo"> | $Enums.AccessType
+    status?: EnumCourseStatusFilter<"LessonVideo"> | $Enums.CourseStatus
     createdAt?: DateTimeFilter<"LessonVideo"> | Date | string
     updatedAt?: DateTimeFilter<"LessonVideo"> | Date | string
     lesson?: XOR<LessonScalarRelationFilter, LessonWhereInput>
@@ -52116,6 +52133,7 @@ export namespace Prisma {
     durationSeconds?: SortOrderInput | SortOrder
     displayOrder?: SortOrder
     accessType?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: LessonVideoCountOrderByAggregateInput
@@ -52139,6 +52157,7 @@ export namespace Prisma {
     durationSeconds?: IntNullableWithAggregatesFilter<"LessonVideo"> | number | null
     displayOrder?: IntWithAggregatesFilter<"LessonVideo"> | number
     accessType?: EnumAccessTypeWithAggregatesFilter<"LessonVideo"> | $Enums.AccessType
+    status?: EnumCourseStatusWithAggregatesFilter<"LessonVideo"> | $Enums.CourseStatus
     createdAt?: DateTimeWithAggregatesFilter<"LessonVideo"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"LessonVideo"> | Date | string
   }
@@ -55159,6 +55178,7 @@ export namespace Prisma {
     durationSeconds?: number | null
     displayOrder?: number
     accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     lesson: LessonCreateNestedOneWithoutVideosInput
@@ -55175,6 +55195,7 @@ export namespace Prisma {
     durationSeconds?: number | null
     displayOrder?: number
     accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -55188,6 +55209,7 @@ export namespace Prisma {
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lesson?: LessonUpdateOneRequiredWithoutVideosNestedInput
@@ -55204,6 +55226,7 @@ export namespace Prisma {
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -55219,6 +55242,7 @@ export namespace Prisma {
     durationSeconds?: number | null
     displayOrder?: number
     accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -55232,6 +55256,7 @@ export namespace Prisma {
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -55247,6 +55272,7 @@ export namespace Prisma {
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -58259,6 +58285,7 @@ export namespace Prisma {
     durationSeconds?: SortOrder
     displayOrder?: SortOrder
     accessType?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -58281,6 +58308,7 @@ export namespace Prisma {
     durationSeconds?: SortOrder
     displayOrder?: SortOrder
     accessType?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -58296,6 +58324,7 @@ export namespace Prisma {
     durationSeconds?: SortOrder
     displayOrder?: SortOrder
     accessType?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -67154,6 +67183,7 @@ export namespace Prisma {
     durationSeconds?: number | null
     displayOrder?: number
     accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -67168,6 +67198,7 @@ export namespace Prisma {
     durationSeconds?: number | null
     displayOrder?: number
     accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -67370,6 +67401,7 @@ export namespace Prisma {
     durationSeconds?: IntNullableFilter<"LessonVideo"> | number | null
     displayOrder?: IntFilter<"LessonVideo"> | number
     accessType?: EnumAccessTypeFilter<"LessonVideo"> | $Enums.AccessType
+    status?: EnumCourseStatusFilter<"LessonVideo"> | $Enums.CourseStatus
     createdAt?: DateTimeFilter<"LessonVideo"> | Date | string
     updatedAt?: DateTimeFilter<"LessonVideo"> | Date | string
   }
@@ -75308,6 +75340,7 @@ export namespace Prisma {
     durationSeconds?: number | null
     displayOrder?: number
     accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -75460,6 +75493,7 @@ export namespace Prisma {
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -75474,6 +75508,7 @@ export namespace Prisma {
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -75488,6 +75523,7 @@ export namespace Prisma {
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     displayOrder?: IntFieldUpdateOperationsInput | number
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

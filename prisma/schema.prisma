@@ -300,6 +300,10 @@ model LessonVideo {
   // lesson does. The lesson's own accessType now covers its quiz, notes and
   // text only.
   accessType      AccessType @default(free)
+  // Draft or published per video, under the lesson's own status: a lesson
+  // that is not published has only draft videos, and publishing it publishes
+  // them. Students are served published videos of published lessons only.
+  status          CourseStatus @default(published)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -84,7 +84,7 @@ async function readableLesson(userId, lessonId) {
       // What is inside decides whether anything opens: a lesson with one free
       // video is readable, so its discussion is too.
       videoUrl: true, noteUrl: true, content: true, quizId: true,
-      videos: { select: { accessType: true } },
+      videos: { where: { status: 'published' }, select: { accessType: true } },
       lessonPlans: { select: { planId: true } },
       chapter: { select: { courseId: true, courseType: { select: { courseId: true } } } },
     },

@@ -274,7 +274,9 @@ async function getSelectedCourseContent(req, res) {
             accessType: true,
             // Per-video free / premium decides what opens, so the tree needs
             // the rows to draw a padlock that tells the truth.
+            // Draft videos are the admin's work in progress, never a student's.
             videos: {
+              where: { status: 'published' },
               select: { id: true, title: true, videoUrl: true, durationSeconds: true, accessType: true, displayOrder: true },
               orderBy: { displayOrder: 'asc' },
             },
@@ -406,6 +408,7 @@ async function getStudentLesson(req, res) {
         // above is still video 1, so a client that only knows the old shape
         // keeps playing the same thing it always did.
         videos: {
+          where: { status: 'published' },
           select: {
             id: true, title: true, description: true, videoUrl: true, thumbnailUrl: true,
             durationSeconds: true, displayOrder: true, accessType: true,

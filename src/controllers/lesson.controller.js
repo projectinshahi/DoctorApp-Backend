@@ -6,6 +6,7 @@ const prisma = require('../db');
 const VALID_LESSON_TYPES = ['video', 'text', 'quiz'];
 const VALID_ACCESS_TYPES = ['free', 'premium'];
 const VALID_STATUSES = ['draft', 'published', 'archived'];
+const VALID_VIDEO_STATUSES = ['draft', 'published'];
 
 
 const VIDEO_SELECT = {
@@ -18,6 +19,7 @@ const VIDEO_SELECT = {
   durationSeconds: true,
   displayOrder: true,
   accessType: true,
+  status: true,
 };
 
 const LESSON_SELECT = {
@@ -168,9 +170,13 @@ async function validatePlansForLesson(planIds, effectiveAccessType, chapterId) {
 // the list rather than sending an index per row.
 //
 // Each row is free or premium. A row that does not say keeps what the video
-// with that link already had (`previous`: videoUrl -> accessType), and a new
-// one is premium — so a panel built before per-video access can re-save a
-// lesson without opening a paid video, and nothing opens itself by default.
+// with that link already had (`previous`: videoUrl -> { accessType, status }),
+// and a new one is premium — so a panel built before per-video access can
+// re-save a lesson without opening a paid video, and nothing opens itself by
+// default.
+//
+// `status` (draft | published) works the same way, new rows published. The
+// lesson's own status then overrides it: see videoStatusesFor.
 function readVideos(body, previous = new Map()) {
   if (body.videos === undefined) return { provided: false, rows: [] };
   if (body.videos === null) return { provided: true, rows: [] };
@@ -202,6 +208,9 @@ function readVideos(body, previous = new Map()) {
     if (raw.accessType !== undefined && raw.accessType !== null && !VALID_ACCESS_TYPES.includes(raw.accessType)) {
       return { provided: true, rows: [], error: `videos[${i}].accessType must be 'free' or 'premium'` };
     }
+    if (raw.status !== undefined && raw.status !== null && !VALID_VIDEO_STATUSES.includes(raw.status)) {
+      return { provided: true, rows: [], error: `videos[${i}].status must be 'draft' or 'published'` };
+    }
 
     const title = typeof raw.title === 'string' && raw.title.trim() ? raw.title.trim() : null;
     const description = typeof raw.description === 'string' && raw.description.trim()
@@ -215,10 +224,22 @@ function readVideos(body, previous = new Map()) {
       thumbnailUrl: raw.thumbnailUrl ?? null,
       durationSeconds,
       displayOrder: i,
-      accessType: raw.accessType ?? previous.get(url) ?? 'premium',
+      accessType: raw.accessType ?? previous.get(url)?.accessType ?? 'premium',
+      status: raw.status ?? previous.get(url)?.status ?? 'published',
     });
   }
   return { provided: true, rows };
+}
+
+// The lesson's status comes first. A lesson that is not published has only
+// draft videos — drafting a lesson drafts everything in it. Publishing a lesson
+// publishes every video in it, so a lesson never goes live empty because its
+// videos were drafted along with it. Only while the lesson stays published does
+// each video keep its own draft / published.
+function videoStatusesFor(rows, lessonStatus, wasPublished) {
+  if (lessonStatus !== 'published') return rows.map((row) => ({ ...row, status: 'draft' }));
+  if (!wasPublished) return rows.map((row) => ({ ...row, status: 'published' }));
+  return rows;
 }
 
 // The lesson's own video columns track video 1. Everything already written
@@ -227,8 +248,11 @@ function readVideos(body, previous = new Map()) {
 //
 // thumbnailUrl is deliberately not mirrored: that column is the lesson's
 // cover image, which the admin sets separately on the lesson form.
+//
+// Video 1 is the first PUBLISHED one: those columns reach students directly,
+// so a draft video must never be what they point at.
 function mirrorFirstVideo(rows) {
-  const first = rows[0] ?? null;
+  const first = rows.find((row) => (row.status ?? 'published') === 'published') ?? null;
   return {
     videoUrl: first ? first.videoUrl : null,
     videoPublicId: first ? first.videoPublicId : null,
@@ -331,6 +355,9 @@ async function createLesson(req, res) {
     if (videoSelection.error) {
       return res.status(400).json({ error: { message: videoSelection.error } });
     }
+    // A new published lesson keeps each row's own status; a draft one drafts all.
+    const lessonStatus = status ?? 'draft';
+    videoSelection.rows = videoStatusesFor(videoSelection.rows, lessonStatus, lessonStatus === 'published');
 
     const lesson = await prisma.lesson.create({
       data: {
@@ -562,7 +589,12 @@ async function updateLesson(req, res) {
 
     const existing = await prisma.lesson.findUnique({
       where: { id: lessonId },
-      include: { videos: { select: { videoUrl: true, accessType: true } } },
+      include: {
+        videos: {
+          select: { videoUrl: true, videoPublicId: true, durationSeconds: true, accessType: true, status: true },
+          orderBy: { displayOrder: 'asc' },
+        },
+      },
     });
     if (!existing) {
       return res.status(404).json({ error: { message: 'Lesson not found' } });
@@ -687,15 +719,25 @@ async function updateLesson(req, res) {
       }
     }
 
-    const videoSelection = readVideos(req.body, new Map(existing.videos.map((v) => [v.videoUrl, v.accessType])));
+    const videoSelection = readVideos(req.body, new Map(existing.videos.map((v) => [v.videoUrl, v])));
     if (videoSelection.error) {
       return res.status(400).json({ error: { message: videoSelection.error } });
     }
+    const effectiveStatus = status !== undefined ? status : existing.status;
+    const wasPublished = existing.status === 'published';
+    const statusChanged = effectiveStatus !== existing.status;
     if (videoSelection.provided) {
       // Replace the whole list. The panel always sends the list it is showing,
       // so a row the admin deleted is a row that is gone.
-      data.videos = { deleteMany: {}, create: videoSelection.rows };
-      Object.assign(data, mirrorFirstVideo(videoSelection.rows));
+      const rows = videoStatusesFor(videoSelection.rows, effectiveStatus, wasPublished);
+      data.videos = { deleteMany: {}, create: rows };
+      Object.assign(data, mirrorFirstVideo(rows));
+    } else if (statusChanged && existing.videos.length > 0) {
+      // A status change with no list in the body still has to carry the
+      // videos with it — this is the save that drafts a lesson from its row.
+      const rows = videoStatusesFor(existing.videos, effectiveStatus, wasPublished);
+      data.videos = { updateMany: { where: {}, data: { status: rows[0].status } } };
+      Object.assign(data, mirrorFirstVideo(rows));
     } else {
       if (videoUrl !== undefined) data.videoUrl = videoUrl;
       if (videoPublicId !== undefined) data.videoPublicId = videoPublicId;
@@ -894,5 +936,6 @@ module.exports = {
   getLessonPlans,
   // Exported for lessonVideos.test.js.
   readVideos,
+  videoStatusesFor,
   mirrorFirstVideo,
 };

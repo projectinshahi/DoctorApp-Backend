@@ -258,6 +258,7 @@ exports.Prisma.LessonVideoScalarFieldEnum = {
   durationSeconds: 'durationSeconds',
   displayOrder: 'displayOrder',
   accessType: 'accessType',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

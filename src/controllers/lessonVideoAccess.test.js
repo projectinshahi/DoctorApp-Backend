@@ -57,7 +57,7 @@ assert.strictEqual(lessonAccess({ ...legacy, accessType: 'free' }, nobody, 'free
 // Saving: a row may say free or premium. One that does not keeps what that
 // link had, and a new one is premium — an older panel re-saving a lesson
 // cannot open a paid video.
-const previous = new Map([['b', 'free'], ['c', 'premium']]);
+const previous = new Map([['b', { accessType: 'free' }], ['c', { accessType: 'premium' }]]);
 const rows = readVideos({
   videos: [
     { videoUrl: 'a', accessType: 'free' },

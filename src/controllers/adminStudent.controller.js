@@ -250,7 +250,7 @@ async function getStudentById(req, res) {
                 accessType: true, isFreePreview: true, displayOrder: true,
                 videoUrl: true, noteUrl: true, thumbnailUrl: true, noteFileType: true,
                 quizId: true, content: true,
-                videos: { select: { id: true, accessType: true }, orderBy: { displayOrder: 'asc' } },
+                videos: { where: { status: 'published' }, select: { id: true, accessType: true }, orderBy: { displayOrder: 'asc' } },
                 lessonPlans: {
                   select: {
                     plan: { select: { id: true, title: true, price: true, durationDays: true, isActive: true } },

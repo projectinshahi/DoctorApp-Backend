@@ -252,7 +252,7 @@ async function fetchSavedLessons(userId, type = null) {
             videoUrl: true, noteUrl: true, noteFileType: true,
             thumbnailUrl: true, accessType: true, isFreePreview: true, quizId: true,
             // Free / premium is per video, so the padlock needs the rows.
-            videos: { select: { id: true, title: true, accessType: true }, orderBy: { displayOrder: 'asc' } },
+            videos: { where: { status: 'published' }, select: { id: true, title: true, accessType: true }, orderBy: { displayOrder: 'asc' } },
             chapter: { select: { id: true, title: true } },
             lessonPlans: {
               select: { plan: { select: { id: true, title: true, price: true, durationDays: true } } },
