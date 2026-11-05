@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { getProfile, updateProfile, deleteAccount } = require('../controllers/profile.controller');
-const { getStudentLesson, getStudentQuizQuestions, submitStudentQuiz } = require('../controllers/selected-course.controller');
+const { getStudentLesson, getStudentQuizQuestions, submitStudentQuiz, recordVideoView } = require('../controllers/selected-course.controller');
 const {
   startAttempt, saveAnswer, finishAttempt, getAttempt, listAttempts, listInProgress,
 } = require('../controllers/quizAttempt.controller');
 const {
   saveQuestion, unsaveQuestion, listSavedQuestions,
   saveLesson, unsaveLesson, listSavedLessons, listSaved,
+  saveVideo, unsaveVideo, listSavedVideos,
 } = require('../controllers/saved.controller');
 const { getHome, saveProgress } = require('../controllers/home.controller');
 const {
@@ -63,6 +64,14 @@ router.delete('/saved-questions/:questionId', authenticateStudent, unsaveQuestio
 router.post('/saved-lessons', authenticateStudent, saveLesson);
 router.get('/saved-lessons', authenticateStudent, listSavedLessons);
 router.delete('/saved-lessons/:lessonId', authenticateStudent, unsaveLesson);
+
+// One bookmark per video, for each row of a lesson's video list.
+router.post('/saved-videos', authenticateStudent, saveVideo);
+router.get('/saved-videos', authenticateStudent, listSavedVideos);
+router.delete('/saved-videos/:videoId', authenticateStudent, unsaveVideo);
+
+// Counts a play, for the view count under a video.
+router.post('/lesson-videos/:id/view', authenticateStudent, recordVideoView);
 
 // Grand Test. Separate from the quiz flow on purpose: a Test is a fixed paper
 // with a server-enforced timer, not a filter that samples the question bank.

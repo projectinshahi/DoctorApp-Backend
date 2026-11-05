@@ -238,6 +238,26 @@ async function unsaveLesson(req, res) {
 // that only had titles would need a second call per row to draw a tick or a
 // paywall, which is the N+1 the tree endpoint already exists to avoid.
 //
+// What this student has bought on their selected course, and that course's
+// tier. A premium course locks its lessons, so a bookmark list has to lock
+// them too or a bookmark becomes a way past the paywall.
+async function studentAccess(userId) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { selectedCourseId: true, selectedCourse: { select: { accessType: true } } },
+  });
+  const activeSubs = user?.selectedCourseId
+    ? await prisma.subscription.findMany({
+        where: { userId, courseId: user.selectedCourseId, isActive: true, endDate: { gte: new Date() } },
+        select: { planId: true, plan: { select: { entitlements: true } } },
+      })
+    : [];
+  return {
+    access: require('./selected-course.controller').accessFrom(activeSubs),
+    courseAccessType: user?.selectedCourse?.accessType ?? null,
+  };
+}
+
 // Unpublished lessons are dropped: a bookmark must not resurrect content an
 // admin has taken down. `count` reflects what is actually returned.
 async function fetchSavedLessons(userId, type = null) {
@@ -267,13 +287,8 @@ async function fetchSavedLessons(userId, type = null) {
     const lessonIds = rows.map((r) => r.lesson.id);
     const quizLessonIds = rows.filter((r) => r.lesson.type === 'quiz').map((r) => r.lesson.id);
 
-    const [user, progressRows, attemptByLesson] = await Promise.all([
-      prisma.user.findUnique({
-        where: { id: userId },
-        // accessType: a premium course locks its lessons, so the saved list
-        // has to lock them too or a bookmark becomes a way past the paywall.
-        select: { selectedCourseId: true, selectedCourse: { select: { accessType: true } } },
-      }),
+    const [{ access: paidPlanIds, courseAccessType }, progressRows, attemptByLesson] = await Promise.all([
+      studentAccess(userId),
       prisma.lessonProgress.findMany({
         where: { userId, lessonId: { in: lessonIds } },
         select: { lessonId: true, completed: true, lastPositionSeconds: true },
@@ -281,19 +296,12 @@ async function fetchSavedLessons(userId, type = null) {
       attemptStatusByLesson(userId, quizLessonIds),
     ]);
 
-    const activeSubs = user?.selectedCourseId
-      ? await prisma.subscription.findMany({
-          where: { userId, courseId: user.selectedCourseId, isActive: true, endDate: { gte: new Date() } },
-          select: { planId: true, plan: { select: { entitlements: true } } },
-        })
-      : [];
-    const paidPlanIds = require('./selected-course.controller').accessFrom(activeSubs);
     const progressByLesson = new Map(progressRows.map((p) => [p.lessonId, p]));
 
   return rows.map((row) => {
         const { lessonPlans = [], ...lesson } = row.lesson;
         const plans = lessonPlans.map((lp) => lp.plan);
-        const gate = lessonAccess(row.lesson, paidPlanIds, user?.selectedCourse?.accessType);
+        const gate = lessonAccess(row.lesson, paidPlanIds, courseAccessType);
         const progress = progressByLesson.get(lesson.id);
         const attempt = lesson.type === 'quiz' ? attemptByLesson.get(lesson.id) ?? null : null;
 
@@ -312,6 +320,110 @@ async function fetchSavedLessons(userId, type = null) {
 
         return stripLockedContent(base, gate);
   });
+}
+
+
+// Bookmarked videos, newest first. A draft video, or one in a lesson that is
+// not published, drops out rather than coming back through a bookmark. A
+// locked one stays listed with its URL stripped, the same as in the lesson.
+async function fetchSavedVideos(userId) {
+  const rows = await prisma.savedVideo.findMany({
+    where: { userId, video: { status: 'published', lesson: { status: 'published' } } },
+    orderBy: { savedAt: 'desc' },
+    select: {
+      savedAt: true,
+      video: {
+        select: {
+          id: true, title: true, description: true, videoUrl: true, thumbnailUrl: true,
+          durationSeconds: true, accessType: true, viewCount: true,
+          lesson: {
+            select: {
+              id: true, title: true, type: true, accessType: true, isFreePreview: true,
+              thumbnailUrl: true,
+              lessonPlans: { select: { planId: true } },
+              chapter: { select: { id: true, title: true } },
+            },
+          },
+        },
+      },
+    },
+  });
+  if (rows.length === 0) return [];
+
+  const { access, courseAccessType } = await studentAccess(userId);
+  return rows.map(({ savedAt, video }) => {
+    const { lesson, ...v } = video;
+    const open = lessonAccess({ ...lesson, videos: [v] }, access, courseAccessType).videoOpen(v);
+    const { lessonPlans, accessType, isFreePreview, type, ...lessonCard } = lesson;
+    return {
+      ...v,
+      videoUrl: open ? v.videoUrl : null,
+      locked: !open,
+      isSaved: true,
+      savedAt,
+      lesson: lessonCard,
+    };
+  });
+}
+
+// POST /api/users/me/saved-videos   { videoId }
+async function saveVideo(req, res) {
+  try {
+    const videoId = Number(req.body?.videoId);
+    if (!Number.isInteger(videoId)) {
+      return res.status(400).json({ error: { message: 'videoId is required' } });
+    }
+
+    const video = await prisma.lessonVideo.findUnique({
+      where: { id: videoId },
+      select: { status: true, lesson: { select: { status: true } } },
+    });
+    if (!video || video.status !== 'published' || video.lesson.status !== 'published') {
+      return res.status(404).json({ error: { message: 'Video not found' } });
+    }
+
+    await prisma.savedVideo.upsert({
+      where: { userId_videoId: { userId: req.user.userId, videoId } },
+      create: { userId: req.user.userId, videoId },
+      update: {},
+    });
+
+    const count = await prisma.savedVideo.count({ where: { userId: req.user.userId } });
+    return res.status(201).json({ saved: true, videoId, count });
+  } catch (error) {
+    console.error('saveVideo error:', error);
+    return res.status(500).json({ error: { message: 'Failed to save the video' } });
+  }
+}
+
+// DELETE /api/users/me/saved-videos/:videoId
+async function unsaveVideo(req, res) {
+  try {
+    const videoId = Number(req.params.videoId);
+    if (!Number.isInteger(videoId)) {
+      return res.status(400).json({ error: { message: 'Invalid video id' } });
+    }
+
+    const { count: removed } = await prisma.savedVideo.deleteMany({
+      where: { userId: req.user.userId, videoId },
+    });
+    const count = await prisma.savedVideo.count({ where: { userId: req.user.userId } });
+    return res.status(200).json({ saved: false, videoId, removed: removed > 0, count });
+  } catch (error) {
+    console.error('unsaveVideo error:', error);
+    return res.status(500).json({ error: { message: 'Failed to remove the bookmark' } });
+  }
+}
+
+// GET /api/users/me/saved-videos
+async function listSavedVideos(req, res) {
+  try {
+    const videos = await fetchSavedVideos(req.user.userId);
+    return res.status(200).json({ videos, count: videos.length });
+  } catch (error) {
+    console.error('listSavedVideos error:', error);
+    return res.status(500).json({ error: { message: 'Failed to load saved videos' } });
+  }
 }
 
 
@@ -365,9 +477,10 @@ async function listSaved(req, res) {
       });
     }
 
-    const [questions, lessons] = await Promise.all([
+    const [questions, lessons, videos] = await Promise.all([
       fetchSavedQuestions(userId),
       fetchSavedLessons(userId),
+      fetchSavedVideos(userId),
     ]);
 
     const counts = {
@@ -377,6 +490,8 @@ async function listSaved(req, res) {
       text: lessons.filter((l) => l.type === 'text').length,
       quiz: lessons.filter((l) => l.type === 'quiz').length,
       lesson: lessons.length,
+      // Single videos bookmarked from a lesson's video list.
+      savedVideos: videos.length,
     };
 
     const wantQuestions = raw === 'all' || raw === 'question';
@@ -389,6 +504,7 @@ async function listSaved(req, res) {
       lessons: wantLessons
         ? (raw === 'all' ? lessons : lessons.filter((l) => l.type === raw))
         : [],
+      videos: raw === 'all' || raw === 'video' ? videos : [],
     });
   } catch (error) {
     console.error('listSaved error:', error);
@@ -403,6 +519,9 @@ module.exports = {
   saveLesson,
   unsaveLesson,
   listSavedLessons,
+  saveVideo,
+  unsaveVideo,
+  listSavedVideos,
   listSaved,
   // Exported for saved.test.js — pure, no DB.
   shapeSavedQuestion,

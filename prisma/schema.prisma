@@ -40,6 +40,7 @@ model User {
   quizAttempts  QuizAttempt[]
   savedQuestions SavedQuestion[]
   savedLessons   SavedLesson[]
+  savedVideos    SavedVideo[]
   lessonProgress LessonProgress[]
   testAttempts   TestAttempt[]
   comments       LessonComment[]
@@ -304,11 +305,15 @@ model LessonVideo {
   // that is not published has only draft videos, and publishing it publishes
   // them. Students are served published videos of published lessons only.
   status          CourseStatus @default(published)
+  // Plays, for the "18.4k views" under a video. Bumped once each time a
+  // student starts it; not deduplicated per student.
+  viewCount       Int          @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lesson  Lesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  savedBy SavedVideo[]
 
   @@index([lessonId, displayOrder])
   @@map("lesson_videos")
@@ -590,6 +595,21 @@ model SavedLesson {
   @@id([userId, lessonId])
   @@index([userId, savedAt])
   @@map("saved_lessons")
+}
+
+// A bookmark on one video, so each row in a lesson's video list has its own.
+// A saved lesson (above) still bookmarks the lesson as a whole.
+model SavedVideo {
+  userId  Int
+  videoId Int
+  savedAt DateTime @default(now())
+
+  user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  video LessonVideo @relation(fields: [videoId], references: [id], onDelete: Cascade)
+
+  @@id([userId, videoId])
+  @@index([userId, savedAt])
+  @@map("saved_videos")
 }
 
 // How far a student got in one lesson. Without this the home screen cannot say

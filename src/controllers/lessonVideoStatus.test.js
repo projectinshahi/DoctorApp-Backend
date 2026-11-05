@@ -42,3 +42,19 @@ assert.strictEqual(mirrorFirstVideo([{ videoUrl: 'd', status: 'draft' }]).videoU
 assert.strictEqual(mirrorFirstVideo([{ videoUrl: 'x' }]).videoUrl, 'x');
 
 console.log('lesson video status: all assertions passed');
+
+// Saving keeps a video whose link is unchanged — same id — so its views and
+// bookmarks survive; new links are created and dropped ones deleted.
+const { videoListWrite } = require('./lesson.controller');
+const write = videoListWrite(
+  [{ videoUrl: 'b', title: 'B' }, { videoUrl: 'new' }, { videoUrl: 'a' }],
+  [{ id: 1, videoUrl: 'a' }, { id: 2, videoUrl: 'b' }, { id: 3, videoUrl: 'gone' }],
+);
+assert.deepStrictEqual(write.update.map((u) => [u.where.id, u.data.videoUrl]), [[2, 'b'], [1, 'a']]);
+assert.deepStrictEqual(write.create.map((r) => r.videoUrl), ['new']);
+assert.deepStrictEqual(write.deleteMany, { id: { in: [3] } });
+// The same link twice keeps one and creates the other, never one id twice.
+const dup = videoListWrite([{ videoUrl: 'a' }, { videoUrl: 'a' }], [{ id: 1, videoUrl: 'a' }]);
+assert.strictEqual(dup.update.length, 1);
+assert.strictEqual(dup.create.length, 1);
+console.log('lesson video list write: all assertions passed');

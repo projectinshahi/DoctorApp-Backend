@@ -20,6 +20,8 @@ const VIDEO_SELECT = {
   displayOrder: true,
   accessType: true,
   status: true,
+  // Read-only: counted by the student app, shown in the panel.
+  viewCount: true,
 };
 
 const LESSON_SELECT = {
@@ -240,6 +242,34 @@ function videoStatusesFor(rows, lessonStatus, wasPublished) {
   if (lessonStatus !== 'published') return rows.map((row) => ({ ...row, status: 'draft' }));
   if (!wasPublished) return rows.map((row) => ({ ...row, status: 'published' }));
   return rows;
+}
+
+// The nested write that makes a lesson's videos exactly `rows`. A row whose
+// link the lesson already has updates that video in place — same id — so its
+// view count and the students' bookmarks on it survive the save. Only links
+// that are new are created, and only videos left out are deleted.
+function videoListWrite(rows, existing) {
+  const idsByUrl = new Map();
+  for (const v of existing) {
+    if (!idsByUrl.has(v.videoUrl)) idsByUrl.set(v.videoUrl, []);
+    idsByUrl.get(v.videoUrl).push(v.id);
+  }
+  const update = [];
+  const create = [];
+  for (const row of rows) {
+    const id = idsByUrl.get(row.videoUrl)?.shift();
+    if (id === undefined) create.push(row);
+    else update.push({ where: { id }, data: row });
+  }
+  // Named ids, not "everything not kept": Prisma does not promise the order of
+  // nested writes, and a notIn filter run after `create` would delete the
+  // videos this same save just added.
+  const kept = new Set(update.map((u) => u.where.id));
+  return {
+    deleteMany: { id: { in: existing.map((v) => v.id).filter((id) => !kept.has(id)) } },
+    update,
+    create,
+  };
 }
 
 // The lesson's own video columns track video 1. Everything already written
@@ -591,7 +621,7 @@ async function updateLesson(req, res) {
       where: { id: lessonId },
       include: {
         videos: {
-          select: { videoUrl: true, videoPublicId: true, durationSeconds: true, accessType: true, status: true },
+          select: { id: true, videoUrl: true, videoPublicId: true, durationSeconds: true, accessType: true, status: true },
           orderBy: { displayOrder: 'asc' },
         },
       },
@@ -730,7 +760,7 @@ async function updateLesson(req, res) {
       // Replace the whole list. The panel always sends the list it is showing,
       // so a row the admin deleted is a row that is gone.
       const rows = videoStatusesFor(videoSelection.rows, effectiveStatus, wasPublished);
-      data.videos = { deleteMany: {}, create: rows };
+      data.videos = videoListWrite(rows, existing.videos);
       Object.assign(data, mirrorFirstVideo(rows));
     } else if (statusChanged && existing.videos.length > 0) {
       // A status change with no list in the body still has to carry the
@@ -937,5 +967,6 @@ module.exports = {
   // Exported for lessonVideos.test.js.
   readVideos,
   videoStatusesFor,
+  videoListWrite,
   mirrorFirstVideo,
 };

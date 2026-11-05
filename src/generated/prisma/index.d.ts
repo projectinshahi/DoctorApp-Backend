@@ -129,6 +129,11 @@ export type SavedQuestion = $Result.DefaultSelection<Prisma.$SavedQuestionPayloa
  */
 export type SavedLesson = $Result.DefaultSelection<Prisma.$SavedLessonPayload>
 /**
+ * Model SavedVideo
+ * 
+ */
+export type SavedVideo = $Result.DefaultSelection<Prisma.$SavedVideoPayload>
+/**
  * Model LessonProgress
  * 
  */
@@ -666,6 +671,16 @@ export class PrismaClient<
     * ```
     */
   get savedLesson(): Prisma.SavedLessonDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.savedVideo`: Exposes CRUD operations for the **SavedVideo** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SavedVideos
+    * const savedVideos = await prisma.savedVideo.findMany()
+    * ```
+    */
+  get savedVideo(): Prisma.SavedVideoDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.lessonProgress`: Exposes CRUD operations for the **LessonProgress** model.
@@ -1276,6 +1291,7 @@ export namespace Prisma {
     AttemptAnswer: 'AttemptAnswer',
     SavedQuestion: 'SavedQuestion',
     SavedLesson: 'SavedLesson',
+    SavedVideo: 'SavedVideo',
     LessonProgress: 'LessonProgress',
     Test: 'Test',
     TestQuestion: 'TestQuestion',
@@ -1305,7 +1321,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonVideo" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "quizQuestion" | "tag" | "questionTag" | "quizAttempt" | "attemptAnswer" | "savedQuestion" | "savedLesson" | "lessonProgress" | "test" | "testQuestion" | "testImage" | "testAttempt" | "testAttemptAnswer" | "lessonComment" | "commentReport" | "dailyQuizAttempt" | "dailyQuizAnswer" | "rapidRecall" | "rapidRecallCard" | "fcmToken" | "notification"
+      modelProps: "user" | "admin" | "subject" | "topic" | "session" | "course" | "courseType" | "chapter" | "lesson" | "lessonVideo" | "lessonPlan" | "plan" | "subscription" | "question" | "questionOption" | "quiz" | "quizQuestion" | "tag" | "questionTag" | "quizAttempt" | "attemptAnswer" | "savedQuestion" | "savedLesson" | "savedVideo" | "lessonProgress" | "test" | "testQuestion" | "testImage" | "testAttempt" | "testAttemptAnswer" | "lessonComment" | "commentReport" | "dailyQuizAttempt" | "dailyQuizAnswer" | "rapidRecall" | "rapidRecallCard" | "fcmToken" | "notification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3011,6 +3027,80 @@ export namespace Prisma {
           }
         }
       }
+      SavedVideo: {
+        payload: Prisma.$SavedVideoPayload<ExtArgs>
+        fields: Prisma.SavedVideoFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SavedVideoFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedVideoPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SavedVideoFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedVideoPayload>
+          }
+          findFirst: {
+            args: Prisma.SavedVideoFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedVideoPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SavedVideoFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedVideoPayload>
+          }
+          findMany: {
+            args: Prisma.SavedVideoFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedVideoPayload>[]
+          }
+          create: {
+            args: Prisma.SavedVideoCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedVideoPayload>
+          }
+          createMany: {
+            args: Prisma.SavedVideoCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SavedVideoCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedVideoPayload>[]
+          }
+          delete: {
+            args: Prisma.SavedVideoDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedVideoPayload>
+          }
+          update: {
+            args: Prisma.SavedVideoUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedVideoPayload>
+          }
+          deleteMany: {
+            args: Prisma.SavedVideoDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SavedVideoUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SavedVideoUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedVideoPayload>[]
+          }
+          upsert: {
+            args: Prisma.SavedVideoUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SavedVideoPayload>
+          }
+          aggregate: {
+            args: Prisma.SavedVideoAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSavedVideo>
+          }
+          groupBy: {
+            args: Prisma.SavedVideoGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SavedVideoGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SavedVideoCountArgs<ExtArgs>
+            result: $Utils.Optional<SavedVideoCountAggregateOutputType> | number
+          }
+        }
+      }
       LessonProgress: {
         payload: Prisma.$LessonProgressPayload<ExtArgs>
         fields: Prisma.LessonProgressFieldRefs
@@ -4193,6 +4283,7 @@ export namespace Prisma {
     attemptAnswer?: AttemptAnswerOmit
     savedQuestion?: SavedQuestionOmit
     savedLesson?: SavedLessonOmit
+    savedVideo?: SavedVideoOmit
     lessonProgress?: LessonProgressOmit
     test?: TestOmit
     testQuestion?: TestQuestionOmit
@@ -4292,6 +4383,7 @@ export namespace Prisma {
     quizAttempts: number
     savedQuestions: number
     savedLessons: number
+    savedVideos: number
     lessonProgress: number
     testAttempts: number
     comments: number
@@ -4307,6 +4399,7 @@ export namespace Prisma {
     quizAttempts?: boolean | UserCountOutputTypeCountQuizAttemptsArgs
     savedQuestions?: boolean | UserCountOutputTypeCountSavedQuestionsArgs
     savedLessons?: boolean | UserCountOutputTypeCountSavedLessonsArgs
+    savedVideos?: boolean | UserCountOutputTypeCountSavedVideosArgs
     lessonProgress?: boolean | UserCountOutputTypeCountLessonProgressArgs
     testAttempts?: boolean | UserCountOutputTypeCountTestAttemptsArgs
     comments?: boolean | UserCountOutputTypeCountCommentsArgs
@@ -4360,6 +4453,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountSavedLessonsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: SavedLessonWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSavedVideosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SavedVideoWhereInput
   }
 
   /**
@@ -4833,6 +4933,37 @@ export namespace Prisma {
    */
   export type LessonCountOutputTypeCountVideosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: LessonVideoWhereInput
+  }
+
+
+  /**
+   * Count Type LessonVideoCountOutputType
+   */
+
+  export type LessonVideoCountOutputType = {
+    savedBy: number
+  }
+
+  export type LessonVideoCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    savedBy?: boolean | LessonVideoCountOutputTypeCountSavedByArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * LessonVideoCountOutputType without action
+   */
+  export type LessonVideoCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LessonVideoCountOutputType
+     */
+    select?: LessonVideoCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * LessonVideoCountOutputType without action
+   */
+  export type LessonVideoCountOutputTypeCountSavedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SavedVideoWhereInput
   }
 
 
@@ -5564,6 +5695,7 @@ export namespace Prisma {
     quizAttempts?: boolean | User$quizAttemptsArgs<ExtArgs>
     savedQuestions?: boolean | User$savedQuestionsArgs<ExtArgs>
     savedLessons?: boolean | User$savedLessonsArgs<ExtArgs>
+    savedVideos?: boolean | User$savedVideosArgs<ExtArgs>
     lessonProgress?: boolean | User$lessonProgressArgs<ExtArgs>
     testAttempts?: boolean | User$testAttemptsArgs<ExtArgs>
     comments?: boolean | User$commentsArgs<ExtArgs>
@@ -5647,6 +5779,7 @@ export namespace Prisma {
     quizAttempts?: boolean | User$quizAttemptsArgs<ExtArgs>
     savedQuestions?: boolean | User$savedQuestionsArgs<ExtArgs>
     savedLessons?: boolean | User$savedLessonsArgs<ExtArgs>
+    savedVideos?: boolean | User$savedVideosArgs<ExtArgs>
     lessonProgress?: boolean | User$lessonProgressArgs<ExtArgs>
     testAttempts?: boolean | User$testAttemptsArgs<ExtArgs>
     comments?: boolean | User$commentsArgs<ExtArgs>
@@ -5675,6 +5808,7 @@ export namespace Prisma {
       quizAttempts: Prisma.$QuizAttemptPayload<ExtArgs>[]
       savedQuestions: Prisma.$SavedQuestionPayload<ExtArgs>[]
       savedLessons: Prisma.$SavedLessonPayload<ExtArgs>[]
+      savedVideos: Prisma.$SavedVideoPayload<ExtArgs>[]
       lessonProgress: Prisma.$LessonProgressPayload<ExtArgs>[]
       testAttempts: Prisma.$TestAttemptPayload<ExtArgs>[]
       comments: Prisma.$LessonCommentPayload<ExtArgs>[]
@@ -6102,6 +6236,7 @@ export namespace Prisma {
     quizAttempts<T extends User$quizAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$quizAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuizAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     savedQuestions<T extends User$savedQuestionsArgs<ExtArgs> = {}>(args?: Subset<T, User$savedQuestionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     savedLessons<T extends User$savedLessonsArgs<ExtArgs> = {}>(args?: Subset<T, User$savedLessonsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedLessonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    savedVideos<T extends User$savedVideosArgs<ExtArgs> = {}>(args?: Subset<T, User$savedVideosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     lessonProgress<T extends User$lessonProgressArgs<ExtArgs> = {}>(args?: Subset<T, User$lessonProgressArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     testAttempts<T extends User$testAttemptsArgs<ExtArgs> = {}>(args?: Subset<T, User$testAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TestAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends User$commentsArgs<ExtArgs> = {}>(args?: Subset<T, User$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LessonCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6684,6 +6819,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: SavedLessonScalarFieldEnum | SavedLessonScalarFieldEnum[]
+  }
+
+  /**
+   * User.savedVideos
+   */
+  export type User$savedVideosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedVideo
+     */
+    select?: SavedVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedVideo
+     */
+    omit?: SavedVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedVideoInclude<ExtArgs> | null
+    where?: SavedVideoWhereInput
+    orderBy?: SavedVideoOrderByWithRelationInput | SavedVideoOrderByWithRelationInput[]
+    cursor?: SavedVideoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SavedVideoScalarFieldEnum | SavedVideoScalarFieldEnum[]
   }
 
   /**
@@ -17240,6 +17399,7 @@ export namespace Prisma {
     lessonId: number | null
     durationSeconds: number | null
     displayOrder: number | null
+    viewCount: number | null
   }
 
   export type LessonVideoSumAggregateOutputType = {
@@ -17247,6 +17407,7 @@ export namespace Prisma {
     lessonId: number | null
     durationSeconds: number | null
     displayOrder: number | null
+    viewCount: number | null
   }
 
   export type LessonVideoMinAggregateOutputType = {
@@ -17261,6 +17422,7 @@ export namespace Prisma {
     displayOrder: number | null
     accessType: $Enums.AccessType | null
     status: $Enums.CourseStatus | null
+    viewCount: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -17277,6 +17439,7 @@ export namespace Prisma {
     displayOrder: number | null
     accessType: $Enums.AccessType | null
     status: $Enums.CourseStatus | null
+    viewCount: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -17293,6 +17456,7 @@ export namespace Prisma {
     displayOrder: number
     accessType: number
     status: number
+    viewCount: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -17304,6 +17468,7 @@ export namespace Prisma {
     lessonId?: true
     durationSeconds?: true
     displayOrder?: true
+    viewCount?: true
   }
 
   export type LessonVideoSumAggregateInputType = {
@@ -17311,6 +17476,7 @@ export namespace Prisma {
     lessonId?: true
     durationSeconds?: true
     displayOrder?: true
+    viewCount?: true
   }
 
   export type LessonVideoMinAggregateInputType = {
@@ -17325,6 +17491,7 @@ export namespace Prisma {
     displayOrder?: true
     accessType?: true
     status?: true
+    viewCount?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -17341,6 +17508,7 @@ export namespace Prisma {
     displayOrder?: true
     accessType?: true
     status?: true
+    viewCount?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -17357,6 +17525,7 @@ export namespace Prisma {
     displayOrder?: true
     accessType?: true
     status?: true
+    viewCount?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -17460,6 +17629,7 @@ export namespace Prisma {
     displayOrder: number
     accessType: $Enums.AccessType
     status: $Enums.CourseStatus
+    viewCount: number
     createdAt: Date
     updatedAt: Date
     _count: LessonVideoCountAggregateOutputType | null
@@ -17495,9 +17665,12 @@ export namespace Prisma {
     displayOrder?: boolean
     accessType?: boolean
     status?: boolean
+    viewCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
+    savedBy?: boolean | LessonVideo$savedByArgs<ExtArgs>
+    _count?: boolean | LessonVideoCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["lessonVideo"]>
 
   export type LessonVideoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -17512,6 +17685,7 @@ export namespace Prisma {
     displayOrder?: boolean
     accessType?: boolean
     status?: boolean
+    viewCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
@@ -17529,6 +17703,7 @@ export namespace Prisma {
     displayOrder?: boolean
     accessType?: boolean
     status?: boolean
+    viewCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
@@ -17546,13 +17721,16 @@ export namespace Prisma {
     displayOrder?: boolean
     accessType?: boolean
     status?: boolean
+    viewCount?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type LessonVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "lessonId" | "title" | "description" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "durationSeconds" | "displayOrder" | "accessType" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["lessonVideo"]>
+  export type LessonVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "lessonId" | "title" | "description" | "videoUrl" | "videoPublicId" | "thumbnailUrl" | "durationSeconds" | "displayOrder" | "accessType" | "status" | "viewCount" | "createdAt" | "updatedAt", ExtArgs["result"]["lessonVideo"]>
   export type LessonVideoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
+    savedBy?: boolean | LessonVideo$savedByArgs<ExtArgs>
+    _count?: boolean | LessonVideoCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type LessonVideoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     lesson?: boolean | LessonDefaultArgs<ExtArgs>
@@ -17565,6 +17743,7 @@ export namespace Prisma {
     name: "LessonVideo"
     objects: {
       lesson: Prisma.$LessonPayload<ExtArgs>
+      savedBy: Prisma.$SavedVideoPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -17578,6 +17757,7 @@ export namespace Prisma {
       displayOrder: number
       accessType: $Enums.AccessType
       status: $Enums.CourseStatus
+      viewCount: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["lessonVideo"]>
@@ -17975,6 +18155,7 @@ export namespace Prisma {
   export interface Prisma__LessonVideoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     lesson<T extends LessonDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LessonDefaultArgs<ExtArgs>>): Prisma__LessonClient<$Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    savedBy<T extends LessonVideo$savedByArgs<ExtArgs> = {}>(args?: Subset<T, LessonVideo$savedByArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -18015,6 +18196,7 @@ export namespace Prisma {
     readonly displayOrder: FieldRef<"LessonVideo", 'Int'>
     readonly accessType: FieldRef<"LessonVideo", 'AccessType'>
     readonly status: FieldRef<"LessonVideo", 'CourseStatus'>
+    readonly viewCount: FieldRef<"LessonVideo", 'Int'>
     readonly createdAt: FieldRef<"LessonVideo", 'DateTime'>
     readonly updatedAt: FieldRef<"LessonVideo", 'DateTime'>
   }
@@ -18424,6 +18606,30 @@ export namespace Prisma {
      * Limit how many LessonVideos to delete.
      */
     limit?: number
+  }
+
+  /**
+   * LessonVideo.savedBy
+   */
+  export type LessonVideo$savedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedVideo
+     */
+    select?: SavedVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedVideo
+     */
+    omit?: SavedVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedVideoInclude<ExtArgs> | null
+    where?: SavedVideoWhereInput
+    orderBy?: SavedVideoOrderByWithRelationInput | SavedVideoOrderByWithRelationInput[]
+    cursor?: SavedVideoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SavedVideoScalarFieldEnum | SavedVideoScalarFieldEnum[]
   }
 
   /**
@@ -33481,6 +33687,1098 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: SavedLessonInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SavedVideo
+   */
+
+  export type AggregateSavedVideo = {
+    _count: SavedVideoCountAggregateOutputType | null
+    _avg: SavedVideoAvgAggregateOutputType | null
+    _sum: SavedVideoSumAggregateOutputType | null
+    _min: SavedVideoMinAggregateOutputType | null
+    _max: SavedVideoMaxAggregateOutputType | null
+  }
+
+  export type SavedVideoAvgAggregateOutputType = {
+    userId: number | null
+    videoId: number | null
+  }
+
+  export type SavedVideoSumAggregateOutputType = {
+    userId: number | null
+    videoId: number | null
+  }
+
+  export type SavedVideoMinAggregateOutputType = {
+    userId: number | null
+    videoId: number | null
+    savedAt: Date | null
+  }
+
+  export type SavedVideoMaxAggregateOutputType = {
+    userId: number | null
+    videoId: number | null
+    savedAt: Date | null
+  }
+
+  export type SavedVideoCountAggregateOutputType = {
+    userId: number
+    videoId: number
+    savedAt: number
+    _all: number
+  }
+
+
+  export type SavedVideoAvgAggregateInputType = {
+    userId?: true
+    videoId?: true
+  }
+
+  export type SavedVideoSumAggregateInputType = {
+    userId?: true
+    videoId?: true
+  }
+
+  export type SavedVideoMinAggregateInputType = {
+    userId?: true
+    videoId?: true
+    savedAt?: true
+  }
+
+  export type SavedVideoMaxAggregateInputType = {
+    userId?: true
+    videoId?: true
+    savedAt?: true
+  }
+
+  export type SavedVideoCountAggregateInputType = {
+    userId?: true
+    videoId?: true
+    savedAt?: true
+    _all?: true
+  }
+
+  export type SavedVideoAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SavedVideo to aggregate.
+     */
+    where?: SavedVideoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SavedVideos to fetch.
+     */
+    orderBy?: SavedVideoOrderByWithRelationInput | SavedVideoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SavedVideoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SavedVideos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SavedVideos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SavedVideos
+    **/
+    _count?: true | SavedVideoCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SavedVideoAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SavedVideoSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SavedVideoMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SavedVideoMaxAggregateInputType
+  }
+
+  export type GetSavedVideoAggregateType<T extends SavedVideoAggregateArgs> = {
+        [P in keyof T & keyof AggregateSavedVideo]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSavedVideo[P]>
+      : GetScalarType<T[P], AggregateSavedVideo[P]>
+  }
+
+
+
+
+  export type SavedVideoGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SavedVideoWhereInput
+    orderBy?: SavedVideoOrderByWithAggregationInput | SavedVideoOrderByWithAggregationInput[]
+    by: SavedVideoScalarFieldEnum[] | SavedVideoScalarFieldEnum
+    having?: SavedVideoScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SavedVideoCountAggregateInputType | true
+    _avg?: SavedVideoAvgAggregateInputType
+    _sum?: SavedVideoSumAggregateInputType
+    _min?: SavedVideoMinAggregateInputType
+    _max?: SavedVideoMaxAggregateInputType
+  }
+
+  export type SavedVideoGroupByOutputType = {
+    userId: number
+    videoId: number
+    savedAt: Date
+    _count: SavedVideoCountAggregateOutputType | null
+    _avg: SavedVideoAvgAggregateOutputType | null
+    _sum: SavedVideoSumAggregateOutputType | null
+    _min: SavedVideoMinAggregateOutputType | null
+    _max: SavedVideoMaxAggregateOutputType | null
+  }
+
+  type GetSavedVideoGroupByPayload<T extends SavedVideoGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SavedVideoGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SavedVideoGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SavedVideoGroupByOutputType[P]>
+            : GetScalarType<T[P], SavedVideoGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SavedVideoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    videoId?: boolean
+    savedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    video?: boolean | LessonVideoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["savedVideo"]>
+
+  export type SavedVideoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    videoId?: boolean
+    savedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    video?: boolean | LessonVideoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["savedVideo"]>
+
+  export type SavedVideoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    videoId?: boolean
+    savedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    video?: boolean | LessonVideoDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["savedVideo"]>
+
+  export type SavedVideoSelectScalar = {
+    userId?: boolean
+    videoId?: boolean
+    savedAt?: boolean
+  }
+
+  export type SavedVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "videoId" | "savedAt", ExtArgs["result"]["savedVideo"]>
+  export type SavedVideoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    video?: boolean | LessonVideoDefaultArgs<ExtArgs>
+  }
+  export type SavedVideoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    video?: boolean | LessonVideoDefaultArgs<ExtArgs>
+  }
+  export type SavedVideoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    video?: boolean | LessonVideoDefaultArgs<ExtArgs>
+  }
+
+  export type $SavedVideoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SavedVideo"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      video: Prisma.$LessonVideoPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      userId: number
+      videoId: number
+      savedAt: Date
+    }, ExtArgs["result"]["savedVideo"]>
+    composites: {}
+  }
+
+  type SavedVideoGetPayload<S extends boolean | null | undefined | SavedVideoDefaultArgs> = $Result.GetResult<Prisma.$SavedVideoPayload, S>
+
+  type SavedVideoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SavedVideoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
+      select?: SavedVideoCountAggregateInputType | true
+    }
+
+  export interface SavedVideoDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SavedVideo'], meta: { name: 'SavedVideo' } }
+    /**
+     * Find zero or one SavedVideo that matches the filter.
+     * @param {SavedVideoFindUniqueArgs} args - Arguments to find a SavedVideo
+     * @example
+     * // Get one SavedVideo
+     * const savedVideo = await prisma.savedVideo.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SavedVideoFindUniqueArgs>(args: SelectSubset<T, SavedVideoFindUniqueArgs<ExtArgs>>): Prisma__SavedVideoClient<$Result.GetResult<Prisma.$SavedVideoPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SavedVideo that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SavedVideoFindUniqueOrThrowArgs} args - Arguments to find a SavedVideo
+     * @example
+     * // Get one SavedVideo
+     * const savedVideo = await prisma.savedVideo.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SavedVideoFindUniqueOrThrowArgs>(args: SelectSubset<T, SavedVideoFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SavedVideoClient<$Result.GetResult<Prisma.$SavedVideoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SavedVideo that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedVideoFindFirstArgs} args - Arguments to find a SavedVideo
+     * @example
+     * // Get one SavedVideo
+     * const savedVideo = await prisma.savedVideo.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SavedVideoFindFirstArgs>(args?: SelectSubset<T, SavedVideoFindFirstArgs<ExtArgs>>): Prisma__SavedVideoClient<$Result.GetResult<Prisma.$SavedVideoPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SavedVideo that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedVideoFindFirstOrThrowArgs} args - Arguments to find a SavedVideo
+     * @example
+     * // Get one SavedVideo
+     * const savedVideo = await prisma.savedVideo.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SavedVideoFindFirstOrThrowArgs>(args?: SelectSubset<T, SavedVideoFindFirstOrThrowArgs<ExtArgs>>): Prisma__SavedVideoClient<$Result.GetResult<Prisma.$SavedVideoPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SavedVideos that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedVideoFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SavedVideos
+     * const savedVideos = await prisma.savedVideo.findMany()
+     * 
+     * // Get first 10 SavedVideos
+     * const savedVideos = await prisma.savedVideo.findMany({ take: 10 })
+     * 
+     * // Only select the `userId`
+     * const savedVideoWithUserIdOnly = await prisma.savedVideo.findMany({ select: { userId: true } })
+     * 
+     */
+    findMany<T extends SavedVideoFindManyArgs>(args?: SelectSubset<T, SavedVideoFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedVideoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SavedVideo.
+     * @param {SavedVideoCreateArgs} args - Arguments to create a SavedVideo.
+     * @example
+     * // Create one SavedVideo
+     * const SavedVideo = await prisma.savedVideo.create({
+     *   data: {
+     *     // ... data to create a SavedVideo
+     *   }
+     * })
+     * 
+     */
+    create<T extends SavedVideoCreateArgs>(args: SelectSubset<T, SavedVideoCreateArgs<ExtArgs>>): Prisma__SavedVideoClient<$Result.GetResult<Prisma.$SavedVideoPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SavedVideos.
+     * @param {SavedVideoCreateManyArgs} args - Arguments to create many SavedVideos.
+     * @example
+     * // Create many SavedVideos
+     * const savedVideo = await prisma.savedVideo.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SavedVideoCreateManyArgs>(args?: SelectSubset<T, SavedVideoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SavedVideos and returns the data saved in the database.
+     * @param {SavedVideoCreateManyAndReturnArgs} args - Arguments to create many SavedVideos.
+     * @example
+     * // Create many SavedVideos
+     * const savedVideo = await prisma.savedVideo.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SavedVideos and only return the `userId`
+     * const savedVideoWithUserIdOnly = await prisma.savedVideo.createManyAndReturn({
+     *   select: { userId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SavedVideoCreateManyAndReturnArgs>(args?: SelectSubset<T, SavedVideoCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedVideoPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SavedVideo.
+     * @param {SavedVideoDeleteArgs} args - Arguments to delete one SavedVideo.
+     * @example
+     * // Delete one SavedVideo
+     * const SavedVideo = await prisma.savedVideo.delete({
+     *   where: {
+     *     // ... filter to delete one SavedVideo
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SavedVideoDeleteArgs>(args: SelectSubset<T, SavedVideoDeleteArgs<ExtArgs>>): Prisma__SavedVideoClient<$Result.GetResult<Prisma.$SavedVideoPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SavedVideo.
+     * @param {SavedVideoUpdateArgs} args - Arguments to update one SavedVideo.
+     * @example
+     * // Update one SavedVideo
+     * const savedVideo = await prisma.savedVideo.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SavedVideoUpdateArgs>(args: SelectSubset<T, SavedVideoUpdateArgs<ExtArgs>>): Prisma__SavedVideoClient<$Result.GetResult<Prisma.$SavedVideoPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SavedVideos.
+     * @param {SavedVideoDeleteManyArgs} args - Arguments to filter SavedVideos to delete.
+     * @example
+     * // Delete a few SavedVideos
+     * const { count } = await prisma.savedVideo.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SavedVideoDeleteManyArgs>(args?: SelectSubset<T, SavedVideoDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SavedVideos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedVideoUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SavedVideos
+     * const savedVideo = await prisma.savedVideo.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SavedVideoUpdateManyArgs>(args: SelectSubset<T, SavedVideoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SavedVideos and returns the data updated in the database.
+     * @param {SavedVideoUpdateManyAndReturnArgs} args - Arguments to update many SavedVideos.
+     * @example
+     * // Update many SavedVideos
+     * const savedVideo = await prisma.savedVideo.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SavedVideos and only return the `userId`
+     * const savedVideoWithUserIdOnly = await prisma.savedVideo.updateManyAndReturn({
+     *   select: { userId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SavedVideoUpdateManyAndReturnArgs>(args: SelectSubset<T, SavedVideoUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedVideoPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SavedVideo.
+     * @param {SavedVideoUpsertArgs} args - Arguments to update or create a SavedVideo.
+     * @example
+     * // Update or create a SavedVideo
+     * const savedVideo = await prisma.savedVideo.upsert({
+     *   create: {
+     *     // ... data to create a SavedVideo
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SavedVideo we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SavedVideoUpsertArgs>(args: SelectSubset<T, SavedVideoUpsertArgs<ExtArgs>>): Prisma__SavedVideoClient<$Result.GetResult<Prisma.$SavedVideoPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SavedVideos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedVideoCountArgs} args - Arguments to filter SavedVideos to count.
+     * @example
+     * // Count the number of SavedVideos
+     * const count = await prisma.savedVideo.count({
+     *   where: {
+     *     // ... the filter for the SavedVideos we want to count
+     *   }
+     * })
+    **/
+    count<T extends SavedVideoCountArgs>(
+      args?: Subset<T, SavedVideoCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SavedVideoCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SavedVideo.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedVideoAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SavedVideoAggregateArgs>(args: Subset<T, SavedVideoAggregateArgs>): Prisma.PrismaPromise<GetSavedVideoAggregateType<T>>
+
+    /**
+     * Group by SavedVideo.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SavedVideoGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SavedVideoGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SavedVideoGroupByArgs['orderBy'] }
+        : { orderBy?: SavedVideoGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SavedVideoGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSavedVideoGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SavedVideo model
+   */
+  readonly fields: SavedVideoFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SavedVideo.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SavedVideoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    video<T extends LessonVideoDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LessonVideoDefaultArgs<ExtArgs>>): Prisma__LessonVideoClient<$Result.GetResult<Prisma.$LessonVideoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SavedVideo model
+   */
+  interface SavedVideoFieldRefs {
+    readonly userId: FieldRef<"SavedVideo", 'Int'>
+    readonly videoId: FieldRef<"SavedVideo", 'Int'>
+    readonly savedAt: FieldRef<"SavedVideo", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SavedVideo findUnique
+   */
+  export type SavedVideoFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedVideo
+     */
+    select?: SavedVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedVideo
+     */
+    omit?: SavedVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedVideoInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedVideo to fetch.
+     */
+    where: SavedVideoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * SavedVideo findUniqueOrThrow
+   */
+  export type SavedVideoFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedVideo
+     */
+    select?: SavedVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedVideo
+     */
+    omit?: SavedVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedVideoInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedVideo to fetch.
+     */
+    where: SavedVideoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * SavedVideo findFirst
+   */
+  export type SavedVideoFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedVideo
+     */
+    select?: SavedVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedVideo
+     */
+    omit?: SavedVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedVideoInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedVideo to fetch.
+     */
+    where?: SavedVideoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SavedVideos to fetch.
+     */
+    orderBy?: SavedVideoOrderByWithRelationInput | SavedVideoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SavedVideos.
+     */
+    cursor?: SavedVideoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SavedVideos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SavedVideos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SavedVideos.
+     */
+    distinct?: SavedVideoScalarFieldEnum | SavedVideoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * SavedVideo findFirstOrThrow
+   */
+  export type SavedVideoFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedVideo
+     */
+    select?: SavedVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedVideo
+     */
+    omit?: SavedVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedVideoInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedVideo to fetch.
+     */
+    where?: SavedVideoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SavedVideos to fetch.
+     */
+    orderBy?: SavedVideoOrderByWithRelationInput | SavedVideoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SavedVideos.
+     */
+    cursor?: SavedVideoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SavedVideos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SavedVideos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SavedVideos.
+     */
+    distinct?: SavedVideoScalarFieldEnum | SavedVideoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * SavedVideo findMany
+   */
+  export type SavedVideoFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedVideo
+     */
+    select?: SavedVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedVideo
+     */
+    omit?: SavedVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedVideoInclude<ExtArgs> | null
+    /**
+     * Filter, which SavedVideos to fetch.
+     */
+    where?: SavedVideoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SavedVideos to fetch.
+     */
+    orderBy?: SavedVideoOrderByWithRelationInput | SavedVideoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SavedVideos.
+     */
+    cursor?: SavedVideoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SavedVideos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SavedVideos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SavedVideos.
+     */
+    distinct?: SavedVideoScalarFieldEnum | SavedVideoScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * SavedVideo create
+   */
+  export type SavedVideoCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedVideo
+     */
+    select?: SavedVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedVideo
+     */
+    omit?: SavedVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedVideoInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SavedVideo.
+     */
+    data: XOR<SavedVideoCreateInput, SavedVideoUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * SavedVideo createMany
+   */
+  export type SavedVideoCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SavedVideos.
+     */
+    data: SavedVideoCreateManyInput | SavedVideoCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SavedVideo createManyAndReturn
+   */
+  export type SavedVideoCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedVideo
+     */
+    select?: SavedVideoSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedVideo
+     */
+    omit?: SavedVideoOmit<ExtArgs> | null
+    /**
+     * The data used to create many SavedVideos.
+     */
+    data: SavedVideoCreateManyInput | SavedVideoCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedVideoIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SavedVideo update
+   */
+  export type SavedVideoUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedVideo
+     */
+    select?: SavedVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedVideo
+     */
+    omit?: SavedVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedVideoInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SavedVideo.
+     */
+    data: XOR<SavedVideoUpdateInput, SavedVideoUncheckedUpdateInput>
+    /**
+     * Choose, which SavedVideo to update.
+     */
+    where: SavedVideoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * SavedVideo updateMany
+   */
+  export type SavedVideoUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SavedVideos.
+     */
+    data: XOR<SavedVideoUpdateManyMutationInput, SavedVideoUncheckedUpdateManyInput>
+    /**
+     * Filter which SavedVideos to update
+     */
+    where?: SavedVideoWhereInput
+    /**
+     * Limit how many SavedVideos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SavedVideo updateManyAndReturn
+   */
+  export type SavedVideoUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedVideo
+     */
+    select?: SavedVideoSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedVideo
+     */
+    omit?: SavedVideoOmit<ExtArgs> | null
+    /**
+     * The data used to update SavedVideos.
+     */
+    data: XOR<SavedVideoUpdateManyMutationInput, SavedVideoUncheckedUpdateManyInput>
+    /**
+     * Filter which SavedVideos to update
+     */
+    where?: SavedVideoWhereInput
+    /**
+     * Limit how many SavedVideos to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedVideoIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SavedVideo upsert
+   */
+  export type SavedVideoUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedVideo
+     */
+    select?: SavedVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedVideo
+     */
+    omit?: SavedVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedVideoInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SavedVideo to update in case it exists.
+     */
+    where: SavedVideoWhereUniqueInput
+    /**
+     * In case the SavedVideo found by the `where` argument doesn't exist, create a new SavedVideo with this data.
+     */
+    create: XOR<SavedVideoCreateInput, SavedVideoUncheckedCreateInput>
+    /**
+     * In case the SavedVideo was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SavedVideoUpdateInput, SavedVideoUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * SavedVideo delete
+   */
+  export type SavedVideoDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedVideo
+     */
+    select?: SavedVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedVideo
+     */
+    omit?: SavedVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedVideoInclude<ExtArgs> | null
+    /**
+     * Filter which SavedVideo to delete.
+     */
+    where: SavedVideoWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * SavedVideo deleteMany
+   */
+  export type SavedVideoDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SavedVideos to delete
+     */
+    where?: SavedVideoWhereInput
+    /**
+     * Limit how many SavedVideos to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SavedVideo without action
+   */
+  export type SavedVideoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SavedVideo
+     */
+    select?: SavedVideoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SavedVideo
+     */
+    omit?: SavedVideoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SavedVideoInclude<ExtArgs> | null
   }
 
 
@@ -50575,6 +51873,7 @@ export namespace Prisma {
     displayOrder: 'displayOrder',
     accessType: 'accessType',
     status: 'status',
+    viewCount: 'viewCount',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -50737,6 +52036,15 @@ export namespace Prisma {
   };
 
   export type SavedLessonScalarFieldEnum = (typeof SavedLessonScalarFieldEnum)[keyof typeof SavedLessonScalarFieldEnum]
+
+
+  export const SavedVideoScalarFieldEnum: {
+    userId: 'userId',
+    videoId: 'videoId',
+    savedAt: 'savedAt'
+  };
+
+  export type SavedVideoScalarFieldEnum = (typeof SavedVideoScalarFieldEnum)[keyof typeof SavedVideoScalarFieldEnum]
 
 
   export const LessonProgressScalarFieldEnum: {
@@ -51198,6 +52506,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptListRelationFilter
     savedQuestions?: SavedQuestionListRelationFilter
     savedLessons?: SavedLessonListRelationFilter
+    savedVideos?: SavedVideoListRelationFilter
     lessonProgress?: LessonProgressListRelationFilter
     testAttempts?: TestAttemptListRelationFilter
     comments?: LessonCommentListRelationFilter
@@ -51232,6 +52541,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptOrderByRelationAggregateInput
     savedQuestions?: SavedQuestionOrderByRelationAggregateInput
     savedLessons?: SavedLessonOrderByRelationAggregateInput
+    savedVideos?: SavedVideoOrderByRelationAggregateInput
     lessonProgress?: LessonProgressOrderByRelationAggregateInput
     testAttempts?: TestAttemptOrderByRelationAggregateInput
     comments?: LessonCommentOrderByRelationAggregateInput
@@ -51269,6 +52579,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptListRelationFilter
     savedQuestions?: SavedQuestionListRelationFilter
     savedLessons?: SavedLessonListRelationFilter
+    savedVideos?: SavedVideoListRelationFilter
     lessonProgress?: LessonProgressListRelationFilter
     testAttempts?: TestAttemptListRelationFilter
     comments?: LessonCommentListRelationFilter
@@ -52080,9 +53391,11 @@ export namespace Prisma {
     displayOrder?: IntFilter<"LessonVideo"> | number
     accessType?: EnumAccessTypeFilter<"LessonVideo"> | $Enums.AccessType
     status?: EnumCourseStatusFilter<"LessonVideo"> | $Enums.CourseStatus
+    viewCount?: IntFilter<"LessonVideo"> | number
     createdAt?: DateTimeFilter<"LessonVideo"> | Date | string
     updatedAt?: DateTimeFilter<"LessonVideo"> | Date | string
     lesson?: XOR<LessonScalarRelationFilter, LessonWhereInput>
+    savedBy?: SavedVideoListRelationFilter
   }
 
   export type LessonVideoOrderByWithRelationInput = {
@@ -52097,9 +53410,11 @@ export namespace Prisma {
     displayOrder?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
+    viewCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     lesson?: LessonOrderByWithRelationInput
+    savedBy?: SavedVideoOrderByRelationAggregateInput
   }
 
   export type LessonVideoWhereUniqueInput = Prisma.AtLeast<{
@@ -52117,9 +53432,11 @@ export namespace Prisma {
     displayOrder?: IntFilter<"LessonVideo"> | number
     accessType?: EnumAccessTypeFilter<"LessonVideo"> | $Enums.AccessType
     status?: EnumCourseStatusFilter<"LessonVideo"> | $Enums.CourseStatus
+    viewCount?: IntFilter<"LessonVideo"> | number
     createdAt?: DateTimeFilter<"LessonVideo"> | Date | string
     updatedAt?: DateTimeFilter<"LessonVideo"> | Date | string
     lesson?: XOR<LessonScalarRelationFilter, LessonWhereInput>
+    savedBy?: SavedVideoListRelationFilter
   }, "id">
 
   export type LessonVideoOrderByWithAggregationInput = {
@@ -52134,6 +53451,7 @@ export namespace Prisma {
     displayOrder?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
+    viewCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: LessonVideoCountOrderByAggregateInput
@@ -52158,6 +53476,7 @@ export namespace Prisma {
     displayOrder?: IntWithAggregatesFilter<"LessonVideo"> | number
     accessType?: EnumAccessTypeWithAggregatesFilter<"LessonVideo"> | $Enums.AccessType
     status?: EnumCourseStatusWithAggregatesFilter<"LessonVideo"> | $Enums.CourseStatus
+    viewCount?: IntWithAggregatesFilter<"LessonVideo"> | number
     createdAt?: DateTimeWithAggregatesFilter<"LessonVideo"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"LessonVideo"> | Date | string
   }
@@ -53037,6 +54356,57 @@ export namespace Prisma {
     userId?: IntWithAggregatesFilter<"SavedLesson"> | number
     lessonId?: IntWithAggregatesFilter<"SavedLesson"> | number
     savedAt?: DateTimeWithAggregatesFilter<"SavedLesson"> | Date | string
+  }
+
+  export type SavedVideoWhereInput = {
+    AND?: SavedVideoWhereInput | SavedVideoWhereInput[]
+    OR?: SavedVideoWhereInput[]
+    NOT?: SavedVideoWhereInput | SavedVideoWhereInput[]
+    userId?: IntFilter<"SavedVideo"> | number
+    videoId?: IntFilter<"SavedVideo"> | number
+    savedAt?: DateTimeFilter<"SavedVideo"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    video?: XOR<LessonVideoScalarRelationFilter, LessonVideoWhereInput>
+  }
+
+  export type SavedVideoOrderByWithRelationInput = {
+    userId?: SortOrder
+    videoId?: SortOrder
+    savedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    video?: LessonVideoOrderByWithRelationInput
+  }
+
+  export type SavedVideoWhereUniqueInput = Prisma.AtLeast<{
+    userId_videoId?: SavedVideoUserIdVideoIdCompoundUniqueInput
+    AND?: SavedVideoWhereInput | SavedVideoWhereInput[]
+    OR?: SavedVideoWhereInput[]
+    NOT?: SavedVideoWhereInput | SavedVideoWhereInput[]
+    userId?: IntFilter<"SavedVideo"> | number
+    videoId?: IntFilter<"SavedVideo"> | number
+    savedAt?: DateTimeFilter<"SavedVideo"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    video?: XOR<LessonVideoScalarRelationFilter, LessonVideoWhereInput>
+  }, "userId_videoId">
+
+  export type SavedVideoOrderByWithAggregationInput = {
+    userId?: SortOrder
+    videoId?: SortOrder
+    savedAt?: SortOrder
+    _count?: SavedVideoCountOrderByAggregateInput
+    _avg?: SavedVideoAvgOrderByAggregateInput
+    _max?: SavedVideoMaxOrderByAggregateInput
+    _min?: SavedVideoMinOrderByAggregateInput
+    _sum?: SavedVideoSumOrderByAggregateInput
+  }
+
+  export type SavedVideoScalarWhereWithAggregatesInput = {
+    AND?: SavedVideoScalarWhereWithAggregatesInput | SavedVideoScalarWhereWithAggregatesInput[]
+    OR?: SavedVideoScalarWhereWithAggregatesInput[]
+    NOT?: SavedVideoScalarWhereWithAggregatesInput | SavedVideoScalarWhereWithAggregatesInput[]
+    userId?: IntWithAggregatesFilter<"SavedVideo"> | number
+    videoId?: IntWithAggregatesFilter<"SavedVideo"> | number
+    savedAt?: DateTimeWithAggregatesFilter<"SavedVideo"> | Date | string
   }
 
   export type LessonProgressWhereInput = {
@@ -54204,6 +55574,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
@@ -54238,6 +55609,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
@@ -54267,6 +55639,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
@@ -54301,6 +55674,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -55179,9 +56553,11 @@ export namespace Prisma {
     displayOrder?: number
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
+    viewCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     lesson: LessonCreateNestedOneWithoutVideosInput
+    savedBy?: SavedVideoCreateNestedManyWithoutVideoInput
   }
 
   export type LessonVideoUncheckedCreateInput = {
@@ -55196,8 +56572,10 @@ export namespace Prisma {
     displayOrder?: number
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
+    viewCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    savedBy?: SavedVideoUncheckedCreateNestedManyWithoutVideoInput
   }
 
   export type LessonVideoUpdateInput = {
@@ -55210,9 +56588,11 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    viewCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     lesson?: LessonUpdateOneRequiredWithoutVideosNestedInput
+    savedBy?: SavedVideoUpdateManyWithoutVideoNestedInput
   }
 
   export type LessonVideoUncheckedUpdateInput = {
@@ -55227,8 +56607,10 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    viewCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    savedBy?: SavedVideoUncheckedUpdateManyWithoutVideoNestedInput
   }
 
   export type LessonVideoCreateManyInput = {
@@ -55243,6 +56625,7 @@ export namespace Prisma {
     displayOrder?: number
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
+    viewCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -55257,6 +56640,7 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    viewCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -55273,6 +56657,7 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    viewCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -56103,6 +57488,46 @@ export namespace Prisma {
   export type SavedLessonUncheckedUpdateManyInput = {
     userId?: IntFieldUpdateOperationsInput | number
     lessonId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedVideoCreateInput = {
+    savedAt?: Date | string
+    user: UserCreateNestedOneWithoutSavedVideosInput
+    video: LessonVideoCreateNestedOneWithoutSavedByInput
+  }
+
+  export type SavedVideoUncheckedCreateInput = {
+    userId: number
+    videoId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedVideoUpdateInput = {
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSavedVideosNestedInput
+    video?: LessonVideoUpdateOneRequiredWithoutSavedByNestedInput
+  }
+
+  export type SavedVideoUncheckedUpdateInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    videoId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedVideoCreateManyInput = {
+    userId: number
+    videoId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedVideoUpdateManyMutationInput = {
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedVideoUncheckedUpdateManyInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    videoId?: IntFieldUpdateOperationsInput | number
     savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -57355,6 +58780,12 @@ export namespace Prisma {
     none?: SavedLessonWhereInput
   }
 
+  export type SavedVideoListRelationFilter = {
+    every?: SavedVideoWhereInput
+    some?: SavedVideoWhereInput
+    none?: SavedVideoWhereInput
+  }
+
   export type LessonProgressListRelationFilter = {
     every?: LessonProgressWhereInput
     some?: LessonProgressWhereInput
@@ -57429,6 +58860,10 @@ export namespace Prisma {
   }
 
   export type SavedLessonOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SavedVideoOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -58286,6 +59721,7 @@ export namespace Prisma {
     displayOrder?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
+    viewCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -58295,6 +59731,7 @@ export namespace Prisma {
     lessonId?: SortOrder
     durationSeconds?: SortOrder
     displayOrder?: SortOrder
+    viewCount?: SortOrder
   }
 
   export type LessonVideoMaxOrderByAggregateInput = {
@@ -58309,6 +59746,7 @@ export namespace Prisma {
     displayOrder?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
+    viewCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -58325,6 +59763,7 @@ export namespace Prisma {
     displayOrder?: SortOrder
     accessType?: SortOrder
     status?: SortOrder
+    viewCount?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -58334,6 +59773,7 @@ export namespace Prisma {
     lessonId?: SortOrder
     durationSeconds?: SortOrder
     displayOrder?: SortOrder
+    viewCount?: SortOrder
   }
 
   export type PlanScalarRelationFilter = {
@@ -59026,6 +60466,44 @@ export namespace Prisma {
   export type SavedLessonSumOrderByAggregateInput = {
     userId?: SortOrder
     lessonId?: SortOrder
+  }
+
+  export type LessonVideoScalarRelationFilter = {
+    is?: LessonVideoWhereInput
+    isNot?: LessonVideoWhereInput
+  }
+
+  export type SavedVideoUserIdVideoIdCompoundUniqueInput = {
+    userId: number
+    videoId: number
+  }
+
+  export type SavedVideoCountOrderByAggregateInput = {
+    userId?: SortOrder
+    videoId?: SortOrder
+    savedAt?: SortOrder
+  }
+
+  export type SavedVideoAvgOrderByAggregateInput = {
+    userId?: SortOrder
+    videoId?: SortOrder
+  }
+
+  export type SavedVideoMaxOrderByAggregateInput = {
+    userId?: SortOrder
+    videoId?: SortOrder
+    savedAt?: SortOrder
+  }
+
+  export type SavedVideoMinOrderByAggregateInput = {
+    userId?: SortOrder
+    videoId?: SortOrder
+    savedAt?: SortOrder
+  }
+
+  export type SavedVideoSumOrderByAggregateInput = {
+    userId?: SortOrder
+    videoId?: SortOrder
   }
 
   export type LessonProgressUserIdLessonIdCompoundUniqueInput = {
@@ -59995,6 +61473,13 @@ export namespace Prisma {
     connect?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
   }
 
+  export type SavedVideoCreateNestedManyWithoutUserInput = {
+    create?: XOR<SavedVideoCreateWithoutUserInput, SavedVideoUncheckedCreateWithoutUserInput> | SavedVideoCreateWithoutUserInput[] | SavedVideoUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SavedVideoCreateOrConnectWithoutUserInput | SavedVideoCreateOrConnectWithoutUserInput[]
+    createMany?: SavedVideoCreateManyUserInputEnvelope
+    connect?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+  }
+
   export type LessonProgressCreateNestedManyWithoutUserInput = {
     create?: XOR<LessonProgressCreateWithoutUserInput, LessonProgressUncheckedCreateWithoutUserInput> | LessonProgressCreateWithoutUserInput[] | LessonProgressUncheckedCreateWithoutUserInput[]
     connectOrCreate?: LessonProgressCreateOrConnectWithoutUserInput | LessonProgressCreateOrConnectWithoutUserInput[]
@@ -60089,6 +61574,13 @@ export namespace Prisma {
     connectOrCreate?: SavedLessonCreateOrConnectWithoutUserInput | SavedLessonCreateOrConnectWithoutUserInput[]
     createMany?: SavedLessonCreateManyUserInputEnvelope
     connect?: SavedLessonWhereUniqueInput | SavedLessonWhereUniqueInput[]
+  }
+
+  export type SavedVideoUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SavedVideoCreateWithoutUserInput, SavedVideoUncheckedCreateWithoutUserInput> | SavedVideoCreateWithoutUserInput[] | SavedVideoUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SavedVideoCreateOrConnectWithoutUserInput | SavedVideoCreateOrConnectWithoutUserInput[]
+    createMany?: SavedVideoCreateManyUserInputEnvelope
+    connect?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
   }
 
   export type LessonProgressUncheckedCreateNestedManyWithoutUserInput = {
@@ -60232,6 +61724,20 @@ export namespace Prisma {
     update?: SavedLessonUpdateWithWhereUniqueWithoutUserInput | SavedLessonUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: SavedLessonUpdateManyWithWhereWithoutUserInput | SavedLessonUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: SavedLessonScalarWhereInput | SavedLessonScalarWhereInput[]
+  }
+
+  export type SavedVideoUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SavedVideoCreateWithoutUserInput, SavedVideoUncheckedCreateWithoutUserInput> | SavedVideoCreateWithoutUserInput[] | SavedVideoUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SavedVideoCreateOrConnectWithoutUserInput | SavedVideoCreateOrConnectWithoutUserInput[]
+    upsert?: SavedVideoUpsertWithWhereUniqueWithoutUserInput | SavedVideoUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SavedVideoCreateManyUserInputEnvelope
+    set?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    disconnect?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    delete?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    connect?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    update?: SavedVideoUpdateWithWhereUniqueWithoutUserInput | SavedVideoUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SavedVideoUpdateManyWithWhereWithoutUserInput | SavedVideoUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SavedVideoScalarWhereInput | SavedVideoScalarWhereInput[]
   }
 
   export type LessonProgressUpdateManyWithoutUserNestedInput = {
@@ -60428,6 +61934,20 @@ export namespace Prisma {
     update?: SavedLessonUpdateWithWhereUniqueWithoutUserInput | SavedLessonUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: SavedLessonUpdateManyWithWhereWithoutUserInput | SavedLessonUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: SavedLessonScalarWhereInput | SavedLessonScalarWhereInput[]
+  }
+
+  export type SavedVideoUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SavedVideoCreateWithoutUserInput, SavedVideoUncheckedCreateWithoutUserInput> | SavedVideoCreateWithoutUserInput[] | SavedVideoUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SavedVideoCreateOrConnectWithoutUserInput | SavedVideoCreateOrConnectWithoutUserInput[]
+    upsert?: SavedVideoUpsertWithWhereUniqueWithoutUserInput | SavedVideoUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SavedVideoCreateManyUserInputEnvelope
+    set?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    disconnect?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    delete?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    connect?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    update?: SavedVideoUpdateWithWhereUniqueWithoutUserInput | SavedVideoUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SavedVideoUpdateManyWithWhereWithoutUserInput | SavedVideoUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SavedVideoScalarWhereInput | SavedVideoScalarWhereInput[]
   }
 
   export type LessonProgressUncheckedUpdateManyWithoutUserNestedInput = {
@@ -61922,12 +63442,54 @@ export namespace Prisma {
     connect?: LessonWhereUniqueInput
   }
 
+  export type SavedVideoCreateNestedManyWithoutVideoInput = {
+    create?: XOR<SavedVideoCreateWithoutVideoInput, SavedVideoUncheckedCreateWithoutVideoInput> | SavedVideoCreateWithoutVideoInput[] | SavedVideoUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: SavedVideoCreateOrConnectWithoutVideoInput | SavedVideoCreateOrConnectWithoutVideoInput[]
+    createMany?: SavedVideoCreateManyVideoInputEnvelope
+    connect?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+  }
+
+  export type SavedVideoUncheckedCreateNestedManyWithoutVideoInput = {
+    create?: XOR<SavedVideoCreateWithoutVideoInput, SavedVideoUncheckedCreateWithoutVideoInput> | SavedVideoCreateWithoutVideoInput[] | SavedVideoUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: SavedVideoCreateOrConnectWithoutVideoInput | SavedVideoCreateOrConnectWithoutVideoInput[]
+    createMany?: SavedVideoCreateManyVideoInputEnvelope
+    connect?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+  }
+
   export type LessonUpdateOneRequiredWithoutVideosNestedInput = {
     create?: XOR<LessonCreateWithoutVideosInput, LessonUncheckedCreateWithoutVideosInput>
     connectOrCreate?: LessonCreateOrConnectWithoutVideosInput
     upsert?: LessonUpsertWithoutVideosInput
     connect?: LessonWhereUniqueInput
     update?: XOR<XOR<LessonUpdateToOneWithWhereWithoutVideosInput, LessonUpdateWithoutVideosInput>, LessonUncheckedUpdateWithoutVideosInput>
+  }
+
+  export type SavedVideoUpdateManyWithoutVideoNestedInput = {
+    create?: XOR<SavedVideoCreateWithoutVideoInput, SavedVideoUncheckedCreateWithoutVideoInput> | SavedVideoCreateWithoutVideoInput[] | SavedVideoUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: SavedVideoCreateOrConnectWithoutVideoInput | SavedVideoCreateOrConnectWithoutVideoInput[]
+    upsert?: SavedVideoUpsertWithWhereUniqueWithoutVideoInput | SavedVideoUpsertWithWhereUniqueWithoutVideoInput[]
+    createMany?: SavedVideoCreateManyVideoInputEnvelope
+    set?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    disconnect?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    delete?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    connect?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    update?: SavedVideoUpdateWithWhereUniqueWithoutVideoInput | SavedVideoUpdateWithWhereUniqueWithoutVideoInput[]
+    updateMany?: SavedVideoUpdateManyWithWhereWithoutVideoInput | SavedVideoUpdateManyWithWhereWithoutVideoInput[]
+    deleteMany?: SavedVideoScalarWhereInput | SavedVideoScalarWhereInput[]
+  }
+
+  export type SavedVideoUncheckedUpdateManyWithoutVideoNestedInput = {
+    create?: XOR<SavedVideoCreateWithoutVideoInput, SavedVideoUncheckedCreateWithoutVideoInput> | SavedVideoCreateWithoutVideoInput[] | SavedVideoUncheckedCreateWithoutVideoInput[]
+    connectOrCreate?: SavedVideoCreateOrConnectWithoutVideoInput | SavedVideoCreateOrConnectWithoutVideoInput[]
+    upsert?: SavedVideoUpsertWithWhereUniqueWithoutVideoInput | SavedVideoUpsertWithWhereUniqueWithoutVideoInput[]
+    createMany?: SavedVideoCreateManyVideoInputEnvelope
+    set?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    disconnect?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    delete?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    connect?: SavedVideoWhereUniqueInput | SavedVideoWhereUniqueInput[]
+    update?: SavedVideoUpdateWithWhereUniqueWithoutVideoInput | SavedVideoUpdateWithWhereUniqueWithoutVideoInput[]
+    updateMany?: SavedVideoUpdateManyWithWhereWithoutVideoInput | SavedVideoUpdateManyWithWhereWithoutVideoInput[]
+    deleteMany?: SavedVideoScalarWhereInput | SavedVideoScalarWhereInput[]
   }
 
   export type LessonCreateNestedOneWithoutLessonPlansInput = {
@@ -62731,6 +64293,34 @@ export namespace Prisma {
     upsert?: LessonUpsertWithoutSavedByInput
     connect?: LessonWhereUniqueInput
     update?: XOR<XOR<LessonUpdateToOneWithWhereWithoutSavedByInput, LessonUpdateWithoutSavedByInput>, LessonUncheckedUpdateWithoutSavedByInput>
+  }
+
+  export type UserCreateNestedOneWithoutSavedVideosInput = {
+    create?: XOR<UserCreateWithoutSavedVideosInput, UserUncheckedCreateWithoutSavedVideosInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSavedVideosInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type LessonVideoCreateNestedOneWithoutSavedByInput = {
+    create?: XOR<LessonVideoCreateWithoutSavedByInput, LessonVideoUncheckedCreateWithoutSavedByInput>
+    connectOrCreate?: LessonVideoCreateOrConnectWithoutSavedByInput
+    connect?: LessonVideoWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutSavedVideosNestedInput = {
+    create?: XOR<UserCreateWithoutSavedVideosInput, UserUncheckedCreateWithoutSavedVideosInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSavedVideosInput
+    upsert?: UserUpsertWithoutSavedVideosInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSavedVideosInput, UserUpdateWithoutSavedVideosInput>, UserUncheckedUpdateWithoutSavedVideosInput>
+  }
+
+  export type LessonVideoUpdateOneRequiredWithoutSavedByNestedInput = {
+    create?: XOR<LessonVideoCreateWithoutSavedByInput, LessonVideoUncheckedCreateWithoutSavedByInput>
+    connectOrCreate?: LessonVideoCreateOrConnectWithoutSavedByInput
+    upsert?: LessonVideoUpsertWithoutSavedByInput
+    connect?: LessonVideoWhereUniqueInput
+    update?: XOR<XOR<LessonVideoUpdateToOneWithWhereWithoutSavedByInput, LessonVideoUpdateWithoutSavedByInput>, LessonVideoUncheckedUpdateWithoutSavedByInput>
   }
 
   export type UserCreateNestedOneWithoutLessonProgressInput = {
@@ -64032,6 +65622,26 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SavedVideoCreateWithoutUserInput = {
+    savedAt?: Date | string
+    video: LessonVideoCreateNestedOneWithoutSavedByInput
+  }
+
+  export type SavedVideoUncheckedCreateWithoutUserInput = {
+    videoId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedVideoCreateOrConnectWithoutUserInput = {
+    where: SavedVideoWhereUniqueInput
+    create: XOR<SavedVideoCreateWithoutUserInput, SavedVideoUncheckedCreateWithoutUserInput>
+  }
+
+  export type SavedVideoCreateManyUserInputEnvelope = {
+    data: SavedVideoCreateManyUserInput | SavedVideoCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type LessonProgressCreateWithoutUserInput = {
     completed?: boolean
     lastPositionSeconds?: number
@@ -64450,6 +66060,31 @@ export namespace Prisma {
     userId?: IntFilter<"SavedLesson"> | number
     lessonId?: IntFilter<"SavedLesson"> | number
     savedAt?: DateTimeFilter<"SavedLesson"> | Date | string
+  }
+
+  export type SavedVideoUpsertWithWhereUniqueWithoutUserInput = {
+    where: SavedVideoWhereUniqueInput
+    update: XOR<SavedVideoUpdateWithoutUserInput, SavedVideoUncheckedUpdateWithoutUserInput>
+    create: XOR<SavedVideoCreateWithoutUserInput, SavedVideoUncheckedCreateWithoutUserInput>
+  }
+
+  export type SavedVideoUpdateWithWhereUniqueWithoutUserInput = {
+    where: SavedVideoWhereUniqueInput
+    data: XOR<SavedVideoUpdateWithoutUserInput, SavedVideoUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SavedVideoUpdateManyWithWhereWithoutUserInput = {
+    where: SavedVideoScalarWhereInput
+    data: XOR<SavedVideoUpdateManyMutationInput, SavedVideoUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type SavedVideoScalarWhereInput = {
+    AND?: SavedVideoScalarWhereInput | SavedVideoScalarWhereInput[]
+    OR?: SavedVideoScalarWhereInput[]
+    NOT?: SavedVideoScalarWhereInput | SavedVideoScalarWhereInput[]
+    userId?: IntFilter<"SavedVideo"> | number
+    videoId?: IntFilter<"SavedVideo"> | number
+    savedAt?: DateTimeFilter<"SavedVideo"> | Date | string
   }
 
   export type LessonProgressUpsertWithWhereUniqueWithoutUserInput = {
@@ -65452,6 +67087,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
@@ -65485,6 +67121,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
@@ -65529,6 +67166,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
@@ -65562,6 +67200,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -65719,6 +67358,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
@@ -65751,6 +67391,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
@@ -66353,6 +67994,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
@@ -66385,6 +68027,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
@@ -67184,8 +68827,10 @@ export namespace Prisma {
     displayOrder?: number
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
+    viewCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    savedBy?: SavedVideoCreateNestedManyWithoutVideoInput
   }
 
   export type LessonVideoUncheckedCreateWithoutLessonInput = {
@@ -67199,8 +68844,10 @@ export namespace Prisma {
     displayOrder?: number
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
+    viewCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
+    savedBy?: SavedVideoUncheckedCreateNestedManyWithoutVideoInput
   }
 
   export type LessonVideoCreateOrConnectWithoutLessonInput = {
@@ -67402,6 +69049,7 @@ export namespace Prisma {
     displayOrder?: IntFilter<"LessonVideo"> | number
     accessType?: EnumAccessTypeFilter<"LessonVideo"> | $Enums.AccessType
     status?: EnumCourseStatusFilter<"LessonVideo"> | $Enums.CourseStatus
+    viewCount?: IntFilter<"LessonVideo"> | number
     createdAt?: DateTimeFilter<"LessonVideo"> | Date | string
     updatedAt?: DateTimeFilter<"LessonVideo"> | Date | string
   }
@@ -67468,6 +69116,26 @@ export namespace Prisma {
   export type LessonCreateOrConnectWithoutVideosInput = {
     where: LessonWhereUniqueInput
     create: XOR<LessonCreateWithoutVideosInput, LessonUncheckedCreateWithoutVideosInput>
+  }
+
+  export type SavedVideoCreateWithoutVideoInput = {
+    savedAt?: Date | string
+    user: UserCreateNestedOneWithoutSavedVideosInput
+  }
+
+  export type SavedVideoUncheckedCreateWithoutVideoInput = {
+    userId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedVideoCreateOrConnectWithoutVideoInput = {
+    where: SavedVideoWhereUniqueInput
+    create: XOR<SavedVideoCreateWithoutVideoInput, SavedVideoUncheckedCreateWithoutVideoInput>
+  }
+
+  export type SavedVideoCreateManyVideoInputEnvelope = {
+    data: SavedVideoCreateManyVideoInput | SavedVideoCreateManyVideoInput[]
+    skipDuplicates?: boolean
   }
 
   export type LessonUpsertWithoutVideosInput = {
@@ -67538,6 +69206,22 @@ export namespace Prisma {
     progress?: LessonProgressUncheckedUpdateManyWithoutLessonNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutLessonNestedInput
     rapidRecalls?: RapidRecallUncheckedUpdateManyWithoutLessonNestedInput
+  }
+
+  export type SavedVideoUpsertWithWhereUniqueWithoutVideoInput = {
+    where: SavedVideoWhereUniqueInput
+    update: XOR<SavedVideoUpdateWithoutVideoInput, SavedVideoUncheckedUpdateWithoutVideoInput>
+    create: XOR<SavedVideoCreateWithoutVideoInput, SavedVideoUncheckedCreateWithoutVideoInput>
+  }
+
+  export type SavedVideoUpdateWithWhereUniqueWithoutVideoInput = {
+    where: SavedVideoWhereUniqueInput
+    data: XOR<SavedVideoUpdateWithoutVideoInput, SavedVideoUncheckedUpdateWithoutVideoInput>
+  }
+
+  export type SavedVideoUpdateManyWithWhereWithoutVideoInput = {
+    where: SavedVideoScalarWhereInput
+    data: XOR<SavedVideoUpdateManyMutationInput, SavedVideoUncheckedUpdateManyWithoutVideoInput>
   }
 
   export type LessonCreateWithoutLessonPlansInput = {
@@ -67968,6 +69652,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
@@ -68001,6 +69686,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
@@ -68137,6 +69823,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
@@ -68170,6 +69857,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -69349,6 +71037,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
@@ -69382,6 +71071,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
@@ -69484,6 +71174,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
@@ -69517,6 +71208,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -69665,6 +71357,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
@@ -69698,6 +71391,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
@@ -69784,6 +71478,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
@@ -69817,6 +71512,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -69893,6 +71589,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
@@ -69926,6 +71623,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
@@ -70034,6 +71732,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
@@ -70067,6 +71766,7 @@ export namespace Prisma {
     subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -70146,6 +71846,230 @@ export namespace Prisma {
     videos?: LessonVideoUncheckedUpdateManyWithoutLessonNestedInput
   }
 
+  export type UserCreateWithoutSavedVideosInput = {
+    email: string
+    password?: string | null
+    name?: string | null
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    emailOtpHash?: string | null
+    emailOtpExpiresAt?: Date | string | null
+    emailOtpAttempts?: number
+    emailOtpSentAt?: Date | string | null
+    updatedAt?: Date | string
+    notificationsReadAt?: Date | string | null
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
+    quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
+    testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
+    comments?: LessonCommentCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptCreateNestedManyWithoutUserInput
+    fcmTokens?: FcmTokenCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    selectedCourse?: CourseCreateNestedOneWithoutSelectedByInput
+    selectedCourseType?: CourseTypeCreateNestedOneWithoutSelectedByInput
+  }
+
+  export type UserUncheckedCreateWithoutSavedVideosInput = {
+    id?: number
+    email: string
+    password?: string | null
+    name?: string | null
+    phone?: string | null
+    avatarUrl?: string | null
+    role?: string
+    status?: string
+    createdAt?: Date | string
+    emailOtpHash?: string | null
+    emailOtpExpiresAt?: Date | string | null
+    emailOtpAttempts?: number
+    emailOtpSentAt?: Date | string | null
+    updatedAt?: Date | string
+    notificationsReadAt?: Date | string | null
+    selectedCourseId?: number | null
+    selectedCourseTypeId?: number | null
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
+    quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
+    savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
+    savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
+    testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
+    comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
+    commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedCreateNestedManyWithoutUserInput
+    fcmTokens?: FcmTokenUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSavedVideosInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSavedVideosInput, UserUncheckedCreateWithoutSavedVideosInput>
+  }
+
+  export type LessonVideoCreateWithoutSavedByInput = {
+    title?: string | null
+    description?: string | null
+    videoUrl: string
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    durationSeconds?: number | null
+    displayOrder?: number
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    viewCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    lesson: LessonCreateNestedOneWithoutVideosInput
+  }
+
+  export type LessonVideoUncheckedCreateWithoutSavedByInput = {
+    id?: number
+    lessonId: number
+    title?: string | null
+    description?: string | null
+    videoUrl: string
+    videoPublicId?: string | null
+    thumbnailUrl?: string | null
+    durationSeconds?: number | null
+    displayOrder?: number
+    accessType?: $Enums.AccessType
+    status?: $Enums.CourseStatus
+    viewCount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LessonVideoCreateOrConnectWithoutSavedByInput = {
+    where: LessonVideoWhereUniqueInput
+    create: XOR<LessonVideoCreateWithoutSavedByInput, LessonVideoUncheckedCreateWithoutSavedByInput>
+  }
+
+  export type UserUpsertWithoutSavedVideosInput = {
+    update: XOR<UserUpdateWithoutSavedVideosInput, UserUncheckedUpdateWithoutSavedVideosInput>
+    create: XOR<UserCreateWithoutSavedVideosInput, UserUncheckedCreateWithoutSavedVideosInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSavedVideosInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSavedVideosInput, UserUncheckedUpdateWithoutSavedVideosInput>
+  }
+
+  export type UserUpdateWithoutSavedVideosInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailOtpHash?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOtpExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailOtpAttempts?: IntFieldUpdateOperationsInput | number
+    emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
+    quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
+    testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUpdateManyWithoutUserNestedInput
+    fcmTokens?: FcmTokenUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    selectedCourse?: CourseUpdateOneWithoutSelectedByNestedInput
+    selectedCourseType?: CourseTypeUpdateOneWithoutSelectedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSavedVideosInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailOtpHash?: NullableStringFieldUpdateOperationsInput | string | null
+    emailOtpExpiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailOtpAttempts?: IntFieldUpdateOperationsInput | number
+    emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
+    selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+    savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
+    savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
+    testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
+    comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
+    commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
+    dailyQuizzes?: DailyQuizAttemptUncheckedUpdateManyWithoutUserNestedInput
+    fcmTokens?: FcmTokenUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type LessonVideoUpsertWithoutSavedByInput = {
+    update: XOR<LessonVideoUpdateWithoutSavedByInput, LessonVideoUncheckedUpdateWithoutSavedByInput>
+    create: XOR<LessonVideoCreateWithoutSavedByInput, LessonVideoUncheckedCreateWithoutSavedByInput>
+    where?: LessonVideoWhereInput
+  }
+
+  export type LessonVideoUpdateToOneWithWhereWithoutSavedByInput = {
+    where?: LessonVideoWhereInput
+    data: XOR<LessonVideoUpdateWithoutSavedByInput, LessonVideoUncheckedUpdateWithoutSavedByInput>
+  }
+
+  export type LessonVideoUpdateWithoutSavedByInput = {
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    videoUrl?: StringFieldUpdateOperationsInput | string
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    viewCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lesson?: LessonUpdateOneRequiredWithoutVideosNestedInput
+  }
+
+  export type LessonVideoUncheckedUpdateWithoutSavedByInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    lessonId?: IntFieldUpdateOperationsInput | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    videoUrl?: StringFieldUpdateOperationsInput | string
+    videoPublicId?: NullableStringFieldUpdateOperationsInput | string | null
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
+    displayOrder?: IntFieldUpdateOperationsInput | number
+    accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    viewCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UserCreateWithoutLessonProgressInput = {
     email: string
     password?: string | null
@@ -70166,6 +72090,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
     commentReports?: CommentReportCreateNestedManyWithoutUserInput
@@ -70199,6 +72124,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
     commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
@@ -70307,6 +72233,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUpdateManyWithoutUserNestedInput
@@ -70340,6 +72267,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
@@ -71062,6 +72990,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
     commentReports?: CommentReportCreateNestedManyWithoutUserInput
@@ -71095,6 +73024,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
     commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
@@ -71209,6 +73139,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUpdateManyWithoutUserNestedInput
@@ -71242,6 +73173,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
@@ -71564,6 +73496,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     commentReports?: CommentReportCreateNestedManyWithoutUserInput
@@ -71597,6 +73530,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     commentReports?: CommentReportUncheckedCreateNestedManyWithoutUserInput
@@ -71833,6 +73767,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUpdateManyWithoutUserNestedInput
@@ -71866,6 +73801,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     commentReports?: CommentReportUncheckedUpdateManyWithoutUserNestedInput
@@ -72030,6 +73966,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
@@ -72063,6 +74000,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
@@ -72145,6 +74083,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
@@ -72178,6 +74117,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -72206,6 +74146,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
@@ -72239,6 +74180,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
@@ -72359,6 +74301,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
@@ -72392,6 +74335,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -73132,6 +75076,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
@@ -73165,6 +75110,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
@@ -73209,6 +75155,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
@@ -73242,6 +75189,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -73270,6 +75218,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptCreateNestedManyWithoutUserInput
     comments?: LessonCommentCreateNestedManyWithoutUserInput
@@ -73303,6 +75252,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedCreateNestedManyWithoutUserInput
     savedQuestions?: SavedQuestionUncheckedCreateNestedManyWithoutUserInput
     savedLessons?: SavedLessonUncheckedCreateNestedManyWithoutUserInput
+    savedVideos?: SavedVideoUncheckedCreateNestedManyWithoutUserInput
     lessonProgress?: LessonProgressUncheckedCreateNestedManyWithoutUserInput
     testAttempts?: TestAttemptUncheckedCreateNestedManyWithoutUserInput
     comments?: LessonCommentUncheckedCreateNestedManyWithoutUserInput
@@ -73347,6 +75297,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
@@ -73380,6 +75331,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -73423,6 +75375,11 @@ export namespace Prisma {
 
   export type SavedLessonCreateManyUserInput = {
     lessonId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedVideoCreateManyUserInput = {
+    videoId: number
     savedAt?: Date | string
   }
 
@@ -73599,6 +75556,21 @@ export namespace Prisma {
 
   export type SavedLessonUncheckedUpdateManyWithoutUserInput = {
     lessonId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedVideoUpdateWithoutUserInput = {
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    video?: LessonVideoUpdateOneRequiredWithoutSavedByNestedInput
+  }
+
+  export type SavedVideoUncheckedUpdateWithoutUserInput = {
+    videoId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedVideoUncheckedUpdateManyWithoutUserInput = {
+    videoId?: IntFieldUpdateOperationsInput | number
     savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -74550,6 +76522,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
@@ -74582,6 +76555,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -74941,6 +76915,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUpdateManyWithoutUserNestedInput
@@ -74973,6 +76948,7 @@ export namespace Prisma {
     quizAttempts?: QuizAttemptUncheckedUpdateManyWithoutUserNestedInput
     savedQuestions?: SavedQuestionUncheckedUpdateManyWithoutUserNestedInput
     savedLessons?: SavedLessonUncheckedUpdateManyWithoutUserNestedInput
+    savedVideos?: SavedVideoUncheckedUpdateManyWithoutUserNestedInput
     lessonProgress?: LessonProgressUncheckedUpdateManyWithoutUserNestedInput
     testAttempts?: TestAttemptUncheckedUpdateManyWithoutUserNestedInput
     comments?: LessonCommentUncheckedUpdateManyWithoutUserNestedInput
@@ -75341,6 +77317,7 @@ export namespace Prisma {
     displayOrder?: number
     accessType?: $Enums.AccessType
     status?: $Enums.CourseStatus
+    viewCount?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -75494,8 +77471,10 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    viewCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    savedBy?: SavedVideoUpdateManyWithoutVideoNestedInput
   }
 
   export type LessonVideoUncheckedUpdateWithoutLessonInput = {
@@ -75509,8 +77488,10 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    viewCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    savedBy?: SavedVideoUncheckedUpdateManyWithoutVideoNestedInput
   }
 
   export type LessonVideoUncheckedUpdateManyWithoutLessonInput = {
@@ -75524,8 +77505,29 @@ export namespace Prisma {
     displayOrder?: IntFieldUpdateOperationsInput | number
     accessType?: EnumAccessTypeFieldUpdateOperationsInput | $Enums.AccessType
     status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    viewCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedVideoCreateManyVideoInput = {
+    userId: number
+    savedAt?: Date | string
+  }
+
+  export type SavedVideoUpdateWithoutVideoInput = {
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSavedVideosNestedInput
+  }
+
+  export type SavedVideoUncheckedUpdateWithoutVideoInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SavedVideoUncheckedUpdateManyWithoutVideoInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    savedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SubscriptionCreateManyPlanInput = {

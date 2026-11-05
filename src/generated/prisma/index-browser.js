@@ -259,6 +259,7 @@ exports.Prisma.LessonVideoScalarFieldEnum = {
   displayOrder: 'displayOrder',
   accessType: 'accessType',
   status: 'status',
+  viewCount: 'viewCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -378,6 +379,12 @@ exports.Prisma.SavedQuestionScalarFieldEnum = {
 exports.Prisma.SavedLessonScalarFieldEnum = {
   userId: 'userId',
   lessonId: 'lessonId',
+  savedAt: 'savedAt'
+};
+
+exports.Prisma.SavedVideoScalarFieldEnum = {
+  userId: 'userId',
+  videoId: 'videoId',
   savedAt: 'savedAt'
 };
 
@@ -634,6 +641,7 @@ exports.Prisma.ModelName = {
   AttemptAnswer: 'AttemptAnswer',
   SavedQuestion: 'SavedQuestion',
   SavedLesson: 'SavedLesson',
+  SavedVideo: 'SavedVideo',
   LessonProgress: 'LessonProgress',
   Test: 'Test',
   TestQuestion: 'TestQuestion',

@@ -277,7 +277,10 @@ async function getSelectedCourseContent(req, res) {
             // Draft videos are the admin's work in progress, never a student's.
             videos: {
               where: { status: 'published' },
-              select: { id: true, title: true, videoUrl: true, durationSeconds: true, accessType: true, displayOrder: true },
+              select: {
+                id: true, title: true, description: true, videoUrl: true, thumbnailUrl: true,
+                durationSeconds: true, accessType: true, displayOrder: true, viewCount: true,
+              },
               orderBy: { displayOrder: 'asc' },
             },
             quizId: true,
@@ -296,7 +299,9 @@ async function getSelectedCourseContent(req, res) {
       ch.lessons.filter((l) => l.type === 'quiz').map((l) => l.id));
     const allLessonIds = chapters.flatMap((ch) => ch.lessons.map((l) => l.id));
 
-    const [attemptByLesson, progressRows, savedRows] = await Promise.all([
+    const allVideoIds = chapters.flatMap((ch) => ch.lessons.flatMap((l) => l.videos.map((v) => v.id)));
+
+    const [attemptByLesson, progressRows, savedRows, savedVideoRows] = await Promise.all([
       attemptStatusByLesson(userId, quizLessonIds),
       prisma.lessonProgress.findMany({
         where: { userId, lessonId: { in: allLessonIds } },
@@ -308,7 +313,13 @@ async function getSelectedCourseContent(req, res) {
         where: { userId, lessonId: { in: allLessonIds } },
         select: { lessonId: true },
       }),
+      // Same for the per-video bookmark on each row of a lesson's video list.
+      prisma.savedVideo.findMany({
+        where: { userId, videoId: { in: allVideoIds } },
+        select: { videoId: true },
+      }),
     ]);
+    const savedVideoIds = new Set(savedVideoRows.map((r) => r.videoId));
     const progressByLesson = new Map(progressRows.map((p) => [p.lessonId, p]));
     const savedLessonIds = new Set(savedRows.map((r) => r.lessonId));
 
@@ -323,6 +334,7 @@ async function getSelectedCourseContent(req, res) {
         const p = progressByLesson.get(l.id);
         const base = {
           ...rest,
+          videos: rest.videos.map((v) => ({ ...v, isSaved: savedVideoIds.has(v.id) })),
           plans,
           planIds: plans.map((x) => x.id),
           attempt,
@@ -411,7 +423,7 @@ async function getStudentLesson(req, res) {
           where: { status: 'published' },
           select: {
             id: true, title: true, description: true, videoUrl: true, thumbnailUrl: true,
-            durationSeconds: true, displayOrder: true, accessType: true,
+            durationSeconds: true, displayOrder: true, accessType: true, viewCount: true,
           },
           orderBy: { displayOrder: 'asc' },
         },
@@ -475,7 +487,7 @@ async function getStudentLesson(req, res) {
     // The player seeks to this on open. The tree carries it too, but this is
     // the call made when a lesson is opened from a deep link or a bookmark,
     // where no tree was loaded — without it those routes always restart at 0.
-    const [progress, saved] = await Promise.all([
+    const [progress, saved, savedVideoRows] = await Promise.all([
       prisma.lessonProgress.findUnique({
         where: { userId_lessonId: { userId, lessonId } },
         select: { completed: true, lastPositionSeconds: true, updatedAt: true },
@@ -484,10 +496,16 @@ async function getStudentLesson(req, res) {
         where: { userId_lessonId: { userId, lessonId } },
         select: { savedAt: true },
       }),
+      prisma.savedVideo.findMany({
+        where: { userId, videoId: { in: rest.videos.map((v) => v.id) } },
+        select: { videoId: true },
+      }),
     ]);
+    const savedVideoIds = new Set(savedVideoRows.map((r) => r.videoId));
 
     const base = {
       ...rest,
+      videos: rest.videos.map((v) => ({ ...v, isSaved: savedVideoIds.has(v.id) })),
       plans: requiredPlans,
       planIds: requiredPlans.map((p) => p.id),
       // Outside the lock strip below: a resume point is not media, and a
@@ -525,6 +543,34 @@ async function getStudentLesson(req, res) {
   } catch (error) {
     console.error('getStudentLesson error:', error);
     return res.status(500).json({ error: { message: 'Failed to load lesson' } });
+  }
+}
+
+
+// POST /api/users/me/lesson-videos/:id/view
+// Counts one play, for the "18.4k views" under a video. The app calls it once
+// when a video starts. Only published videos in published lessons count.
+//
+// ponytail: not deduplicated — a student replaying a video counts again. A
+// per-student-per-day table is the upgrade if the number needs to mean people.
+async function recordVideoView(req, res) {
+  try {
+    const videoId = Number(req.params.id);
+    if (!Number.isInteger(videoId)) {
+      return res.status(400).json({ error: { message: 'Invalid video id' } });
+    }
+
+    const { count } = await prisma.lessonVideo.updateMany({
+      where: { id: videoId, status: 'published', lesson: { status: 'published' } },
+      data: { viewCount: { increment: 1 } },
+    });
+    if (count === 0) return res.status(404).json({ error: { message: 'Video not found' } });
+
+    const video = await prisma.lessonVideo.findUnique({ where: { id: videoId }, select: { viewCount: true } });
+    return res.status(200).json({ videoId, viewCount: video.viewCount });
+  } catch (error) {
+    console.error('recordVideoView error:', error);
+    return res.status(500).json({ error: { message: 'Failed to record the view' } });
   }
 }
 
@@ -741,6 +787,7 @@ module.exports = {
   lessonDone,
   getSelectedCourseContent,
   getStudentLesson,
+  recordVideoView,
   getStudentQuizQuestions,
   submitStudentQuiz,
   // Reused by quizAttempt.controller.js so the attempt flow runs the same gates.
