@@ -358,6 +358,18 @@ const OTP_TTL_MS = 10 * 60 * 1000;
 const OTP_MAX_ATTEMPTS = 5;
 const OTP_RESEND_COOLDOWN_MS = 60 * 1000;
 
+// The once-a-minute limit only holds while the last code is still usable.
+// Once it has been used or has expired there is nothing to wait for:
+// verifying a signup and then logging in at once must get a fresh code.
+function codeRecentlySent(user) {
+  return Boolean(
+    user?.emailOtpHash &&
+    user.emailOtpExpiresAt > new Date() &&
+    user.emailOtpSentAt &&
+    Date.now() - user.emailOtpSentAt.getTime() < OTP_RESEND_COOLDOWN_MS
+  );
+}
+
 // A fresh code replaces any earlier one and resets the guess count.
 async function issueOtp(user) {
   const code = generateOtp();
@@ -439,6 +451,9 @@ async function register(req, res) {
 }
 
 // POST /api/auth/login  { email, password, deviceId }
+// The right password is only half a login: it emails a code, and
+// /login/verify-otp exchanges the code for a session. Calling this again
+// re-sends the code, at most once a minute.
 async function login(req, res) {
   try {
     const email = normaliseEmail(req.body.email);
@@ -483,11 +498,48 @@ async function login(req, res) {
       });
     }
 
-    return await startSession(res, user, deviceId, false);
+    const coolingDown = codeRecentlySent(user);
+    if (!coolingDown) await issueOtp(user);
+
+    return res.status(200).json({
+      otpRequired: true,
+      message: 'We emailed you a 6-digit code.',
+      otpExpiresInSeconds: OTP_TTL_MS / 1000,
+      resendAfterSeconds: OTP_RESEND_COOLDOWN_MS / 1000,
+    });
   } catch (err) {
     console.error('login error:', err);
     return res.status(500).json({ error: { message: 'Could not log in', status: 500 } });
   }
+}
+
+// Whether `code` is the live code for `user`: null when it is, otherwise the
+// reply to send. Shared by signup verification and password reset.
+async function checkOtp(user, code) {
+  if (!user || !user.emailOtpHash || user.emailOtpExpiresAt < new Date()) {
+    return { status: 400, body: { error: { code: 'OTP_EXPIRED', message: 'This code has expired. Ask for a new one.', status: 400 } } };
+  }
+
+  // The guess is counted before it is checked, and only while under the
+  // limit, so parallel requests cannot squeeze in extra guesses.
+  const { count } = await prisma.user.updateMany({
+    where: { id: user.id, emailOtpAttempts: { lt: OTP_MAX_ATTEMPTS } },
+    data: { emailOtpAttempts: { increment: 1 } },
+  });
+  if (count === 0) {
+    return { status: 429, body: { error: { code: 'OTP_LOCKED', message: 'Too many wrong codes. Ask for a new one.', status: 429 } } };
+  }
+
+  if (!otpMatches(user.id, code, user.emailOtpHash)) {
+    return {
+      status: 400,
+      body: {
+        error: { code: 'INVALID_OTP', message: 'That code is not right.', status: 400 },
+        attemptsLeft: Math.max(0, OTP_MAX_ATTEMPTS - user.emailOtpAttempts - 1),
+      },
+    };
+  }
+  return null;
 }
 
 // POST /api/auth/verify-otp  { email, code, deviceId? }
@@ -515,31 +567,8 @@ async function verifyOtp(req, res) {
         error: { code: 'ACCOUNT_DEACTIVATED', message: 'Your account has been deactivated. Please contact support.', status: 403 },
       });
     }
-    if (!user || !user.emailOtpHash || user.emailOtpExpiresAt < new Date()) {
-      return res.status(400).json({
-        error: { code: 'OTP_EXPIRED', message: 'This code has expired. Ask for a new one.', status: 400 },
-      });
-    }
-
-    // The guess is counted before it is checked, and only while under the
-    // limit, so parallel requests cannot squeeze in extra guesses.
-    const { count } = await prisma.user.updateMany({
-      where: { id: user.id, emailOtpAttempts: { lt: OTP_MAX_ATTEMPTS } },
-      data: { emailOtpAttempts: { increment: 1 } },
-    });
-    if (count === 0) {
-      return res.status(429).json({
-        error: { code: 'OTP_LOCKED', message: 'Too many wrong codes. Ask for a new one.', status: 429 },
-      });
-    }
-
-    if (!otpMatches(user.id, code, user.emailOtpHash)) {
-      const attemptsLeft = OTP_MAX_ATTEMPTS - user.emailOtpAttempts - 1;
-      return res.status(400).json({
-        error: { code: 'INVALID_OTP', message: 'That code is not right.', status: 400 },
-        attemptsLeft: Math.max(0, attemptsLeft),
-      });
-    }
+    const refused = await checkOtp(user, code);
+    if (refused) return res.status(refused.status).json(refused.body);
 
     const verified = await prisma.user.update({
       where: { id: user.id },
@@ -564,9 +593,9 @@ async function resendOtp(req, res) {
     const email = normaliseEmail(req.body.email);
     const user = email && await prisma.user.findUnique({
       where: { email },
-      select: { id: true, email: true, status: true, password: true, emailOtpSentAt: true },
+      select: { id: true, email: true, status: true, password: true, emailOtpSentAt: true, emailOtpHash: true, emailOtpExpiresAt: true },
     });
-    const coolingDown = user?.emailOtpSentAt && Date.now() - user.emailOtpSentAt.getTime() < OTP_RESEND_COOLDOWN_MS;
+    const coolingDown = codeRecentlySent(user);
     if (user && user.status === 'unverified' && user.password && !coolingDown) {
       await issueOtp(user);
     }
@@ -579,6 +608,129 @@ async function resendOtp(req, res) {
   } catch (err) {
     console.error('resendOtp error:', err);
     return res.status(500).json({ error: { message: 'Could not send the code', status: 500 } });
+  }
+}
+
+// POST /api/auth/login/verify-otp  { email, code, deviceId }
+// The second half of an email login: the code from /login, for a session.
+async function verifyLoginOtp(req, res) {
+  try {
+    const email = normaliseEmail(req.body.email);
+    const code = String(req.body.code ?? '').trim();
+    const { deviceId } = req.body;
+
+    if (!email || !/^\d{6}$/.test(code)) {
+      return res.status(400).json({
+        error: { code: 'INVALID_OTP', message: 'Enter the 6-digit code from the email', status: 400 },
+      });
+    }
+    if (!deviceId) {
+      return res.status(400).json({ error: { message: 'deviceId is required', status: 400 } });
+    }
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (user?.status === 'blocked') {
+      return res.status(403).json({
+        error: { code: 'ACCOUNT_DEACTIVATED', message: 'Your account has been deactivated. Please contact support.', status: 403 },
+      });
+    }
+    if (user?.status === 'unverified') {
+      return res.status(403).json({
+        error: { code: 'EMAIL_NOT_VERIFIED', message: 'Please verify your email first.', status: 403 },
+      });
+    }
+    const refused = await checkOtp(user, code);
+    if (refused) return res.status(refused.status).json(refused.body);
+
+    const signedIn = await prisma.user.update({
+      where: { id: user.id },
+      data: { emailOtpHash: null, emailOtpExpiresAt: null, emailOtpAttempts: 0 },
+    });
+    return await startSession(res, signedIn, deviceId, false);
+  } catch (err) {
+    console.error('verifyLoginOtp error:', err);
+    return res.status(500).json({ error: { message: 'Could not verify the code', status: 500 } });
+  }
+}
+
+// POST /api/auth/forgot-password  { email }
+// Emails a code that /reset-password exchanges for a new password. Works for
+// Google accounts too, which is how they add a password.
+async function forgotPassword(req, res) {
+  try {
+    const email = normaliseEmail(req.body.email);
+    const user = email && await prisma.user.findUnique({
+      where: { email },
+      select: { id: true, email: true, status: true, emailOtpSentAt: true, emailOtpHash: true, emailOtpExpiresAt: true },
+    });
+    const coolingDown = codeRecentlySent(user);
+    if (user && user.status !== 'blocked' && !coolingDown) {
+      await issueOtp(user);
+    }
+    // The same reply either way, so this cannot be used to probe for accounts.
+    return res.status(200).json({
+      message: 'If an account exists for that email, a code has been sent.',
+      resendAfterSeconds: OTP_RESEND_COOLDOWN_MS / 1000,
+    });
+  } catch (err) {
+    console.error('forgotPassword error:', err);
+    return res.status(500).json({ error: { message: 'Could not send the code', status: 500 } });
+  }
+}
+
+// POST /api/auth/reset-password  { email, code, password, deviceId? }
+// Right code: the password is replaced, every other device is signed out,
+// and, given a deviceId, this one is signed in.
+async function resetPassword(req, res) {
+  try {
+    const email = normaliseEmail(req.body.email);
+    const code = String(req.body.code ?? '').trim();
+    const { password, deviceId } = req.body;
+
+    if (!email || !/^\d{6}$/.test(code)) {
+      return res.status(400).json({
+        error: { code: 'INVALID_OTP', message: 'Enter the 6-digit code from the email', status: 400 },
+      });
+    }
+    if (typeof password !== 'string' || password.length < MIN_PASSWORD) {
+      return res.status(400).json({
+        error: { code: 'WEAK_PASSWORD', message: `Password must be at least ${MIN_PASSWORD} characters`, status: 400 },
+      });
+    }
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (user?.status === 'blocked') {
+      return res.status(403).json({
+        error: { code: 'ACCOUNT_DEACTIVATED', message: 'Your account has been deactivated. Please contact support.', status: 403 },
+      });
+    }
+    const refused = await checkOtp(user, code);
+    if (refused) return res.status(refused.status).json(refused.body);
+
+    // The code proves they own the address, so an unfinished signup is
+    // verified here too.
+    const updated = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: await hashPassword(password),
+        status: 'verified',
+        emailOtpHash: null,
+        emailOtpExpiresAt: null,
+        emailOtpAttempts: 0,
+      },
+    });
+
+    // A reset is often because someone else got in: end every session, so
+    // the device lock below cannot keep this person out of their own account.
+    await revokeActiveSessions(user.id);
+
+    if (!deviceId) {
+      return res.status(200).json({ message: 'Password updated. Please log in.' });
+    }
+    return await startSession(res, updated, deviceId, user.status === 'unverified');
+  } catch (err) {
+    console.error('resetPassword error:', err);
+    return res.status(500).json({ error: { message: 'Could not reset the password', status: 500 } });
   }
 }
 
@@ -686,7 +838,7 @@ async function logout(req, res) {
 
 module.exports = {
   googleSignIn, appleSignIn, refreshAccessToken, logout,
-  register, login, verifyOtp, resendOtp,
+  register, login, verifyLoginOtp, verifyOtp, resendOtp, forgotPassword, resetPassword,
   // Exported for auth.test.js — pure, no DB.
   decideLogin, IDLE_RELEASE_MS,
 };
