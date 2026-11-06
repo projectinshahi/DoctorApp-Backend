@@ -137,11 +137,28 @@ const server = app.listen(0, async () => {
     assert.strictEqual(users[0].emailOtpHash, null);
     assert.strictEqual((await post('/verify-otp', { email: 'asha@example.com', code: lastCode })).body.error.code, 'ALREADY_VERIFIED');
 
-    // T-012.1 — correct credentials return both tokens.
-    const ok = await post('/login', { email: 'asha@example.com', password: 'secret123', deviceId: 'D1' });
+    // T-012.1 — correct credentials email a code, and the code returns both
+    // tokens. The password alone yields none.
+    const sentBeforeLogin = sends;
+    const step1 = await post('/login', { email: 'asha@example.com', password: 'secret123', deviceId: 'D1' });
+    assert.strictEqual(step1.status, 200);
+    assert.strictEqual(step1.body.otpRequired, true);
+    assert.ok(!step1.body.accessToken && !step1.body.refreshToken);
+    assert.strictEqual(sends, sentBeforeLogin + 1);
+    // Logging in again inside the minute sends nothing new.
+    await post('/login', { email: 'asha@example.com', password: 'secret123', deviceId: 'D1' });
+    assert.strictEqual(sends, sentBeforeLogin + 1);
+    // A code without the device, or the wrong code, gets no session.
+    assert.strictEqual((await post('/login/verify-otp', { email: 'asha@example.com', code: lastCode })).status, 400);
+    const badLogin = await post('/login/verify-otp', { email: 'asha@example.com', code: wrongOf(lastCode), deviceId: 'D1' });
+    assert.strictEqual(badLogin.body.error.code, 'INVALID_OTP');
+    assert.ok(!badLogin.body.accessToken);
+    const ok = await post('/login/verify-otp', { email: 'asha@example.com', code: lastCode, deviceId: 'D1' });
     assert.strictEqual(ok.status, 200);
     assert.ok(ok.body.accessToken && ok.body.refreshToken);
     assert.strictEqual(ok.body.user.email, 'asha@example.com');
+    // The code is spent.
+    assert.strictEqual((await post('/login/verify-otp', { email: 'asha@example.com', code: lastCode, deviceId: 'D1' })).body.error.code, 'OTP_EXPIRED');
     // 15-minute access token, 7-day refresh token.
     const claims = (t) => JSON.parse(Buffer.from(t.split('.')[1], 'base64url'));
     assert.strictEqual(claims(ok.body.accessToken).exp - claims(ok.body.accessToken).iat, 15 * 60);

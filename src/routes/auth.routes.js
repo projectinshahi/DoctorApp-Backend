@@ -3,13 +3,14 @@ const express = require('express');
 const router = express.Router();
 const {
   googleSignIn, appleSignIn, refreshAccessToken, logout,
-  register, login, verifyOtp, resendOtp, forgotPassword, resetPassword,
+  register, login, verifyLoginOtp, verifyOtp, resendOtp, forgotPassword, resetPassword,
 } = require('../controllers/auth.controller');
 const { adminLogin } = require('../controllers/adminAuth.controller');
 const authenticateStudent = require('../middleware/authenticateStudent'); // adjust path
 
 router.post('/register', register);
 router.post('/login', login);
+router.post('/login/verify-otp', verifyLoginOtp);
 router.post('/verify-otp', verifyOtp);
 router.post('/resend-otp', resendOtp);
 router.post('/forgot-password', forgotPassword);
