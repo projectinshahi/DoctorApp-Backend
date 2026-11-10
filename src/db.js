@@ -29,7 +29,14 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 // operations take the option; writes reject it.
 const READ_OPS = new Set(['findMany', 'findFirst', 'findFirstOrThrow', 'findUnique', 'findUniqueOrThrow']);
 
-const base = globalThis.__prismaBase ?? new PrismaClient({ adapter });
+// Transactions take a connection of their own. Opening a new one to Neon costs
+// 1.4–3.4s (above), past Prisma's 2s default wait, so any transaction that
+// found the pool busy — a delete-account right after the auth middleware's
+// lastSeenAt touch, say — failed with P2028 before it began.
+const base = globalThis.__prismaBase ?? new PrismaClient({
+  adapter,
+  transactionOptions: { maxWait: 10000, timeout: 20000 },
+});
 if (process.env.NODE_ENV !== 'production') globalThis.__prismaBase = base;
 
 const prisma = globalThis.__prisma ?? base.$extends({
