@@ -869,7 +869,7 @@ model DailyQuizAttempt {
   courseId    Int
   // The day this set belongs to, in the app's timezone — not the server's.
   quizDate    DateTime @db.Date
-  questionIds Int[]
+  questionIds Int[]    @default([])
   startedAt   DateTime  @default(now())
   completedAt DateTime?
 
