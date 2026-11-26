@@ -13,8 +13,9 @@ const prisma = require('../db');
 // one filter out — 'note' matches nothing.
 const LESSON_TYPES = ['video', 'text', 'quiz'];
 
-const lessonAccess = (...args) => require('./selected-course.controller').lessonAccess(...args);
-const stripLockedContent = (...args) => require('./selected-course.controller').stripLockedContent(...args);
+const {
+  lessonAccess, stripLockedContent, getCourseAccess, FULL_ACCESS_SELECT,
+} = require('../services/access.service');
 const lessonDone = (...args) => require('./selected-course.controller').lessonDone(...args);
 const attemptStatusByLesson = (...args) => require('./quizAttempt.controller').attemptStatusByLesson(...args);
 
@@ -244,16 +245,19 @@ async function unsaveLesson(req, res) {
 async function studentAccess(userId) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { selectedCourseId: true, selectedCourse: { select: { accessType: true } } },
+    select: {
+      selectedCourseId: true,
+      selectedCourse: { select: { accessType: true } },
+      // Read here so getCourseAccess needs no user query of its own.
+      ...FULL_ACCESS_SELECT,
+    },
   });
-  const activeSubs = user?.selectedCourseId
-    ? await prisma.subscription.findMany({
-        where: { userId, courseId: user.selectedCourseId, isActive: true, endDate: { gte: new Date() } },
-        select: { planId: true, plan: { select: { entitlements: true } } },
-      })
-    : [];
+  // No selected course: getCourseAccess(null) returns "nothing bought"
+  // without a subscription query, exactly as the empty list used to (or full
+  // access, which does not depend on a course).
+  const access = await getCourseAccess(userId, user?.selectedCourseId || null, { user });
   return {
-    access: require('./selected-course.controller').accessFrom(activeSubs),
+    access,
     courseAccessType: user?.selectedCourse?.accessType ?? null,
   };
 }

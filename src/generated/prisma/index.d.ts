@@ -5425,6 +5425,7 @@ export namespace Prisma {
     emailOtpAttempts: number | null
     emailOtpSentAt: Date | null
     updatedAt: Date | null
+    fullAccess: boolean | null
     notificationsReadAt: Date | null
     selectedCourseId: number | null
     selectedCourseTypeId: number | null
@@ -5445,6 +5446,7 @@ export namespace Prisma {
     emailOtpAttempts: number | null
     emailOtpSentAt: Date | null
     updatedAt: Date | null
+    fullAccess: boolean | null
     notificationsReadAt: Date | null
     selectedCourseId: number | null
     selectedCourseTypeId: number | null
@@ -5465,6 +5467,7 @@ export namespace Prisma {
     emailOtpAttempts: number
     emailOtpSentAt: number
     updatedAt: number
+    fullAccess: number
     notificationsReadAt: number
     selectedCourseId: number
     selectedCourseTypeId: number
@@ -5501,6 +5504,7 @@ export namespace Prisma {
     emailOtpAttempts?: true
     emailOtpSentAt?: true
     updatedAt?: true
+    fullAccess?: true
     notificationsReadAt?: true
     selectedCourseId?: true
     selectedCourseTypeId?: true
@@ -5521,6 +5525,7 @@ export namespace Prisma {
     emailOtpAttempts?: true
     emailOtpSentAt?: true
     updatedAt?: true
+    fullAccess?: true
     notificationsReadAt?: true
     selectedCourseId?: true
     selectedCourseTypeId?: true
@@ -5541,6 +5546,7 @@ export namespace Prisma {
     emailOtpAttempts?: true
     emailOtpSentAt?: true
     updatedAt?: true
+    fullAccess?: true
     notificationsReadAt?: true
     selectedCourseId?: true
     selectedCourseTypeId?: true
@@ -5648,6 +5654,7 @@ export namespace Prisma {
     emailOtpAttempts: number
     emailOtpSentAt: Date | null
     updatedAt: Date
+    fullAccess: boolean
     notificationsReadAt: Date | null
     selectedCourseId: number | null
     selectedCourseTypeId: number | null
@@ -5687,6 +5694,7 @@ export namespace Prisma {
     emailOtpAttempts?: boolean
     emailOtpSentAt?: boolean
     updatedAt?: boolean
+    fullAccess?: boolean
     notificationsReadAt?: boolean
     selectedCourseId?: boolean
     selectedCourseTypeId?: boolean
@@ -5723,6 +5731,7 @@ export namespace Prisma {
     emailOtpAttempts?: boolean
     emailOtpSentAt?: boolean
     updatedAt?: boolean
+    fullAccess?: boolean
     notificationsReadAt?: boolean
     selectedCourseId?: boolean
     selectedCourseTypeId?: boolean
@@ -5745,6 +5754,7 @@ export namespace Prisma {
     emailOtpAttempts?: boolean
     emailOtpSentAt?: boolean
     updatedAt?: boolean
+    fullAccess?: boolean
     notificationsReadAt?: boolean
     selectedCourseId?: boolean
     selectedCourseTypeId?: boolean
@@ -5767,12 +5777,13 @@ export namespace Prisma {
     emailOtpAttempts?: boolean
     emailOtpSentAt?: boolean
     updatedAt?: boolean
+    fullAccess?: boolean
     notificationsReadAt?: boolean
     selectedCourseId?: boolean
     selectedCourseTypeId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "phone" | "avatarUrl" | "role" | "status" | "createdAt" | "emailOtpHash" | "emailOtpExpiresAt" | "emailOtpAttempts" | "emailOtpSentAt" | "updatedAt" | "notificationsReadAt" | "selectedCourseId" | "selectedCourseTypeId", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "phone" | "avatarUrl" | "role" | "status" | "createdAt" | "emailOtpHash" | "emailOtpExpiresAt" | "emailOtpAttempts" | "emailOtpSentAt" | "updatedAt" | "fullAccess" | "notificationsReadAt" | "selectedCourseId" | "selectedCourseTypeId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     subscriptions?: boolean | User$subscriptionsArgs<ExtArgs>
@@ -5834,6 +5845,7 @@ export namespace Prisma {
       emailOtpAttempts: number
       emailOtpSentAt: Date | null
       updatedAt: Date
+      fullAccess: boolean
       notificationsReadAt: Date | null
       selectedCourseId: number | null
       selectedCourseTypeId: number | null
@@ -6289,6 +6301,7 @@ export namespace Prisma {
     readonly emailOtpAttempts: FieldRef<"User", 'Int'>
     readonly emailOtpSentAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
+    readonly fullAccess: FieldRef<"User", 'Boolean'>
     readonly notificationsReadAt: FieldRef<"User", 'DateTime'>
     readonly selectedCourseId: FieldRef<"User", 'Int'>
     readonly selectedCourseTypeId: FieldRef<"User", 'Int'>
@@ -51719,6 +51732,7 @@ export namespace Prisma {
     emailOtpAttempts: 'emailOtpAttempts',
     emailOtpSentAt: 'emailOtpSentAt',
     updatedAt: 'updatedAt',
+    fullAccess: 'fullAccess',
     notificationsReadAt: 'notificationsReadAt',
     selectedCourseId: 'selectedCourseId',
     selectedCourseTypeId: 'selectedCourseTypeId'
@@ -52498,6 +52512,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFilter<"User"> | number
     emailOtpSentAt?: DateTimeNullableFilter<"User"> | Date | string | null
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    fullAccess?: BoolFilter<"User"> | boolean
     notificationsReadAt?: DateTimeNullableFilter<"User"> | Date | string | null
     selectedCourseId?: IntNullableFilter<"User"> | number | null
     selectedCourseTypeId?: IntNullableFilter<"User"> | number | null
@@ -52533,6 +52548,7 @@ export namespace Prisma {
     emailOtpAttempts?: SortOrder
     emailOtpSentAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
+    fullAccess?: SortOrder
     notificationsReadAt?: SortOrderInput | SortOrder
     selectedCourseId?: SortOrderInput | SortOrder
     selectedCourseTypeId?: SortOrderInput | SortOrder
@@ -52571,6 +52587,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFilter<"User"> | number
     emailOtpSentAt?: DateTimeNullableFilter<"User"> | Date | string | null
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    fullAccess?: BoolFilter<"User"> | boolean
     notificationsReadAt?: DateTimeNullableFilter<"User"> | Date | string | null
     selectedCourseId?: IntNullableFilter<"User"> | number | null
     selectedCourseTypeId?: IntNullableFilter<"User"> | number | null
@@ -52606,6 +52623,7 @@ export namespace Prisma {
     emailOtpAttempts?: SortOrder
     emailOtpSentAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
+    fullAccess?: SortOrder
     notificationsReadAt?: SortOrderInput | SortOrder
     selectedCourseId?: SortOrderInput | SortOrder
     selectedCourseTypeId?: SortOrderInput | SortOrder
@@ -52634,6 +52652,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntWithAggregatesFilter<"User"> | number
     emailOtpSentAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    fullAccess?: BoolWithAggregatesFilter<"User"> | boolean
     notificationsReadAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     selectedCourseId?: IntNullableWithAggregatesFilter<"User"> | number | null
     selectedCourseTypeId?: IntNullableWithAggregatesFilter<"User"> | number | null
@@ -55568,6 +55587,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
@@ -55601,6 +55621,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -55633,6 +55654,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
@@ -55666,6 +55688,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -55699,6 +55722,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -55718,6 +55742,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
@@ -55736,6 +55761,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -58739,6 +58765,11 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type IntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -58910,6 +58941,7 @@ export namespace Prisma {
     emailOtpAttempts?: SortOrder
     emailOtpSentAt?: SortOrder
     updatedAt?: SortOrder
+    fullAccess?: SortOrder
     notificationsReadAt?: SortOrder
     selectedCourseId?: SortOrder
     selectedCourseTypeId?: SortOrder
@@ -58937,6 +58969,7 @@ export namespace Prisma {
     emailOtpAttempts?: SortOrder
     emailOtpSentAt?: SortOrder
     updatedAt?: SortOrder
+    fullAccess?: SortOrder
     notificationsReadAt?: SortOrder
     selectedCourseId?: SortOrder
     selectedCourseTypeId?: SortOrder
@@ -58957,6 +58990,7 @@ export namespace Prisma {
     emailOtpAttempts?: SortOrder
     emailOtpSentAt?: SortOrder
     updatedAt?: SortOrder
+    fullAccess?: SortOrder
     notificationsReadAt?: SortOrder
     selectedCourseId?: SortOrder
     selectedCourseTypeId?: SortOrder
@@ -59049,6 +59083,14 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -59114,11 +59156,6 @@ export namespace Prisma {
 
   export type AdminSumOrderByAggregateInput = {
     id?: SortOrder
-  }
-
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type TopicListRelationFilter = {
@@ -59196,14 +59233,6 @@ export namespace Prisma {
   export type SubjectSumOrderByAggregateInput = {
     id?: SortOrder
     displayOrder?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type SubjectScalarRelationFilter = {
@@ -61656,6 +61685,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type SessionUpdateManyWithoutUserNestedInput = {
     create?: XOR<SessionCreateWithoutUserInput, SessionUncheckedCreateWithoutUserInput> | SessionCreateWithoutUserInput[] | SessionUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SessionCreateOrConnectWithoutUserInput | SessionCreateOrConnectWithoutUserInput[]
@@ -62198,10 +62231,6 @@ export namespace Prisma {
     connectOrCreate?: RapidRecallCreateOrConnectWithoutSubjectInput | RapidRecallCreateOrConnectWithoutSubjectInput[]
     createMany?: RapidRecallCreateManySubjectInputEnvelope
     connect?: RapidRecallWhereUniqueInput | RapidRecallWhereUniqueInput[]
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type TopicUpdateManyWithoutSubjectNestedInput = {
@@ -65183,6 +65212,11 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedIntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -65283,6 +65317,14 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -65308,19 +65350,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumCourseStatusFilter<$PrismaModel = never> = {
@@ -67082,6 +67111,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
@@ -67114,6 +67144,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -67161,6 +67192,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
@@ -67193,6 +67225,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -67352,6 +67385,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
@@ -67384,6 +67418,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseTypeId?: number | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -67766,6 +67801,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFilter<"User"> | number
     emailOtpSentAt?: DateTimeNullableFilter<"User"> | Date | string | null
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    fullAccess?: BoolFilter<"User"> | boolean
     notificationsReadAt?: DateTimeNullableFilter<"User"> | Date | string | null
     selectedCourseId?: IntNullableFilter<"User"> | number | null
     selectedCourseTypeId?: IntNullableFilter<"User"> | number | null
@@ -67988,6 +68024,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
@@ -68020,6 +68057,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -69647,6 +69685,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     quizAttempts?: QuizAttemptCreateNestedManyWithoutUserInput
@@ -69679,6 +69718,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -69818,6 +69858,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     quizAttempts?: QuizAttemptUpdateManyWithoutUserNestedInput
@@ -69850,6 +69891,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -71032,6 +71074,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
@@ -71064,6 +71107,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -71169,6 +71213,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
@@ -71201,6 +71246,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -71352,6 +71398,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
@@ -71384,6 +71431,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -71473,6 +71521,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
@@ -71505,6 +71554,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -71584,6 +71634,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
@@ -71616,6 +71667,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -71727,6 +71779,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
@@ -71759,6 +71812,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -71860,6 +71914,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
@@ -71892,6 +71947,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -71977,6 +72033,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
@@ -72009,6 +72066,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -72084,6 +72142,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
@@ -72116,6 +72175,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -72227,6 +72287,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
@@ -72259,6 +72320,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -72984,6 +73046,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
@@ -73016,6 +73079,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -73133,6 +73197,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
@@ -73165,6 +73230,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -73490,6 +73556,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
@@ -73522,6 +73589,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -73761,6 +73829,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
@@ -73793,6 +73862,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -73960,6 +74030,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
@@ -73992,6 +74063,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -74077,6 +74149,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
@@ -74109,6 +74182,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -74140,6 +74214,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
@@ -74172,6 +74247,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -74295,6 +74371,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
@@ -74327,6 +74404,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -75070,6 +75148,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
@@ -75102,6 +75181,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -75149,6 +75229,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
@@ -75181,6 +75262,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -75212,6 +75294,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     sessions?: SessionCreateNestedManyWithoutUserInput
     subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
@@ -75244,6 +75327,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
     selectedCourseTypeId?: number | null
@@ -75291,6 +75375,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
@@ -75323,6 +75408,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -76324,6 +76410,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseTypeId?: number | null
   }
@@ -76516,6 +76603,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
@@ -76548,6 +76636,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -76580,6 +76669,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseTypeId?: NullableIntFieldUpdateOperationsInput | number | null
   }
@@ -76827,6 +76917,7 @@ export namespace Prisma {
     emailOtpAttempts?: number
     emailOtpSentAt?: Date | string | null
     updatedAt?: Date | string
+    fullAccess?: boolean
     notificationsReadAt?: Date | string | null
     selectedCourseId?: number | null
   }
@@ -76909,6 +77000,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     sessions?: SessionUpdateManyWithoutUserNestedInput
     subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
@@ -76941,6 +77033,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -76973,6 +77066,7 @@ export namespace Prisma {
     emailOtpAttempts?: IntFieldUpdateOperationsInput | number
     emailOtpSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fullAccess?: BoolFieldUpdateOperationsInput | boolean
     notificationsReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     selectedCourseId?: NullableIntFieldUpdateOperationsInput | number | null
   }

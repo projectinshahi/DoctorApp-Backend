@@ -124,7 +124,8 @@ async function listTests(req, res) {
     // visible to everyone in it.
     const user = await prisma.user.findUnique({
       where: { id: req.user.userId },
-      select: { selectedCourseTypeId: true },
+      // fullAccess + status: read here so hasCourseFeature needs no user query.
+      select: { selectedCourseTypeId: true, fullAccess: true, status: true },
     });
 
     const tests = await prisma.test.findMany({
@@ -150,8 +151,8 @@ async function listTests(req, res) {
 
     // A mock is premium content. Papers stay listed so a student can see what
     // a subscription buys; `locked` is what stops them opening one.
-    const { hasCourseFeature } = require('./selected-course.controller');
-    const unlocked = await hasCourseFeature(req.user.userId, courseId, 'mock');
+    const { hasCourseFeature } = require('../services/access.service');
+    const unlocked = await hasCourseFeature(req.user.userId, courseId, 'mock', { user });
 
     return res.status(200).json({
       tests: tests.map(({ attempts, ...test }) => ({
@@ -198,7 +199,7 @@ async function startTestAttempt(req, res) {
     // Only new attempts are gated. One already running when a subscription
     // lapses is allowed to finish, because stranding someone mid-exam is a
     // worse answer than honouring the last few minutes.
-    const { hasCourseFeature } = require('./selected-course.controller');
+    const { hasCourseFeature } = require('../services/access.service');
     if (!(await hasCourseFeature(req.user.userId, test.courseId, 'mock'))) {
       return res.status(403).json({
         error: {
@@ -519,7 +520,10 @@ function rankAttempts(rows) {
  */
 async function buildLeaderboard(test, { includeEmail = false } = {}) {
   const attempts = await prisma.testAttempt.findMany({
-    where: { testId: test.id, submittedAt: { not: null } },
+    // Full-access accounts (the owner trying papers out) are not ranked: the
+    // student board, the admin board and the admin student screen all read
+    // this, so they agree.
+    where: { testId: test.id, submittedAt: { not: null }, user: { fullAccess: false } },
     select: {
       id: true, userId: true, score: true, startedAt: true, submittedAt: true,
       user: { select: { id: true, name: true, email: true, avatarUrl: true } },

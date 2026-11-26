@@ -1,5 +1,8 @@
 
 const prisma = require('../db');
+const {
+  getLatestActiveSubscription, hasFullAccess, FULL_ACCESS_SELECT,
+} = require('../services/access.service');
 
 // POST /api/courses/:courseId/plans
 // The feature codes the server understands. Sales copy lives in `features`
@@ -246,6 +249,26 @@ async function getPricing(req, res) {
   }
 }
 
+// What /users/me/plans reports for a full-access account: a stand-in
+// subscription, so the app treats them as subscribed. The student app
+// (student_plans_model.dart, plan_access_provider.dart) reads id, planId,
+// plan.title, endDate and daysLeft. With endDate null it falls back to
+// daysLeft, and only shows the "plan ends in N days" countdown when that is
+// 10 or less, so a large daysLeft means no renewal banner. id / planId 0
+// match no plan card.
+const FULL_ACCESS_DAYS_LEFT = 36500;
+function fullAccessSubscription() {
+  return {
+    id: 0,
+    planId: 0,
+    startDate: null,
+    endDate: null,
+    plan: { id: 0, title: 'Full access', features: [], entitlements: [...VALID_ENTITLEMENTS] },
+    daysLeft: FULL_ACCESS_DAYS_LEFT,
+    fullAccess: true,
+  };
+}
+
 /**
  * GET /api/users/me/plans
  *
@@ -266,6 +289,8 @@ async function getMyCoursePlans(req, res) {
         selectedCourse: {
           select: { id: true, title: true, description: true, accessType: true },
         },
+        // Owner override, read from the DB (never the JWT).
+        ...FULL_ACCESS_SELECT,
       },
     });
 
@@ -276,6 +301,7 @@ async function getMyCoursePlans(req, res) {
     }
 
     const now = new Date();
+    const fullAccess = hasFullAccess(user);
     const [plans, subscription] = await Promise.all([
       prisma.plan.findMany({
         where: { courseId: user.selectedCourseId, isActive: true },
@@ -283,9 +309,10 @@ async function getMyCoursePlans(req, res) {
       }),
       // Their live one, if any. Same test the access check uses: the stored
       // isActive flag is never cleared when a plan runs out.
-      prisma.subscription.findFirst({
-        where: { userId: req.user.userId, courseId: user.selectedCourseId, isActive: true, endDate: { gte: now } },
-        orderBy: { endDate: 'desc' },
+      // A full-access account is answered with fullAccessSubscription() below,
+      // so its real rows (if any) are not looked up.
+      fullAccess ? null : getLatestActiveSubscription(req.user.userId, user.selectedCourseId, {
+        now,
         select: {
           id: true, planId: true, startDate: true, endDate: true,
           // entitlements is what the app locks tabs on, so the live plan has
@@ -294,6 +321,19 @@ async function getMyCoursePlans(req, res) {
         },
       }),
     ]);
+
+    if (fullAccess) {
+      return res.status(200).json({
+        hasCourseSelected: true,
+        course: user.selectedCourse,
+        isPremiumCourse: user.selectedCourse.accessType === 'premium',
+        // Still listed, so the screen looks as it does for anyone; no card is
+        // "Your plan" because none was bought.
+        plans: plans.map((plan) => ({ ...shapePlan(plan), isCurrent: false })),
+        currentSubscription: fullAccessSubscription(),
+        fullAccess: true,
+      });
+    }
 
     return res.status(200).json({
       hasCourseSelected: true,

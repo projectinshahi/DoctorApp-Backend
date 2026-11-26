@@ -450,7 +450,8 @@ async function listStudentRapidRecalls(req, res) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user.userId },
-      select: { selectedCourseId: true, selectedCourseTypeId: true },
+      // fullAccess + status: read here so hasCourseFeature needs no user query.
+      select: { selectedCourseId: true, selectedCourseTypeId: true, fullAccess: true, status: true },
     });
     if (!user?.selectedCourseId) {
       return res.status(200).json({ rapidRecalls: [], reason: 'No course selected yet.' });
@@ -462,8 +463,8 @@ async function listStudentRapidRecalls(req, res) {
     // Rapid Recall is premium content, gated by the same helper mock tests
     // use. Decks stay listed without their cards so the student can see what a
     // subscription buys.
-    const { hasCourseFeature } = require('./selected-course.controller');
-    const unlocked = await hasCourseFeature(req.user.userId, user.selectedCourseId, 'rapid_recall');
+    const { hasCourseFeature } = require('../services/access.service');
+    const unlocked = await hasCourseFeature(req.user.userId, user.selectedCourseId, 'rapid_recall', { user });
 
     const recalls = await prisma.rapidRecall.findMany({
       where,
@@ -497,7 +498,8 @@ async function getStudentRapidRecall(req, res) {
 
     const user = await prisma.user.findUnique({
       where: { id: req.user.userId },
-      select: { selectedCourseId: true, selectedCourseTypeId: true },
+      // fullAccess + status: read here so hasCourseFeature needs no user query.
+      select: { selectedCourseId: true, selectedCourseTypeId: true, fullAccess: true, status: true },
     });
 
     const recall = await prisma.rapidRecall.findUnique({
@@ -515,8 +517,8 @@ async function getStudentRapidRecall(req, res) {
         || recall.courseTypeId === user?.selectedCourseTypeId);
     if (!visible) return res.status(404).json({ error: { message: 'Rapid recall not found' } });
 
-    const { hasCourseFeature } = require('./selected-course.controller');
-    if (!(await hasCourseFeature(req.user.userId, recall.courseId, 'rapid_recall'))) {
+    const { hasCourseFeature } = require('../services/access.service');
+    if (!(await hasCourseFeature(req.user.userId, recall.courseId, 'rapid_recall', { user }))) {
       return res.status(403).json({
         error: {
           code: 'SUBSCRIPTION_REQUIRED',

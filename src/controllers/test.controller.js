@@ -968,7 +968,8 @@ async function getTestAnalytics(req, res) {
     if (!test) return res.status(404).json({ error: { message: 'Test not found' } });
 
     const submitted = await prisma.testAttempt.findMany({
-      where: { testId, submittedAt: { not: null } },
+      // Same cohort as the leaderboard: full-access accounts are left out.
+      where: { testId, submittedAt: { not: null }, user: { fullAccess: false } },
       select: { id: true, score: true, startedAt: true, submittedAt: true },
     });
 

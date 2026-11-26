@@ -46,7 +46,9 @@ async function sendExpiryReminders(req, res) {
     const dryRun = req.body?.dryRun === true;
 
     const due = await prisma.subscription.findMany({
-      where: { isActive: true, endDate: { gte: now, lte: until } },
+      // A full-access account (the owner) loses nothing when a plan ends, so
+      // it is never reminded.
+      where: { isActive: true, endDate: { gte: now, lte: until }, user: { fullAccess: false } },
       orderBy: { endDate: 'asc' },
       select: {
         id: true, userId: true, courseId: true, endDate: true,

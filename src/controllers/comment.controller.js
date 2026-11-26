@@ -13,7 +13,7 @@
 
 const prisma = require('../db');
 
-const { lessonAccess } = require('./selected-course.controller');
+const { lessonAccess, getCourseAccess } = require('../services/access.service');
 
 const MAX_BODY = 2000;
 
@@ -94,18 +94,16 @@ async function readableLesson(userId, lessonId) {
   }
 
   const courseId = lesson.chapter.courseId ?? lesson.chapter.courseType?.courseId ?? null;
-  const [activeSubs, course] = await Promise.all([
-    courseId === null ? [] : prisma.subscription.findMany({
-      where: { userId, courseId, isActive: true, endDate: { gte: new Date() } },
-      select: { planId: true, plan: { select: { entitlements: true } } },
-    }),
+  const [access, course] = await Promise.all([
+    // The lesson's own course, not the selected one. A null course costs no
+    // query and buys nothing.
+    getCourseAccess(userId, courseId),
     courseId === null ? null : prisma.course.findUnique({
       where: { id: courseId }, select: { accessType: true },
     }),
   ]);
 
-  const { accessFrom } = require('./selected-course.controller');
-  if (lessonAccess(lesson, accessFrom(activeSubs), course?.accessType).locked) {
+  if (lessonAccess(lesson, access, course?.accessType).locked) {
     return { error: { status: 403, message: 'This lesson is locked. Subscribe to join the discussion.' } };
   }
   return { lesson };

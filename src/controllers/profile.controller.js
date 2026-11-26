@@ -1,39 +1,10 @@
 
 const prisma = require('../db');
+const { getSubscriptionStatus } = require('../services/access.service');
 
-// Shared helper: computes subscription status for a given user + their selected course
-async function getSubscriptionInfo(userId, selectedCourseId, selectedCourseAccessType) {
-  if (!selectedCourseId) {
-    return {
-      isPremiumCourse: false,
-      hasPaid: false,
-    };
-  }
-
-  const isPremiumCourse = selectedCourseAccessType === 'premium';
-
-  if (!isPremiumCourse) {
-    return {
-      isPremiumCourse: false,
-      hasPaid: true, // free courses don't need payment
-    };
-  }
-
-  const activeSubscription = await prisma.subscription.findFirst({
-    where: {
-      userId,
-      courseId: selectedCourseId,
-      isActive: true,
-      endDate: { gte: new Date() },
-    },
-  });
-
-  return {
-    isPremiumCourse: true,
-    hasPaid: !!activeSubscription,
-    subscription: activeSubscription ?? null,
-  };
-}
+// Subscription status for a user + their selected course. The same helper
+// backs GET /users/me/subscription-status.
+const getSubscriptionInfo = getSubscriptionStatus;
 
 // GET /api/users/me
 async function getProfile(req, res) {
@@ -65,6 +36,9 @@ async function getProfile(req, res) {
             title: true,
           },
         },
+        // Owner override, read from the DB (never the JWT). Additive in the
+        // response, and it saves getSubscriptionInfo a user query.
+        fullAccess: true,
       },
     });
 
@@ -75,7 +49,8 @@ async function getProfile(req, res) {
     const subscriptionInfo = await getSubscriptionInfo(
       userId,
       user.selectedCourseId,
-      user.selectedCourse?.accessType
+      user.selectedCourse?.accessType,
+      { user }
     );
 
     return res.status(200).json({
@@ -151,13 +126,17 @@ async function updateProfile(req, res) {
         selectedCourseType: {
           select: { id: true, title: true },
         },
+        // Read-only here: `data` above is an allow-list of name / phone /
+        // avatarUrl, so a fullAccess field in the body is ignored.
+        fullAccess: true,
       },
     });
 
     const subscriptionInfo = await getSubscriptionInfo(
       userId,
       updatedUser.selectedCourseId,
-      updatedUser.selectedCourse?.accessType
+      updatedUser.selectedCourse?.accessType,
+      { user: updatedUser }
     );
 
     return res.status(200).json({

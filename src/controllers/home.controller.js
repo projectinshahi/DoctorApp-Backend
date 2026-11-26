@@ -7,7 +7,9 @@
 
 const prisma = require('../db');
 
-const { lessonAccess } = require('./selected-course.controller');
+const {
+  lessonAccess, getCourseAccess, hasAnyPlan, FULL_ACCESS_SELECT,
+} = require('../services/access.service');
 
 /**
  * completed / total as a whole percent.
@@ -64,6 +66,8 @@ async function getHome(req, res) {
         selectedCourseId: true,
         selectedCourseTypeId: true,
         selectedCourse: { select: { id: true, title: true, thumbnail: true, accessType: true } },
+        // Read here so getCourseAccess needs no user query of its own.
+        ...FULL_ACCESS_SELECT,
       },
     });
 
@@ -94,23 +98,19 @@ async function getHome(req, res) {
     //
     // Lazy require: dailyQuiz.controller has no dependency on this file today,
     // but every other controller pair here found a cycle eventually.
-    const [courseType, activeSubs, lessons, daily] = await Promise.all([
+    const [courseType, paidPlanIds, lessons, daily] = await Promise.all([
       user.selectedCourseTypeId
         ? prisma.courseType.findUnique({
             where: { id: user.selectedCourseTypeId },
             select: { id: true, title: true, description: true },
           })
         : null,
-      prisma.subscription.findMany({
-        where: { userId, courseId: user.selectedCourseId, isActive: true, endDate: { gte: new Date() } },
-        select: { planId: true, plan: { select: { entitlements: true } } },
-      }),
+      getCourseAccess(userId, user.selectedCourseId, { user }),
       courseLessons(user),
       require('./dailyQuiz.controller').dailyQuizSummary(userId, user.selectedCourseId),
     ]);
 
-    const paidPlanIds = require('./selected-course.controller').accessFrom(activeSubs);
-    const hasPaid = user.selectedCourse.accessType !== 'premium' || paidPlanIds.planIds.size > 0;
+    const hasPaid = user.selectedCourse.accessType !== 'premium' || hasAnyPlan(paidPlanIds);
 
     const videoLessons = lessons.filter((l) => l.type === 'video');
     // 'text' is the enum value; note lessons are text lessons carrying a
