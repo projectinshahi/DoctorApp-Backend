@@ -2,7 +2,7 @@
 
 Paste this into Claude inside the **admin panel repo**.
 
-Base URL: `https://doctorapp-backend-cl2h.onrender.com`
+Base URL: `https://doctorapp-backend-30gd.onrender.com`
 Auth: `Authorization: Bearer <admin token>` on every request.
 
 A question now carries the same free/premium choice a lesson does. Free
