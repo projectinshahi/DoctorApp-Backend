@@ -13,8 +13,9 @@ const prisma = require('../db');
 // one filter out — 'note' matches nothing.
 const LESSON_TYPES = ['video', 'text', 'quiz'];
 
-const lessonAccess = (...args) => require('./selected-course.controller').lessonAccess(...args);
-const stripLockedContent = (...args) => require('./selected-course.controller').stripLockedContent(...args);
+const {
+  lessonAccess, stripLockedContent, getCourseAccess, FULL_ACCESS_SELECT,
+} = require('../services/access.service');
 const lessonDone = (...args) => require('./selected-course.controller').lessonDone(...args);
 const attemptStatusByLesson = (...args) => require('./quizAttempt.controller').attemptStatusByLesson(...args);
 
@@ -244,16 +245,19 @@ async function unsaveLesson(req, res) {
 async function studentAccess(userId) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { selectedCourseId: true, selectedCourse: { select: { accessType: true } } },
+    select: {
+      selectedCourseId: true,
+      selectedCourse: { select: { accessType: true } },
+      // Read here so getCourseAccess needs no user query of its own.
+      ...FULL_ACCESS_SELECT,
+    },
   });
-  const activeSubs = user?.selectedCourseId
-    ? await prisma.subscription.findMany({
-        where: { userId, courseId: user.selectedCourseId, isActive: true, endDate: { gte: new Date() } },
-        select: { planId: true, plan: { select: { entitlements: true } } },
-      })
-    : [];
+  // No selected course: getCourseAccess(null) returns "nothing bought"
+  // without a subscription query, exactly as the empty list used to (or full
+  // access, which does not depend on a course).
+  const access = await getCourseAccess(userId, user?.selectedCourseId || null, { user });
   return {
-    access: require('./selected-course.controller').accessFrom(activeSubs),
+    access,
     courseAccessType: user?.selectedCourse?.accessType ?? null,
   };
 }
@@ -272,7 +276,14 @@ async function fetchSavedLessons(userId, type = null) {
             videoUrl: true, noteUrl: true, noteFileType: true,
             thumbnailUrl: true, accessType: true, isFreePreview: true, quizId: true,
             // Free / premium is per video, so the padlock needs the rows.
-            videos: { where: { status: 'published' }, select: { id: true, title: true, accessType: true }, orderBy: { displayOrder: 'asc' } },
+            // videoUrl is read so the lesson's own videoUrl can be video 1's
+            // (stripLockedContent), never the column; it is dropped from the
+            // rows again below, so the response shape is unchanged.
+            videos: {
+              where: { status: 'published' },
+              select: { id: true, title: true, accessType: true, videoUrl: true },
+              orderBy: [{ displayOrder: 'asc' }, { id: 'asc' }],
+            },
             chapter: { select: { id: true, title: true } },
             lessonPlans: {
               select: { plan: { select: { id: true, title: true, price: true, durationDays: true } } },
@@ -318,7 +329,11 @@ async function fetchSavedLessons(userId, type = null) {
           isSaved: true,
         };
 
-        return stripLockedContent(base, gate);
+        const out = stripLockedContent(base, gate);
+        // Per-video URLs were never part of a saved lesson row; the saved
+        // VIDEOS list is where a single video's URL comes from.
+        if (Array.isArray(out.videos)) out.videos = out.videos.map(({ videoUrl, ...v }) => v);
+        return out;
   });
 }
 

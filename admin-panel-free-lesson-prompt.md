@@ -2,7 +2,7 @@
 
 Paste this into Claude inside the **admin panel repo** (`admin_drapp`).
 
-Base URL: `https://doctorapp-backend-cl2h.onrender.com`
+Base URL: `https://doctorapp-backend-30gd.onrender.com`
 Admin bearer token on every request. **No backend change is needed** — the
 field already exists and both endpoints already accept it.
 

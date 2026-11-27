@@ -1,6 +1,9 @@
 
 const { revokeActiveSessions } = require('../services/session.service');
-const { lessonAccess, lessonDone } = require('./selected-course.controller');
+const { lessonDone } = require('./selected-course.controller');
+const {
+  lessonAccess, accessFrom, isSubscriptionActive, hasFullAccess, fullAccessGrant, hasAnyPlan,
+} = require('../services/access.service');
 const { percent } = require('./home.controller');
 const { attemptStatusByLesson } = require('./quizAttempt.controller');
 const { buildLeaderboard } = require('./testAttempt.controller');
@@ -47,6 +50,9 @@ async function getStudentList(req, res) {
           phone: true,
           status: true,
           createdAt: true,
+          // Owner override (set by scripts/grantFullAccess.js). Shown, never
+          // editable from the admin app.
+          fullAccess: true,
           selectedCourse: {
             select: {
               id: true,
@@ -86,6 +92,7 @@ async function getStudentList(req, res) {
       phone: s.phone,
       status: s.status,
       isBlocked: s.status === 'blocked',
+      fullAccess: s.fullAccess === true,
       isLoggedIn: s.sessions.length > 0,
       lastLoginAt: s.sessions[0]?.createdAt ?? null,
       currentDeviceId: s.sessions[0]?.deviceId ?? null,
@@ -192,7 +199,7 @@ async function getStudentById(req, res) {
       where: { id: studentId },
       select: {
         id: true, name: true, email: true, phone: true, avatarUrl: true,
-        role: true, status: true, createdAt: true,
+        role: true, status: true, createdAt: true, fullAccess: true,
         selectedCourseId: true, selectedCourseTypeId: true,
         selectedCourse: {
           select: { id: true, title: true, thumbnail: true, status: true, accessType: true },
@@ -230,9 +237,14 @@ async function getStudentById(req, res) {
     const now = new Date();
     // Same shape the student gate uses, so this screen reports what the student
     // actually sees rather than a looser approximation of it.
-    const paidPlanIds = require('./selected-course.controller').accessFrom(
-      subscriptions.filter((s) => s.isActive && s.endDate >= now && s.courseId === user.selectedCourseId),
-    );
+    // A full-access account opens everything, as the student gate decides it:
+    // every lesson reads visibleToStudent (when published) and unlockedByPlan
+    // true, though no plan is involved.
+    const paidPlanIds = hasFullAccess(user)
+      ? fullAccessGrant()
+      : accessFrom(
+          subscriptions.filter((s) => isSubscriptionActive(s, now) && s.courseId === user.selectedCourseId),
+        );
 
     // Same either/or resolution the student feed uses.
     const chapters = user.selectedCourseId
@@ -496,11 +508,16 @@ async function getStudentById(req, res) {
         // needs to see it.
         lastSeenAt: user.sessions[0]?.lastSeenAt ?? null,
         createdAt: user.createdAt,
+        // The stored flag. It opens nothing while the student is blocked.
+        fullAccess: user.fullAccess === true,
       },
       selectedCourse: user.selectedCourse,
       selectedCourseType: user.selectedCourseType,
       subscriptions,
-      hasActiveSubscription: paidPlanIds.size > 0,
+      // accessFrom returns { planIds, entitlements }, so the old
+      // `paidPlanIds.size > 0` was always false. True for a
+      // full-access account too: it can open everything a subscriber can.
+      hasActiveSubscription: hasAnyPlan(paidPlanIds),
       progress: studentProgress,
       recentQuizAttempts,
       recentTestAttempts,

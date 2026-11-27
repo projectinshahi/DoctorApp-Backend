@@ -12,7 +12,9 @@ const MAX_LIMIT = 200;
 
 const SUBSCRIPTION_SELECT = {
   id: true, startDate: true, endDate: true, isActive: true, createdAt: true,
-  user: { select: { id: true, name: true, email: true, status: true } },
+  // fullAccess: the owner's account. Its rows stay listed (they are real
+  // rows) but flagged, and the summary leaves them out.
+  user: { select: { id: true, name: true, email: true, status: true, fullAccess: true } },
   course: { select: { id: true, title: true, accessType: true } },
   plan: { select: { id: true, title: true, price: true, currency: true, durationDays: true } },
 };
@@ -117,7 +119,10 @@ async function listSubscriptions(req, res) {
 async function subscriptionSummary(req, res) {
   try {
     const now = new Date();
+    // Full-access accounts (the owner) are not customers: their rows would
+    // inflate the counts and the revenue.
     const subs = await prisma.subscription.findMany({
+      where: { user: { fullAccess: false } },
       select: {
         isActive: true, endDate: true,
         course: { select: { id: true, title: true } },

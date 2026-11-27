@@ -7,7 +7,9 @@
 
 const prisma = require('../db');
 
-const { lessonAccess } = require('./selected-course.controller');
+const {
+  lessonAccess, lessonVideoUrl, getCourseAccess, hasAnyPlan, FULL_ACCESS_SELECT,
+} = require('../services/access.service');
 
 /**
  * completed / total as a whole percent.
@@ -44,8 +46,15 @@ async function courseLessons(user) {
       // bouncing through GET /lessons/:id first.
       videoUrl: true, durationSeconds: true,
       // Video 1's free / premium decides whether its resume card plays —
-      // progress is per lesson and always against video 1.
-      videos: { where: { status: 'published' }, select: { accessType: true }, orderBy: { displayOrder: 'asc' }, take: 1 },
+      // progress is per lesson and always against video 1. Its videoUrl is
+      // what the card plays (lessonVideoUrl), not the lesson column, which
+      // can drift from video 1.
+      videos: {
+        where: { status: 'published' },
+        select: { accessType: true, videoUrl: true },
+        orderBy: [{ displayOrder: 'asc' }, { id: 'asc' }],
+        take: 1,
+      },
       lessonPlans: { select: { planId: true } },
       quiz: { select: { id: true, title: true, subjectId: true, topicId: true, examTag: true } },
       chapter: { select: { id: true, title: true } },
@@ -64,6 +73,8 @@ async function getHome(req, res) {
         selectedCourseId: true,
         selectedCourseTypeId: true,
         selectedCourse: { select: { id: true, title: true, thumbnail: true, accessType: true } },
+        // Read here so getCourseAccess needs no user query of its own.
+        ...FULL_ACCESS_SELECT,
       },
     });
 
@@ -94,23 +105,19 @@ async function getHome(req, res) {
     //
     // Lazy require: dailyQuiz.controller has no dependency on this file today,
     // but every other controller pair here found a cycle eventually.
-    const [courseType, activeSubs, lessons, daily] = await Promise.all([
+    const [courseType, paidPlanIds, lessons, daily] = await Promise.all([
       user.selectedCourseTypeId
         ? prisma.courseType.findUnique({
             where: { id: user.selectedCourseTypeId },
             select: { id: true, title: true, description: true },
           })
         : null,
-      prisma.subscription.findMany({
-        where: { userId, courseId: user.selectedCourseId, isActive: true, endDate: { gte: new Date() } },
-        select: { planId: true, plan: { select: { entitlements: true } } },
-      }),
+      getCourseAccess(userId, user.selectedCourseId, { user }),
       courseLessons(user),
       require('./dailyQuiz.controller').dailyQuizSummary(userId, user.selectedCourseId),
     ]);
 
-    const paidPlanIds = require('./selected-course.controller').accessFrom(activeSubs);
-    const hasPaid = user.selectedCourse.accessType !== 'premium' || paidPlanIds.planIds.size > 0;
+    const hasPaid = user.selectedCourse.accessType !== 'premium' || hasAnyPlan(paidPlanIds);
 
     const videoLessons = lessons.filter((l) => l.type === 'video');
     // 'text' is the enum value; note lessons are text lessons carrying a
@@ -189,7 +196,8 @@ async function getHome(req, res) {
       .filter(({ lesson }) => lesson && lesson.type === 'video')
       .slice(0, 10)
       .map(({ p, lesson }) => {
-        const unlocked = lessonAccess(lesson, paidPlanIds, user.selectedCourse.accessType).firstVideoOpen;
+        const gate = lessonAccess(lesson, paidPlanIds, user.selectedCourse.accessType);
+        const unlocked = gate.firstVideoOpen;
         return {
           lessonId: lesson.id,
           title: lesson.title,
@@ -200,7 +208,7 @@ async function getHome(req, res) {
           watchedPercent: watchedState(p.lastPositionSeconds, lesson.durationSeconds).watchedPercent,
           // Stripped when locked, exactly as the tree does it. A resume point
           // is not the media, so it survives; the URL does not.
-          videoUrl: unlocked ? lesson.videoUrl : null,
+          videoUrl: lessonVideoUrl(lesson, gate),
           locked: !unlocked,
           updatedAt: p.updatedAt,
         };
@@ -263,8 +271,8 @@ async function getHome(req, res) {
             durationSeconds: continueLesson.durationSeconds,
             watchedPercent: watchedState(lastTouched.lastPositionSeconds, continueLesson.durationSeconds).watchedPercent,
             ...(() => {
-              const open = lessonAccess(continueLesson, paidPlanIds, user.selectedCourse.accessType).firstVideoOpen;
-              return { videoUrl: open ? continueLesson.videoUrl : null, locked: !open };
+              const gate = lessonAccess(continueLesson, paidPlanIds, user.selectedCourse.accessType);
+              return { videoUrl: lessonVideoUrl(continueLesson, gate), locked: !gate.firstVideoOpen };
             })(),
           }
         : null,

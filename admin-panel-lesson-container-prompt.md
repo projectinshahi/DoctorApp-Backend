@@ -9,7 +9,7 @@ The backend changed. A lesson is no longer "one video **or** one quiz" — it is
 a container that can hold **several videos**, **a quiz**, and the **Rapid
 Recall decks** filed against it, all at once. The client asked for this.
 
-Live now on `https://doctorapp-backend-cl2h.onrender.com`.
+Live now on `https://doctorapp-backend-30gd.onrender.com`.
 Backend commit `dda141a`.
 
 Nothing you have today breaks. `lesson.videoUrl` is still sent and still

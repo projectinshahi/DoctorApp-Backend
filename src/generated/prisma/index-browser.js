@@ -135,6 +135,7 @@ exports.Prisma.UserScalarFieldEnum = {
   emailOtpAttempts: 'emailOtpAttempts',
   emailOtpSentAt: 'emailOtpSentAt',
   updatedAt: 'updatedAt',
+  fullAccess: 'fullAccess',
   notificationsReadAt: 'notificationsReadAt',
   selectedCourseId: 'selectedCourseId',
   selectedCourseTypeId: 'selectedCourseTypeId'

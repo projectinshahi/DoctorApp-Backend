@@ -35,6 +35,11 @@ model User {
   emailOtpSentAt    DateTime?
   updatedAt DateTime @updatedAt
 
+  // Owner / staff account that opens every course's content without a
+  // subscription. Set only by scripts/grantFullAccess.js; no endpoint
+  // writes it. Ignored while status is "blocked". See access.service.js.
+  fullAccess Boolean @default(false)
+
   sessions      Session[]
   subscriptions Subscription[]
   quizAttempts  QuizAttempt[]
@@ -864,7 +869,7 @@ model DailyQuizAttempt {
   courseId    Int
   // The day this set belongs to, in the app's timezone — not the server's.
   quizDate    DateTime @db.Date
-  questionIds Int[]
+  questionIds Int[]    @default([])
   startedAt   DateTime  @default(now())
   completedAt DateTime?
 
