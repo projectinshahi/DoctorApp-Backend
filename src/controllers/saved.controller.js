@@ -276,7 +276,14 @@ async function fetchSavedLessons(userId, type = null) {
             videoUrl: true, noteUrl: true, noteFileType: true,
             thumbnailUrl: true, accessType: true, isFreePreview: true, quizId: true,
             // Free / premium is per video, so the padlock needs the rows.
-            videos: { where: { status: 'published' }, select: { id: true, title: true, accessType: true }, orderBy: { displayOrder: 'asc' } },
+            // videoUrl is read so the lesson's own videoUrl can be video 1's
+            // (stripLockedContent), never the column; it is dropped from the
+            // rows again below, so the response shape is unchanged.
+            videos: {
+              where: { status: 'published' },
+              select: { id: true, title: true, accessType: true, videoUrl: true },
+              orderBy: [{ displayOrder: 'asc' }, { id: 'asc' }],
+            },
             chapter: { select: { id: true, title: true } },
             lessonPlans: {
               select: { plan: { select: { id: true, title: true, price: true, durationDays: true } } },
@@ -322,7 +329,11 @@ async function fetchSavedLessons(userId, type = null) {
           isSaved: true,
         };
 
-        return stripLockedContent(base, gate);
+        const out = stripLockedContent(base, gate);
+        // Per-video URLs were never part of a saved lesson row; the saved
+        // VIDEOS list is where a single video's URL comes from.
+        if (Array.isArray(out.videos)) out.videos = out.videos.map(({ videoUrl, ...v }) => v);
+        return out;
   });
 }
 

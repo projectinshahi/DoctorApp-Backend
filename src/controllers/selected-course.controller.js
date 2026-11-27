@@ -106,7 +106,10 @@ async function getSelectedCourseContent(req, res) {
                 id: true, title: true, description: true, videoUrl: true, thumbnailUrl: true,
                 durationSeconds: true, accessType: true, displayOrder: true, viewCount: true,
               },
-              orderBy: { displayOrder: 'asc' },
+              // videos[0] is video 1: lessonAccess gates it and
+              // stripLockedContent serves its URL as the lesson's videoUrl
+              // (never the column). id breaks a displayOrder tie.
+              orderBy: [{ displayOrder: 'asc' }, { id: 'asc' }],
             },
             quizId: true,
             quiz: { select: { id: true, title: true, questionCount: true, status: true } },
@@ -242,16 +245,17 @@ async function getStudentLesson(req, res) {
         videoUrl: true, thumbnailUrl: true, noteUrl: true, noteFileType: true,
         displayOrder: true, isFreePreview: true, accessType: true, status: true,
         durationSeconds: true,
-        // A lesson holds its videos, its quiz and its revision decks. videoUrl
-        // above is still video 1, so a client that only knows the old shape
-        // keeps playing the same thing it always did.
+        // A lesson holds its videos, its quiz and its revision decks. The
+        // videoUrl a student gets is video 1's: stripLockedContent takes it
+        // from videos[0], not from the column above, so a client that only
+        // knows the old shape keeps playing video 1.
         videos: {
           where: { status: 'published' },
           select: {
             id: true, title: true, description: true, videoUrl: true, thumbnailUrl: true,
             durationSeconds: true, displayOrder: true, accessType: true, viewCount: true,
           },
-          orderBy: { displayOrder: 'asc' },
+          orderBy: [{ displayOrder: 'asc' }, { id: 'asc' }],
         },
         rapidRecalls: {
           where: { status: 'published' },

@@ -3,7 +3,7 @@
 // Two layers live here:
 //
 //   1. Pure rules (no DB): LESSON_ENTITLEMENT, isLessonUnlocked, lessonAccess,
-//      stripLockedContent, accessFrom, courseAccessOf, hasFullAccess,
+//      lessonVideoUrl, stripLockedContent, accessFrom, courseAccessOf, hasFullAccess,
 //      hasAnyPlan. They decide from an `access` object
 //      ({ planIds, entitlements, fullAccess? }) that a caller already has.
 //
@@ -208,12 +208,38 @@ function lessonAccess(lesson, access, courseAccessType = null) {
   return { contentOpen, firstVideoOpen, videoOpen, locked };
 }
 
+/**
+ * The lesson-level `videoUrl` a student may receive.
+ *
+ * A lesson with published video rows plays video 1: the first row's URL when
+ * that row opens for this student, otherwise null. The Lesson.videoUrl column
+ * is NOT used then. It is meant to mirror video 1, but the admin's lesson
+ * update writes it on its own, so it can point at a premium video while
+ * video 1 is free; trusting it would hand that premium URL to unpaid
+ * students.
+ *
+ * A lesson with no rows (the old single-video lessons) keeps the column,
+ * gated on the lesson exactly as before.
+ *
+ * `lesson.videos` must be the published rows in displayOrder (the same array
+ * `gate` came from) and carry `videoUrl`. A row without it gives null: fail
+ * closed rather than fall back to the column.
+ */
+function lessonVideoUrl(lesson, gate) {
+  if (!gate.firstVideoOpen) return null;
+  if (Array.isArray(lesson.videos) && lesson.videos.length > 0) {
+    return lesson.videos[0].videoUrl ?? null;
+  }
+  return lesson.videoUrl ?? null;
+}
+
 // Applies lessonAccess to a lesson row: locked videos lose their URL, a
 // locked quiz / notes / text lose theirs, and the flags the app draws from
-// are added. Only keys the row already has are blanked.
+// are added. Only keys the row already has are blanked (or, for videoUrl,
+// replaced by video 1's: see lessonVideoUrl).
 function stripLockedContent(lesson, gate) {
   const out = { ...lesson, locked: gate.locked, contentLocked: !gate.contentOpen };
-  if ('videoUrl' in lesson && !gate.firstVideoOpen) out.videoUrl = null;
+  if ('videoUrl' in lesson) out.videoUrl = lessonVideoUrl(lesson, gate);
   if (Array.isArray(lesson.videos)) {
     out.videos = lesson.videos.map((v) => (gate.videoOpen(v)
       ? { ...v, locked: false }
@@ -389,6 +415,7 @@ module.exports = {
   LESSON_ENTITLEMENT,
   isLessonUnlocked,
   lessonAccess,
+  lessonVideoUrl,
   stripLockedContent,
   courseAccessOf,
   accessFrom,
