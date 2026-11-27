@@ -1,8 +1,32 @@
 // Course announcement rules. Run: node src/services/push.test.js
+//
+// No database: prisma is swapped for a recorder in require.cache before the
+// service loads, the same way access.test.js does it. Without this,
+// notifyCoursePublished below wrote a real broadcast row to whatever database
+// .env pointed at, and the service swallows the error, so it passed either way.
 const assert = require('assert');
+const path = require('path');
 
 // Must run unconfigured: this test may not reach Firebase.
 delete process.env.FIREBASE_SERVICE_ACCOUNT;
+
+// Every call push.service could make, recorded. The models beyond
+// notification are here so a stray lookup shows up as a recorded call (and
+// fails the exact assertions below) rather than reaching a real database.
+const dbCalls = [];
+const recorder = (model, op, result) => async (args) => { dbCalls.push({ model, op, args }); return result; };
+const fakeDb = {
+  notification: { create: recorder('notification', 'create', { id: 1 }) },
+  fcmToken: {
+    findMany: recorder('fcmToken', 'findMany', []),
+    deleteMany: recorder('fcmToken', 'deleteMany', { count: 0 }),
+    count: recorder('fcmToken', 'count', 0),
+  },
+  chapter: { findUnique: recorder('chapter', 'findUnique', null), findMany: recorder('chapter', 'findMany', []) },
+  course: { findMany: recorder('course', 'findMany', []) },
+  subject: { findUnique: recorder('subject', 'findUnique', null) },
+};
+require.cache[path.resolve(__dirname, '../db.js')] = { exports: fakeDb };
 
 const {
   becamePublished, newCourseMessage, notifyCoursePublished, TOPIC,
@@ -178,6 +202,28 @@ assert.strictEqual(isDeadToken(null), false);
 (async () => {
   const result = await notifyCoursePublished({ id: 1, title: 'x' });
   assert.deepStrictEqual(result, { sent: false, reason: 'not configured' });
+
+  // It records exactly one broadcast row (no user, course or exam type) and
+  // touches nothing else: the topic send needs no device lookup.
+  assert.deepStrictEqual(dbCalls, [{
+    model: 'notification',
+    op: 'create',
+    args: {
+      data: {
+        userId: null, courseId: null, courseTypeId: null,
+        type: 'new_course',
+        title: 'New course available',
+        body: 'x',
+        data: { type: 'new_course', courseId: '1' },
+      },
+    },
+  }]);
+
+  // A dry run is a health check and must not put a row on every student's screen.
+  dbCalls.length = 0;
+  const dry = await notifyCoursePublished({ id: 1, title: 'x' }, { dryRun: true });
+  assert.deepStrictEqual(dry, { sent: false, reason: 'not configured' });
+  assert.deepStrictEqual(dbCalls, [], 'a dry run records nothing');
 
   // ── configured: the real SDK has to initialise ──
   //
