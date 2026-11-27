@@ -27,4 +27,4 @@ jobs:
             -H "Content-Type: application/json" \
             -H "x-cron-key: ${{ secrets.CRON_SECRET }}" \
             -d '{}' \
-            https://doctorapp-backend-cl2h.onrender.com/api/admin/notifications/expiry-reminders
+            https://doctorapp-backend-30gd.onrender.com/api/admin/notifications/expiry-reminders
