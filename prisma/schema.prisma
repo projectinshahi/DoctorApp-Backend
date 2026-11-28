@@ -36,8 +36,9 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Owner / staff account that opens every course's content without a
-  // subscription. Set only by scripts/grantFullAccess.js; no endpoint
-  // writes it. Ignored while status is "blocked". See access.service.js.
+  // subscription. Set by scripts/grantFullAccess.js or the admin endpoint
+  // PATCH /admin/students/:id/full-access (admin app). Ignored while status
+  // is "blocked". See access.service.js.
   fullAccess Boolean @default(false)
 
   sessions      Session[]
