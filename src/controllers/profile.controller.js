@@ -1,6 +1,7 @@
 
 const prisma = require('../db');
 const { getSubscriptionStatus } = require('../services/access.service');
+const { deleteUserAccount } = require('../services/account.service');
 
 // Subscription status for a user + their selected course. The same helper
 // backs GET /users/me/subscription-status.
@@ -156,11 +157,9 @@ async function updateProfile(req, res) {
 // DELETE /api/users/me
 //
 // Removes the account and everything stored against it, as the App Store and
-// Play Store require. Progress, attempts, saved items, comments, reports,
-// notifications, FCM tokens and daily quizzes cascade from the user row;
-// sessions and subscriptions do not, so they are deleted first, in the same
-// transaction — a failure part way leaves the account untouched rather than
-// half-erased.
+// Play Store require. What is removed, and why sessions and subscriptions go
+// first in one transaction, is in services/account.service.js — shared with
+// the admin's DELETE /admin/students/:id so both erase the same rows.
 //
 // Subscriptions go too: the student asked for every detail removed, and a
 // payment row keyed to their id is one. Signing in with Google again later
@@ -170,11 +169,7 @@ async function deleteAccount(req, res) {
     const userId = req.user.userId;
     const deletedAt = new Date();
 
-    await prisma.$transaction([
-      prisma.session.deleteMany({ where: { userId } }),
-      prisma.subscription.deleteMany({ where: { userId } }),
-      prisma.user.delete({ where: { id: userId } }),
-    ]);
+    await deleteUserAccount(userId);
 
     console.log(`[account] user ${userId} deleted at ${deletedAt.toISOString()}`);
     return res.status(200).json({ deleted: true, deletedAt });

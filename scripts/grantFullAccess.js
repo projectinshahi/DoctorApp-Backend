@@ -7,9 +7,10 @@
 // no subscription: premium lessons and videos, quizzes with premium
 // questions, mock tests, Rapid Recall. See src/services/access.service.js.
 //
-// This script is the ONLY way to set the flag: no API endpoint writes it, and
-// the admin app cannot. It touches the students table (`users`) only, never
-// `admins`. It reads DATABASE_URL from .env, so it acts on whatever database
+// The same flag can also be set from the admin app (student detail screen,
+// "Full access" switch), which calls PATCH /admin/students/:id/full-access.
+// This script remains the way to do it from a shell. It touches the students
+// table (`users`) only, never `admins`. It reads DATABASE_URL from .env, so it acts on whatever database
 // that points at: check before running it against production.
 //
 // The change applies on the student's next request (the flag is read from the

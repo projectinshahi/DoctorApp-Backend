@@ -1,5 +1,6 @@
 
 const { revokeActiveSessions } = require('../services/session.service');
+const { deleteUserAccount } = require('../services/account.service');
 const { lessonDone } = require('./selected-course.controller');
 const {
   lessonAccess, accessFrom, isSubscriptionActive, hasFullAccess, fullAccessGrant, hasAnyPlan,
@@ -50,8 +51,8 @@ async function getStudentList(req, res) {
           phone: true,
           status: true,
           createdAt: true,
-          // Owner override (set by scripts/grantFullAccess.js). Shown, never
-          // editable from the admin app.
+          // Owner override: scripts/grantFullAccess.js or PATCH
+          // /admin/students/:id/full-access.
           fullAccess: true,
           selectedCourse: {
             select: {
@@ -179,6 +180,115 @@ async function updateStudentStatus(req, res) {
     console.error('updateStudentStatus error:', error);
     return res.status(500).json({
       error: { message: 'Something went wrong while updating the student status' },
+    });
+  }
+}
+
+// The columns shapeStudent needs. Shared by the detail endpoint and the
+// full-access toggle so both return the same `student` object.
+const STUDENT_SUMMARY_SELECT = {
+  id: true, name: true, email: true, phone: true, avatarUrl: true,
+  role: true, status: true, createdAt: true, fullAccess: true,
+  sessions: {
+    where: { revokedAt: null },
+    select: { deviceId: true, createdAt: true, lastSeenAt: true },
+    orderBy: { createdAt: 'desc' },
+    take: 1,
+  },
+};
+
+// The `student` object of GET /admin/students/:id.
+function shapeStudent(user) {
+  return {
+    id: user.id, name: user.name, email: user.email, phone: user.phone,
+    avatarUrl: user.avatarUrl, status: user.status,
+    isBlocked: user.status === 'blocked',
+    isLoggedIn: user.sessions.length > 0,
+    lastLoginAt: user.sessions[0]?.createdAt ?? null,
+    currentDeviceId: user.sessions[0]?.deviceId ?? null,
+    // When this device last made a request. It is what decides whether a
+    // second device is refused, so an admin fielding "I can't log in"
+    // needs to see it.
+    lastSeenAt: user.sessions[0]?.lastSeenAt ?? null,
+    createdAt: user.createdAt,
+    // The stored flag. It opens nothing while the student is blocked.
+    fullAccess: user.fullAccess === true,
+  };
+}
+
+// PATCH /admin/students/:id/full-access
+// Body: { "fullAccess": true }
+//
+// The owner override (see access.service.js), also settable with
+// scripts/grantFullAccess.js. The flag is read from the database on every
+// request, never from the login token, so it takes effect on the student's
+// next request — no session is revoked. Blocked accounts keep the stored
+// value but get nothing from it until unblocked.
+async function updateStudentFullAccess(req, res) {
+  try {
+    const studentId = Number(req.params.id);
+    if (!Number.isInteger(studentId)) {
+      return res.status(400).json({ error: { message: 'Invalid student id' } });
+    }
+
+    const { fullAccess } = req.body ?? {};
+    if (typeof fullAccess !== 'boolean') {
+      return res.status(400).json({ error: { message: 'fullAccess must be true or false' } });
+    }
+
+    const student = await prisma.user.findUnique({
+      where: { id: studentId },
+      select: { id: true, role: true },
+    });
+    if (!student || student.role !== 'student') {
+      return res.status(404).json({ error: { message: 'Student not found' } });
+    }
+
+    const updated = await prisma.user.update({
+      where: { id: studentId },
+      data: { fullAccess },
+      select: STUDENT_SUMMARY_SELECT,
+    });
+
+    console.log(`[admin] admin ${req.admin?.adminId ?? '?'} set fullAccess=${fullAccess} on user ${studentId}`);
+    return res.status(200).json({ student: shapeStudent(updated) });
+  } catch (error) {
+    console.error('updateStudentFullAccess error:', error);
+    return res.status(500).json({
+      error: { message: 'Something went wrong while updating full access' },
+    });
+  }
+}
+
+// DELETE /admin/students/:id
+//
+// Permanently removes a student and everything stored against them — the same
+// rows the student's own DELETE /api/users/me removes (account.service.js),
+// subscriptions included. There is no undo. Only role "student" rows.
+async function deleteStudent(req, res) {
+  try {
+    const studentId = Number(req.params.id);
+    if (!Number.isInteger(studentId)) {
+      return res.status(400).json({ error: { message: 'Invalid student id' } });
+    }
+
+    const student = await prisma.user.findUnique({
+      where: { id: studentId },
+      select: { id: true, role: true, email: true },
+    });
+    if (!student || student.role !== 'student') {
+      return res.status(404).json({ error: { message: 'Student not found' } });
+    }
+
+    const deletedAt = new Date();
+    await deleteUserAccount(studentId);
+
+    console.log(`[admin] admin ${req.admin?.adminId ?? '?'} deleted user ${studentId} at ${deletedAt.toISOString()}`);
+    return res.status(200).json({ deleted: true, studentId, deletedAt });
+  } catch (error) {
+    console.error('deleteStudent error:', error);
+    return res.status(500).json({
+      error: { message: 'Something went wrong while deleting the student' },
     });
   }
 }
@@ -496,21 +606,7 @@ async function getStudentById(req, res) {
     }));
 
     return res.status(200).json({
-      student: {
-        id: user.id, name: user.name, email: user.email, phone: user.phone,
-        avatarUrl: user.avatarUrl, status: user.status,
-        isBlocked: user.status === 'blocked',
-        isLoggedIn: user.sessions.length > 0,
-        lastLoginAt: user.sessions[0]?.createdAt ?? null,
-        currentDeviceId: user.sessions[0]?.deviceId ?? null,
-        // When this device last made a request. It is what decides whether a
-        // second device is refused, so an admin fielding "I can't log in"
-        // needs to see it.
-        lastSeenAt: user.sessions[0]?.lastSeenAt ?? null,
-        createdAt: user.createdAt,
-        // The stored flag. It opens nothing while the student is blocked.
-        fullAccess: user.fullAccess === true,
-      },
+      student: shapeStudent(user),
       selectedCourse: user.selectedCourse,
       selectedCourseType: user.selectedCourseType,
       subscriptions,
@@ -573,4 +669,7 @@ async function revokeStudentSessions(req, res) {
 }
 
 
-module.exports = { getStudentList, getStudentById, updateStudentStatus, revokeStudentSessions };
+module.exports = {
+  getStudentList, getStudentById, updateStudentStatus, revokeStudentSessions,
+  updateStudentFullAccess, deleteStudent,
+};

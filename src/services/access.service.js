@@ -17,8 +17,9 @@
 // lessons, lessons pinned to plans, premium videos, mock tests, Rapid Recall,
 // premium questions) with no subscription row at all. The flag is always
 // read from the database, never from the JWT, so turning it off takes effect
-// on the next request. A blocked user never has full access. Nothing in the
-// API can set it; only scripts/grantFullAccess.js does.
+// on the next request. A blocked user never has full access. Only two things
+// set it: scripts/grantFullAccess.js and the admin-only PATCH
+// /admin/students/:id/full-access. No student endpoint can.
 //
 // "Active" is isActive = true AND endDate >= now. Nothing ever clears
 // isActive when a plan runs out, so the endDate test is what expires a row.
